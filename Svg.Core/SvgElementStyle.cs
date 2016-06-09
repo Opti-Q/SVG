@@ -323,7 +323,7 @@ namespace Svg
 
             if (sFaces == null)
             {
-                var fontStyle = Svg.FontStyle.Regular;
+                var fontStyle = SvgSetup.FontStyle.Regular;
 
                 // Get the font-weight
                 switch (this.FontWeight)
@@ -334,7 +334,7 @@ namespace Svg
                     case SvgFontWeight.W700:
                     case SvgFontWeight.W800:
                     case SvgFontWeight.W900:
-                        fontStyle |= Svg.FontStyle.Bold;
+                        fontStyle |= SvgSetup.FontStyle.Bold;
                         break;
                 }
 
@@ -343,7 +343,7 @@ namespace Svg
                 {
                     case SvgFontStyle.Italic:
                     case SvgFontStyle.Oblique:
-                        fontStyle |= Svg.FontStyle.Italic;
+                        fontStyle |= SvgSetup.FontStyle.Italic;
                         break;
                 }
 
@@ -351,10 +351,10 @@ namespace Svg
                 switch (this.TextDecoration)
                 {
                     case SvgTextDecoration.LineThrough:
-                        fontStyle |= Svg.FontStyle.Strikeout;
+                        fontStyle |= SvgSetup.FontStyle.Strikeout;
                         break;
                     case SvgTextDecoration.Underline:
-                        fontStyle |= Svg.FontStyle.Underline;
+                        fontStyle |= SvgSetup.FontStyle.Underline;
                         break;
                 }
 

@@ -28,6 +28,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using Svg.Interfaces;
+
 namespace System.Drawing.Drawing2D
 {
     public sealed class ColorBlend

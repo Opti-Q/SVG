@@ -9,7 +9,7 @@ namespace Svg.Droid
         private Paint _paint;
         private DashPathEffect _dashes;
         private float[] _dashPattern;
-        private Svg.LineJoin _lineJoin;
+        private SvgSetup.LineJoin _lineJoin;
         private float _miterLimit;
         private LineCap _cap;
         private LineCap _endCap;

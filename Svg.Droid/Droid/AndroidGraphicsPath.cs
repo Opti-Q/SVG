@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using Android.Graphics;
-using Android.Provider;
-using PointF = System.Drawing.PointF;
+using Svg.Interfaces;
+using PointF = Svg.Interfaces.PointF;
 
 namespace Svg.Droid
 {

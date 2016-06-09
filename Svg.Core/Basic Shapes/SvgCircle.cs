@@ -4,6 +4,7 @@ using System.Text;
 using System.Drawing;
 using System.Xml;
 using System.ComponentModel;
+using Svg.Interfaces;
 
 namespace Svg
 {

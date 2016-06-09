@@ -192,6 +192,7 @@
     <Compile Include="Interfaces\BitmapData.cs" />
     <Compile Include="Interfaces\Brush.cs" />
     <Compile Include="Interfaces\CharacterRange.cs" />
+    <Compile Include="Interfaces\Color.cs" />
     <Compile Include="Interfaces\ColorAdjustType.cs" />
     <Compile Include="Interfaces\ColorBlend.cs" />
     <Compile Include="Interfaces\ColorMatrix.cs" />
@@ -218,7 +219,10 @@
     <Compile Include="Interfaces\PathGradientBrush.cs" />
     <Compile Include="Interfaces\Pen.cs" />
     <Compile Include="Interfaces\PixelFormat.cs" />
+    <Compile Include="Interfaces\PointF.cs" />
+    <Compile Include="Interfaces\RectangleF.cs" />
     <Compile Include="Interfaces\Region.cs" />
+    <Compile Include="Interfaces\SizeF.cs" />
     <Compile Include="Interfaces\SmoothingMode.cs" />
     <Compile Include="Interfaces\SolidBrush.cs" />
     <Compile Include="Interfaces\StringFormat.cs" />
@@ -262,6 +266,7 @@
     <Compile Include="Rendering\IGraphicsProvider.cs" />
     <Compile Include="Rendering\ISvgRenderer.cs" />
     <Compile Include="Rendering\SvgRenderer.cs" />
+    <Compile Include="SvgSetup.cs" />
     <Compile Include="SvgAttributeAttribute.cs" />
     <Compile Include="SvgAttributeCollection.cs" />
     <Compile Include="SvgContentNode.cs" />

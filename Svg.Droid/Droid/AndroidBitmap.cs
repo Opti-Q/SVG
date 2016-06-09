@@ -4,7 +4,7 @@ using System.Drawing;
 namespace Svg.Droid
 {
 
-    public class AndroidBitmap : Svg.Bitmap
+    public class AndroidBitmap : SvgSetup.Bitmap
     {
         protected Android.Graphics.Bitmap _image;
 
