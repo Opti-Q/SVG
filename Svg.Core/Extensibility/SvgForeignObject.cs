@@ -29,7 +29,7 @@ namespace Svg
         {
             get
             {
-                var r = SvgSetup.Factory.CreateRectangleF();
+                var r = Engine.Factory.CreateRectangleF();
                 foreach (var c in this.Children)
                 {
                     if (c is SvgVisualElement)

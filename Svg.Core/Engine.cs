@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Svg
 {
-    public class SvgSetup
+    public static class Engine
     {
         private static readonly object _lock = new object();
         private static readonly Dictionary<Type, Func<object>> _serviceRegistry = new Dictionary<Type, Func<object>>();

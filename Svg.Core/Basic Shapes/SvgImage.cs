@@ -85,8 +85,8 @@ namespace Svg
         /// <value>The bounds.</value>
         public override RectangleF Bounds
         {
-			get { return SvgSetup.Factory.CreateRectangleF(this.Location.ToDeviceValue(null, this),
-                                        SvgSetup.Factory.CreateSizeF(this.Width.ToDeviceValue(null, UnitRenderingType.Horizontal, this), 
+			get { return Engine.Factory.CreateRectangleF(this.Location.ToDeviceValue(null, this),
+                                        Engine.Factory.CreateSizeF(this.Width.ToDeviceValue(null, UnitRenderingType.Horizontal, this), 
                                                   this.Height.ToDeviceValue(null, UnitRenderingType.Vertical, this))); }
         }
 
@@ -116,24 +116,24 @@ namespace Svg
                     var svg = img as SvgFragment;
                     if (bmp != null)
                     {
-                        srcRect = SvgSetup.Factory.CreateRectangleF(0, 0, bmp.Width, bmp.Height);
+                        srcRect = Engine.Factory.CreateRectangleF(0, 0, bmp.Width, bmp.Height);
                     }
                     else if (svg != null)
                     {
-                        srcRect = SvgSetup.Factory.CreateRectangleF(SvgSetup.Factory.CreatePointF(0, 0), svg.GetDimensions());
+                        srcRect = Engine.Factory.CreateRectangleF(Engine.Factory.CreatePointF(0, 0), svg.GetDimensions());
                     }
                     else
                     {
                         return;
                     }
 
-                    var destClip = SvgSetup.Factory.CreateRectangleF(this.Location.ToDeviceValue(renderer, this),
-                                                  SvgSetup.Factory.CreateSizeF(Width.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
+                    var destClip = Engine.Factory.CreateRectangleF(this.Location.ToDeviceValue(renderer, this),
+                                                  Engine.Factory.CreateSizeF(Width.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
                                                             Height.ToDeviceValue(renderer, UnitRenderingType.Vertical, this)));
                     RectangleF destRect = destClip;
                         
                     this.PushTransforms(renderer);
-                    renderer.SetClip(SvgSetup.Factory.CreateRegion(destClip), CombineMode.Intersect);
+                    renderer.SetClip(Engine.Factory.CreateRegion(destClip), CombineMode.Intersect);
                     this.SetClip(renderer);
 
                     if (AspectRatio != null && AspectRatio.Align != SvgPreserveAspectRatio.none)
@@ -188,7 +188,7 @@ namespace Svg
                                 break;
                         }
 
-                        destRect = SvgSetup.Factory.CreateRectangleF(destClip.X + xOffset, destClip.Y + yOffset, 
+                        destRect = Engine.Factory.CreateRectangleF(destClip.X + xOffset, destClip.Y + yOffset, 
                                                     srcRect.Width * fScaleX, srcRect.Height * fScaleY);
                     }
 
@@ -199,7 +199,7 @@ namespace Svg
                     }
                     else if (svg != null)
                     {
-                        var currOffset = SvgSetup.Factory.CreatePointF(renderer.Transform.OffsetX, renderer.Transform.OffsetY);
+                        var currOffset = Engine.Factory.CreatePointF(renderer.Transform.OffsetX, renderer.Transform.OffsetY);
                         renderer.TranslateTransform(-currOffset.X, -currOffset.Y);
                         renderer.ScaleTransform(destRect.Width / srcRect.Width, destRect.Height / srcRect.Height);
                         renderer.TranslateTransform(currOffset.X + destRect.X, currOffset.Y + destRect.Y);
@@ -234,7 +234,7 @@ namespace Svg
                     byte[] imageBytes = Convert.FromBase64String(uriString.Substring(dataIdx));
                     using (var stream = new MemoryStream(imageBytes))
                     {
-                        return SvgSetup.Factory.CreateImageFromStream(stream);
+                        return Engine.Factory.CreateImageFromStream(stream);
                     }
                 }
 
@@ -243,15 +243,15 @@ namespace Svg
                     uri = new Uri(OwnerDocument.BaseUri, uri);
                 }
 
-                // should work with http: and file: protocol urls
-                var httpRequest = WebRequest.Create(uri);
-
-                using (WebResponse webResponse = httpRequest.GetResponse())
+                //// should work with http: and file: protocol urls
+                //var httpRequest = WebRequest.Create(uri);
+                //using (WebResponse webResponse = httpRequest.GetResponse())
+                using (var webResponse = Svg.Engine.Resolve<IWebRequest>().GetResponse(uri))
                 {
                     using (var stream = webResponse.GetResponseStream())
                     {
                         stream.Position = 0;
-                        if (uri.LocalPath.EndsWith(".svg", StringComparison.InvariantCultureIgnoreCase))
+                        if (uri.LocalPath.ToLowerInvariant().EndsWith(".svg"))
                         {
                             var doc = SvgDocument.Open<SvgDocument>(stream);
                             doc.BaseUri = uri;
@@ -259,7 +259,7 @@ namespace Svg
                         }
                         else
                         {
-                            return SvgSetup.Factory.CreateBitmapFromStream(stream);
+                            return Engine.Factory.CreateBitmapFromStream(stream);
                         }
                     }
                 }

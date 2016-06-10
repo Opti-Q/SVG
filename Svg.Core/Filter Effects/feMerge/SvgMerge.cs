@@ -10,12 +10,12 @@ namespace Svg.FilterEffects
         {
             var children = this.Children.OfType<SvgMergeNode>().ToList();
             var inputImage = buffer[children.First().Input];
-            var result = SvgSetup.Factory.CreateBitmap(inputImage.Width, inputImage.Height);
-            using (var g = SvgSetup.Factory.CreateGraphicsFromImage(result))
+            var result = Engine.Factory.CreateBitmap(inputImage.Width, inputImage.Height);
+            using (var g = Engine.Factory.CreateGraphicsFromImage(result))
             {
                 foreach (var child in children)
                 {
-                    g.DrawImage(buffer[child.Input], SvgSetup.Factory.CreateRectangleF(0, 0, inputImage.Width, inputImage.Height),
+                    g.DrawImage(buffer[child.Input], Engine.Factory.CreateRectangleF(0, 0, inputImage.Width, inputImage.Height),
                                 0, 0, inputImage.Width, inputImage.Height, GraphicsUnit.Pixel);
                 }
                 g.Flush();

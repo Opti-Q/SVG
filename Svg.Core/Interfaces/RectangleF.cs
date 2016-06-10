@@ -5,29 +5,29 @@ using System.Text;
 
 namespace Svg.Interfaces
 {
-    public interface RectangleF
+    public abstract class RectangleF
     {
-        void Inflate(float x, float y);
-        void Inflate(SizeF size);
-        void Intersect(RectangleF rect);
-        bool Contains(float x, float y);
-        bool Contains(PointF pt);
-        bool Contains(RectangleF rect);
-        bool IntersectsWith(RectangleF rect);
-        void Offset(float x, float y);
-        void Offset(PointF pos);
-        float Bottom { get; }
-        float Height { get; set; }
-        bool IsEmpty { get; }
-        float Left { get; }
-        PointF Location { get; set; }
-        float Right { get; }
-        SizeF Size { get; set; }
-        float Top { get; }
-        float Width { get; set; }
-        float X { get; set; }
-        float Y { get; set; }
-        RectangleF UnionAndCopy(RectangleF other);
-        RectangleF InflateAndCopy(float x, float y);
+        public abstract void Inflate(float x, float y);
+        public abstract void Inflate(SizeF size);
+        public abstract void Intersect(RectangleF rect);
+        public abstract bool Contains(float x, float y);
+        public abstract bool Contains(PointF pt);
+        public abstract bool Contains(RectangleF rect);
+        public abstract bool IntersectsWith(RectangleF rect);
+        public abstract void Offset(float x, float y);
+        public abstract void Offset(PointF pos);
+        public abstract float Bottom { get; }
+        public abstract float Height { get; set; }
+        public abstract bool IsEmpty { get; }
+        public abstract float Left { get; }
+        public abstract PointF Location { get; set; }
+        public abstract float Right { get; }
+        public abstract SizeF Size { get; set; }
+        public abstract float Top { get; }
+        public abstract float Width { get; set; }
+        public abstract float X { get; set; }
+        public abstract float Y { get; set; }
+        public abstract RectangleF UnionAndCopy(RectangleF other);
+        public abstract RectangleF InflateAndCopy(float x, float y);
     }
 }

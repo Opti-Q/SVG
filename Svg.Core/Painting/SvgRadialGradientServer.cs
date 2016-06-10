@@ -114,12 +114,12 @@ namespace Svg
                 if (this.GradientUnits == SvgCoordinateUnits.ObjectBoundingBox) renderer.SetBoundable(renderingElement);
 
                 // Calculate the path and transform it appropriately
-                var center = SvgSetup.Factory.CreatePointF(NormalizeUnit(CenterX).ToDeviceValue(renderer, UnitRenderingType.Horizontal, this),
+                var center = Engine.Factory.CreatePointF(NormalizeUnit(CenterX).ToDeviceValue(renderer, UnitRenderingType.Horizontal, this),
                                         NormalizeUnit(CenterY).ToDeviceValue(renderer, UnitRenderingType.Vertical, this));
-                var focals = new PointF[] {SvgSetup.Factory.CreatePointF(NormalizeUnit(FocalX).ToDeviceValue(renderer, UnitRenderingType.Horizontal, this),
+                var focals = new PointF[] {Engine.Factory.CreatePointF(NormalizeUnit(FocalX).ToDeviceValue(renderer, UnitRenderingType.Horizontal, this),
                                                       NormalizeUnit(FocalY).ToDeviceValue(renderer, UnitRenderingType.Vertical, this)) };
                 var specifiedRadius = NormalizeUnit(Radius).ToDeviceValue(renderer, UnitRenderingType.Other, this);
-                var path = SvgSetup.Factory.CreateGraphicsPath();
+                var path = Engine.Factory.CreateGraphicsPath();
                 path.AddEllipse(
                     center.X - specifiedRadius, center.Y - specifiedRadius,
                     specifiedRadius * 2, specifiedRadius * 2
@@ -147,12 +147,12 @@ namespace Svg
                 {
                     var stop = Stops.Last();
                     var origColor = stop.GetColor(renderingElement);
-                    var renderColor = SvgSetup.Factory.CreateColorFromArgb((int)(opacity * stop.GetOpacity() * 255), origColor);
+                    var renderColor = Engine.Factory.CreateColorFromArgb((int)(opacity * stop.GetOpacity() * 255), origColor);
 
                     var origClip = renderer.GetClip();
                     try
                     {
-                        using (var solidBrush = SvgSetup.Factory.CreateSolidBrush(renderColor))
+                        using (var solidBrush = Engine.Factory.CreateSolidBrush(renderColor))
                         {
                             var newClip = origClip.Clone();
                             newClip.Exclude(path);
@@ -161,7 +161,7 @@ namespace Svg
                             var renderPath = (GraphicsPath)renderingElement.Path(renderer);
                             if (forStroke)
                             {
-                                using (var pen = SvgSetup.Factory.CreatePen(solidBrush, renderingElement.StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, renderingElement)))
+                                using (var pen = Engine.Factory.CreatePen(solidBrush, renderingElement.StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, renderingElement)))
                                 {
                                     renderer.DrawPath(pen, renderPath);
                                 }
@@ -183,8 +183,8 @@ namespace Svg
 
                 // Transform the path based on the scaling
                 var gradBounds = path.GetBounds();
-                var transCenter = SvgSetup.Factory.CreatePointF(gradBounds.Left + gradBounds.Width / 2, gradBounds.Top + gradBounds.Height / 2);
-                using (var scaleMat = SvgSetup.Factory.CreateMatrix())
+                var transCenter = Engine.Factory.CreatePointF(gradBounds.Left + gradBounds.Width / 2, gradBounds.Top + gradBounds.Height / 2);
+                using (var scaleMat = Engine.Factory.CreateMatrix())
                 {
                     scaleMat.Translate(-1 * transCenter.X, -1 * transCenter.Y, MatrixOrder.Append);
                     scaleMat.Scale(scale, scale, MatrixOrder.Append);
@@ -193,7 +193,7 @@ namespace Svg
                 }
 
                 // calculate the brush
-                var brush = SvgSetup.Factory.CreatePathGradientBrush(path);
+                var brush = Engine.Factory.CreatePathGradientBrush(path);
                 brush.CenterPoint = focals[0];
                 brush.InterpolationColors = blend;
 
@@ -218,14 +218,14 @@ namespace Svg
         private float CalcScale(RectangleF bounds, GraphicsPath path)
         {
             var points = new PointF[] {
-                SvgSetup.Factory.CreatePointF(bounds.Left, bounds.Top), 
-                SvgSetup.Factory.CreatePointF(bounds.Right, bounds.Top), 
-                SvgSetup.Factory.CreatePointF(bounds.Right, bounds.Bottom), 
-                SvgSetup.Factory.CreatePointF(bounds.Left, bounds.Bottom) 
+                Engine.Factory.CreatePointF(bounds.Left, bounds.Top), 
+                Engine.Factory.CreatePointF(bounds.Right, bounds.Top), 
+                Engine.Factory.CreatePointF(bounds.Right, bounds.Bottom), 
+                Engine.Factory.CreatePointF(bounds.Left, bounds.Bottom) 
             };
             var pathBounds = path.GetBounds();
-            var pathCenter = SvgSetup.Factory.CreatePointF(pathBounds.X + pathBounds.Width / 2, pathBounds.Y + pathBounds.Height / 2);
-            using (var transform = SvgSetup.Factory.CreateMatrix())
+            var pathCenter = Engine.Factory.CreatePointF(pathBounds.X + pathBounds.Width / 2, pathBounds.Y + pathBounds.Height / 2);
+            using (var transform = Engine.Factory.CreateMatrix())
             {
                 transform.Translate(-1 * pathCenter.X, -1 * pathCenter.Y, MatrixOrder.Append);
                 transform.Scale(.95f, .95f, MatrixOrder.Append);
@@ -253,7 +253,7 @@ namespace Svg
             var bounds = subject.UnionAndCopy(clipBounds);
             bounds.Inflate(bounds.Width * .3f, bounds.Height * 0.3f);
 
-            var clipMidPoint = SvgSetup.Factory.CreatePointF((clipBounds.Left + clipBounds.Right) / 2, (clipBounds.Top + clipBounds.Bottom) / 2);
+            var clipMidPoint = Engine.Factory.CreatePointF((clipBounds.Left + clipBounds.Right) / 2, (clipBounds.Top + clipBounds.Bottom) / 2);
             var leftPoints = new List<PointF>();
             var rightPoints = new List<PointF>();
             foreach (var pt in clipFlat.PathPoints)
@@ -270,27 +270,27 @@ namespace Svg
             leftPoints.Sort((p, q) => p.Y.CompareTo(q.Y));
             rightPoints.Sort((p, q) => p.Y.CompareTo(q.Y));
 
-            var point = SvgSetup.Factory.CreatePointF((leftPoints.Last().X + rightPoints.Last().X) / 2,
+            var point = Engine.Factory.CreatePointF((leftPoints.Last().X + rightPoints.Last().X) / 2,
                                    (leftPoints.Last().Y + rightPoints.Last().Y) / 2);
             leftPoints.Add(point);
             rightPoints.Add(point);
-            point = SvgSetup.Factory.CreatePointF(point.X, bounds.Bottom);
+            point = Engine.Factory.CreatePointF(point.X, bounds.Bottom);
             leftPoints.Add(point);
             rightPoints.Add(point);
 
-            leftPoints.Add(SvgSetup.Factory.CreatePointF(bounds.Left, bounds.Bottom));
-            leftPoints.Add(SvgSetup.Factory.CreatePointF(bounds.Left, bounds.Top));
-            rightPoints.Add(SvgSetup.Factory.CreatePointF(bounds.Right, bounds.Bottom));
-            rightPoints.Add(SvgSetup.Factory.CreatePointF(bounds.Right, bounds.Top));
+            leftPoints.Add(Engine.Factory.CreatePointF(bounds.Left, bounds.Bottom));
+            leftPoints.Add(Engine.Factory.CreatePointF(bounds.Left, bounds.Top));
+            rightPoints.Add(Engine.Factory.CreatePointF(bounds.Right, bounds.Bottom));
+            rightPoints.Add(Engine.Factory.CreatePointF(bounds.Right, bounds.Top));
 
-            point = SvgSetup.Factory.CreatePointF((leftPoints.First().X + rightPoints.First().X) / 2, bounds.Top);
+            point = Engine.Factory.CreatePointF((leftPoints.First().X + rightPoints.First().X) / 2, bounds.Top);
             leftPoints.Add(point);
             rightPoints.Add(point);
-            point = SvgSetup.Factory.CreatePointF(point.X, (leftPoints.First().Y + rightPoints.First().Y) / 2);
+            point = Engine.Factory.CreatePointF(point.X, (leftPoints.First().Y + rightPoints.First().Y) / 2);
             leftPoints.Add(point);
             rightPoints.Add(point);
 
-            var path = SvgSetup.Factory.CreateGraphicsPath(FillMode.Winding);
+            var path = Engine.Factory.CreateGraphicsPath(FillMode.Winding);
             path.AddPolygon(leftPoints.ToArray());
             yield return path;
 
@@ -301,7 +301,7 @@ namespace Svg
 
         private static GraphicsPath CreateGraphicsPath(PointF origin, PointF centerPoint, float effectiveRadius)
         {
-            var path = SvgSetup.Factory.CreateGraphicsPath();
+            var path = Engine.Factory.CreateGraphicsPath();
 
             path.AddEllipse(
                 origin.X + centerPoint.X - effectiveRadius,

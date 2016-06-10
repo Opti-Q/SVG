@@ -282,7 +282,7 @@ namespace Svg
             get { return this._customAttributes; }
         }
 
-        private static readonly Matrix _zeroMatrix = SvgSetup.Factory.CreateMatrix(0, 0, 0, 0, 0, 0);
+        private static readonly Matrix _zeroMatrix = Engine.Factory.CreateMatrix(0, 0, 0, 0, 0, 0);
 
         /// <summary>
         /// Applies the required transforms to <see cref="ISvgRenderer"/>.
@@ -771,7 +771,7 @@ namespace Svg
         /// <param name="path"></param>
         protected GraphicsPath GetPaths(SvgElement elem, ISvgRenderer renderer)
         {
-        	var ret = SvgSetup.Factory.CreateGraphicsPath();
+        	var ret = Engine.Factory.CreateGraphicsPath();
         	
         	foreach(var child in elem.Children)
         	{

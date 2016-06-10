@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Diagnostics;
+using Svg.Interfaces;
 
 namespace Svg
 {
@@ -47,13 +48,13 @@ namespace Svg
         {
             if (_Path == null || this.IsPathDirty)
             {
-                _Path = SvgSetup.Factory.CreateGraphicsPath();
+                _Path = Engine.Factory.CreateGraphicsPath();
 
                 try
                 {
                     for (int i = 0; (i + 1) < Points.Count; i += 2)
                     {
-                        PointF endPoint = new PointF(Points[i].ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
+                        PointF endPoint = Svg.Engine.Factory.CreatePointF(Points[i].ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
                                                      Points[i + 1].ToDeviceValue(renderer, UnitRenderingType.Vertical, this));
 
                         // TODO: Remove unrequired first line
@@ -69,7 +70,7 @@ namespace Svg
                 }
                 catch (Exception exc)
                 {
-                    Trace.TraceError("Error rendering points: " + exc.Message);
+                    //Trace.TraceError("Error rendering points: " + exc.Message);
                 }
                 this.IsPathDirty = false;
             }

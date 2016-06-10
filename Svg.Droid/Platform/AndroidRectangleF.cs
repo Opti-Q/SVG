@@ -19,97 +19,97 @@ namespace Svg.Droid
             _inner = inner;
         }
 
-        public void Inflate(float x, float y)
+        public override void Inflate(float x, float y)
         {
             _inner.Inflate(x, y);
         }
 
-        public void Inflate(SizeF size)
+        public override void Inflate(SizeF size)
         {
             _inner.Inflate(size.Width, size.Height);
         }
 
-        public void Intersect(RectangleF rect)
+        public override void Intersect(RectangleF rect)
         {
             _inner.Intersect(((AndroidRectangleF)rect)._inner);
         }
 
-        public bool Contains(float x, float y)
+        public override bool Contains(float x, float y)
         {
             return _inner.Contains(x, y);
         }
 
-        public bool Contains(PointF pt)
+        public override bool Contains(PointF pt)
         {
             return _inner.Contains(pt.X, pt.Y);
         }
 
-        public bool Contains(RectangleF rect)
+        public override bool Contains(RectangleF rect)
         {
             return _inner.Contains(((AndroidRectangleF) rect)._inner);
         }
 
-        public bool IntersectsWith(RectangleF rect)
+        public override bool IntersectsWith(RectangleF rect)
         {
             return _inner.IntersectsWith(((AndroidRectangleF) rect)._inner);
         }
 
-        public void Offset(float x, float y)
+        public override void Offset(float x, float y)
         {
             _inner.Offset(x, y);
         }
 
-        public void Offset(PointF pos)
+        public override void Offset(PointF pos)
         {
             _inner.Offset(pos.X, pos.Y);
         }
 
-        public float Bottom => _inner.Bottom;
-        public float Height
+        public override float Bottom => _inner.Bottom;
+        public override float Height
         {
             get { return _inner.Height; }
             set { _inner.Height = value; }
         }
 
-        public bool IsEmpty => _inner.IsEmpty;
-        public float Left => _inner.Left;
-        public PointF Location
+        public override bool IsEmpty => _inner.IsEmpty;
+        public override float Left => _inner.Left;
+        public override PointF Location
         {
             get { return (AndroidPointF)_inner.Location; }
             set { _inner.Location = (AndroidPointF)value; }
         }
 
-        public float Right => _inner.Right;
-        public SizeF Size
+        public override float Right => _inner.Right;
+        public override SizeF Size
         {
             get { return (AndroidSizeF)_inner.Size; }
             set { _inner.Size = (AndroidSizeF)value; }
         }
 
-        public float Top => _inner.Top;
-        public float Width
+        public override float Top => _inner.Top;
+        public override float Width
         {
             get { return _inner.Width; }
             set { _inner.Width = value; }
         }
 
-        public float X
+        public override float X
         {
             get { return _inner.X; }
             set { _inner.X = value; }
         }
 
-        public float Y
+        public override float Y
         {
             get { return _inner.Y; }
             set { _inner.Y = value; }
         }
 
-        public RectangleF UnionAndCopy(RectangleF other)
+        public override RectangleF UnionAndCopy(RectangleF other)
         {
             return new AndroidRectangleF(System.Drawing.RectangleF.Union(_inner, ((AndroidRectangleF)other)._inner));
         }
-        public RectangleF InflateAndCopy(float x, float y)
+        public override RectangleF InflateAndCopy(float x, float y)
         {
             return new AndroidRectangleF(System.Drawing.RectangleF.Inflate(_inner, x, y));
         }

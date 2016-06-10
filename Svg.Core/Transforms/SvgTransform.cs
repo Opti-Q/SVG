@@ -1,4 +1,6 @@
 using System;
+using Svg.Interfaces;
+
 namespace Svg.Transforms
 {
     public abstract class SvgTransform : ICloneable

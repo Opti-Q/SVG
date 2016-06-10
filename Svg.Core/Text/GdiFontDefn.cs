@@ -26,7 +26,7 @@ namespace Svg
 
         public void AddStringToPath(ISvgRenderer renderer, GraphicsPath path, string text, PointF location)
         {
-            path.AddString(text, _font.FontFamily, (int)_font.Style, _font.Size, location, SvgSetup.Factory.CreateStringFormatGenericTypographic());
+            path.AddString(text, _font.FontFamily, (int)_font.Style, _font.Size, location, Engine.Factory.CreateStringFormatGenericTypographic());
         }
 
         //Baseline calculation to match http://bobpowell.net/formattingtext.aspx
@@ -45,11 +45,11 @@ namespace Svg
             StringFormat format;
             for (int s = 0; s <= (text.Length - 1) / 32; s++)
             {
-                format = SvgSetup.Factory.CreateStringFormatGenericTypographic();
+                format = Engine.Factory.CreateStringFormatGenericTypographic();
                 format.FormatFlags |= StringFormatFlags.MeasureTrailingSpaces;
                 format.SetMeasurableCharacterRanges((from r in Enumerable.Range(32 * s, Math.Min(32, text.Length - 32 * s))
                                                      select new CharacterRange(r, 1)).ToArray());
-                regions.AddRange(from r in g.MeasureCharacterRanges(text, _font, SvgSetup.Factory.CreateRectangleF(0, 0, 1000, 1000), format)
+                regions.AddRange(from r in g.MeasureCharacterRanges(text, _font, Engine.Factory.CreateRectangleF(0, 0, 1000, 1000), format)
                                  select r.GetBounds(g));
             }
             return regions;
@@ -58,14 +58,14 @@ namespace Svg
         public SizeF MeasureString(ISvgRenderer renderer, string text)
         {
             var g = GetGraphics(renderer);
-            var provider = SvgSetup.Factory.GetFontFamilyProvider();
+            var provider = Engine.Factory.GetFontFamilyProvider();
             StringFormat format = provider.GenericTypographic;
             format.SetMeasurableCharacterRanges(new CharacterRange[] { new CharacterRange(0, text.Length) });
             format.FormatFlags |= StringFormatFlags.MeasureTrailingSpaces;
-            Region[] r = g.MeasureCharacterRanges(text, _font, SvgSetup.Factory.CreateRectangleF(0, 0, 1000, 1000), format);
+            Region[] r = g.MeasureCharacterRanges(text, _font, Engine.Factory.CreateRectangleF(0, 0, 1000, 1000), format);
             RectangleF rect = r[0].GetBounds(g);
 
-            return SvgSetup.Factory.CreateSizeF(rect.Width, Ascent(renderer));
+            return Engine.Factory.CreateSizeF(rect.Width, Ascent(renderer));
         }
 
         private static Graphics _graphics;
@@ -76,8 +76,8 @@ namespace Svg
             {
                 if (_graphics == null)
                 {
-                    var bmp = SvgSetup.Factory.CreateBitmap(1, 1);
-                    _graphics = SvgSetup.Factory.CreateGraphicsFromImage(bmp);
+                    var bmp = Engine.Factory.CreateBitmap(1, 1);
+                    _graphics = Engine.Factory.CreateGraphicsFromImage(bmp);
                 }
                 return _graphics;
             }

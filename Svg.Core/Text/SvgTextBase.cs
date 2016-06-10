@@ -199,7 +199,7 @@ namespace Svg
         /// <value>The fill.</value>
         public override SvgPaintServer Fill
         {
-            get { return (this.Attributes["fill"] == null) ? new SvgColourServer(SvgSetup.Factory.Colors.Black) : (SvgPaintServer)this.Attributes["fill"]; }
+            get { return (this.Attributes["fill"] == null) ? new SvgColourServer(Engine.Factory.Colors.Black) : (SvgPaintServer)this.Attributes["fill"]; }
             set { this.Attributes["fill"] = value; }
         }
 
@@ -352,7 +352,7 @@ namespace Svg
                 }
             }
 
-            var path = state.GetPath() ?? SvgSetup.Factory.CreateGraphicsPath();
+            var path = state.GetPath() ?? Engine.Factory.CreateGraphicsPath();
 
             // Apply any text length adjustments
             if (doMeasurements)
@@ -373,7 +373,7 @@ namespace Svg
                         }
                         else
                         {
-                            using (var matrix = SvgSetup.Factory.CreateMatrix())
+                            using (var matrix = Engine.Factory.CreateMatrix())
                             {
                                 matrix.Translate(-1 * bounds.X, 0, MatrixOrder.Append);
                                 matrix.Scale(specLength / actLength, 1, MatrixOrder.Append);
@@ -498,17 +498,17 @@ namespace Svg
 
             public PointF Location
             {
-                get { return _location ?? (_location = SvgSetup.Factory.CreatePointF(0f, 0f)); }
+                get { return _location ?? (_location = Engine.Factory.CreatePointF(0f, 0f)); }
             }
 
             public SizeF Size
             {
-                get { return SvgSetup.Factory.CreateSizeF(_width, _font.Size); }
+                get { return Engine.Factory.CreateSizeF(_width, _font.Size); }
             }
 
             public RectangleF Bounds
             {
-                get { return SvgSetup.Factory.CreateRectangleF(this.Location.X, this.Location.Y, this.Size.Width, this.Size.Height); }
+                get { return Engine.Factory.CreateRectangleF(this.Location.X, this.Location.Y, this.Size.Width, this.Size.Height); }
             }
         }
 
@@ -534,7 +534,7 @@ namespace Svg
             {
                 this.Element = element;
                 this.Renderer = renderer;
-                this.Current = SvgSetup.Factory.CreatePointF(0f,0f);
+                this.Current = Engine.Factory.CreatePointF(0f,0f);
                 _xAnchor = 0;
                 this.BaselinePath = element.GetBaselinePath(renderer);
                 _authorPathLength = element.GetAuthorPathLength();
@@ -647,7 +647,7 @@ namespace Svg
                                 baselineShift = -1 * new SvgUnit(SvgUnitType.Ex, 1).ToDeviceValue(this.Renderer, UnitRenderingType.Vertical, this.Element);
                                 break;
                             default:
-                                var convert = SvgSetup.Resolve<ISvgUnitConverter>();
+                                var convert = Engine.Resolve<ISvgUnitConverter>();
                                 var shiftUnit = (SvgUnit)convert.ConvertFromInvariantString(baselineShiftText);
                                 baselineShift = -1 * shiftUnit.ToDeviceValue(this.Renderer, UnitRenderingType.Vertical, this.Element);
                                 break;
@@ -680,7 +680,7 @@ namespace Svg
                         EnsurePath();
                         yPos = (yAnchors.Count > i ? yAnchors[i] : yPos) + (yOffsets.Count > i ? yOffsets[i] : 0);
 
-                        DrawStringOnCurrPath(value[i].ToString(), font, SvgSetup.Factory.CreatePointF(_xAnchor, yPos),
+                        DrawStringOnCurrPath(value[i].ToString(), font, Engine.Factory.CreatePointF(_xAnchor, yPos),
                                              fontBaselineHeight, (rotations.Count > i ? rotations[i] : rotations.LastOrDefault()));
                     }
 
@@ -712,7 +712,7 @@ namespace Svg
                             yPos = (yAnchors.Count > i ? yAnchors[i] : yPos) + (yOffsets.Count > i ? yOffsets[i] : 0);
                             if (pathStats == null)
                             {
-                                DrawStringOnCurrPath(value[i].ToString(), font, SvgSetup.Factory.CreatePointF(xPos, yPos),
+                                DrawStringOnCurrPath(value[i].ToString(), font, Engine.Factory.CreatePointF(xPos, yPos),
                                                      fontBaselineHeight, (rotations.Count > i ? rotations[i] : rotations.LastOrDefault()));
                             }
                             else
@@ -722,7 +722,7 @@ namespace Svg
                                 if (pathStats.OffsetOnPath(xPos + halfWidth))
                                 {
                                     pathStats.LocationAngleAtOffset(xPos + halfWidth, out pathPoint, out rotation);
-                                    pathPoint = SvgSetup.Factory.CreatePointF((float)(pathPoint.X - halfWidth * Math.Cos(rotation * Math.PI / 180) - (float)pathScale * yPos * Math.Sin(rotation * Math.PI / 180)),
+                                    pathPoint = Engine.Factory.CreatePointF((float)(pathPoint.X - halfWidth * Math.Cos(rotation * Math.PI / 180) - (float)pathScale * yPos * Math.Sin(rotation * Math.PI / 180)),
                                                            (float)(pathPoint.Y - halfWidth * Math.Sin(rotation * Math.PI / 180) + (float)pathScale * yPos * Math.Cos(rotation * Math.PI / 180)));
                                     DrawStringOnCurrPath(value[i].ToString(), font, pathPoint, fontBaselineHeight, rotation);
                                 }
@@ -746,7 +746,7 @@ namespace Svg
                         xPos += (xOffsets.Count > lastIndividualChar ? xOffsets[lastIndividualChar] : 0);
                         yPos = (yAnchors.Count > lastIndividualChar ? yAnchors[lastIndividualChar] : yPos) +
                                 (yOffsets.Count > lastIndividualChar ? yOffsets[lastIndividualChar] : 0);
-                        DrawStringOnCurrPath(value.Substring(lastIndividualChar), font, SvgSetup.Factory.CreatePointF(xPos, yPos),
+                        DrawStringOnCurrPath(value.Substring(lastIndividualChar), font, Engine.Factory.CreatePointF(xPos, yPos),
                                              fontBaselineHeight, rotations.LastOrDefault());
                         var bounds = font.MeasureString(this.Renderer, value.Substring(lastIndividualChar));
                         xPos += bounds.Width;
@@ -755,18 +755,18 @@ namespace Svg
 
                     NumChars += value.Length;
                     // Undo any baseline shift.  This is not persisted, unlike normal vertical offsets.
-                    this.Current = SvgSetup.Factory.CreatePointF(xPos, yPos - baselineShift);
+                    this.Current = Engine.Factory.CreatePointF(xPos, yPos - baselineShift);
                 }
             }
 
             private void DrawStringOnCurrPath(string value, IFontDefn font, PointF location, float fontBaselineHeight, float rotation)
             {
                 var drawPath = _currPath;
-                if (rotation != 0.0f) drawPath = SvgSetup.Factory.CreateGraphicsPath();
-                font.AddStringToPath(this.Renderer, drawPath, value, SvgSetup.Factory.CreatePointF(location.X, location.Y - fontBaselineHeight));
+                if (rotation != 0.0f) drawPath = Engine.Factory.CreateGraphicsPath();
+                font.AddStringToPath(this.Renderer, drawPath, value, Engine.Factory.CreatePointF(location.X, location.Y - fontBaselineHeight));
                 if (rotation != 0.0f && drawPath.PointCount > 0)
                 {
-                    using (var matrix = SvgSetup.Factory.CreateMatrix())
+                    using (var matrix = Engine.Factory.CreateMatrix())
                     {
                         matrix.Translate(-1 * location.X, -1 * location.Y, MatrixOrder.Append);
                         matrix.Rotate(rotation, MatrixOrder.Append);
@@ -782,7 +782,7 @@ namespace Svg
             {
                 if (_currPath == null)
                 {
-                    _currPath = SvgSetup.Factory.CreateGraphicsPath();
+                    _currPath = Engine.Factory.CreateGraphicsPath();
                     _currPath.StartFigure();
 
                     var currState = this;
@@ -834,7 +834,7 @@ namespace Svg
 
                         if (xOffset != 0)
                         {
-                            using (var matrix = SvgSetup.Factory.CreateMatrix())
+                            using (var matrix = Engine.Factory.CreateMatrix())
                             {
                                 matrix.Translate(xOffset, 0);
                                 foreach (var path in _anchoredPaths)

@@ -55,11 +55,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Svg.Shared\CharConverter.cs">
+      <Link>CharConverter.cs</Link>
+    </Compile>
     <Compile Include="..\Svg.Shared\EnumConverters.cs">
       <Link>Painting\EnumConverters.cs</Link>
     </Compile>
     <Compile Include="..\Svg.Shared\FileSystem.cs">
       <Link>FileSystem.cs</Link>
+    </Compile>
+    <Compile Include="..\Svg.Shared\Marshal.cs">
+      <Link>Marshal.cs</Link>
     </Compile>
     <Compile Include="..\Svg.Shared\SvgAspectRatioConverter.cs">
       <Link>DataTypes\SvgAspectRatioConverter.cs</Link>
@@ -85,6 +91,9 @@
     <Compile Include="..\Svg.Shared\SvgPathBuilder.cs">
       <Link>Paths\SvgPathBuilder.cs</Link>
     </Compile>
+    <Compile Include="..\Svg.Shared\SvgPlatformSetupBase.cs">
+      <Link>SvgPlatformSetupBase.cs</Link>
+    </Compile>
     <Compile Include="..\Svg.Shared\SvgPointCollection.cs">
       <Link>DataTypes\SvgPointCollection.cs</Link>
     </Compile>
@@ -105,6 +114,9 @@
     </Compile>
     <Compile Include="..\Svg.Shared\SvgXmlTextWriter.cs">
       <Link>Platform\Xml\SvgXmlTextWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Svg.Shared\WebRequestSvc.cs">
+      <Link>WebRequestSvc.cs</Link>
     </Compile>
     <Compile Include="Platform\AndroidBitmap.cs" />
     <Compile Include="Platform\AndroidColor.cs" />
@@ -130,7 +142,7 @@
     <Compile Include="Factory.cs" />
     <Compile Include="Rendering\SvgRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SetUp.cs" />
+    <Compile Include="PlatformSetupSetUp.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="svgkey.snk" />

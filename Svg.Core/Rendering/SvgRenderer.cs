@@ -106,7 +106,7 @@ namespace Svg
         /// <param name="image"><see cref="Image"/> from which to create the new <see cref="ISvgRenderer"/>.</param>
         public static ISvgRenderer FromImage(Image image)
         {
-            var g = SvgSetup.Factory.CreateGraphicsFromImage(image);
+            var g = Engine.Factory.CreateGraphicsFromImage(image);
             g.TextRenderingHint = TextRenderingHint.AntiAlias;
             // TODO LX take over?
             //g.PixelOffsetMode = PixelOffsetMode.Half;
@@ -126,7 +126,7 @@ namespace Svg
 
         public static ISvgRenderer FromNull()
         {
-            var img = SvgSetup.Factory.CreateBitmap(1, 1);
+            var img = Engine.Factory.CreateBitmap(1, 1);
             return SvgRenderer.FromImage(img);
         }
     }

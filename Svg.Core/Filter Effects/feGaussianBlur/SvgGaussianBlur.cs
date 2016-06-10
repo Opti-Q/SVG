@@ -68,11 +68,11 @@ namespace Svg.FilterEffects
         public Bitmap Apply(Image inputImage)
         {
             var bitmapSrc = inputImage as Bitmap;
-            if (bitmapSrc == null) bitmapSrc = SvgSetup.Factory.CreateBitmap(inputImage);//new Bitmap(inputImage);
+            if (bitmapSrc == null) bitmapSrc = Engine.Factory.CreateBitmap(inputImage);//new Bitmap(inputImage);
 
             using (RawBitmap src = new RawBitmap(bitmapSrc))
             {
-                using (RawBitmap dest = new RawBitmap(SvgSetup.Factory.CreateBitmap(inputImage.Width, inputImage.Height)))
+                using (RawBitmap dest = new RawBitmap(Engine.Factory.CreateBitmap(inputImage.Width, inputImage.Height)))
                 {
                     int pixelCount = src.Width * src.Height;
                     int[] b = new int[pixelCount];

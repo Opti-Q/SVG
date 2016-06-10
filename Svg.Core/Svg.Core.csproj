@@ -203,13 +203,14 @@
     <Compile Include="Interfaces\Graphics.cs" />
     <Compile Include="Interfaces\GraphicsPath.cs" />
     <Compile Include="Interfaces\GraphicsUnit.cs" />
+    <Compile Include="Interfaces\ICharConverter.cs" />
     <Compile Include="Interfaces\ICloneable.cs" />
     <Compile Include="Interfaces\IFactory.cs" />
     <Compile Include="Interfaces\IFileSystem.cs" />
     <Compile Include="Interfaces\Image.cs" />
     <Compile Include="Interfaces\ImageAttributes.cs" />
     <Compile Include="Interfaces\ImageLockMode.cs" />
-    <Compile Include="Interfaces\IPosition.cs" />
+    <Compile Include="Interfaces\IMarshal.cs" />
     <Compile Include="Interfaces\ISvgElementFactory.cs" />
     <Compile Include="Interfaces\ISvgUnitConverter.cs" />
     <Compile Include="Interfaces\LinearGradientBrush.cs" />
@@ -235,6 +236,7 @@
     <Compile Include="Interfaces\Xml\ISvgTextReader.cs" />
     <Compile Include="Interfaces\Xml\IXmlDocument.cs" />
     <Compile Include="Interfaces\Xml\IXmlTextWriter.cs" />
+    <Compile Include="IWebRequest.cs" />
     <Compile Include="NonSvgElement.cs" />
     <Compile Include="Painting\GenericBoundable.cs" />
     <Compile Include="Painting\ISvgBoundable.cs" />
@@ -269,7 +271,7 @@
     <Compile Include="Rendering\ISvgRenderer.cs" />
     <Compile Include="Rendering\SvgRenderer.cs" />
     <Compile Include="SortedList.cs" />
-    <Compile Include="SvgSetup.cs" />
+    <Compile Include="Engine.cs" />
     <Compile Include="SvgAttributeAttribute.cs" />
     <Compile Include="SvgAttributeCollection.cs" />
     <Compile Include="SvgContentNode.cs" />

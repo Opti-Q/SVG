@@ -59,7 +59,7 @@ namespace Svg
         /// <returns>The result of the conversion.</returns>
         public static implicit operator RectangleF(SvgViewBox value)
         {
-            return SvgSetup.Factory.CreateRectangleF(value.MinX, value.MinY, value.Width, value.Height);
+            return Engine.Factory.CreateRectangleF(value.MinX, value.MinY, value.Width, value.Height);
         }
         
         /// <summary>
@@ -198,7 +198,7 @@ namespace Svg
                 }
             }
 
-            renderer.SetClip(new Region(SvgSetup.Factory.CreateRectangleF(x, y, width, height)), CombineMode.Intersect);
+            renderer.SetClip(new Region(Engine.Factory.CreateRectangleF(x, y, width, height)), CombineMode.Intersect);
             renderer.ScaleTransform(fScaleX, fScaleY, MatrixOrder.Prepend);
             renderer.TranslateTransform(x, y);
             renderer.TranslateTransform(fMinX, fMinY);

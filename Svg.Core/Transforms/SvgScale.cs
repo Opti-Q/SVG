@@ -23,7 +23,7 @@ namespace Svg.Transforms
         {
             get
             {
-                var matrix = SvgSetup.Factory.CreateMatrix();
+                var matrix = Engine.Factory.CreateMatrix();
                 matrix.Scale(this.X, this.Y);
                 return matrix;
             }

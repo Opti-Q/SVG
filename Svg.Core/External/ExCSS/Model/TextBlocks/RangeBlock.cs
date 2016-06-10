@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Svg;
 
 namespace ExCSS.Model.TextBlocks
 {
@@ -27,7 +28,7 @@ namespace ExCSS.Model.TextBlocks
 
             if (end == null)
             {
-                SelectedRange = new [] { char.ConvertFromUtf32(startValue) };
+                SelectedRange = new [] { startValue.ConvertFromUtf32() };
             }
             else
             {
@@ -41,7 +42,7 @@ namespace ExCSS.Model.TextBlocks
 
                 for (; startValue <= endValue; startValue++)
                 {
-                    list.Add(char.ConvertFromUtf32(startValue));
+                    list.Add(startValue.ConvertFromUtf32());
                 }
 
                 SelectedRange = list.ToArray();
@@ -59,11 +60,11 @@ namespace ExCSS.Model.TextBlocks
 
             if (SelectedRange.Length == 1)
             {
-                return "#" + char.ConvertToUtf32(SelectedRange[0], 0).ToString("x");
+                return "#" + SelectedRange[0].ConvertToUtf32(0).ToString("x");
             }
 
-            return "#" + char.ConvertToUtf32(SelectedRange[0], 0).ToString("x") + "-#" + 
-                char.ConvertToUtf32(SelectedRange[SelectedRange.Length - 1], 0).ToString("x");
+            return "#" + SelectedRange[0].ConvertToUtf32( 0).ToString("x") + "-#" +
+                SelectedRange[SelectedRange.Length - 1].ConvertToUtf32(0).ToString("x");
         }
     }
 }

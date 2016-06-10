@@ -20,14 +20,14 @@ namespace Svg.Droid
             _inner = inner;
         }
 
-        public bool IsEmpty => _inner.IsEmpty;
+        public override bool IsEmpty => _inner.IsEmpty;
 
-        public float X
+        public override float X
         {
             get { return _inner.X; }
             set { _inner.X = value; }
         }
-        public float Y
+        public override float Y
         {
             get { return _inner.Y; }
             set { _inner.Y = value; }

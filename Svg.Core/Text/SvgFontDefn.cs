@@ -54,8 +54,8 @@ namespace Svg
             var result = new List<RectangleF>();
             using (var path = GetPath(renderer, text, result, true)) { }
             var nonEmpty = result.Where(r => r.IsEmpty);
-            if (!nonEmpty.Any()) return SvgSetup.Factory.CreateSizeF(0f,0f);
-            return SvgSetup.Factory.CreateSizeF(nonEmpty.Last().Right - nonEmpty.First().Left, Ascent(renderer));
+            if (!nonEmpty.Any()) return Engine.Factory.CreateSizeF(0f,0f);
+            return Engine.Factory.CreateSizeF(nonEmpty.Last().Right - nonEmpty.First().Left, Ascent(renderer));
         }
 
         public void AddStringToPath(ISvgRenderer renderer, GraphicsPath path, string text, PointF location)
@@ -63,7 +63,7 @@ namespace Svg
             var textPath = GetPath(renderer, text, null, false);
             if (textPath.PointCount > 0)
             {
-                using (var translate = SvgSetup.Factory.CreateMatrix())
+                using (var translate = Engine.Factory.CreateMatrix())
                 {
                     translate.Translate(location.X, location.Y);
                     textPath.Transform(translate);
@@ -86,7 +86,7 @@ namespace Svg
 
             var ascent = Ascent(renderer);
 
-            var result = SvgSetup.Factory.CreateGraphicsPath();
+            var result = Engine.Factory.CreateGraphicsPath();
             if (string.IsNullOrEmpty(text)) return result;
 
             for (int i = 0; i < text.Length; i++)
@@ -97,7 +97,7 @@ namespace Svg
                     xPos -= kern.Kerning * _emScale;
                 }
                 path = (GraphicsPath)glyph.Path(renderer).Clone();
-                scaleMatrix = SvgSetup.Factory.CreateMatrix();
+                scaleMatrix = Engine.Factory.CreateMatrix();
                 scaleMatrix.Scale(_emScale, -1 * _emScale, MatrixOrder.Append);
                 scaleMatrix.Translate(xPos, ascent, MatrixOrder.Append);
                 path.Transform(scaleMatrix);
@@ -108,7 +108,7 @@ namespace Svg
                 {
                     if (measureSpaces && bounds.IsEmpty)
                     {
-                        ranges.Add(SvgSetup.Factory.CreateRectangleF(xPos, 0, glyph.HorizAdvX * _emScale, ascent));
+                        ranges.Add(Engine.Factory.CreateRectangleF(xPos, 0, glyph.HorizAdvX * _emScale, ascent));
                     }
                     else
                     {

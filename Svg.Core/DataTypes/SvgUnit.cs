@@ -275,7 +275,7 @@ namespace Svg
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SvgSetup.SvgUnit"/> to <see cref="System.Single"/>.
+        /// Performs an implicit conversion from <see cref="Engine.SvgUnit"/> to <see cref="System.Single"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
@@ -285,7 +285,7 @@ namespace Svg
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="System.Single"/> to <see cref="SvgSetup.SvgUnit"/>.
+        /// Performs an implicit conversion from <see cref="System.Single"/> to <see cref="Engine.SvgUnit"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
@@ -321,18 +321,18 @@ namespace Svg
 
         public static Svg.Interfaces.PointF GetDevicePoint(SvgUnit x, SvgUnit y, ISvgRenderer renderer, SvgElement owner)
         {
-            return SvgSetup.Factory.CreatePointF(x.ToDeviceValue(renderer, UnitRenderingType.Horizontal, owner),
+            return Engine.Factory.CreatePointF(x.ToDeviceValue(renderer, UnitRenderingType.Horizontal, owner),
                                              y.ToDeviceValue(renderer, UnitRenderingType.Vertical, owner));
         }
         public static Svg.Interfaces.PointF GetDevicePointOffset(SvgUnit x, SvgUnit y, ISvgRenderer renderer, SvgElement owner)
         {
-            return SvgSetup.Factory.CreatePointF(x.ToDeviceValue(renderer, UnitRenderingType.HorizontalOffset, owner),
+            return Engine.Factory.CreatePointF(x.ToDeviceValue(renderer, UnitRenderingType.HorizontalOffset, owner),
                                              y.ToDeviceValue(renderer, UnitRenderingType.VerticalOffset, owner));
         }
 
         public static Svg.Interfaces.SizeF GetDeviceSize(SvgUnit width, SvgUnit height, ISvgRenderer renderer, SvgElement owner)
         {
-            return SvgSetup.Factory.CreateSizeF(width.ToDeviceValue(renderer, UnitRenderingType.HorizontalOffset, owner),
+            return Engine.Factory.CreateSizeF(width.ToDeviceValue(renderer, UnitRenderingType.HorizontalOffset, owner),
                                             height.ToDeviceValue(renderer, UnitRenderingType.VerticalOffset, owner));
         }
     }

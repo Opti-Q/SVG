@@ -35,15 +35,15 @@ namespace Svg.FilterEffects
         public override void Process(ImageBuffer buffer)
 		{
             var inputImage = buffer[this.Input];
-            var result = SvgSetup.Factory.CreateBitmap(inputImage.Width, inputImage.Height);
+            var result = Engine.Factory.CreateBitmap(inputImage.Width, inputImage.Height);
 
-            var pts = new PointF[] { SvgSetup.Factory.CreatePointF(this.Dx.ToDeviceValue(null, UnitRenderingType.Horizontal, null), 
+            var pts = new PointF[] { Engine.Factory.CreatePointF(this.Dx.ToDeviceValue(null, UnitRenderingType.Horizontal, null), 
                                                 this.Dy.ToDeviceValue(null, UnitRenderingType.Vertical, null)) };
             buffer.Transform.TransformVectors(pts);
 
-            using (var g = SvgSetup.Factory.CreateGraphicsFromImage(result))
+            using (var g = Engine.Factory.CreateGraphicsFromImage(result))
             {
-                g.DrawImage(inputImage, SvgSetup.Factory.CreateRectangleF((int)pts[0].X, (int)pts[0].Y, 
+                g.DrawImage(inputImage, Engine.Factory.CreateRectangleF((int)pts[0].X, (int)pts[0].Y, 
                                                       inputImage.Width, inputImage.Height),
                             0, 0, inputImage.Width, inputImage.Height, GraphicsUnit.Pixel);
                 g.Flush();

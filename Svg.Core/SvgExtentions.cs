@@ -27,7 +27,7 @@ namespace Svg
         
         public static RectangleF GetRectangle(this SvgRectangle r)
         {
-            return SvgSetup.Factory.CreateRectangleF(r.X, r.Y, r.Width, r.Height);
+            return Engine.Factory.CreateRectangleF(r.X, r.Y, r.Width, r.Height);
         }
 
         public static string GetXML(this SvgDocument doc)
@@ -55,7 +55,7 @@ namespace Svg
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             using (StringWriter str = new StringWriter())
             {
-                using (IXmlTextWriter xml = SvgSetup.Factory.CreateXmlTextWriter(str))
+                using (IXmlTextWriter xml = Engine.Factory.CreateXmlTextWriter(str))
                 {
                     elem.Write(xml);
                     result = str.ToString();

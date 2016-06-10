@@ -129,12 +129,12 @@ namespace Svg.FilterEffects
 
         private Bitmap CreateSourceGraphic()
         {
-            var graphic = SvgSetup.Factory.CreateBitmap((int)(_bounds.Width + 2 * _inflate * _bounds.Width + _bounds.X),
+            var graphic = Engine.Factory.CreateBitmap((int)(_bounds.Width + 2 * _inflate * _bounds.Width + _bounds.X),
                                      (int)(_bounds.Height + 2 * _inflate * _bounds.Height + _bounds.Y));
             using (var renderer = SvgRenderer.FromImage(graphic))
             {
                 renderer.SetBoundable(_renderer.GetBoundable());
-                var transform = SvgSetup.Factory.CreateMatrix();
+                var transform = Engine.Factory.CreateMatrix();
                 transform.Translate(_bounds.Width * _inflate, _bounds.Height * _inflate);
                 renderer.Transform = transform;
                 //renderer.Transform = _renderer.Transform;
@@ -155,17 +155,17 @@ namespace Svg.FilterEffects
                    new float[] {0, 0, 0, 1, 1},        // alpha
                    new float[] {0, 0, 0, 0, 0} };    // translations
 
-            var matrix = SvgSetup.Factory.CreateColorMatrix(colorMatrixElements);
+            var matrix = Engine.Factory.CreateColorMatrix(colorMatrixElements);
 
-            ImageAttributes attributes = SvgSetup.Factory.CreateImageAttributes();
+            ImageAttributes attributes = Engine.Factory.CreateImageAttributes();
             attributes.SetColorMatrix(matrix);
 
-            var sourceAlpha = SvgSetup.Factory.CreateBitmap(source.Width, source.Height);
+            var sourceAlpha = Engine.Factory.CreateBitmap(source.Width, source.Height);
 
-            using (var graphics = SvgSetup.Factory.CreateGraphicsFromImage(sourceAlpha))
+            using (var graphics = Engine.Factory.CreateGraphicsFromImage(sourceAlpha))
             {
 
-                graphics.DrawImage(source, SvgSetup.Factory.CreateRectangleF((0, 0, source.Width, source.Height), 0, 0,
+                graphics.DrawImage(source, Engine.Factory.CreateRectangleF(0, 0, source.Width, source.Height), 0, 0,
                       source.Width, source.Height, GraphicsUnit.Pixel, attributes);
                 graphics.Save();
             }

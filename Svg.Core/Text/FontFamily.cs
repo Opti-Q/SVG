@@ -46,7 +46,7 @@ namespace Svg.Text
             string encStr = "UTF-8";
             string strRet = string.Empty;
 
-            var fileSystem = SvgSetup.Resolve<IFileSystem>();
+            var fileSystem = Engine.Resolve<IFileSystem>();
             //using (FileStream fs = new FileStream(fontFilePath, FileMode.Open, FileAccess.Read))
             using(var fs = fileSystem.OpenRead(fontFilePath))
             {

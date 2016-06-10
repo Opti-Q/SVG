@@ -5,10 +5,10 @@ using System.Text;
 
 namespace Svg.Interfaces
 {
-    public interface SizeF
+    public abstract class SizeF
     {
-        bool IsEmpty { get; }
-        float Width { get; set; }
-        float Height { get; set; }
+        public abstract bool IsEmpty { get; }
+        public abstract float Width { get; set; }
+        public abstract float Height { get; set; }
     }
 }

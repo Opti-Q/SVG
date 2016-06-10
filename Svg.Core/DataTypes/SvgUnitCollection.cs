@@ -1,9 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Globalization;
 
 namespace Svg
 {
@@ -30,9 +26,11 @@ namespace Svg
                 (collection.Count == 1 && (collection[0] == SvgUnit.Empty || collection[0] == SvgUnit.None));
         }
 
-        public void ConvertAll(Func<object, float> func)
+        // TODO LX: is this correct?
+        public IEnumerable<float> ConvertAll(Func<SvgUnit, float> func)
         {
-            throw new NotImplementedException();
+            foreach (var unit in this)
+                yield return func(unit);
         }
     }
     

@@ -12,14 +12,14 @@ namespace Svg
     	/// <summary>
         /// An unspecified <see cref="SvgPaintServer"/>.
         /// </summary>
-        public static readonly SvgPaintServer NotSet = new SvgColourServer(SvgSetup.Factory.Colors.Black);
+        public static readonly SvgPaintServer NotSet = new SvgColourServer(Engine.Factory.Colors.Black);
         /// <summary>
         /// A <see cref="SvgPaintServer"/> that should inherit from its parent.
         /// </summary>
-        public static readonly SvgPaintServer Inherit = new SvgColourServer(SvgSetup.Factory.Colors.Black);
+        public static readonly SvgPaintServer Inherit = new SvgColourServer(Engine.Factory.Colors.Black);
 
         public SvgColourServer()
-            : this(SvgSetup.Factory.Colors.Black)
+            : this(Engine.Factory.Colors.Black)
         {
         }
 
@@ -39,12 +39,12 @@ namespace Svg
         public override Brush GetBrush(SvgVisualElement styleOwner, ISvgRenderer renderer, float opacity, bool forStroke = false)
         {
             //is none?
-            if (this == SvgPaintServer.None) return SvgSetup.Factory.CreateSolidBrush(SvgSetup.Factory.Colors.Transparent);
+            if (this == SvgPaintServer.None) return Engine.Factory.CreateSolidBrush(Engine.Factory.Colors.Transparent);
                 
             int alpha = (int)((opacity * (this.Colour.A/255.0f) ) * 255);
-            Color colour = SvgSetup.Factory.CreateColorFromArgb(alpha, this.Colour);
+            Color colour = Engine.Factory.CreateColorFromArgb(alpha, this.Colour);
 
-            return SvgSetup.Factory.CreateSolidBrush(colour);
+            return Engine.Factory.CreateSolidBrush(colour);
         }
 
         public override string ToString()

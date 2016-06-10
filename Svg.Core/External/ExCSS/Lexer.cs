@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Text;
 using ExCSS.Model;
 using ExCSS.Model.TextBlocks;
+using Svg;
 
 // ReSharper disable once CheckNamespace
 namespace ExCSS
@@ -1148,7 +1149,7 @@ namespace ExCSS
         {
             if (!current.IsHex())
             {
-                return current.ToString(CultureInfo.InvariantCulture);
+                return current.ToString();//(CultureInfo.InvariantCulture);
             }
 
             var escape = new List<Char>();
@@ -1166,7 +1167,8 @@ namespace ExCSS
 
             current = _stylesheetReader.Previous;
             var code = int.Parse(new string(escape.ToArray()), NumberStyles.HexNumber);
-            return Char.ConvertFromUtf32(code);
+            //return Char.ConvertFromUtf32(code);
+            return code.ConvertFromUtf32();
         }
 
         private bool IsValidEscape(char current)

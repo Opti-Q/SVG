@@ -102,7 +102,7 @@ namespace Svg
                 var path = this.Path(null);
                 if (path != null)
                     return path.GetBounds();
-                return SvgSetup.Factory.CreateRectangleF();
+                return Engine.Factory.CreateRectangleF();
             }
         }
 
@@ -174,7 +174,7 @@ namespace Svg
             {
                 using (var markerPath = GetClone(pOwner))
                 {
-                    using (var transMatrix = SvgSetup.Factory.CreateMatrix())
+                    using (var transMatrix = Engine.Factory.CreateMatrix())
                     {
                         transMatrix.Translate(pMarkerPoint.X, pMarkerPoint.Y);
                         if (Orient.IsAuto)
@@ -225,12 +225,12 @@ namespace Svg
             switch (MarkerUnits)
             {
                 case SvgMarkerUnits.StrokeWidth:
-                    return (SvgSetup.Factory.CreatePen(pBrush, StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, this) * 
+                    return (Engine.Factory.CreatePen(pBrush, StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, this) * 
                                             pPath.StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, this)));
                 case SvgMarkerUnits.UserSpaceOnUse:
-                    return (SvgSetup.Factory.CreatePen(pBrush, StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, this)));
+                    return (Engine.Factory.CreatePen(pBrush, StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, this)));
             }
-            return (SvgSetup.Factory.CreatePen(pBrush, StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, this)));
+            return (Engine.Factory.CreatePen(pBrush, StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, this)));
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace Svg
             switch (MarkerUnits)
             {
                 case SvgMarkerUnits.StrokeWidth:
-                    using (var transMatrix = SvgSetup.Factory.CreateMatrix())
+                    using (var transMatrix = Engine.Factory.CreateMatrix())
                     {
                         transMatrix.Scale(AdjustForViewBoxWidth(pPath.StrokeWidth), AdjustForViewBoxHeight(pPath.StrokeWidth));
                         pRet.Transform(transMatrix);

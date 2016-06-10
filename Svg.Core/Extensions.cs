@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using System.Threading;
+using Svg.Interfaces;
 
 namespace Svg
 {
@@ -59,6 +61,34 @@ namespace Svg
                 }
             }
             yield break;
+        }
+        
+        private static ICharConverter _converter = null;
+
+        public static string ConvertFromUtf32(this int value)
+        {
+            // cache converter for better performance
+            if (_converter == null)
+            {
+                var oldConv = _converter;
+                var converter = Engine.Resolve<ICharConverter>();
+                Interlocked.CompareExchange(ref _converter, converter, oldConv);
+            }
+
+            return _converter.ConvertFromUtf32(value);
+        }
+
+        public static int ConvertToUtf32(this string value, int i)
+        {
+            // cache converter for better performance
+            if (_converter == null)
+            {
+                var oldConv = _converter;
+                var converter = Engine.Resolve<ICharConverter>();
+                Interlocked.CompareExchange(ref _converter, converter, oldConv);
+            }
+
+            return _converter.ConvertToUtf32(value, i);
         }
     }
 }

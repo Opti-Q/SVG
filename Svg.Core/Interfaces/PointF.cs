@@ -5,10 +5,10 @@ using System.Text;
 
 namespace Svg.Interfaces
 {
-    public interface PointF
+    public abstract class PointF
     {
-        bool IsEmpty { get; }
-        float X { get; set; }
-        float Y { get; set; }
+        public abstract bool IsEmpty { get; }
+        public abstract float X { get; set; }
+        public abstract float Y { get; set; }
     }
 }

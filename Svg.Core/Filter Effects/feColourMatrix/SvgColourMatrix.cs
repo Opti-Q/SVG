@@ -88,15 +88,15 @@ namespace Svg.FilterEffects
                     break;
             }
 
-            var colorMatrix = SvgSetup.Factory.CreateColorMatrix(colorMatrixElements);
-            using (var imageAttrs = SvgSetup.Factory.CreateImageAttributes())
+            var colorMatrix = Engine.Factory.CreateColorMatrix(colorMatrixElements);
+            using (var imageAttrs = Engine.Factory.CreateImageAttributes())
             {
                 imageAttrs.SetColorMatrix(colorMatrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
 
-                var result = SvgSetup.Factory.CreateBitmap(inputImage.Width, inputImage.Height);
-                using (var g = SvgSetup.Factory.CreateGraphicsFromImage(result))
+                var result = Engine.Factory.CreateBitmap(inputImage.Width, inputImage.Height);
+                using (var g = Engine.Factory.CreateGraphicsFromImage(result))
                 {
-                    g.DrawImage(inputImage, SvgSetup.Factory.CreateRectangleF(0, 0, inputImage.Width, inputImage.Height),
+                    g.DrawImage(inputImage, Engine.Factory.CreateRectangleF(0, 0, inputImage.Width, inputImage.Height),
                                 0, 0, inputImage.Width, inputImage.Height, GraphicsUnit.Pixel, imageAttrs);
                     g.Flush();
                 }

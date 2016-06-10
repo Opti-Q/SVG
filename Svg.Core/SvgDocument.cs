@@ -88,7 +88,7 @@ namespace Svg
 
         private IFileSystem FileSystem
         {
-            get { return _fileSystem ?? (_fileSystem = SvgSetup.Resolve<IFileSystem>()); }
+            get { return _fileSystem ?? (_fileSystem = Engine.Resolve<IFileSystem>()); }
         }
 
         #region ITypeDescriptorContext Members
@@ -186,7 +186,7 @@ namespace Svg
             if (temp.Result != null)
                 return temp.Result;
 
-            var fs = SvgSetup.Resolve<IFileSystem>();
+            var fs = Engine.Resolve<IFileSystem>();
 
             if (!fs.FileExists(path))
             {
@@ -230,7 +230,7 @@ namespace Svg
                 //reader.XmlResolver = new SvgDtdResolver();
                 //reader.WhitespaceHandling = WhitespaceHandling.None;
 
-                var reader = SvgSetup.Factory.CreateSvgTextReader(strReader, null);
+                var reader = Engine.Factory.CreateSvgTextReader(strReader, null);
                 return Open<T>(reader);
             }
         }
@@ -252,7 +252,7 @@ namespace Svg
             //var reader = new SvgTextReader(stream, entities);
             //reader.XmlResolver = new SvgDtdResolver();
             //reader.WhitespaceHandling = WhitespaceHandling.None;
-            var reader = SvgSetup.Factory.CreateSvgTextReader(stream, entities);
+            var reader = Engine.Factory.CreateSvgTextReader(stream, entities);
             return Open<T>(reader);
         }
 
@@ -462,7 +462,7 @@ namespace Svg
             //Trace.TraceInformation("Begin Render");
 
             var size = GetDimensions();
-            var bitmap = SvgSetup.Factory.CreateBitmap((int)Math.Round(size.Width), (int)Math.Round(size.Height));
+            var bitmap = Engine.Factory.CreateBitmap((int)Math.Round(size.Width), (int)Math.Round(size.Height));
             // 	bitmap.SetResolution(300, 300);
             try
             {
@@ -525,7 +525,7 @@ namespace Svg
         public void Write(Stream stream)
         {
 
-            var xmlWriter = SvgSetup.Factory.CreateXmlTextWriter(stream, Encoding.UTF8);
+            var xmlWriter = Engine.Factory.CreateXmlTextWriter(stream, Encoding.UTF8);
             
 
             xmlWriter.WriteDocType("svg", "-//W3C//DTD SVG 1.1//EN", "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd", null);
@@ -541,7 +541,7 @@ namespace Svg
         public void Write(string path)
         {
             //using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
-            using (var fs = SvgSetup.Resolve<IFileSystem>().OpenWrite(path))
+            using (var fs = Engine.Resolve<IFileSystem>().OpenWrite(path))
             {
                 this.Write(fs);
             }

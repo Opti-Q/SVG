@@ -17,7 +17,7 @@ namespace Svg
         }
         public GenericBoundable(float x, float y, float width, float height)
         {
-            _rect = SvgSetup.Factory.CreateRectangleF(x, y, width, height);
+            _rect = Engine.Factory.CreateRectangleF(x, y, width, height);
         }
 
         public PointF Location
