@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using Svg.Interfaces;
 
 namespace Svg
 {
@@ -124,9 +125,9 @@ namespace Svg
         {
             if (this._path == null || this.IsPathDirty)
             {
-                PointF start = new PointF(this.StartX.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
+                PointF start = SvgSetup.Factory.CreatePointF(this.StartX.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
                                           this.StartY.ToDeviceValue(renderer, UnitRenderingType.Vertical, this));
-                PointF end = new PointF(this.EndX.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
+                PointF end = SvgSetup.Factory.CreatePointF(this.EndX.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
                                         this.EndY.ToDeviceValue(renderer, UnitRenderingType.Vertical, this));
 
                 this._path = SvgSetup.Factory.CreateGraphicsPath();

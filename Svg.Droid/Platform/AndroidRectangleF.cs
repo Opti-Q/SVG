@@ -113,5 +113,7 @@ namespace Svg.Droid
         {
             return new AndroidRectangleF(System.Drawing.RectangleF.Inflate(_inner, x, y));
         }
+
+        
     }
 }

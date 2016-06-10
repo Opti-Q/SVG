@@ -1,8 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.IO;
+using System.Text;
+using System.Xml;
 using Android.Graphics;
 using Svg.Droid;
+using Svg.Interfaces;
+using Svg.Interfaces.Xml;
 using Svg.Platform;
 using Color = Svg.Interfaces.Color;
 using PointF = Svg.Interfaces.PointF;
@@ -133,6 +138,11 @@ namespace Svg
             return new AndroidBitmap(bitmap);
         }
 
+        public RectangleF CreateRectangleF(PointF location, SizeF size)
+        {
+            return new AndroidRectangleF(location.X, location.Y, size.Width, size.Height);
+        }
+
         public RectangleF CreateRectangleF(float left, float top, float width, float height)
         {
             return new AndroidRectangleF(left, top, width, height);
@@ -143,14 +153,48 @@ namespace Svg
             return new AndroidRectangleF();
         }
 
+        public Colors Colors { get; }
+
         public Color CreateColorFromArgb(int alpha, Color color)
         {
-            return new AndroidColor(alpha, color);
+            return new AndroidColor((byte)alpha, color);
         }
 
         public PointF CreatePointF(float x, float y)
         {
             return new AndroidPointF(x, y);
+        }
+
+        public SizeF CreateSizeF(float width, float height)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IXmlTextWriter CreateXmlTextWriter(StringWriter writer)
+        {
+            return new SvgXmlTextWriter(writer);
+        }
+
+        public IXmlTextWriter CreateXmlTextWriter(Stream stream, Encoding utf8)
+        {
+            var w = new SvgXmlTextWriter(stream, utf8);
+            w.Formatting = Formatting.Indented;
+            return w;
+        }
+        public ISvgTextReader CreateSvgTextReader(Stream stream, Dictionary<string, string> entities)
+        {
+            var reader = new SvgTextReader(stream, entities);
+            reader.XmlResolver = new SvgDtdResolver();
+            reader.WhitespaceHandling = WhitespaceHandling.None;
+            return reader;
+        }
+
+        public ISvgTextReader CreateSvgTextReader(StringReader r, Dictionary<string, string> entities)
+        {
+            var reader = new SvgTextReader(r, entities);
+            reader.XmlResolver = new SvgDtdResolver();
+            reader.WhitespaceHandling = WhitespaceHandling.None;
+            return reader;
         }
     }
 }

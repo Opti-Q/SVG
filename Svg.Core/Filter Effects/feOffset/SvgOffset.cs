@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Collections.Generic;
+using Svg.Interfaces;
 
 namespace Svg.FilterEffects
 {
@@ -36,13 +37,13 @@ namespace Svg.FilterEffects
             var inputImage = buffer[this.Input];
             var result = SvgSetup.Factory.CreateBitmap(inputImage.Width, inputImage.Height);
 
-            var pts = new PointF[] { new PointF(this.Dx.ToDeviceValue(null, UnitRenderingType.Horizontal, null), 
+            var pts = new PointF[] { SvgSetup.Factory.CreatePointF(this.Dx.ToDeviceValue(null, UnitRenderingType.Horizontal, null), 
                                                 this.Dy.ToDeviceValue(null, UnitRenderingType.Vertical, null)) };
             buffer.Transform.TransformVectors(pts);
 
             using (var g = SvgSetup.Factory.CreateGraphicsFromImage(result))
             {
-                g.DrawImage(inputImage, new Rectangle((int)pts[0].X, (int)pts[0].Y, 
+                g.DrawImage(inputImage, SvgSetup.Factory.CreateRectangleF((int)pts[0].X, (int)pts[0].Y, 
                                                       inputImage.Width, inputImage.Height),
                             0, 0, inputImage.Width, inputImage.Height, GraphicsUnit.Pixel);
                 g.Flush();

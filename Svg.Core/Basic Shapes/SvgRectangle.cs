@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using Svg.Interfaces;
 
 namespace Svg
 {
@@ -179,7 +180,7 @@ namespace Svg
                 // If the corners aren't to be rounded just create a rectangle
                 if (CornerRadiusX.Value == 0.0f && CornerRadiusY.Value == 0.0f)
                 {
-                    var rectangle = new RectangleF(Location.ToDeviceValue(renderer, this),
+                    var rectangle = SvgSetup.Factory.CreateRectangleF(Location.ToDeviceValue(renderer, this),
                         SvgUnit.GetDeviceSize(this.Width, this.Height, renderer, this));
 
                     _path = SvgSetup.Factory.CreateGraphicsPath();
@@ -190,9 +191,9 @@ namespace Svg
                 else
                 {
                     _path = SvgSetup.Factory.CreateGraphicsPath();
-                    var arcBounds = new RectangleF();
-                    var lineStart = new PointF();
-                    var lineEnd = new PointF();
+                    var arcBounds = SvgSetup.Factory.CreateRectangleF();
+                    var lineStart = SvgSetup.Factory.CreatePointF(0f,0f);
+                    var lineEnd = SvgSetup.Factory.CreatePointF(0f,0f);
                     var width = Width.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this);
                     var height = Height.ToDeviceValue(renderer, UnitRenderingType.Vertical, this);
                     var rx = Math.Min(CornerRadiusX.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this) * 2, width);
@@ -216,7 +217,7 @@ namespace Svg
                     _path.AddLine(lineStart, lineEnd);
 
                     // Add second arc
-                    arcBounds.Location = new PointF(location.X + width - rx, location.Y);
+                    arcBounds.Location = SvgSetup.Factory.CreatePointF(location.X + width - rx, location.Y);
                     _path.AddArc(arcBounds, 270, 90);
 
                     // Add second line
@@ -227,7 +228,7 @@ namespace Svg
                     _path.AddLine(lineStart, lineEnd);
 
                     // Add third arc
-                    arcBounds.Location = new PointF(location.X + width - rx, location.Y + height - ry);
+                    arcBounds.Location = SvgSetup.Factory.CreatePointF(location.X + width - rx, location.Y + height - ry);
                     _path.AddArc(arcBounds, 0, 90);
 
                     // Add third line
@@ -238,7 +239,7 @@ namespace Svg
                     _path.AddLine(lineStart, lineEnd);
 
                     // Add third arc
-                    arcBounds.Location = new PointF(location.X, location.Y + height - ry);
+                    arcBounds.Location = SvgSetup.Factory.CreatePointF(location.X, location.Y + height - ry);
                     _path.AddArc(arcBounds, 90, 90);
 
                     // Add fourth line

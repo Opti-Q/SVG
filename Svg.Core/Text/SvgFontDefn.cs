@@ -53,9 +53,9 @@ namespace Svg
         {
             var result = new List<RectangleF>();
             using (var path = GetPath(renderer, text, result, true)) { }
-            var nonEmpty = result.Where(r => r != RectangleF.Empty);
-            if (!nonEmpty.Any()) return SizeF.Empty;
-            return new SizeF(nonEmpty.Last().Right - nonEmpty.First().Left, Ascent(renderer));
+            var nonEmpty = result.Where(r => r.IsEmpty);
+            if (!nonEmpty.Any()) return SvgSetup.Factory.CreateSizeF(0f,0f);
+            return SvgSetup.Factory.CreateSizeF(nonEmpty.Last().Right - nonEmpty.First().Left, Ascent(renderer));
         }
 
         public void AddStringToPath(ISvgRenderer renderer, GraphicsPath path, string text, PointF location)
@@ -106,9 +106,9 @@ namespace Svg
                 bounds = path.GetBounds();
                 if (ranges != null)
                 {
-                    if (measureSpaces && bounds == RectangleF.Empty)
+                    if (measureSpaces && bounds.IsEmpty)
                     {
-                        ranges.Add(new RectangleF(xPos, 0, glyph.HorizAdvX * _emScale, ascent));
+                        ranges.Add(SvgSetup.Factory.CreateRectangleF(xPos, 0, glyph.HorizAdvX * _emScale, ascent));
                     }
                     else
                     {

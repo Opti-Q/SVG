@@ -29,7 +29,7 @@ namespace Svg
         {
             get
             {
-                var r = new RectangleF();
+                var r = SvgSetup.Factory.CreateRectangleF();
                 foreach (var c in this.Children)
                 {
                     if (c is SvgVisualElement)
@@ -45,7 +45,7 @@ namespace Svg
                             var childBounds = ((SvgVisualElement)c).Bounds;
                             if (!childBounds.IsEmpty)
                             {
-                                r = RectangleF.Union(r, childBounds);
+                                r = r.UnionAndCopy(childBounds);
                             }
                         }
                     }

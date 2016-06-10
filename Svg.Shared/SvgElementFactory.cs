@@ -6,13 +6,14 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using ExCSS;
+using Svg.Interfaces;
 
 namespace Svg
 {
     /// <summary>
     /// Provides the methods required in order to parse and create <see cref="SvgElement"/> instances from XML.
     /// </summary>
-    internal class SvgElementFactory
+    public class SvgElementFactory : ISvgElementFactory
     {
         private static Dictionary<string, ElementInfo> availableElements;
         private static Parser cssParser = new Parser();
@@ -20,7 +21,7 @@ namespace Svg
         /// <summary>
         /// Gets a list of available types that can be used when creating an <see cref="SvgElement"/>.
         /// </summary>
-        public static Dictionary<string, ElementInfo> AvailableElements
+        public Dictionary<string, ElementInfo> AvailableElements
         {
             get
             {
@@ -47,7 +48,7 @@ namespace Svg
         /// <param name="reader">The <see cref="XmlTextReader"/> containing the node to parse into an <see cref="SvgDocument"/>.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="reader"/> parameter cannot be <c>null</c>.</exception>
         /// <exception cref="InvalidOperationException">The CreateDocument method can only be used to parse root &lt;svg&gt; elements.</exception>
-        public static T CreateDocument<T>(XmlReader reader) where T : SvgDocument, new()
+        public T CreateDocument<T>(XmlReader reader) where T : SvgDocument, new()
         {
             if (reader == null)
             {
@@ -68,7 +69,7 @@ namespace Svg
         /// <param name="reader">The <see cref="XmlTextReader"/> containing the node to parse into a subclass of <see cref="SvgElement"/>.</param>
         /// <param name="document">The <see cref="SvgDocument"/> that the created element belongs to.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="reader"/> and <paramref name="document"/> parameters cannot be <c>null</c>.</exception>
-        public static SvgElement CreateElement(XmlReader reader, SvgDocument document)
+        public SvgElement CreateElement(XmlReader reader, SvgDocument document)
         {
             if (reader == null)
             {
@@ -78,7 +79,7 @@ namespace Svg
             return CreateElement<SvgDocument>(reader, false, document);
         }
 
-        private static SvgElement CreateElement<T>(XmlReader reader, bool fragmentIsDocument, SvgDocument document) where T : SvgDocument, new()
+        private SvgElement CreateElement<T>(XmlReader reader, bool fragmentIsDocument, SvgDocument document) where T : SvgDocument, new()
         {
             SvgElement createdElement = null;
             string elementName = reader.LocalName;
@@ -122,7 +123,7 @@ namespace Svg
             return createdElement;
         }
 
-        private static void SetAttributes(SvgElement element, XmlReader reader, SvgDocument document)
+        private void SetAttributes(SvgElement element, XmlReader reader, SvgDocument document)
         {
             //Trace.TraceInformation("Begin SetAttributes");
 
@@ -156,7 +157,7 @@ namespace Svg
             //Trace.TraceInformation("End SetAttributes");
         }
 
-        private static bool IsStyleAttribute(string name)
+        private bool IsStyleAttribute(string name)
         {
             switch (name)
             {
@@ -303,38 +304,5 @@ namespace Svg
             }
         }
 
-        /// <summary>
-        /// Contains information about a type inheriting from <see cref="SvgElement"/>.
-        /// </summary>
-        [DebuggerDisplay("{ElementName}, {ElementType}")]
-        internal sealed class ElementInfo
-        {
-            /// <summary>
-            /// Gets the SVG name of the <see cref="SvgElement"/>.
-            /// </summary>
-            public string ElementName { get; set; }
-            /// <summary>
-            /// Gets the <see cref="Type"/> of the <see cref="SvgElement"/> subclass.
-            /// </summary>
-            public Type ElementType { get; set; }
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="ElementInfo"/> struct.
-            /// </summary>
-            /// <param name="elementName">Name of the element.</param>
-            /// <param name="elementType">Type of the element.</param>
-            public ElementInfo(string elementName, Type elementType)
-            {
-                this.ElementName = elementName;
-                this.ElementType = elementType;
-            }
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="ElementInfo"/> class.
-            /// </summary>
-            public ElementInfo()
-            {
-            }
-        }
     }
 }

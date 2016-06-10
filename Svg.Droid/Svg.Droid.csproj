@@ -61,8 +61,23 @@
     <Compile Include="..\Svg.Shared\FileSystem.cs">
       <Link>FileSystem.cs</Link>
     </Compile>
+    <Compile Include="..\Svg.Shared\SvgAspectRatioConverter.cs">
+      <Link>DataTypes\SvgAspectRatioConverter.cs</Link>
+    </Compile>
     <Compile Include="..\Svg.Shared\SvgColourConverter.cs">
       <Link>Painting\SvgColourConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Svg.Shared\SvgDtdResolver.cs">
+      <Link>SvgDtdResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Svg.Shared\SvgElementFactory.cs">
+      <Link>SvgElementFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Svg.Shared\SvgNodeReader.cs">
+      <Link>SvgNodeReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Svg.Shared\SvgOrientConverter.cs">
+      <Link>DataTypes\SvgOrientConverter.cs</Link>
     </Compile>
     <Compile Include="..\Svg.Shared\SvgPaintServerFactory.cs">
       <Link>Painting\SvgPaintServerFactory.cs</Link>
@@ -70,8 +85,26 @@
     <Compile Include="..\Svg.Shared\SvgPathBuilder.cs">
       <Link>Paths\SvgPathBuilder.cs</Link>
     </Compile>
+    <Compile Include="..\Svg.Shared\SvgPointCollection.cs">
+      <Link>DataTypes\SvgPointCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\Svg.Shared\SvgTextReader.cs">
+      <Link>SvgTextReader.cs</Link>
+    </Compile>
     <Compile Include="..\Svg.Shared\SvgTransformConverter.cs">
       <Link>Transforms\SvgTransformConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Svg.Shared\SvgUnitCollection.cs">
+      <Link>DataTypes\SvgUnitCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\Svg.Shared\SvgUnitConverter.cs">
+      <Link>DataTypes\SvgUnitConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Svg.Shared\SvgViewBox.cs">
+      <Link>DataTypes\SvgViewBox.cs</Link>
+    </Compile>
+    <Compile Include="..\Svg.Shared\SvgXmlTextWriter.cs">
+      <Link>Platform\Xml\SvgXmlTextWriter.cs</Link>
     </Compile>
     <Compile Include="Platform\AndroidBitmap.cs" />
     <Compile Include="Platform\AndroidColor.cs" />

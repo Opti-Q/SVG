@@ -1,6 +1,8 @@
 using System;
 using System.Drawing;
 using System.Xml;
+using Svg.Interfaces;
+using Svg.Interfaces.Xml;
 
 namespace Svg
 {
@@ -19,7 +21,7 @@ namespace Svg
         {
             get
             {
-                return new PointF(X, Y);
+                return SvgSetup.Factory.CreatePointF(X, Y);
             }
         }
 
@@ -35,7 +37,9 @@ namespace Svg
         {
             get
             {
-                return new RectangleF(((ISvgBoundable)this).Location, ((ISvgBoundable)this).Size);
+                var loc = ((ISvgBoundable) this).Location;
+                var siz = ((ISvgBoundable) this).Size;
+                return SvgSetup.Factory.CreateRectangleF(loc.X, loc.Y, siz.Width, siz.Height);
             }
         }
 
@@ -172,7 +176,7 @@ namespace Svg
                     try
                     {
                         var size = (this.Parent == null ? renderer.GetBoundable().Bounds.Size : GetDimensions());
-                        var clip = new RectangleF(this.X.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this),
+                        var clip = SvgSetup.Factory.CreateRectangleF(this.X.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this),
                                                   this.Y.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this),
                                                   size.Width, size.Height);
                         renderer.SetClip(new Region(clip), CombineMode.Intersect);
@@ -233,12 +237,12 @@ namespace Svg
             var isWidthperc = Width.Type == SvgUnitType.Percentage;
             var isHeightperc = Height.Type == SvgUnitType.Percentage;
 
-            RectangleF bounds = new RectangleF();
+            RectangleF bounds = SvgSetup.Factory.CreateRectangleF();
             if (isWidthperc || isHeightperc)
             {
                 if (ViewBox.Width > 0 && ViewBox.Height > 0)
                 {
-                    bounds = new RectangleF(ViewBox.MinX, ViewBox.MinY, ViewBox.Width, ViewBox.Height);
+                    bounds = SvgSetup.Factory.CreateRectangleF(ViewBox.MinX, ViewBox.MinY, ViewBox.Width, ViewBox.Height);
                 }
                 else
                 {
@@ -263,7 +267,7 @@ namespace Svg
                 h = Height.ToDeviceValue(null, UnitRenderingType.Vertical, this);
             }
 
-            return new SizeF(w, h);
+            return SvgSetup.Factory.CreateSizeF(w, h);
         }
 
         public override SvgElement DeepCopy()
@@ -283,7 +287,7 @@ namespace Svg
         }
 
         //Override the default behavior, writing out the namespaces.
-        protected override void WriteStartElement(XmlTextWriter writer)
+        protected override void WriteStartElement(IXmlTextWriter writer)
         {
             base.WriteStartElement(writer);
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using Svg.Interfaces.Xml;
 
 namespace Svg
 {
@@ -39,7 +40,7 @@ namespace Svg
             // Do nothing. Children should NOT be rendered.
         }
 
-		protected override void WriteChildren(XmlTextWriter writer)
+		protected override void WriteChildren(IXmlTextWriter writer)
 		{
 			writer.WriteRaw(this.Content); //write out metadata as is
 		}
@@ -50,13 +51,13 @@ namespace Svg
 			return DeepCopy<SvgDocumentMetadata>();
 		}
 
-		public override void InitialiseFromXML(XmlTextReader reader, SvgDocument document)
-		{
-			base.InitialiseFromXML(reader, document);
+		//public override void InitialiseFromXML(IXmlTextReader reader, SvgDocument document)
+		//{
+		//	base.InitialiseFromXML(reader, document);
 
-			//read in the metadata just as a string ready to be written straight back out again
-			Content = reader.ReadInnerXml();
-		}
+		//	//read in the metadata just as a string ready to be written straight back out again
+		//	Content = reader.ReadInnerXml();
+		//}
 
     }
 }

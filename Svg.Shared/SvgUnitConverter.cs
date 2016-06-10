@@ -5,12 +5,14 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using Svg.Interfaces;
 
 namespace Svg
 {
-    public sealed class SvgUnitConverter : TypeConverter
+    public sealed class SvgUnitConverter : TypeConverter, ISvgUnitConverter
     {
-        public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+        public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture,
+            object value)
         {
             if (value == null)
             {
@@ -25,7 +27,7 @@ namespace Svg
             // http://www.w3.org/TR/CSS21/syndata.html#values
             // http://www.w3.org/TR/SVG11/coords.html#Units
 
-            string unit = (string)value;
+            string unit = (string) value;
             int identifierIndex = -1;
 
             if (unit == "none")
@@ -34,7 +36,9 @@ namespace Svg
             for (int i = 0; i < unit.Length; i++)
             {
                 // If the character is a percent sign or a letter which is not an exponent 'e'
-                if (unit[i] == '%' || (char.IsLetter(unit[i]) && !((unit[i] == 'e' || unit[i] == 'E') && i < unit.Length - 1 && !char.IsLetter(unit[i + 1]))))
+                if (unit[i] == '%' ||
+                    (char.IsLetter(unit[i]) &&
+                     !((unit[i] == 'e' || unit[i] == 'E') && i < unit.Length - 1 && !char.IsLetter(unit[i + 1]))))
                 {
                     identifierIndex = i;
                     break;
@@ -42,7 +46,8 @@ namespace Svg
             }
 
             float val = 0.0f;
-            float.TryParse((identifierIndex > -1) ? unit.Substring(0, identifierIndex) : unit, NumberStyles.Float, CultureInfo.InvariantCulture, out val);
+            float.TryParse((identifierIndex > -1) ? unit.Substring(0, identifierIndex) : unit, NumberStyles.Float,
+                CultureInfo.InvariantCulture, out val);
 
             if (identifierIndex == -1)
             {
@@ -94,11 +99,12 @@ namespace Svg
             return base.CanConvertTo(context, destinationType);
         }
 
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
+            Type destinationType)
         {
             if (destinationType == typeof(string))
             {
-                return ((SvgUnit)value).ToString();
+                return ((SvgUnit) value).ToString();
             }
 
             return base.ConvertTo(context, culture, value, destinationType);

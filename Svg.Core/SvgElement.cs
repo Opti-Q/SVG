@@ -5,6 +5,8 @@ using System.Xml;
 using System.Linq;
 using Svg.Transforms;
 using System.Reflection;
+using Svg.Interfaces;
+using Svg.Interfaces.Xml;
 
 namespace Svg
 {
@@ -13,8 +15,8 @@ namespace Svg
     /// </summary>
     public abstract partial class SvgElement : ISvgElement, ISvgTransformable, ICloneable, ISvgNode
     {
-        internal const int StyleSpecificity_PresAttribute = 0;
-        internal const int StyleSpecificity_InlineStyle = 1 << 16;
+        public const int StyleSpecificity_PresAttribute = 0;
+        public const int StyleSpecificity_InlineStyle = 1 << 16;
 
         //optimization
         protected class PropertyAttributeTuple
@@ -97,7 +99,7 @@ namespace Svg
         /// <summary>
         /// Gets the name of the element.
         /// </summary>
-        protected internal string ElementName
+        /*protected internal*/public string ElementName
         {
             get
             {
@@ -501,10 +503,10 @@ namespace Svg
         	OnAttributeChanged(e);
         }
 
-		public virtual void InitialiseFromXML(XmlTextReader reader, SvgDocument document)
-		{
-            throw new NotImplementedException();
-		}
+		//public virtual void InitialiseFromXML(XmlTextReader reader, SvgDocument document)
+		//{
+  //          throw new NotImplementedException();
+		//}
 
 
         /// <summary>
@@ -523,7 +525,7 @@ namespace Svg
             return (this.ElementName != String.Empty);
         }
 
-        protected virtual void WriteStartElement(XmlTextWriter writer)
+        protected virtual void WriteStartElement(IXmlTextWriter writer)
         {
             if (this.ElementName != String.Empty)
             {
@@ -533,14 +535,14 @@ namespace Svg
             this.WriteAttributes(writer);
         }
 
-        protected virtual void WriteEndElement(XmlTextWriter writer)
+        protected virtual void WriteEndElement(IXmlTextWriter writer)
         {
             if (this.ElementName != String.Empty)
             {
                 writer.WriteEndElement();
             }
         }
-        protected virtual void WriteAttributes(XmlTextWriter writer)
+        protected virtual void WriteAttributes(IXmlTextWriter writer)
         {
             var styles = new Dictionary<string, string>();
             bool writeStyle;
@@ -658,7 +660,7 @@ namespace Svg
             return resolved;
         }
 
-        public virtual void Write(XmlTextWriter writer)
+        public virtual void Write(IXmlTextWriter writer)
         {
             if (ShouldWriteElement())
             {
@@ -668,7 +670,7 @@ namespace Svg
             }
         }
 
-        protected virtual void WriteChildren(XmlTextWriter writer)
+        protected virtual void WriteChildren(IXmlTextWriter writer)
         {
             if (this.Nodes.Any())
             {

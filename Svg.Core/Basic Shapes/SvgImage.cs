@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Net;
+using Svg.Interfaces;
 
 namespace Svg
 {
@@ -84,8 +85,8 @@ namespace Svg
         /// <value>The bounds.</value>
         public override RectangleF Bounds
         {
-			get { return new RectangleF(this.Location.ToDeviceValue(null, this), 
-                                        new SizeF(this.Width.ToDeviceValue(null, UnitRenderingType.Horizontal, this), 
+			get { return SvgSetup.Factory.CreateRectangleF(this.Location.ToDeviceValue(null, this),
+                                        SvgSetup.Factory.CreateSizeF(this.Width.ToDeviceValue(null, UnitRenderingType.Horizontal, this), 
                                                   this.Height.ToDeviceValue(null, UnitRenderingType.Vertical, this))); }
         }
 
@@ -115,19 +116,19 @@ namespace Svg
                     var svg = img as SvgFragment;
                     if (bmp != null)
                     {
-                        srcRect = new RectangleF(0, 0, bmp.Width, bmp.Height);
+                        srcRect = SvgSetup.Factory.CreateRectangleF(0, 0, bmp.Width, bmp.Height);
                     }
                     else if (svg != null)
                     {
-                        srcRect = new RectangleF(new PointF(0, 0), svg.GetDimensions());
+                        srcRect = SvgSetup.Factory.CreateRectangleF(SvgSetup.Factory.CreatePointF(0, 0), svg.GetDimensions());
                     }
                     else
                     {
                         return;
                     }
 
-                    var destClip = new RectangleF(this.Location.ToDeviceValue(renderer, this),
-                                                  new SizeF(Width.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
+                    var destClip = SvgSetup.Factory.CreateRectangleF(this.Location.ToDeviceValue(renderer, this),
+                                                  SvgSetup.Factory.CreateSizeF(Width.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
                                                             Height.ToDeviceValue(renderer, UnitRenderingType.Vertical, this)));
                     RectangleF destRect = destClip;
                         
@@ -187,7 +188,7 @@ namespace Svg
                                 break;
                         }
 
-                        destRect = new RectangleF(destClip.X + xOffset, destClip.Y + yOffset, 
+                        destRect = SvgSetup.Factory.CreateRectangleF(destClip.X + xOffset, destClip.Y + yOffset, 
                                                     srcRect.Width * fScaleX, srcRect.Height * fScaleY);
                     }
 
@@ -198,7 +199,7 @@ namespace Svg
                     }
                     else if (svg != null)
                     {
-                        var currOffset = new PointF(renderer.Transform.OffsetX, renderer.Transform.OffsetY);
+                        var currOffset = SvgSetup.Factory.CreatePointF(renderer.Transform.OffsetX, renderer.Transform.OffsetY);
                         renderer.TranslateTransform(-currOffset.X, -currOffset.Y);
                         renderer.ScaleTransform(destRect.Width / srcRect.Width, destRect.Height / srcRect.Height);
                         renderer.TranslateTransform(currOffset.X + destRect.X, currOffset.Y + destRect.Y);
@@ -265,7 +266,7 @@ namespace Svg
             }
             catch (Exception ex)
             {
-                Trace.TraceError("Error loading image: '{0}', error: {1} ", uri, ex.Message);
+                //Trace.TraceError("Error loading image: '{0}', error: {1} ", uri, ex.Message);
                 return null;
             }
         }

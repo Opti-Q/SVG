@@ -8,6 +8,7 @@ using System.Xml;
 using System.Threading;
 using System.Globalization;
 using Svg.Interfaces;
+using Svg.Interfaces.Xml;
 
 namespace Svg
 {
@@ -26,7 +27,7 @@ namespace Svg
         
         public static RectangleF GetRectangle(this SvgRectangle r)
         {
-            return new RectangleF(r.X, r.Y, r.Width, r.Height);
+            return SvgSetup.Factory.CreateRectangleF(r.X, r.Y, r.Width, r.Height);
         }
 
         public static string GetXML(this SvgDocument doc)
@@ -37,9 +38,10 @@ namespace Svg
             {
                 doc.Write(ms);
                 ms.Position = 0;
-                var sr = new StreamReader(ms);
-                ret = sr.ReadToEnd();
-                sr.Close();
+                using (var sr = new StreamReader(ms))
+                {
+                    ret = sr.ReadToEnd();
+                }
             }
 
             return ret;
@@ -53,7 +55,7 @@ namespace Svg
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             using (StringWriter str = new StringWriter())
             {
-                using (XmlTextWriter xml = new XmlTextWriter(str))
+                using (IXmlTextWriter xml = SvgSetup.Factory.CreateXmlTextWriter(str))
                 {
                     elem.Write(xml);
                     result = str.ToString();

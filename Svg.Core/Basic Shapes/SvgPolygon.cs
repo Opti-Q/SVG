@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using System.Diagnostics;
+using Svg.Interfaces;
 using Svg.Pathing;
 
 namespace Svg
@@ -89,7 +90,7 @@ namespace Svg
                 }
                 catch
                 {
-                    Trace.TraceError("Error parsing points");
+                    //Trace.TraceError("Error parsing points");
                 }
 
                 this._path.CloseFigure();

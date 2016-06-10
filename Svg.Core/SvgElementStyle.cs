@@ -7,6 +7,7 @@ using System.ComponentModel;
 using Svg.DataTypes;
 using System.Text.RegularExpressions;
 using System.Linq;
+using Svg.Interfaces;
 
 namespace Svg
 {
@@ -265,7 +266,7 @@ namespace Svg
                                 sizes = part.Split('/');
                                 try
                                 {
-                                    fontSize = (SvgUnit)(new SvgUnitConverter().ConvertFromInvariantString(sizes[0]));
+                                    fontSize = (SvgUnit)(SvgSetup.Resolve<ISvgUnitConverter>().ConvertFromInvariantString(sizes[0]));
                                     success = true;
                                     this.FontSize = fontSize;
                                 }

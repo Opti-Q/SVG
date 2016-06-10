@@ -96,7 +96,7 @@ namespace Svg.FilterEffects
                 var result = SvgSetup.Factory.CreateBitmap(inputImage.Width, inputImage.Height);
                 using (var g = SvgSetup.Factory.CreateGraphicsFromImage(result))
                 {
-                    g.DrawImage(inputImage, new Rectangle(0, 0, inputImage.Width, inputImage.Height),
+                    g.DrawImage(inputImage, SvgSetup.Factory.CreateRectangleF(0, 0, inputImage.Width, inputImage.Height),
                                 0, 0, inputImage.Width, inputImage.Height, GraphicsUnit.Pixel, imageAttrs);
                     g.Flush();
                 }

@@ -9,7 +9,7 @@ namespace Svg
     /// <summary>
     /// Represents a unit in an Scalable Vector Graphics document.
     /// </summary>
-    [TypeConverter(typeof(SvgUnitConverter))]
+    //[TypeConverter(typeof(SvgUnitConverter))]
     public struct SvgUnit
     {
         private SvgUnitType _type;
@@ -321,18 +321,18 @@ namespace Svg
 
         public static Svg.Interfaces.PointF GetDevicePoint(SvgUnit x, SvgUnit y, ISvgRenderer renderer, SvgElement owner)
         {
-            return new Svg.Interfaces.PointF(x.ToDeviceValue(renderer, UnitRenderingType.Horizontal, owner),
+            return SvgSetup.Factory.CreatePointF(x.ToDeviceValue(renderer, UnitRenderingType.Horizontal, owner),
                                              y.ToDeviceValue(renderer, UnitRenderingType.Vertical, owner));
         }
         public static Svg.Interfaces.PointF GetDevicePointOffset(SvgUnit x, SvgUnit y, ISvgRenderer renderer, SvgElement owner)
         {
-            return new Svg.Interfaces.PointF(x.ToDeviceValue(renderer, UnitRenderingType.HorizontalOffset, owner),
+            return SvgSetup.Factory.CreatePointF(x.ToDeviceValue(renderer, UnitRenderingType.HorizontalOffset, owner),
                                              y.ToDeviceValue(renderer, UnitRenderingType.VerticalOffset, owner));
         }
 
         public static Svg.Interfaces.SizeF GetDeviceSize(SvgUnit width, SvgUnit height, ISvgRenderer renderer, SvgElement owner)
         {
-            return new Svg.Interfaces.SizeF(width.ToDeviceValue(renderer, UnitRenderingType.HorizontalOffset, owner),
+            return SvgSetup.Factory.CreateSizeF(width.ToDeviceValue(renderer, UnitRenderingType.HorizontalOffset, owner),
                                             height.ToDeviceValue(renderer, UnitRenderingType.VerticalOffset, owner));
         }
     }

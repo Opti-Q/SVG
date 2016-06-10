@@ -131,7 +131,10 @@ namespace Svg
                         {
                             filter.ApplyFilter(this, renderer, (r) => this.Render(r, false));
                         }
-                        catch (Exception ex) { Debug.Print(ex.ToString()); }
+                        catch (Exception ex)
+                        {
+                            //Debug.Print(ex.ToString());
+                        }
                         renderNormal = false;
                     }
                 }
@@ -219,7 +222,7 @@ namespace Svg
                                 case SvgStrokeLineCap.Square:
                                     using (var capPath = SvgSetup.Factory.CreateGraphicsPath())
                                     {
-                                        capPath.AddRectangle(new RectangleF(path.PathPoints[0].X - strokeWidth / 2, path.PathPoints[0].Y - strokeWidth / 2, strokeWidth, strokeWidth));
+                                        capPath.AddRectangle(SvgSetup.Factory.CreateRectangleF(path.PathPoints[0].X - strokeWidth / 2, path.PathPoints[0].Y - strokeWidth / 2, strokeWidth, strokeWidth));
                                         renderer.FillPath(brush, capPath);
                                     }
                                     break;

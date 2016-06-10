@@ -6,7 +6,7 @@ namespace Svg
 	/// <summary>
 	/// Description of SvgAspectRatio.
 	/// </summary>
-	[TypeConverter(typeof(SvgPreserveAspectRatioConverter))]
+	//[TypeConverter(typeof(SvgPreserveAspectRatioConverter))]
 	public class SvgAspectRatio
 	{
 		public SvgAspectRatio() : this(SvgPreserveAspectRatio.none)
@@ -50,7 +50,7 @@ namespace Svg
 
 	}
 	
-    [TypeConverter(typeof(SvgPreserveAspectRatioConverter))]
+    //[TypeConverter(typeof(SvgPreserveAspectRatioConverter))]
 	public enum SvgPreserveAspectRatio
 	{
 		xMidYMid, //default

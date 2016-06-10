@@ -1,6 +1,9 @@
+using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.IO;
+using System.Text;
 using Svg.Interfaces;
+using Svg.Interfaces.Xml;
 
 namespace Svg
 {
@@ -28,12 +31,18 @@ namespace Svg
         FontFamilyProvider GetFontFamilyProvider();
         Image CreateImageFromStream(Stream stream);
         Bitmap CreateBitmapFromStream(Stream stream);
-        RectangleF CreateRectangleF(float left, float top, float width, float height);
         RectangleF CreateRectangleF();
+        RectangleF CreateRectangleF(PointF location, SizeF size);
+        RectangleF CreateRectangleF(float left, float top, float width, float height);
 
         Colors Colors { get; }
         Color CreateColorFromArgb(int alpha, Color colour);
         PointF CreatePointF(float x, float y);
         SizeF CreateSizeF(float width, float height);
+
+        IXmlTextWriter CreateXmlTextWriter(StringWriter writer);
+        IXmlTextWriter CreateXmlTextWriter(Stream stream, Encoding utf8);
+        ISvgTextReader CreateSvgTextReader(Stream stream, Dictionary<string, string> entities);
+        ISvgTextReader CreateSvgTextReader(StringReader reader, Dictionary<string, string> entities);
     }
 }

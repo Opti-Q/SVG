@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Svg.Interfaces;
 
 namespace Svg.FilterEffects
 {
@@ -164,7 +165,7 @@ namespace Svg.FilterEffects
             using (var graphics = SvgSetup.Factory.CreateGraphicsFromImage(sourceAlpha))
             {
 
-                graphics.DrawImage(source, new Rectangle(0, 0, source.Width, source.Height), 0, 0,
+                graphics.DrawImage(source, SvgSetup.Factory.CreateRectangleF((0, 0, source.Width, source.Height), 0, 0,
                       source.Width, source.Height, GraphicsUnit.Pixel, attributes);
                 graphics.Save();
             }

@@ -19,5 +19,15 @@ namespace Svg
         {
             return File.OpenRead(path);
         }
+
+        public Stream OpenWrite(string path)
+        {
+            return new FileStream(path, FileMode.Create, FileAccess.Write);
+        }
+
+        public string GetFullPath(string path)
+        {
+            return path;
+        }
     }
 }

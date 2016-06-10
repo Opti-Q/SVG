@@ -3,15 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Fizzler;
+using Svg.Interfaces;
 
 namespace Svg.Css
 {
     internal class SvgElementOps : IElementOps<SvgElement>
     {
+        private ISvgElementFactory _factory;
+
+        public ISvgElementFactory Factory
+        {
+            get { return _factory ?? (_factory = SvgSetup.Resolve<ISvgElementFactory>()); }
+        }
+
         public Selector<SvgElement> Type(NamespacePrefix prefix, string name)
         {
-            SvgElementFactory.ElementInfo type = null;
-            if (SvgElementFactory.AvailableElements.TryGetValue(name, out type)) 
+            ElementInfo type = null;
+            if (Factory.AvailableElements.TryGetValue(name, out type)) 
             {
                 return nodes => nodes.Where(n => n.GetType() == type.ElementType);
             }

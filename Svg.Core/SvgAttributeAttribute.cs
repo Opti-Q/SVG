@@ -37,7 +37,7 @@ namespace Svg
         /// <returns>
         /// true if this instance equals <paramref name="obj"/>; otherwise, false.
         /// </returns>
-        public override bool Match(object obj)
+        public override bool Equals(object obj)
         {
             SvgAttributeAttribute indicator = obj as SvgAttributeAttribute;
 
@@ -89,7 +89,7 @@ namespace Svg
         /// <summary>
         /// Initializes a new instance of the <see cref="SvgAttributeAttribute"/> class.
         /// </summary>
-        internal SvgAttributeAttribute()
+        public SvgAttributeAttribute()
         {
             this._name = String.Empty;
         }
@@ -98,13 +98,13 @@ namespace Svg
         /// Initializes a new instance of the <see cref="SvgAttributeAttribute"/> class with the specified attribute name.
         /// </summary>
         /// <param name="name">The name of the SVG attribute.</param>
-        internal SvgAttributeAttribute(string name)
+        public SvgAttributeAttribute(string name)
         {
             this._name = name;
             this._namespace = SvgNamespace;
         }
 
-        internal SvgAttributeAttribute(string name, bool inAttrDictionary)
+        public SvgAttributeAttribute(string name, bool inAttrDictionary)
         {
             this._name = name;
             this._namespace = SvgNamespace;

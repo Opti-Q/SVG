@@ -15,7 +15,7 @@ namespace Svg.FilterEffects
             {
                 foreach (var child in children)
                 {
-                    g.DrawImage(buffer[child.Input], new Rectangle(0, 0, inputImage.Width, inputImage.Height),
+                    g.DrawImage(buffer[child.Input], SvgSetup.Factory.CreateRectangleF(0, 0, inputImage.Width, inputImage.Height),
                                 0, 0, inputImage.Width, inputImage.Height, GraphicsUnit.Pixel);
                 }
                 g.Flush();

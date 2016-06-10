@@ -13,5 +13,9 @@ namespace Svg.Interfaces
         bool FolderExists(string path);
 
         Stream OpenRead(string path);
+
+        Stream OpenWrite(string path);
+
+        string GetFullPath(string path);
     }
 }

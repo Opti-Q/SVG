@@ -5,19 +5,28 @@ using System.Text;
 using System.Xml;
 using System.IO;
 using System.Collections.Specialized;
+using Svg.Interfaces.Xml;
 
 namespace Svg
 {
-    internal sealed class SvgNodeReader : XmlNodeReader
+    public sealed class SvgTextReader : XmlTextReader, ISvgTextReader
     {
         private Dictionary<string, string> _entities;
         private string _value;
         private bool _customValue = false;
         private string _localName;
 
-        public SvgNodeReader(XmlNode node, Dictionary<string, string> entities)
-            : base(node)
+        public SvgTextReader(Stream stream, Dictionary<string, string> entities)
+            : base(stream)
         {
+            this.EntityHandling = EntityHandling.ExpandEntities;
+            this._entities = entities;
+        }
+
+        public SvgTextReader(TextReader reader, Dictionary<string, string> entities)
+            : base(reader)
+        {
+            this.EntityHandling = EntityHandling.ExpandEntities;
             this._entities = entities;
         }
 
@@ -115,9 +124,9 @@ namespace Svg
         {
             const string entityText = "<!ENTITY";
             string[] entities = this.Value.Split(new string[]{entityText}, StringSplitOptions.None);
-            string[] parts = null;
             string name = null;
             string value = null;
+            int quoteIndex;
 
             foreach (string entity in entities)
             {
@@ -126,11 +135,14 @@ namespace Svg
                     continue;
                 }
 
-                parts = entity.Trim().Split(new char[]{' ', '\t'},  StringSplitOptions.RemoveEmptyEntries);
-                name = parts[0];
-                value = parts[1].Split(new char[] { this.QuoteChar }, StringSplitOptions.RemoveEmptyEntries)[0];
-
-                this.Entities.Add(name, value);
+                name = entity.Trim();
+                quoteIndex = name.IndexOf(this.QuoteChar);
+                if (quoteIndex > 0)
+                {
+                    value = name.Substring(quoteIndex + 1, name.LastIndexOf(this.QuoteChar) - quoteIndex - 1);
+                    name = name.Substring(0, quoteIndex).Trim();
+                    this.Entities.Add(name, value);
+                }
             }
         }
 

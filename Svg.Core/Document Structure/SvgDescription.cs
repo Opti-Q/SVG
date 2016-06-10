@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace Svg
 {
-    [DefaultProperty("Text")]
+    //[DefaultProperty("Text")]
     [SvgElement("desc")]
     public class SvgDescription : SvgElement, ISvgDescriptiveElement
     {

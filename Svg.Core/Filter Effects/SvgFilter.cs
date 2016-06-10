@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Drawing;
 using Svg.DataTypes;
+using Svg.Interfaces;
 
 namespace Svg.FilterEffects
 {
@@ -109,10 +110,10 @@ namespace Svg.FilterEffects
         private RectangleF GetPathBounds(SvgVisualElement element, ISvgRenderer renderer, Matrix transform)
         {
             var bounds = element.Path(renderer).GetBounds();
-            var pts = new PointF[] { bounds.Location, new PointF(bounds.Right, bounds.Bottom) };
+            var pts = new PointF[] { bounds.Location, SvgSetup.Factory.CreatePointF(bounds.Right, bounds.Bottom) };
             transform.TransformPoints(pts);
 
-            return new RectangleF(Math.Min(pts[0].X, pts[1].X), Math.Min(pts[0].Y, pts[1].Y),
+            return SvgSetup.Factory.CreateRectangleF(Math.Min(pts[0].X, pts[1].X), Math.Min(pts[0].Y, pts[1].Y),
                                   Math.Abs(pts[0].X - pts[1].X), Math.Abs(pts[0].Y - pts[1].Y));
         }
 
@@ -139,10 +140,10 @@ namespace Svg.FilterEffects
                 // Render the final filtered image
                 var bufferImg = buffer.Buffer;
                 //bufferImg.Save(@"C:\test.png");
-                var imgDraw = RectangleF.Inflate(bounds, inflate * bounds.Width, inflate * bounds.Height);
+                var imgDraw = bounds.InflateAndCopy(inflate * bounds.Width, inflate * bounds.Height);
                 var prevClip = renderer.GetClip();
                 renderer.SetClip(new Region(imgDraw));
-                renderer.DrawImage(bufferImg, imgDraw, new RectangleF(bounds.X, bounds.Y, imgDraw.Width, imgDraw.Height), GraphicsUnit.Pixel);
+                renderer.DrawImage(bufferImg, imgDraw, SvgSetup.Factory.CreateRectangleF(bounds.X, bounds.Y, imgDraw.Width, imgDraw.Height), GraphicsUnit.Pixel);
                 renderer.SetClip(prevClip);
             }
         }
