@@ -34,13 +34,13 @@ namespace Svg.FilterEffects
         public override void Process(ImageBuffer buffer)
 		{
             var inputImage = buffer[this.Input];
-            var result = Factory.Instance.CreateBitmap(inputImage.Width, inputImage.Height);
+            var result = SvgSetup.Factory.CreateBitmap(inputImage.Width, inputImage.Height);
 
             var pts = new PointF[] { new PointF(this.Dx.ToDeviceValue(null, UnitRenderingType.Horizontal, null), 
                                                 this.Dy.ToDeviceValue(null, UnitRenderingType.Vertical, null)) };
             buffer.Transform.TransformVectors(pts);
 
-            using (var g = Factory.Instance.CreateGraphicsFromImage(result))
+            using (var g = SvgSetup.Factory.CreateGraphicsFromImage(result))
             {
                 g.DrawImage(inputImage, new Rectangle((int)pts[0].X, (int)pts[0].Y, 
                                                       inputImage.Width, inputImage.Height),

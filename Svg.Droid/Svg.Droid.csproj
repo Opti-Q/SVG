@@ -55,26 +55,45 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Droid\AndroidBitmap.cs" />
-    <Compile Include="Droid\AndroidColorMatrix.cs" />
-    <Compile Include="Droid\AndroidFont.cs" />
-    <Compile Include="Droid\AndroidFontFamily.cs" />
-    <Compile Include="Droid\AndroidFontFamilyProvider.cs" />
-    <Compile Include="Droid\AndroidGraphics.cs" />
-    <Compile Include="Droid\AndroidGraphicsPath.cs" />
-    <Compile Include="Droid\AndroidLinearGradientBrush.cs" />
-    <Compile Include="Droid\AndroidMatrix.cs" />
-    <Compile Include="Droid\AndroidPen.cs">
+    <Compile Include="..\Svg.Shared\EnumConverters.cs">
+      <Link>Painting\EnumConverters.cs</Link>
+    </Compile>
+    <Compile Include="..\Svg.Shared\FileSystem.cs">
+      <Link>FileSystem.cs</Link>
+    </Compile>
+    <Compile Include="..\Svg.Shared\SvgColourConverter.cs">
+      <Link>Painting\SvgColourConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Svg.Shared\SvgPaintServerFactory.cs">
+      <Link>Painting\SvgPaintServerFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Svg.Shared\SvgPathBuilder.cs">
+      <Link>Paths\SvgPathBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\Svg.Shared\SvgTransformConverter.cs">
+      <Link>Transforms\SvgTransformConverter.cs</Link>
+    </Compile>
+    <Compile Include="Platform\AndroidBitmap.cs" />
+    <Compile Include="Platform\AndroidColor.cs" />
+    <Compile Include="Platform\AndroidColorMatrix.cs" />
+    <Compile Include="Platform\AndroidFont.cs" />
+    <Compile Include="Platform\AndroidFontFamily.cs" />
+    <Compile Include="Platform\AndroidFontFamilyProvider.cs" />
+    <Compile Include="Platform\AndroidGraphics.cs" />
+    <Compile Include="Platform\AndroidGraphicsPath.cs" />
+    <Compile Include="Platform\AndroidLinearGradientBrush.cs" />
+    <Compile Include="Platform\AndroidMatrix.cs" />
+    <Compile Include="Platform\AndroidPen.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Droid\AndroidSizeF.cs" />
-    <Compile Include="Droid\AndroidPointF.cs" />
-    <Compile Include="Droid\AndroidRectangleF.cs" />
-    <Compile Include="Droid\AndroidSolidBrush.cs" />
-    <Compile Include="Droid\AndroidTextureBrush.cs" />
-    <Compile Include="Droid\Extensions.cs" />
-    <Compile Include="Droid\IAndroidShader.cs" />
-    <Compile Include="Droid\SelectableAndroidBitmap.cs" />
+    <Compile Include="Platform\AndroidSizeF.cs" />
+    <Compile Include="Platform\AndroidPointF.cs" />
+    <Compile Include="Platform\AndroidRectangleF.cs" />
+    <Compile Include="Platform\AndroidSolidBrush.cs" />
+    <Compile Include="Platform\AndroidTextureBrush.cs" />
+    <Compile Include="Platform\Extensions.cs" />
+    <Compile Include="Platform\IAndroidShader.cs" />
+    <Compile Include="Platform\SelectableAndroidBitmap.cs" />
     <Compile Include="Factory.cs" />
     <Compile Include="Rendering\SvgRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

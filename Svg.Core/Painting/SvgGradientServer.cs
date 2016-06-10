@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using Svg.Interfaces;
 using Svg.Transforms;
 
 namespace Svg
@@ -109,7 +110,7 @@ namespace Svg
         {
             get
             {
-                var transform = Factory.Instance.CreateMatrix();
+                var transform = SvgSetup.Factory.CreateMatrix();
 
                 if (GradientTransform != null)
                 {
@@ -167,13 +168,13 @@ namespace Svg
                 }
             }
 
-            ColorBlend blend = Factory.Instance.CreateColorBlend(colourBlends);
+            ColorBlend blend = SvgSetup.Factory.CreateColorBlend(colourBlends);
 
             // Set positions and colour values
             int actualStops = 0;
             float mergedOpacity = 0.0f;
             float position = 0.0f;
-            Color colour = System.Drawing.Color.Black;
+            Color colour = SvgSetup.Factory.Colors.Black;
 
             for (int i = 0; i < colourBlends; i++)
             {
@@ -185,7 +186,7 @@ namespace Svg
                     radial
                     ? 1 - (currentStop.Offset.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this) / boundWidth)
                     : (currentStop.Offset.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this) / boundWidth);
-                colour = System.Drawing.Color.FromArgb((int)(mergedOpacity * 255), currentStop.GetColor(this));
+                colour = SvgSetup.Factory.CreateColorFromArgb((int)(mergedOpacity * 255), currentStop.GetColor(this));
 
                 actualStops++;
 

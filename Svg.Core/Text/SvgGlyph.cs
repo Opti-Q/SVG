@@ -66,7 +66,7 @@ namespace Svg
         {
             if (this._path == null || this.IsPathDirty)
             {
-                _path = Factory.Instance.CreateGraphicsPath();
+                _path = SvgSetup.Factory.CreateGraphicsPath();
 
                 foreach (SvgPathSegment segment in this.PathData)
                 {
@@ -91,7 +91,7 @@ namespace Svg
         /// Gets the bounds of the element.
         /// </summary>
         /// <value>The bounds.</value>
-        public override System.Drawing.RectangleF Bounds
+        public override Svg.Interfaces.RectangleF Bounds
         {
             get { return this.Path(null).GetBounds(); }
         }

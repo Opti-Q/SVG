@@ -128,12 +128,12 @@ namespace Svg.FilterEffects
 
         private Bitmap CreateSourceGraphic()
         {
-            var graphic = Factory.Instance.CreateBitmap((int)(_bounds.Width + 2 * _inflate * _bounds.Width + _bounds.X),
+            var graphic = SvgSetup.Factory.CreateBitmap((int)(_bounds.Width + 2 * _inflate * _bounds.Width + _bounds.X),
                                      (int)(_bounds.Height + 2 * _inflate * _bounds.Height + _bounds.Y));
             using (var renderer = SvgRenderer.FromImage(graphic))
             {
                 renderer.SetBoundable(_renderer.GetBoundable());
-                var transform = Factory.Instance.CreateMatrix();
+                var transform = SvgSetup.Factory.CreateMatrix();
                 transform.Translate(_bounds.Width * _inflate, _bounds.Height * _inflate);
                 renderer.Transform = transform;
                 //renderer.Transform = _renderer.Transform;
@@ -154,14 +154,14 @@ namespace Svg.FilterEffects
                    new float[] {0, 0, 0, 1, 1},        // alpha
                    new float[] {0, 0, 0, 0, 0} };    // translations
 
-            var matrix = Factory.Instance.CreateColorMatrix(colorMatrixElements);
+            var matrix = SvgSetup.Factory.CreateColorMatrix(colorMatrixElements);
 
-            ImageAttributes attributes = Factory.Instance.CreateImageAttributes();
+            ImageAttributes attributes = SvgSetup.Factory.CreateImageAttributes();
             attributes.SetColorMatrix(matrix);
 
-            var sourceAlpha = Factory.Instance.CreateBitmap(source.Width, source.Height);
+            var sourceAlpha = SvgSetup.Factory.CreateBitmap(source.Width, source.Height);
 
-            using (var graphics = Factory.Instance.CreateGraphicsFromImage(sourceAlpha))
+            using (var graphics = SvgSetup.Factory.CreateGraphicsFromImage(sourceAlpha))
             {
 
                 graphics.DrawImage(source, new Rectangle(0, 0, source.Width, source.Height), 0, 0,

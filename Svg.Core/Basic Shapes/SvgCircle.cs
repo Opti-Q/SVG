@@ -101,7 +101,7 @@ namespace Svg
         {
             if (this._path == null || this.IsPathDirty)
             {
-                _path = Factory.Instance.CreateGraphicsPath();
+                _path = SvgSetup.Factory.CreateGraphicsPath();
                 _path.StartFigure();
                 var center = this.Center.ToDeviceValue(renderer, this);
                 var radius = this.Radius.ToDeviceValue(renderer, UnitRenderingType.Other, this);

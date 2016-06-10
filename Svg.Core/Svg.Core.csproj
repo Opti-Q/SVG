@@ -197,6 +197,7 @@
     <Compile Include="Interfaces\ColorBlend.cs" />
     <Compile Include="Interfaces\ColorMatrix.cs" />
     <Compile Include="Interfaces\ColorMatrixFlag.cs" />
+    <Compile Include="Interfaces\Colors.cs" />
     <Compile Include="Interfaces\CombineMode.cs" />
     <Compile Include="Interfaces\FillMode.cs" />
     <Compile Include="Interfaces\Font.cs" />
@@ -206,6 +207,7 @@
     <Compile Include="Interfaces\GraphicsPath.cs" />
     <Compile Include="Interfaces\GraphicsUnit.cs" />
     <Compile Include="Interfaces\IFactory.cs" />
+    <Compile Include="Interfaces\IFileSystem.cs" />
     <Compile Include="Interfaces\Image.cs" />
     <Compile Include="Interfaces\ImageAttributes.cs" />
     <Compile Include="Interfaces\ImageLockMode.cs" />
@@ -231,11 +233,9 @@
     <Compile Include="Interfaces\TextureBrush.cs" />
     <Compile Include="Interfaces\WrapMode.cs" />
     <Compile Include="NonSvgElement.cs" />
-    <Compile Include="Painting\EnumConverters.cs" />
     <Compile Include="Painting\GenericBoundable.cs" />
     <Compile Include="Painting\ISvgBoundable.cs" />
     <Compile Include="Painting\ISvgStylable.cs" />
-    <Compile Include="Painting\SvgColourConverter.cs" />
     <Compile Include="Painting\SvgColourServer.cs" />
     <Compile Include="Painting\SvgDeferredPaintServer.cs" />
     <Compile Include="Painting\SvgFallbackPaintServer .cs" />
@@ -246,7 +246,6 @@
     <Compile Include="Painting\SvgLinearGradientServer.cs" />
     <Compile Include="Painting\SvgMarker.cs" />
     <Compile Include="Painting\SvgPaintServer.cs" />
-    <Compile Include="Painting\SvgPaintServerFactory.cs" />
     <Compile Include="Painting\SvgPatternServer.cs" />
     <Compile Include="Painting\SvgRadialGradientServer.cs" />
     <Compile Include="Painting\SvgStrokeLineCap.cs" />
@@ -309,7 +308,6 @@
     <Compile Include="Transforms\SvgSkew.cs" />
     <Compile Include="Transforms\SvgTransform.cs" />
     <Compile Include="Transforms\SvgTransformCollection.cs" />
-    <Compile Include="Transforms\SvgTransformConverter.cs" />
     <Compile Include="Transforms\SvgTranslate.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

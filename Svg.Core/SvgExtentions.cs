@@ -7,6 +7,7 @@ using System.IO;
 using System.Xml;
 using System.Threading;
 using System.Globalization;
+using Svg.Interfaces;
 
 namespace Svg
 {

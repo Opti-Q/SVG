@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Svg.Transforms
 {
-    [TypeConverter(typeof(SvgTransformConverter))]
+    //[TypeConverter(typeof(SvgTransformConverter))]
     public class SvgTransformCollection : List<SvgTransform>, ICloneable
     {
     	private void AddItem(SvgTransform item)
@@ -43,7 +43,7 @@ namespace Svg.Transforms
     	/// <returns>The result of all transforms</returns>
     	public Matrix GetMatrix()
     	{
-            var transformMatrix = Factory.Instance.CreateMatrix();
+            var transformMatrix = SvgSetup.Factory.CreateMatrix();
     		
     		// Return if there are no transforms
             if (this.Count == 0)

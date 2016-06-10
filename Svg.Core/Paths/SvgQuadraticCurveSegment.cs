@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using Svg.Interfaces;
 
 namespace Svg.Pathing
 {
@@ -22,7 +23,7 @@ namespace Svg.Pathing
                 float x1 = Start.X + (this.ControlPoint.X - Start.X) * 2 / 3;
                 float y1 = Start.Y + (this.ControlPoint.Y - Start.Y) * 2 / 3;
 
-                return new PointF(x1, y1);
+                return SvgSetup.Factory.CreatePointF(x1, y1);
             }
         }
 
@@ -33,7 +34,7 @@ namespace Svg.Pathing
                 float x2 = this.ControlPoint.X + (this.End.X - this.ControlPoint.X) / 3;
                 float y2 = this.ControlPoint.Y + (this.End.Y - this.ControlPoint.Y) / 3;
 
-                return new PointF(x2, y2);
+                return SvgSetup.Factory.CreatePointF(x2, y2);
             }
         }
 

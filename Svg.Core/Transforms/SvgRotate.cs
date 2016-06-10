@@ -27,7 +27,7 @@ namespace Svg.Transforms
         {
             get
             {
-                Matrix matrix = Factory.Instance.CreateMatrix();
+                Matrix matrix = SvgSetup.Factory.CreateMatrix();
                 matrix.Translate(this.CenterX, this.CenterY);
                 matrix.Rotate(this.Angle);
                 matrix.Translate(-this.CenterX, -this.CenterY);

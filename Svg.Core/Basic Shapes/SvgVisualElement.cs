@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Diagnostics;
 using System.Linq;
+using Svg.Interfaces;
 
 namespace Svg
 {
@@ -209,14 +210,14 @@ namespace Svg
                             switch (this.StrokeLineCap)
                             {
                                 case SvgStrokeLineCap.Round:
-                                    using (var capPath = Factory.Instance.CreateGraphicsPath())
+                                    using (var capPath = SvgSetup.Factory.CreateGraphicsPath())
                                     {
                                         capPath.AddEllipse(path.PathPoints[0].X - strokeWidth / 2, path.PathPoints[0].Y - strokeWidth / 2, strokeWidth, strokeWidth);
                                         renderer.FillPath(brush, capPath);
                                     }
                                     break;
                                 case SvgStrokeLineCap.Square:
-                                    using (var capPath = Factory.Instance.CreateGraphicsPath())
+                                    using (var capPath = SvgSetup.Factory.CreateGraphicsPath())
                                     {
                                         capPath.AddRectangle(new RectangleF(path.PathPoints[0].X - strokeWidth / 2, path.PathPoints[0].Y - strokeWidth / 2, strokeWidth, strokeWidth));
                                         renderer.FillPath(brush, capPath);
@@ -226,7 +227,7 @@ namespace Svg
                         }
                         else
                         {
-                            using (var pen = Factory.Instance.CreatePen(brush, strokeWidth))
+                            using (var pen = SvgSetup.Factory.CreatePen(brush, strokeWidth))
                             {
                                 if (this.StrokeDashArray != null && this.StrokeDashArray.Count > 0)
                                 {

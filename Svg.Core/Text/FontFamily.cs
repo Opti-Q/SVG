@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Svg.Interfaces;
 
 namespace Svg.Text
 {
@@ -45,7 +46,9 @@ namespace Svg.Text
             string encStr = "UTF-8";
             string strRet = string.Empty;
 
-            using (FileStream fs = new FileStream(fontFilePath, FileMode.Open, FileAccess.Read))
+            var fileSystem = SvgSetup.Resolve<IFileSystem>();
+            //using (FileStream fs = new FileStream(fontFilePath, FileMode.Open, FileAccess.Read))
+            using(var fs = fileSystem.OpenRead(fontFilePath))
             {
 
                 TT_OFFSET_TABLE ttOffsetTable = new TT_OFFSET_TABLE()
@@ -70,7 +73,8 @@ namespace Svg.Text
                     tblDir.uLength = ReadULong(fs);
 
                     Encoding enc = Encoding.GetEncoding(encStr);
-                    string s = enc.GetString(tblDir.szTag);
+                    // TODO lx: is that correct? original: enc.GetString(tblDir.szTag)
+                    string s = enc.GetString(tblDir.szTag, 0, tblDir.szTag.Length);
 
                     if (s.CompareTo("name") == 0)
                     {
@@ -122,7 +126,8 @@ namespace Svg.Text
                         enc = Encoding.UTF8;
                     }
 
-                    strRet = enc.GetString(buf);
+                    // TODO lx: is that correct? original: enc.GetString(buf)
+                    strRet = enc.GetString(buf, 0, buf.Length);
                     if (ttRecord.uNameID == 1) { FontName = strRet; }
                     if (ttRecord.uNameID == 2) { FontSubFamily = strRet; }
 
@@ -172,7 +177,7 @@ namespace Svg.Text
             public ushort uStringOffset;
         }
 
-        static private UInt16 ReadChar(FileStream fs, int characters)
+        static private UInt16 ReadChar(Stream fs, int characters)
         {
             string[] s = new string[characters];
             byte[] buf = new byte[Convert.ToByte(s.Length)];
@@ -181,28 +186,28 @@ namespace Svg.Text
             return BitConverter.ToUInt16(buf, 0);
         }
 
-        static private UInt16 ReadByte(FileStream fs)
+        static private UInt16 ReadByte(Stream fs)
         {
             byte[] buf = new byte[11];
             buf = ReadAndSwap(fs, buf.Length);
             return BitConverter.ToUInt16(buf, 0);
         }
 
-        static private UInt16 ReadUShort(FileStream fs)
+        static private UInt16 ReadUShort(Stream fs)
         {
             byte[] buf = new byte[2];
             buf = ReadAndSwap(fs, buf.Length);
             return BitConverter.ToUInt16(buf, 0);
         }
 
-        static private UInt32 ReadULong(FileStream fs)
+        static private UInt32 ReadULong(Stream fs)
         {
             byte[] buf = new byte[4];
             buf = ReadAndSwap(fs, buf.Length);
             return BitConverter.ToUInt32(buf, 0);
         }
 
-        static private byte[] ReadAndSwap(FileStream fs, int size)
+        static private byte[] ReadAndSwap(Stream fs, int size)
         {
             byte[] buf = new byte[size];
             fs.Read(buf, 0, buf.Length);

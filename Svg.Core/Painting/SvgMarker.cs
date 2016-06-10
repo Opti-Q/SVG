@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Linq;
 using Svg.DataTypes;
+using Svg.Interfaces;
 
 namespace Svg
 {
@@ -94,14 +95,14 @@ namespace Svg
             return null;
         }
 
-        public override System.Drawing.RectangleF Bounds
+        public override Svg.Interfaces.RectangleF Bounds
         {
             get
             {
                 var path = this.Path(null);
                 if (path != null)
                     return path.GetBounds();
-                return new System.Drawing.RectangleF();
+                return SvgSetup.Factory.CreateRectangleF();
             }
         }
 
@@ -173,7 +174,7 @@ namespace Svg
             {
                 using (var markerPath = GetClone(pOwner))
                 {
-                    using (var transMatrix = Factory.Instance.CreateMatrix())
+                    using (var transMatrix = SvgSetup.Factory.CreateMatrix())
                     {
                         transMatrix.Translate(pMarkerPoint.X, pMarkerPoint.Y);
                         if (Orient.IsAuto)
@@ -224,12 +225,12 @@ namespace Svg
             switch (MarkerUnits)
             {
                 case SvgMarkerUnits.StrokeWidth:
-                    return (Factory.Instance.CreatePen(pBrush, StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, this) * 
+                    return (SvgSetup.Factory.CreatePen(pBrush, StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, this) * 
                                             pPath.StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, this)));
                 case SvgMarkerUnits.UserSpaceOnUse:
-                    return (Factory.Instance.CreatePen(pBrush, StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, this)));
+                    return (SvgSetup.Factory.CreatePen(pBrush, StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, this)));
             }
-            return (Factory.Instance.CreatePen(pBrush, StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, this)));
+            return (SvgSetup.Factory.CreatePen(pBrush, StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, this)));
         }
 
         /// <summary>
@@ -242,7 +243,7 @@ namespace Svg
             switch (MarkerUnits)
             {
                 case SvgMarkerUnits.StrokeWidth:
-                    using (var transMatrix = Factory.Instance.CreateMatrix())
+                    using (var transMatrix = SvgSetup.Factory.CreateMatrix())
                     {
                         transMatrix.Scale(AdjustForViewBoxWidth(pPath.StrokeWidth), AdjustForViewBoxHeight(pPath.StrokeWidth));
                         pRet.Transform(transMatrix);

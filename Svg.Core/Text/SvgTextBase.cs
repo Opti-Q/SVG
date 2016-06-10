@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Drawing;
 using Svg.DataTypes;
 using System.Linq;
+using Svg.Interfaces;
 
 namespace Svg
 {
@@ -226,7 +227,7 @@ namespace Svg
         /// Gets the bounds of the element.
         /// </summary>
         /// <value>The bounds.</value>
-        public override System.Drawing.RectangleF Bounds
+        public override Svg.Interfaces.RectangleF Bounds
         {
             get
             {
@@ -351,7 +352,7 @@ namespace Svg
                 }
             }
 
-            var path = state.GetPath() ?? Factory.Instance.CreateGraphicsPath();
+            var path = state.GetPath() ?? SvgSetup.Factory.CreateGraphicsPath();
 
             // Apply any text length adjustments
             if (doMeasurements)
@@ -372,7 +373,7 @@ namespace Svg
                         }
                         else
                         {
-                            using (var matrix = Factory.Instance.CreateMatrix())
+                            using (var matrix = SvgSetup.Factory.CreateMatrix())
                             {
                                 matrix.Translate(-1 * bounds.X, 0, MatrixOrder.Append);
                                 matrix.Scale(specLength / actLength, 1, MatrixOrder.Append);
@@ -760,11 +761,11 @@ namespace Svg
             private void DrawStringOnCurrPath(string value, IFontDefn font, PointF location, float fontBaselineHeight, float rotation)
             {
                 var drawPath = _currPath;
-                if (rotation != 0.0f) drawPath = Factory.Instance.CreateGraphicsPath();
+                if (rotation != 0.0f) drawPath = SvgSetup.Factory.CreateGraphicsPath();
                 font.AddStringToPath(this.Renderer, drawPath, value, new PointF(location.X, location.Y - fontBaselineHeight));
                 if (rotation != 0.0f && drawPath.PointCount > 0)
                 {
-                    using (var matrix = Factory.Instance.CreateMatrix())
+                    using (var matrix = SvgSetup.Factory.CreateMatrix())
                     {
                         matrix.Translate(-1 * location.X, -1 * location.Y, MatrixOrder.Append);
                         matrix.Rotate(rotation, MatrixOrder.Append);
@@ -780,7 +781,7 @@ namespace Svg
             {
                 if (_currPath == null)
                 {
-                    _currPath = Factory.Instance.CreateGraphicsPath();
+                    _currPath = SvgSetup.Factory.CreateGraphicsPath();
                     _currPath.StartFigure();
 
                     var currState = this;
@@ -832,7 +833,7 @@ namespace Svg
 
                         if (xOffset != 0)
                         {
-                            using (var matrix = Factory.Instance.CreateMatrix())
+                            using (var matrix = SvgSetup.Factory.CreateMatrix())
                             {
                                 matrix.Translate(xOffset, 0);
                                 foreach (var path in _anchoredPaths)

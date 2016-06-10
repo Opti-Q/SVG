@@ -103,7 +103,7 @@ namespace Svg
                 var center = SvgUnit.GetDevicePoint(this._centerX, this._centerY, renderer, this);
                 var radius = SvgUnit.GetDevicePoint(this._radiusX, this._radiusY, renderer, this);
 
-                this._path = Factory.Instance.CreateGraphicsPath();
+                this._path = SvgSetup.Factory.CreateGraphicsPath();
                 _path.StartFigure();
                 _path.AddEllipse(center.X - radius.X, center.Y - radius.Y, 2 * radius.X, 2 * radius.Y);
                 _path.CloseFigure();

@@ -1,13 +1,14 @@
 
 using System;
 using System.Drawing;
+using Svg.Interfaces;
 
 namespace Svg
 {
     public interface Graphics : IDisposable
     {
-        void DrawImage(Bitmap bitmap, Rectangle rectangle, int x, int y, int width, int height, GraphicsUnit pixel);
-        void DrawImage(Bitmap bitmap, Rectangle rectangle, int x, int y, int width, int height, GraphicsUnit pixel, ImageAttributes attributes);
+        void DrawImage(Bitmap bitmap, RectangleF rectangle, int x, int y, int width, int height, GraphicsUnit pixel);
+        void DrawImage(Bitmap bitmap, RectangleF rectangle, int x, int y, int width, int height, GraphicsUnit pixel, ImageAttributes attributes);
         void Flush();
         void Save();
         TextRenderingHint TextRenderingHint { get; set; }
@@ -16,13 +17,13 @@ namespace Svg
         SmoothingMode SmoothingMode { get; set; }
         Matrix Transform { get; set; }
         void DrawImage(Image bitmap, RectangleF destRect, RectangleF srcRect, GraphicsUnit graphicsUnit);
-        void DrawImageUnscaled(Image image, Point location);
+        void DrawImageUnscaled(Image image, PointF location);
         void DrawPath(Pen pen, GraphicsPath path);
         void FillPath(Brush brush, GraphicsPath path);
         void RotateTransform(float fAngle, MatrixOrder order);
         void ScaleTransform(float sx, float sy, MatrixOrder order);
         void SetClip(Region region, CombineMode combineMode);
         void TranslateTransform(float dx, float dy, MatrixOrder order);
-        Region[] MeasureCharacterRanges(string text, Font font, Rectangle rectangle, StringFormat format);
+        Region[] MeasureCharacterRanges(string text, Font font, RectangleF rectangle, StringFormat format);
     }
 }

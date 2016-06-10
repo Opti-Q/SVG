@@ -28,6 +28,12 @@ namespace Svg
         FontFamilyProvider GetFontFamilyProvider();
         Image CreateImageFromStream(Stream stream);
         Bitmap CreateBitmapFromStream(Stream stream);
-        RectangleF CreateRectangle(float left, float top, float width, float height);
+        RectangleF CreateRectangleF(float left, float top, float width, float height);
+        RectangleF CreateRectangleF();
+
+        Colors Colors { get; }
+        Color CreateColorFromArgb(int alpha, Color colour);
+        PointF CreatePointF(float x, float y);
+        SizeF CreateSizeF(float width, float height);
     }
 }

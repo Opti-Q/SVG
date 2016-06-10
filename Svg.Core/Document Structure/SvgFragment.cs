@@ -194,7 +194,7 @@ namespace Svg
         {
             get
             {
-                var path = Factory.Instance.CreateGraphicsPath();
+                var path = SvgSetup.Factory.CreateGraphicsPath();
 
                 AddPaths(this, path);
 

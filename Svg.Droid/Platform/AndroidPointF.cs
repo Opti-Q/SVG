@@ -1,14 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Svg.Interfaces;
 
 namespace Svg.Droid
@@ -52,6 +41,16 @@ namespace Svg.Droid
         public static implicit operator System.Drawing.PointF(AndroidPointF other)
         {
             return other._inner;
+        }
+
+        public static implicit operator AndroidPointF(Android.Graphics.PointF other)
+        {
+            return new AndroidPointF(other.X, other.Y);
+        }
+
+        public static implicit operator Android.Graphics.PointF(AndroidPointF other)
+        {
+            return other._inner.ToPointF();
         }
     }
 }

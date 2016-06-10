@@ -7,6 +7,15 @@ namespace Svg
     {
         private static readonly object _lock = new object();
         private static readonly Dictionary<Type, Func<object>> _serviceRegistry = new Dictionary<Type, Func<object>>();
+        private static IFactory _factory = null;
+
+        public static IFactory Factory
+        {
+            get
+            {
+                return _factory;
+            }
+        }
 
         public static void Register<TInterface, TImplementation>(Func<TImplementation> factory)
             where TInterface : class
@@ -15,6 +24,10 @@ namespace Svg
             lock (_lock)
             {
                 _serviceRegistry[typeof(TInterface)] = factory;
+
+                // store IFactory separatly as it is used more often
+                if (typeof(TInterface) == typeof(IFactory))
+                    _factory = (IFactory)factory();
             }
         }
 

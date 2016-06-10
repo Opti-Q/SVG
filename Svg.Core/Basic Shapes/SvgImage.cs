@@ -132,7 +132,7 @@ namespace Svg
                     RectangleF destRect = destClip;
                         
                     this.PushTransforms(renderer);
-                    renderer.SetClip(Factory.Instance.CreateRegion(destClip), CombineMode.Intersect);
+                    renderer.SetClip(SvgSetup.Factory.CreateRegion(destClip), CombineMode.Intersect);
                     this.SetClip(renderer);
 
                     if (AspectRatio != null && AspectRatio.Align != SvgPreserveAspectRatio.none)
@@ -233,7 +233,7 @@ namespace Svg
                     byte[] imageBytes = Convert.FromBase64String(uriString.Substring(dataIdx));
                     using (var stream = new MemoryStream(imageBytes))
                     {
-                        return Factory.Instance.CreateImageFromStream(stream);
+                        return SvgSetup.Factory.CreateImageFromStream(stream);
                     }
                 }
 
@@ -258,7 +258,7 @@ namespace Svg
                         }
                         else
                         {
-                            return Factory.Instance.CreateBitmapFromStream(stream);
+                            return SvgSetup.Factory.CreateBitmapFromStream(stream);
                         }
                     }
                 }

@@ -1,10 +1,11 @@
 using System;
-using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using Android.Graphics;
 using Svg.Droid;
-using Svg;
-using Svg.Interfaces;
+using Svg.Platform;
+using Color = Svg.Interfaces.Color;
+using PointF = Svg.Interfaces.PointF;
 using RectangleF = Svg.Interfaces.RectangleF;
 
 namespace Svg
@@ -77,7 +78,7 @@ namespace Svg
 
         public SolidBrush CreateSolidBrush(Color color)
         {
-            return new AndroidSolidBrush(color.ToColor());
+            return new AndroidSolidBrush((AndroidColor)color);
         }
 
         public ColorBlend CreateColorBlend(int colourBlends)
@@ -92,7 +93,7 @@ namespace Svg
 
         public LinearGradientBrush CreateLinearGradientBrush(PointF start, PointF end, Color startColor, Color endColor)
         {
-            return new AndroidLinearGradientBrush(start.ToPointF(), end.ToPointF(), startColor.ToColor(), endColor.ToColor());
+            return new AndroidLinearGradientBrush((AndroidPointF)start, (AndroidPointF)end, (AndroidColor)startColor, (AndroidColor)endColor);
         }
 
         public PathGradientBrush CreatePathGradientBrush(GraphicsPath path)
@@ -132,9 +133,24 @@ namespace Svg
             return new AndroidBitmap(bitmap);
         }
 
-        public RectangleF CreateRectangle(float left, float top, float width, float height)
+        public RectangleF CreateRectangleF(float left, float top, float width, float height)
         {
-            throw new NotImplementedException();
+            return new AndroidRectangleF(left, top, width, height);
+        }
+
+        public RectangleF CreateRectangleF()
+        {
+            return new AndroidRectangleF();
+        }
+
+        public Color CreateColorFromArgb(int alpha, Color color)
+        {
+            return new AndroidColor(alpha, color);
+        }
+
+        public PointF CreatePointF(float x, float y)
+        {
+            return new AndroidPointF(x, y);
         }
     }
 }

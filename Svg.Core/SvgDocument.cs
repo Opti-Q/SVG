@@ -448,7 +448,7 @@ namespace Svg
             //Trace.TraceInformation("Begin Render");
 
             var size = GetDimensions();
-            var bitmap = Factory.Instance.CreateBitmap((int)Math.Round(size.Width), (int)Math.Round(size.Height));
+            var bitmap = SvgSetup.Factory.CreateBitmap((int)Math.Round(size.Width), (int)Math.Round(size.Height));
             // 	bitmap.SetResolution(300, 300);
             try
             {

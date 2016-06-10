@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using Svg.Interfaces;
 
 namespace Svg
 {
@@ -7,7 +8,7 @@ namespace Svg
     {
         float DpiY { get; }
         void DrawImage(Image image, RectangleF destRect, RectangleF srcRect, GraphicsUnit graphicsUnit);
-        void DrawImageUnscaled(Image image, Point location);
+        void DrawImageUnscaled(Image image, PointF location);
         void DrawPath(Pen pen, GraphicsPath path);
         void FillPath(Brush brush, GraphicsPath path);
         ISvgBoundable GetBoundable();

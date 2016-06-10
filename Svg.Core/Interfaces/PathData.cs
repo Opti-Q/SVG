@@ -1,4 +1,5 @@
 using System.Drawing;
+using Svg.Interfaces;
 
 namespace Svg
 {
@@ -16,11 +17,11 @@ namespace Svg
         }
 
         // Summary:
-        //     Gets or sets an array of System.Drawing.PointF structures that represents
+        //     Gets or sets an array of Svg.Interfaces.PointF structures that represents
         //     the points through which the path is constructed.
         //
         // Returns:
-        //     An array of System.Drawing.PointF objects that represents the points through
+        //     An array of Svg.Interfaces.PointF objects that represents the points through
         //     which the path is constructed.
         public PointF[] Points { get; private set; }
         //

@@ -48,7 +48,7 @@ namespace Svg.Document_Structure
         /// Gets the bounds of the element.
         /// </summary>
         /// <value>The bounds.</value>
-        public override System.Drawing.RectangleF Bounds
+        public override Svg.Interfaces.RectangleF Bounds
         {
             get
             {

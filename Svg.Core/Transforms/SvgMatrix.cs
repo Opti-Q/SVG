@@ -20,7 +20,7 @@ namespace Svg.Transforms
         {
             get
             {
-            	Matrix matrix = Factory.Instance.CreateMatrix(
+            	Matrix matrix = SvgSetup.Factory.CreateMatrix(
             		this.points[0],
             		this.points[1],
             		this.points[3],

@@ -6,9 +6,17 @@ namespace Svg.Droid
     {
         System.Drawing.RectangleF _inner;
 
+        public AndroidRectangleF()
+        {
+            _inner = new System.Drawing.RectangleF();
+        }
         public AndroidRectangleF(float left, float top, float width, float height)
         {
             _inner = new System.Drawing.RectangleF(left, top, width, height);
+        }
+        public AndroidRectangleF(System.Drawing.RectangleF inner)
+        {
+            _inner = inner;
         }
 
         public void Inflate(float x, float y)
@@ -95,6 +103,15 @@ namespace Svg.Droid
         {
             get { return _inner.Y; }
             set { _inner.Y = value; }
+        }
+
+        public RectangleF UnionAndCopy(RectangleF other)
+        {
+            return new AndroidRectangleF(System.Drawing.RectangleF.Union(_inner, ((AndroidRectangleF)other)._inner));
+        }
+        public RectangleF InflateAndCopy(float x, float y)
+        {
+            return new AndroidRectangleF(System.Drawing.RectangleF.Inflate(_inner, x, y));
         }
     }
 }

@@ -1,6 +1,7 @@
 
 using System;
 using System.Drawing;
+using Svg.Interfaces;
 
 namespace Svg
 {

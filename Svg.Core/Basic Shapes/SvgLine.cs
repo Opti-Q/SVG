@@ -129,7 +129,7 @@ namespace Svg
                 PointF end = new PointF(this.EndX.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
                                         this.EndY.ToDeviceValue(renderer, UnitRenderingType.Vertical, this));
 
-                this._path = Factory.Instance.CreateGraphicsPath();
+                this._path = SvgSetup.Factory.CreateGraphicsPath();
                 this._path.AddLine(start, end);
                 this.IsPathDirty = false;
             }
@@ -167,7 +167,7 @@ namespace Svg
             return result;
         }
 
-        public override System.Drawing.RectangleF Bounds
+        public override Svg.Interfaces.RectangleF Bounds
         {
             get { return this.Path(null).GetBounds(); }
         }

@@ -4,7 +4,7 @@ using System.Drawing;
 namespace Svg.Droid
 {
 
-    public class AndroidBitmap : SvgSetup.Bitmap
+    public class AndroidBitmap : Svg.Bitmap
     {
         protected Android.Graphics.Bitmap _image;
 
@@ -40,14 +40,6 @@ namespace Svg.Droid
         public void Dispose()
         {
             _image.Dispose();
-        }
-
-
-        public BitmapData LockBits(Rectangle rectangle, ImageLockMode lockmode, PixelFormat pixelFormat)
-        {
-            // TODO LX only partially supported by Android
-            _image.LockPixels();
-            throw new NotSupportedException();
         }
 
         public void UnlockBits(BitmapData bitmapData)

@@ -26,7 +26,7 @@ namespace Svg.Transforms
         {
             get
             {
-                Matrix matrix = Factory.Instance.CreateMatrix();
+                Matrix matrix = SvgSetup.Factory.CreateMatrix();
                 matrix.Shear(this.X, this.Y);
                 return matrix;
             }

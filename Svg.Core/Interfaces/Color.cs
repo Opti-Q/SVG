@@ -16,5 +16,9 @@ namespace Svg.Interfaces
         byte R { get; }
         byte G { get; }
         byte B { get; }
+        float GetBrightness();
+        float GetSaturation();
+        float GetHue();
+        int ToArgb();
     }
 }

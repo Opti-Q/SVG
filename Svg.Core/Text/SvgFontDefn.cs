@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using Svg.Interfaces;
+
 namespace Svg
 {
     public class SvgFontDefn : IFontDefn
@@ -40,14 +42,14 @@ namespace Svg
             return renderer.DpiY / 72f * baselineOffset;
         }
 
-        public IList<System.Drawing.RectangleF> MeasureCharacters(ISvgRenderer renderer, string text)
+        public IList<Svg.Interfaces.RectangleF> MeasureCharacters(ISvgRenderer renderer, string text)
         {
             var result = new List<RectangleF>();
             using (var path = GetPath(renderer, text, result, false)) { }
             return result;
         }
 
-        public System.Drawing.SizeF MeasureString(ISvgRenderer renderer, string text)
+        public Svg.Interfaces.SizeF MeasureString(ISvgRenderer renderer, string text)
         {
             var result = new List<RectangleF>();
             using (var path = GetPath(renderer, text, result, true)) { }
@@ -61,7 +63,7 @@ namespace Svg
             var textPath = GetPath(renderer, text, null, false);
             if (textPath.PointCount > 0)
             {
-                using (var translate = Factory.Instance.CreateMatrix())
+                using (var translate = SvgSetup.Factory.CreateMatrix())
                 {
                     translate.Translate(location.X, location.Y);
                     textPath.Transform(translate);
@@ -84,7 +86,7 @@ namespace Svg
 
             var ascent = Ascent(renderer);
 
-            var result = Factory.Instance.CreateGraphicsPath();
+            var result = SvgSetup.Factory.CreateGraphicsPath();
             if (string.IsNullOrEmpty(text)) return result;
 
             for (int i = 0; i < text.Length; i++)
@@ -95,7 +97,7 @@ namespace Svg
                     xPos -= kern.Kerning * _emScale;
                 }
                 path = (GraphicsPath)glyph.Path(renderer).Clone();
-                scaleMatrix = Factory.Instance.CreateMatrix();
+                scaleMatrix = SvgSetup.Factory.CreateMatrix();
                 scaleMatrix.Scale(_emScale, -1 * _emScale, MatrixOrder.Append);
                 scaleMatrix.Translate(xPos, ascent, MatrixOrder.Append);
                 path.Transform(scaleMatrix);

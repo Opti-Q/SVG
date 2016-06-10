@@ -130,7 +130,7 @@ namespace Svg
         /// </summary>
         /// <remarks>Apparently this can be set on non-sensical elements.  Don't ask; just check the tests.</remarks>
         [SvgAttribute("stop-color", true)]
-        [TypeConverter(typeof(SvgPaintServerFactory))]
+        //[TypeConverter(typeof(SvgPaintServerFactory))]
         public SvgPaintServer StopColor
         {
             get { return this.Attributes["stop-color"] as SvgPaintServer; }
@@ -247,17 +247,17 @@ namespace Svg
                         switch (state)
                         {
                             case FontParseState.fontStyle:
-                                success = Enums.TryParse<SvgFontStyle>(part, out fontStyle);
+                                success = Enum.TryParse<SvgFontStyle>(part, out fontStyle);
                                 if (success) this.FontStyle = fontStyle;
                                 state++;
                                 break;
                             case FontParseState.fontVariant:
-                                success = Enums.TryParse<SvgFontVariant>(part, out fontVariant);
+                                success = Enum.TryParse<SvgFontVariant>(part, out fontVariant);
                                 if (success) this.FontVariant = fontVariant;
                                 state++;
                                 break;
                             case FontParseState.fontWeight:
-                                success = Enums.TryParse<SvgFontWeight>(part, out fontWeight);
+                                success = Enum.TryParse<SvgFontWeight>(part, out fontWeight);
                                 if (success) this.FontWeight = fontWeight;
                                 state++;
                                 break;
@@ -323,7 +323,7 @@ namespace Svg
 
             if (sFaces == null)
             {
-                var fontStyle = SvgSetup.FontStyle.Regular;
+                var fontStyle = Svg.FontStyle.Regular;
 
                 // Get the font-weight
                 switch (this.FontWeight)
@@ -334,7 +334,7 @@ namespace Svg
                     case SvgFontWeight.W700:
                     case SvgFontWeight.W800:
                     case SvgFontWeight.W900:
-                        fontStyle |= SvgSetup.FontStyle.Bold;
+                        fontStyle |= Svg.FontStyle.Bold;
                         break;
                 }
 
@@ -343,7 +343,7 @@ namespace Svg
                 {
                     case SvgFontStyle.Italic:
                     case SvgFontStyle.Oblique:
-                        fontStyle |= SvgSetup.FontStyle.Italic;
+                        fontStyle |= Svg.FontStyle.Italic;
                         break;
                 }
 
@@ -351,10 +351,10 @@ namespace Svg
                 switch (this.TextDecoration)
                 {
                     case SvgTextDecoration.LineThrough:
-                        fontStyle |= SvgSetup.FontStyle.Strikeout;
+                        fontStyle |= Svg.FontStyle.Strikeout;
                         break;
                     case SvgTextDecoration.Underline:
-                        fontStyle |= SvgSetup.FontStyle.Underline;
+                        fontStyle |= Svg.FontStyle.Underline;
                         break;
                 }
 
@@ -365,7 +365,7 @@ namespace Svg
                 }
 
                 // Get the font-family
-                return new GdiFontDefn(Factory.Instance.CreateFont(ff, fontSize, fontStyle, GraphicsUnit.Pixel));
+                return new GdiFontDefn(SvgSetup.Factory.CreateFont(ff, fontSize, fontStyle, GraphicsUnit.Pixel));
             }
             else
             {
@@ -384,7 +384,7 @@ namespace Svg
             // Split font family list on "," and then trim start and end spaces and quotes.
             var fontParts = (fontFamilyList ?? "").Split(new[] { ',' }).Select(fontName => fontName.Trim(new[] { '"', ' ', '\'' }));
 
-            var ffProvider = Factory.Instance.GetFontFamilyProvider();
+            var ffProvider = SvgSetup.Factory.GetFontFamilyProvider();
 
             var families = ffProvider.Families;
             FontFamily family;

@@ -27,5 +27,7 @@ namespace Svg.Interfaces
         float Width { get; set; }
         float X { get; set; }
         float Y { get; set; }
+        RectangleF UnionAndCopy(RectangleF other);
+        RectangleF InflateAndCopy(float x, float y);
     }
 }

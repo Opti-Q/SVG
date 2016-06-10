@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using System.ComponentModel;
+using Svg.Interfaces;
 
 namespace Svg
 {
@@ -56,7 +57,7 @@ namespace Svg
         /// Gets or sets the colour of the gradient stop.
         /// </summary>
         [SvgAttribute("stop-color")]
-        [TypeConverter(typeof(SvgPaintServerFactory))]
+        //[TypeConverter(typeof(SvgPaintServerFactory))]
         public SvgPaintServer StopColor
         {
             get 

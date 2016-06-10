@@ -3,6 +3,7 @@ using System.Drawing;
 
 using Svg.Transforms;
 using System.Linq;
+using Svg.Interfaces;
 
 namespace Svg
 {
@@ -135,7 +136,7 @@ namespace Svg
         {
             get
             {
-                var transform = Factory.Instance.CreateMatrix();
+                var transform = SvgSetup.Factory.CreateMatrix();
 
                 if (PatternTransform != null)
                 {
@@ -200,7 +201,7 @@ namespace Svg
             {
                 if (patternUnits == SvgCoordinateUnits.ObjectBoundingBox) renderer.SetBoundable(renderingElement);
 
-                using (var patternMatrix = Factory.Instance.CreateMatrix())
+                using (var patternMatrix = SvgSetup.Factory.CreateMatrix())
                 {
                     var bounds = renderer.GetBoundable().Bounds;
                     var xScale = (patternUnits == SvgCoordinateUnits.ObjectBoundingBox ? bounds.Width : 1);
@@ -218,13 +219,13 @@ namespace Svg
                                         (patternContentUnits == SvgCoordinateUnits.ObjectBoundingBox ? bounds.Height : 1) * 
                                         (viewBox.Height > 0 ? height / viewBox.Height : 1), MatrixOrder.Prepend);
 
-                    Bitmap image = Factory.Instance.CreateBitmap((int)width, (int)height);
+                    Bitmap image = SvgSetup.Factory.CreateBitmap((int)width, (int)height);
                     using (var iRenderer = SvgRenderer.FromImage(image))
                     {
                         iRenderer.SetBoundable((_patternContentUnits == SvgCoordinateUnits.ObjectBoundingBox) ? new GenericBoundable(0, 0, width, height) : renderer.GetBoundable());
                         iRenderer.Transform = patternMatrix;
                         iRenderer.SmoothingMode = SmoothingMode.AntiAlias;
-                        iRenderer.SetClip(new Region(new RectangleF(0, 0,
+                        iRenderer.SetClip(new Region(SvgSetup.Factory.CreateRectangleF(0, 0,
                             viewBox.Width > 0 ? viewBox.Width : width,
                             viewBox.Height > 0 ? viewBox.Height : height)));
 
@@ -234,7 +235,7 @@ namespace Svg
                         }
                     }
 
-                    TextureBrush textureBrush = Factory.Instance.CreateTextureBrush(image);
+                    TextureBrush textureBrush = SvgSetup.Factory.CreateTextureBrush(image);
                     var brushTransform = EffectivePatternTransform.Clone();
                     brushTransform.Translate(x, y, MatrixOrder.Append);
                     textureBrush.Transform = brushTransform;

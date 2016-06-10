@@ -9,7 +9,7 @@ namespace Svg
     /// <summary>
     /// Represents the base class for all paint servers that are intended to be used as a fill or stroke.
     /// </summary>
-    [TypeConverter(typeof(SvgPaintServerFactory))]
+    //[TypeConverter(typeof(SvgPaintServerFactory))]
     public abstract class SvgPaintServer : SvgElement
     {
         public Func<SvgPaintServer> GetCallback { get; set; }

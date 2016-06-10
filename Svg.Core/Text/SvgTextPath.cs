@@ -61,7 +61,7 @@ namespace Svg
             var pathData = (GraphicsPath)path.Path(renderer).Clone();
             if (path.Transforms.Count > 0)
             {
-                Matrix transformMatrix = Factory.Instance.CreateMatrix(1, 0, 0, 1, 0, 0);
+                Matrix transformMatrix = SvgSetup.Factory.CreateMatrix(1, 0, 0, 1, 0, 0);
 
                 foreach (var transformation in path.Transforms)
                 {

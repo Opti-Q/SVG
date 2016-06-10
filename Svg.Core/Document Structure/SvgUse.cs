@@ -59,9 +59,9 @@ namespace Svg
             return (element != null) ? element.Path(renderer) : null;
         }
 
-        public override System.Drawing.RectangleF Bounds
+        public override Svg.Interfaces.RectangleF Bounds
         {
-            get { return new System.Drawing.RectangleF(); }
+            get { return new Svg.Interfaces.RectangleF(); }
         }
 
         protected override bool Renderable { get { return false; } }

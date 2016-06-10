@@ -66,7 +66,7 @@ namespace Svg
         {
             if (this._path == null || this.IsPathDirty)
             {
-                this._path = Factory.Instance.CreateGraphicsPath();
+                this._path = SvgSetup.Factory.CreateGraphicsPath();
                 this._path.StartFigure();
 
                 try

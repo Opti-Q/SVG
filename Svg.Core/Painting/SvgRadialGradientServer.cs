@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using Svg.Interfaces;
 
 namespace Svg
 {
@@ -113,12 +114,12 @@ namespace Svg
                 if (this.GradientUnits == SvgCoordinateUnits.ObjectBoundingBox) renderer.SetBoundable(renderingElement);
 
                 // Calculate the path and transform it appropriately
-                var center = new PointF(NormalizeUnit(CenterX).ToDeviceValue(renderer, UnitRenderingType.Horizontal, this),
+                var center = SvgSetup.Factory.CreatePointF(NormalizeUnit(CenterX).ToDeviceValue(renderer, UnitRenderingType.Horizontal, this),
                                         NormalizeUnit(CenterY).ToDeviceValue(renderer, UnitRenderingType.Vertical, this));
-                var focals = new PointF[] {new PointF(NormalizeUnit(FocalX).ToDeviceValue(renderer, UnitRenderingType.Horizontal, this),
+                var focals = new PointF[] {SvgSetup.Factory.CreatePointF(NormalizeUnit(FocalX).ToDeviceValue(renderer, UnitRenderingType.Horizontal, this),
                                                       NormalizeUnit(FocalY).ToDeviceValue(renderer, UnitRenderingType.Vertical, this)) };
                 var specifiedRadius = NormalizeUnit(Radius).ToDeviceValue(renderer, UnitRenderingType.Other, this);
-                var path = Factory.Instance.CreateGraphicsPath();
+                var path = SvgSetup.Factory.CreateGraphicsPath();
                 path.AddEllipse(
                     center.X - specifiedRadius, center.Y - specifiedRadius,
                     specifiedRadius * 2, specifiedRadius * 2
@@ -138,7 +139,7 @@ namespace Svg
 
 
                 // Calculate any required scaling
-                var scaleBounds = RectangleF.Inflate(renderingElement.Bounds, renderingElement.StrokeWidth, renderingElement.StrokeWidth);
+                var scaleBounds = renderingElement.Bounds.InflateAndCopy(renderingElement.StrokeWidth, renderingElement.StrokeWidth);
                 var scale = CalcScale(scaleBounds, path);
 
                 // Not ideal, but this makes sure that the rest of the shape gets properly filled or drawn
@@ -146,12 +147,12 @@ namespace Svg
                 {
                     var stop = Stops.Last();
                     var origColor = stop.GetColor(renderingElement);
-                    var renderColor = System.Drawing.Color.FromArgb((int)(opacity * stop.GetOpacity() * 255), origColor);
+                    var renderColor = SvgSetup.Factory.CreateColorFromArgb((int)(opacity * stop.GetOpacity() * 255), origColor);
 
                     var origClip = renderer.GetClip();
                     try
                     {
-                        using (var solidBrush = Factory.Instance.CreateSolidBrush(renderColor))
+                        using (var solidBrush = SvgSetup.Factory.CreateSolidBrush(renderColor))
                         {
                             var newClip = origClip.Clone();
                             newClip.Exclude(path);
@@ -160,7 +161,7 @@ namespace Svg
                             var renderPath = (GraphicsPath)renderingElement.Path(renderer);
                             if (forStroke)
                             {
-                                using (var pen = Factory.Instance.CreatePen(solidBrush, renderingElement.StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, renderingElement)))
+                                using (var pen = SvgSetup.Factory.CreatePen(solidBrush, renderingElement.StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, renderingElement)))
                                 {
                                     renderer.DrawPath(pen, renderPath);
                                 }
@@ -182,8 +183,8 @@ namespace Svg
 
                 // Transform the path based on the scaling
                 var gradBounds = path.GetBounds();
-                var transCenter = new PointF(gradBounds.Left + gradBounds.Width / 2, gradBounds.Top + gradBounds.Height / 2);
-                using (var scaleMat = Factory.Instance.CreateMatrix())
+                var transCenter = SvgSetup.Factory.CreatePointF(gradBounds.Left + gradBounds.Width / 2, gradBounds.Top + gradBounds.Height / 2);
+                using (var scaleMat = SvgSetup.Factory.CreateMatrix())
                 {
                     scaleMat.Translate(-1 * transCenter.X, -1 * transCenter.Y, MatrixOrder.Append);
                     scaleMat.Scale(scale, scale, MatrixOrder.Append);
@@ -192,7 +193,7 @@ namespace Svg
                 }
 
                 // calculate the brush
-                var brush = Factory.Instance.CreatePathGradientBrush(path);
+                var brush = SvgSetup.Factory.CreatePathGradientBrush(path);
                 brush.CenterPoint = focals[0];
                 brush.InterpolationColors = blend;
 
@@ -217,20 +218,20 @@ namespace Svg
         private float CalcScale(RectangleF bounds, GraphicsPath path)
         {
             var points = new PointF[] {
-                new PointF(bounds.Left, bounds.Top), 
-                new PointF(bounds.Right, bounds.Top), 
-                new PointF(bounds.Right, bounds.Bottom), 
-                new PointF(bounds.Left, bounds.Bottom) 
+                SvgSetup.Factory.CreatePointF(bounds.Left, bounds.Top), 
+                SvgSetup.Factory.CreatePointF(bounds.Right, bounds.Top), 
+                SvgSetup.Factory.CreatePointF(bounds.Right, bounds.Bottom), 
+                SvgSetup.Factory.CreatePointF(bounds.Left, bounds.Bottom) 
             };
             var pathBounds = path.GetBounds();
-            var pathCenter = new PointF(pathBounds.X + pathBounds.Width / 2, pathBounds.Y + pathBounds.Height / 2);
-            using (var transform = Factory.Instance.CreateMatrix())
+            var pathCenter = SvgSetup.Factory.CreatePointF(pathBounds.X + pathBounds.Width / 2, pathBounds.Y + pathBounds.Height / 2);
+            using (var transform = SvgSetup.Factory.CreateMatrix())
             {
                 transform.Translate(-1 * pathCenter.X, -1 * pathCenter.Y, MatrixOrder.Append);
                 transform.Scale(.95f, .95f, MatrixOrder.Append);
                 transform.Translate(pathCenter.X, pathCenter.Y, MatrixOrder.Append);
 
-                var boundsTest = RectangleF.Inflate(bounds, 0, 0);
+                var boundsTest = bounds.InflateAndCopy(0, 0);
                 while (!(path.IsVisible(points[0]) && path.IsVisible(points[1]) &&
                          path.IsVisible(points[2]) && path.IsVisible(points[3])))
                 {
@@ -249,10 +250,10 @@ namespace Svg
             var clipFlat = (GraphicsPath)clip.Clone();
             clipFlat.Flatten();
             var clipBounds = clipFlat.GetBounds();
-            var bounds = RectangleF.Union(subject, clipBounds);
+            var bounds = subject.UnionAndCopy(clipBounds);
             bounds.Inflate(bounds.Width * .3f, bounds.Height * 0.3f);
 
-            var clipMidPoint = new PointF((clipBounds.Left + clipBounds.Right) / 2, (clipBounds.Top + clipBounds.Bottom) / 2);
+            var clipMidPoint = SvgSetup.Factory.CreatePointF((clipBounds.Left + clipBounds.Right) / 2, (clipBounds.Top + clipBounds.Bottom) / 2);
             var leftPoints = new List<PointF>();
             var rightPoints = new List<PointF>();
             foreach (var pt in clipFlat.PathPoints)
@@ -269,27 +270,27 @@ namespace Svg
             leftPoints.Sort((p, q) => p.Y.CompareTo(q.Y));
             rightPoints.Sort((p, q) => p.Y.CompareTo(q.Y));
 
-            var point = new PointF((leftPoints.Last().X + rightPoints.Last().X) / 2,
+            var point = SvgSetup.Factory.CreatePointF((leftPoints.Last().X + rightPoints.Last().X) / 2,
                                    (leftPoints.Last().Y + rightPoints.Last().Y) / 2);
             leftPoints.Add(point);
             rightPoints.Add(point);
-            point = new PointF(point.X, bounds.Bottom);
+            point = SvgSetup.Factory.CreatePointF(point.X, bounds.Bottom);
             leftPoints.Add(point);
             rightPoints.Add(point);
 
-            leftPoints.Add(new PointF(bounds.Left, bounds.Bottom));
-            leftPoints.Add(new PointF(bounds.Left, bounds.Top));
-            rightPoints.Add(new PointF(bounds.Right, bounds.Bottom));
-            rightPoints.Add(new PointF(bounds.Right, bounds.Top));
+            leftPoints.Add(SvgSetup.Factory.CreatePointF(bounds.Left, bounds.Bottom));
+            leftPoints.Add(SvgSetup.Factory.CreatePointF(bounds.Left, bounds.Top));
+            rightPoints.Add(SvgSetup.Factory.CreatePointF(bounds.Right, bounds.Bottom));
+            rightPoints.Add(SvgSetup.Factory.CreatePointF(bounds.Right, bounds.Top));
 
-            point = new PointF((leftPoints.First().X + rightPoints.First().X) / 2, bounds.Top);
+            point = SvgSetup.Factory.CreatePointF((leftPoints.First().X + rightPoints.First().X) / 2, bounds.Top);
             leftPoints.Add(point);
             rightPoints.Add(point);
-            point = new PointF(point.X, (leftPoints.First().Y + rightPoints.First().Y) / 2);
+            point = SvgSetup.Factory.CreatePointF(point.X, (leftPoints.First().Y + rightPoints.First().Y) / 2);
             leftPoints.Add(point);
             rightPoints.Add(point);
 
-            var path = Factory.Instance.CreateGraphicsPath(FillMode.Winding);
+            var path = SvgSetup.Factory.CreateGraphicsPath(FillMode.Winding);
             path.AddPolygon(leftPoints.ToArray());
             yield return path;
 
@@ -300,7 +301,7 @@ namespace Svg
 
         private static GraphicsPath CreateGraphicsPath(PointF origin, PointF centerPoint, float effectiveRadius)
         {
-            var path = Factory.Instance.CreateGraphicsPath();
+            var path = SvgSetup.Factory.CreateGraphicsPath();
 
             path.AddEllipse(
                 origin.X + centerPoint.X - effectiveRadius,
