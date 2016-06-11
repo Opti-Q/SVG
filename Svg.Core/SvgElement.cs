@@ -21,7 +21,8 @@ namespace Svg
         //optimization
         protected class PropertyAttributeTuple
         {
-            public PropertyDescriptor Property;
+            //public PropertyDescriptor Property;
+            public PropertyInfo Property;
             public SvgAttributeAttribute Attribute;
         }
 
@@ -38,7 +39,7 @@ namespace Svg
         internal SvgElement _parent;
         private string _elementName;
         private SvgAttributeCollection _attributes;
-        private EventHandlerList _eventHandlers;
+        private ISortedList<object, Delegate> _eventHandlers;
         private SvgElementCollection _children;
         private static readonly object _loadEventKey = new object();
         private Region _graphicsClip;
@@ -47,15 +48,21 @@ namespace Svg
         private List<ISvgNode> _nodes = new List<ISvgNode>();
 
 
-        private Dictionary<string, SortedDictionary<int, string>> _styles = new Dictionary<string, SortedDictionary<int, string>>();
-        
+        private Dictionary<string, IDictionary<int, string>> _styles = new Dictionary<string, IDictionary<int, string>>();
+
+        private ISvgElementFactory _elementFactory;
+        public ISvgElementFactory SvgElementFactory => _elementFactory ?? (_elementFactory = Engine.Resolve<ISvgElementFactory>());
+        private ISvgTypeDescriptor _typeDescriptor;
+        public ISvgTypeDescriptor TypeDescriptor => _typeDescriptor ?? (_typeDescriptor = Engine.Resolve<ISvgTypeDescriptor>());
+
 
         public void AddStyle(string name, string value, int specificity)
         {
-            SortedDictionary<int, string> rules;
+            IDictionary<int, string> rules;
             if (!_styles.TryGetValue(name, out rules))
             {
-                rules = new SortedDictionary<int, string>();
+                //rules = new SortedDictionary<int, string>();
+                rules = Svg.Engine.Factory.CreateSortedDictionary<int, string>();
                 _styles[name] = rules;
             }
             while (rules.ContainsKey(specificity)) specificity++;
@@ -65,6 +72,7 @@ namespace Svg
         {
             foreach (var s in _styles)
             {
+
                 SvgElementFactory.SetPropertyValue(this, s.Key, s.Value.Last().Value, this.OwnerDocument);
             }
             _styles = null;
@@ -73,7 +81,7 @@ namespace Svg
 
         public bool ContainsAttribute(string name)
         {
-            SortedDictionary<int, string> rules;
+            IDictionary<int, string> rules;
             return (this.Attributes.ContainsKey(name) || this.CustomAttributes.ContainsKey(name) ||
                 (_styles != null && _styles.TryGetValue(name, out rules)) && (rules.ContainsKey(StyleSpecificity_InlineStyle) || rules.ContainsKey(StyleSpecificity_PresAttribute)));
         }
@@ -86,7 +94,7 @@ namespace Svg
                 return true;
             }
             if (this.CustomAttributes.TryGetValue(name, out value)) return true;
-            SortedDictionary<int, string> rules;
+            IDictionary<int, string> rules;
             if (_styles != null && _styles.TryGetValue(name, out rules))
             {
                 // Get staged styles that are 
@@ -158,7 +166,7 @@ namespace Svg
         /// <summary>
         /// Gets an <see cref="EventHandlerList"/> of all events belonging to the element.
         /// </summary>
-        protected virtual EventHandlerList Events
+        protected virtual ISortedList<object, Delegate> Events
         {
             get { return this._eventHandlers; }
         }
@@ -168,8 +176,8 @@ namespace Svg
         /// </summary>
         public event EventHandler Load
         {
-            add { this.Events.AddHandler(_loadEventKey, value); }
-            remove { this.Events.RemoveHandler(_loadEventKey, value); }
+            add { this.Events.Add(_loadEventKey, value); }
+            remove { this.Events.Remove(_loadEventKey); }
         }
 
         /// <summary>
@@ -474,7 +482,7 @@ namespace Svg
         public SvgElement()
         {
             this._children = new SvgElementCollection(this);
-            this._eventHandlers = new EventHandlerList();
+            this._eventHandlers = Svg.Engine.Factory.CreateSortedList<object, Delegate>();/*new EventHandlerList();*/
             this._elementName = string.Empty;
             this._customAttributes = new SvgCustomAttributeCollection(this);
             
@@ -485,15 +493,17 @@ namespace Svg
             CustomAttributes.AttributeChanged += Attributes_AttributeChanged;
 
             //find svg attribute descriptions
-            _svgPropertyAttributes = from PropertyDescriptor a in TypeDescriptor.GetProperties(this)
-                            let attribute = a.Attributes[typeof(SvgAttributeAttribute)] as SvgAttributeAttribute
-                            where attribute != null
+            _svgPropertyAttributes = from PropertyInfo a in TypeDescriptor.GetProperties(this)
+                            let attribute = a.GetCustomAttributes(typeof(SvgAttributeAttribute), true).FirstOrDefault() as SvgAttributeAttribute//a.Attributes[typeof(SvgAttributeAttribute)] as SvgAttributeAttribute
+                                    where attribute != null
                             select new PropertyAttributeTuple { Property = a, Attribute = attribute };
 
-            _svgEventAttributes = from EventDescriptor a in TypeDescriptor.GetEvents(this)
-                            let attribute = a.Attributes[typeof(SvgAttributeAttribute)] as SvgAttributeAttribute
-                            where attribute != null
-                            select new EventAttributeTuple { Event = a.ComponentType.GetField(a.Name, BindingFlags.Instance | BindingFlags.NonPublic), Attribute = attribute };
+            _svgEventAttributes = from EventInfo a in TypeDescriptor.GetEvents(this)
+                            let attribute = a.GetCustomAttributes(typeof(SvgAttributeAttribute), true).FirstOrDefault() as SvgAttributeAttribute
+                                  where attribute != null
+                                  //select new EventAttributeTuple { Event = a.ComponentType.GetField(a.Name, BindingFlags.Instance | BindingFlags.NonPublic), Attribute = attribute };
+                                  // TODO LX: is that correct?
+                                  select new EventAttributeTuple { Event = a.EventHandlerType.GetField(a.Name, BindingFlags.Instance | BindingFlags.NonPublic), Attribute = attribute };
 
         }
 

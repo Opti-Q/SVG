@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Svg.Interfaces;
 
 namespace Svg
 {
@@ -8,12 +9,21 @@ namespace Svg
         private static readonly object _lock = new object();
         private static readonly Dictionary<Type, Func<object>> _serviceRegistry = new Dictionary<Type, Func<object>>();
         private static IFactory _factory = null;
+        private static ISvgTypeDescriptor _typeDescriptor = null;
 
         public static IFactory Factory
         {
             get
             {
                 return _factory;
+            }
+        }
+
+        public static ISvgTypeDescriptor TypeDescriptor
+        {
+            get
+            {
+                return _typeDescriptor;
             }
         }
 
@@ -28,6 +38,8 @@ namespace Svg
                 // store IFactory separatly as it is used more often
                 if (typeof(TInterface) == typeof(IFactory))
                     _factory = (IFactory)factory();
+                if (typeof(TInterface) == typeof(ISvgTypeDescriptor))
+                    _typeDescriptor = (ISvgTypeDescriptor)factory();
             }
         }
 

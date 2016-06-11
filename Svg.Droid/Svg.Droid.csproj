@@ -97,11 +97,17 @@
     <Compile Include="..\Svg.Shared\SvgPointCollection.cs">
       <Link>DataTypes\SvgPointCollection.cs</Link>
     </Compile>
+    <Compile Include="..\Svg.Shared\SvgSortedList.cs">
+      <Link>SvgSortedList.cs</Link>
+    </Compile>
     <Compile Include="..\Svg.Shared\SvgTextReader.cs">
       <Link>SvgTextReader.cs</Link>
     </Compile>
     <Compile Include="..\Svg.Shared\SvgTransformConverter.cs">
       <Link>Transforms\SvgTransformConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\Svg.Shared\SvgTypeDescriptor.cs">
+      <Link>SvgTypeDescriptor.cs</Link>
     </Compile>
     <Compile Include="..\Svg.Shared\SvgUnitCollection.cs">
       <Link>DataTypes\SvgUnitCollection.cs</Link>

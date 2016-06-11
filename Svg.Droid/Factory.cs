@@ -196,5 +196,14 @@ namespace Svg
             reader.WhitespaceHandling = WhitespaceHandling.None;
             return reader;
         }
+
+        public ISortedList<TKey, TValue> CreateSortedList<TKey, TValue>()
+        {
+            return new SvgSortedList<TKey, TValue>();
+        }
+        public IDictionary<TKey, TValue> CreateSortedDictionary<TKey, TValue>()
+        {
+            return new SortedDictionary<TKey, TValue>();
+        }
     }
 }

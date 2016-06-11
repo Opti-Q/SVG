@@ -211,8 +211,11 @@
     <Compile Include="Interfaces\ImageAttributes.cs" />
     <Compile Include="Interfaces\ImageLockMode.cs" />
     <Compile Include="Interfaces\IMarshal.cs" />
+    <Compile Include="Interfaces\ISortedList.cs" />
     <Compile Include="Interfaces\ISvgElementFactory.cs" />
+    <Compile Include="Interfaces\ISvgTypeDescriptor.cs" />
     <Compile Include="Interfaces\ISvgUnitConverter.cs" />
+    <Compile Include="Interfaces\ITypeConverter.cs" />
     <Compile Include="Interfaces\LinearGradientBrush.cs" />
     <Compile Include="Interfaces\LineCap.cs" />
     <Compile Include="Interfaces\LineJoin.cs" />
@@ -270,7 +273,6 @@
     <Compile Include="Rendering\IGraphicsProvider.cs" />
     <Compile Include="Rendering\ISvgRenderer.cs" />
     <Compile Include="Rendering\SvgRenderer.cs" />
-    <Compile Include="SortedList.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="SvgAttributeAttribute.cs" />
     <Compile Include="SvgAttributeCollection.cs" />

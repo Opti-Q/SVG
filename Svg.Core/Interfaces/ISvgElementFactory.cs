@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Xml;
 
 namespace Svg.Interfaces
 {
@@ -42,5 +43,8 @@ namespace Svg.Interfaces
     public interface ISvgElementFactory
     {
         Dictionary<string, ElementInfo> AvailableElements { get; }
+        void SetPropertyValue(SvgElement svgElement, string key, string value, SvgDocument ownerDocument);
+        SvgElement CreateElement(XmlReader reader, SvgDocument svgDocument);
+        T CreateDocument<T>(XmlReader reader);
     }
 }

@@ -276,14 +276,15 @@ namespace Svg
                             // Does this element have a value or children
                             // (Must do this check here before we progress to another node)
                             elementEmpty = reader.IsEmptyElement;
+                            var factory = Engine.Resolve<ISvgElementFactory>();
                             // Create element
                             if (elementStack.Count > 0)
                             {
-                                element = SvgElementFactory.CreateElement(reader, svgDocument);
+                                element = factory.CreateElement(reader, svgDocument);
                             }
                             else
                             {
-                                svgDocument = SvgElementFactory.CreateDocument<T>(reader);
+                                svgDocument = factory.CreateDocument<T>(reader);
                                 element = svgDocument;
                             }
 

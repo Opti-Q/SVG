@@ -1,4 +1,3 @@
-using System.IO;
 using Svg.Interfaces;
 
 namespace Svg
@@ -8,12 +7,14 @@ namespace Svg
         private static readonly FileSystem FileSystem = new FileSystem();
         private static readonly SvgElementFactory ElementFactory = new SvgElementFactory();
         private static readonly SvgMarshal Marshal = new SvgMarshal();
-        private static readonly CharConverter CharConverter = new CharConverter();
+        private static readonly SvgTypeDescriptor SvgTypeDescriptor = new SvgTypeDescriptor();
+        private static readonly SvgCharComverter CharConverter = new SvgCharComverter();
 
         protected virtual void Initialize()
         {
             Engine.Register<IMarshal, SvgMarshal>(() => Marshal);
-            Engine.Register<ICharConverter, CharConverter>(() => CharConverter);
+            Engine.Register<ISvgTypeDescriptor, SvgTypeDescriptor>(() => SvgTypeDescriptor);
+            Engine.Register<ICharConverter, SvgCharComverter>(() => CharConverter);
             Engine.Register<IWebRequest, WebRequestSvc>(() => new WebRequestSvc());
             Engine.Register<IFileSystem, FileSystem>(() => FileSystem);
             Engine.Register<ISvgUnitConverter, SvgUnitConverter>(() => new SvgUnitConverter());

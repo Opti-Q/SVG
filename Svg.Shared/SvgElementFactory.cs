@@ -230,7 +230,7 @@ namespace Svg
         private static Dictionary<Type, Dictionary<string, PropertyDescriptorCollection>> _propertyDescriptors = new Dictionary<Type, Dictionary<string, PropertyDescriptorCollection>>();
         private static object syncLock = new object();
 
-        internal static void SetPropertyValue(SvgElement element, string attributeName, string attributeValue, SvgDocument document)
+        public void SetPropertyValue(SvgElement element, string attributeName, string attributeValue, SvgDocument document)
         {
             var elementType = element.GetType();
 

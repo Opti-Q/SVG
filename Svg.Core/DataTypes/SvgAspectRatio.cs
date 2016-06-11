@@ -45,7 +45,7 @@ namespace Svg
 
 		public override string ToString()
 		{
-			return TypeDescriptor.GetConverter(typeof(SvgPreserveAspectRatio)).ConvertToString(this.Align) + (Slice ? " slice" : "");
+			return Engine.TypeDescriptor.GetConverter(typeof(SvgPreserveAspectRatio)).ConvertToString(this.Align) + (Slice ? " slice" : "");
 		}
 
 	}

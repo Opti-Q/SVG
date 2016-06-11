@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Drawing;
-using System.ComponentModel;
 using Svg.Interfaces;
 
 namespace Svg
@@ -11,6 +6,9 @@ namespace Svg
     {
         private SvgUnit x;
         private SvgUnit y;
+
+        private ISvgTypeDescriptor _typeDescriptor;
+        public ISvgTypeDescriptor TypeDescriptor => _typeDescriptor ?? (_typeDescriptor = Engine.Resolve<ISvgTypeDescriptor>());
 
         public SvgUnit X
         {
@@ -51,7 +49,9 @@ namespace Svg
 
         public SvgPoint(string x, string y)
         {
-            TypeConverter converter = TypeDescriptor.GetConverter(typeof(SvgUnit));
+            _typeDescriptor = Engine.TypeDescriptor;
+
+            ITypeConverter converter = _typeDescriptor.GetConverter(typeof(SvgUnit));
 
             this.x = (SvgUnit)converter.ConvertFrom(x);
             this.y = (SvgUnit)converter.ConvertFrom(y);
@@ -59,6 +59,7 @@ namespace Svg
 
         public SvgPoint(SvgUnit x, SvgUnit y)
         {
+            _typeDescriptor = Engine.TypeDescriptor;
             this.x = x;
             this.y = y;
         }
