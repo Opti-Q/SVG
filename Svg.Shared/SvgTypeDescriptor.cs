@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using Svg.Interfaces;
@@ -11,22 +13,22 @@ namespace Svg
     {
         public IEnumerable<Attribute> GetAttributes(object obj)
         {
-            throw new NotImplementedException();
+            return TypeDescriptor.GetAttributes(obj).Cast<Attribute>();
         }
 
         public IEnumerable<EventInfo> GetEvents(object obj)
         {
-            throw new NotImplementedException();
+            return TypeDescriptor.GetEvents(obj).Cast<EventInfo>();
         }
 
         public IEnumerable<PropertyInfo> GetProperties(object obj)
         {
-            throw new NotImplementedException();
+            return TypeDescriptor.GetProperties(obj).Cast<PropertyInfo>();
         }
 
         public ITypeConverter GetConverter(Type type)
         {
-            throw new NotImplementedException();
+            return new SvgTypeConverter(TypeDescriptor.GetConverter(type));
         }
     }
 }

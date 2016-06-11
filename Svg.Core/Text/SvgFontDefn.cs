@@ -28,11 +28,12 @@ namespace Svg
 
         public SvgFontDefn (SvgFont font, float size, float ppi)
         {
+            if (font == null) throw new ArgumentNullException(nameof(font));
             _font = font;
             _size = size;
             _ppi = ppi;
             var face = _font.Children.OfType<SvgFontFace>().First();
-            _emScale = _size / face.UnitsPerEm;
+            _emScale = _size/face.UnitsPerEm;
         }
 
         public float Ascent(ISvgRenderer renderer)

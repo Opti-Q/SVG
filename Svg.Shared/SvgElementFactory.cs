@@ -85,7 +85,7 @@ namespace Svg
             string elementName = reader.LocalName;
             string elementNS = reader.NamespaceURI;
 
-            Engine.Logger.Info($"Begin CreateElement: {elementName}");
+            Engine.Logger.Debug($"Begin CreateElement: {elementName}");
 
             if (elementNS == SvgAttributeAttribute.SvgNamespace || string.IsNullOrEmpty(elementNS))
             {
@@ -118,14 +118,14 @@ namespace Svg
                 SetAttributes(createdElement, reader, document);
             }
 
-            Engine.Logger.Info("End CreateElement");
+            Engine.Logger.Debug("End CreateElement");
 
             return createdElement;
         }
 
         private void SetAttributes(SvgElement element, XmlReader reader, SvgDocument document)
         {
-            Engine.Logger.Info("Begin SetAttributes");
+            Engine.Logger.Debug("Begin SetAttributes");
 
             //string[] styles = null;
             //string[] style = null;
@@ -154,7 +154,7 @@ namespace Svg
                 }
             }
 
-            Engine.Logger.Info("End SetAttributes");
+            Engine.Logger.Debug("End SetAttributes");
         }
 
         private bool IsStyleAttribute(string name)
@@ -271,8 +271,17 @@ namespace Svg
 
                     var ctx = new SvgDocumentTypeDescriptorContext(document);
 
-                    descriptor.SetValue(element, descriptor.Converter.ConvertFrom(ctx, CultureInfo.InvariantCulture, attributeValue));
-					
+                    if (attributeName == "visibility")
+                    {
+                        bool visible = string.Equals(attributeValue, "visible",
+                            StringComparison.InvariantCultureIgnoreCase);
+                        descriptor.SetValue(element, visible);
+                    }
+                    else
+                    {
+                        descriptor.SetValue(element,
+                            descriptor.Converter.ConvertFrom(ctx, CultureInfo.InvariantCulture, attributeValue));
+                    }
 
                 }
                 catch
@@ -308,7 +317,7 @@ namespace Svg
 
     }
 
-    internal class SvgDocumentTypeDescriptorContext : ITypeDescriptorContext
+    internal class SvgDocumentTypeDescriptorContext : ITypeDescriptorContext, ISvgDocumentProvider
     {
         private readonly SvgDocument _document;
 
@@ -326,7 +335,7 @@ namespace Svg
 
         object ITypeDescriptorContext.Instance
         {
-            get { return _document; }
+            get { return Document; }
         }
 
         void ITypeDescriptorContext.OnComponentChanged()
@@ -344,11 +353,21 @@ namespace Svg
             get { throw new NotImplementedException(); }
         }
 
+        public SvgDocument Document
+        {
+            get { return _document; }
+        }
+
         object IServiceProvider.GetService(Type serviceType)
         {
             throw new NotImplementedException();
         }
 
         #endregion
+
+        public static explicit operator SvgDocument(SvgDocumentTypeDescriptorContext other)
+        {
+            return other.Document;
+        }
     }
 }

@@ -75,5 +75,19 @@ namespace Svg
                 throw new InvalidOperationException($"Interface {typeof(TInterface).FullName} could not be resovled. Maybe the platform has not been initialized yet?");
             }
         }
+
+        public static TInterface TryResolve<TInterface>()
+            where TInterface : class
+        {
+            lock (_lock)
+            {
+                Func<object> result;
+                if (_serviceRegistry.TryGetValue(typeof(TInterface), out result))
+                {
+                    return (TInterface)result();
+                }
+                return null;
+            }
+        }
     }
 }

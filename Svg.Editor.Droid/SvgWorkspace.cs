@@ -23,6 +23,10 @@ namespace Svg.Droid.Editor
 
         public SvgWorkspace(Context context, IAttributeSet attr) : base(context, attr)
         {
+            // Initialize SVG Platform and tie together PCL and platform specific modules
+            SvgPlatformSetup.Init(context);
+
+
             if(ZoomTool.IsActive)
                 SharedMasterTool.Instance.ScaleDetector = new ScaleGestureDetector(context, new ZoomTool.ScaleListener(this, ViewModel.SelectionService));
         }

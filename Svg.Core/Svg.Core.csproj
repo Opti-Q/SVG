@@ -47,6 +47,7 @@
     <Compile Include="Basic Shapes\SvgPolygon.cs" />
     <Compile Include="Basic Shapes\SvgPolyline.cs" />
     <Compile Include="Basic Shapes\SvgRectangle.cs" />
+    <Compile Include="Basic Shapes\SvgVisible.cs" />
     <Compile Include="Basic Shapes\SvgVisibility.cs" />
     <Compile Include="Basic Shapes\SvgVisualElement.cs" />
     <Compile Include="Basic Shapes\SvgVisualElementStyle.cs" />
@@ -215,8 +216,10 @@
     <Compile Include="Interfaces\IMarshal.cs" />
     <Compile Include="Interfaces\IPropertyDescriptor.cs" />
     <Compile Include="Interfaces\ISortedList.cs" />
+    <Compile Include="Interfaces\ISvgDocumentProvider.cs" />
     <Compile Include="Interfaces\ISvgElementAttributeProvider.cs" />
     <Compile Include="Interfaces\ISvgElementFactory.cs" />
+    <Compile Include="Interfaces\ISvgElementLoader.cs" />
     <Compile Include="Interfaces\ISvgTypeDescriptor.cs" />
     <Compile Include="Interfaces\ISvgUnitConverter.cs" />
     <Compile Include="Interfaces\ITypeConverter.cs" />

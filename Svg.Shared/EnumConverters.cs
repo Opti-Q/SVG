@@ -216,6 +216,10 @@ namespace Svg
     {
         public SvgGradientSpreadMethodConverter() : base(SvgGradientSpreadMethod.Pad) { }
     }
+    public sealed class SvgVisibleConverter : EnumBaseConverter<SvgVisible>
+    {
+        public SvgVisibleConverter() : base(SvgVisible.Hidden) { }
+    }
 
     public sealed class SvgTextDecorationConverter : EnumBaseConverter<SvgTextDecoration>
     {

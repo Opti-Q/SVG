@@ -38,6 +38,7 @@ namespace Svg
 
         Colors Colors { get; }
         Color CreateColorFromArgb(int alpha, Color colour);
+        Color CreateColorFromArgb(int alpha, int r, int g, int b);
         PointF CreatePointF(float x, float y);
         SizeF CreateSizeF(float width, float height);
 

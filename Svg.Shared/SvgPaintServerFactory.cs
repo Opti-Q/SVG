@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using Svg.Interfaces;
 
 namespace Svg
 {
@@ -104,7 +105,7 @@ namespace Svg
                 if (String.Equals(s.Trim(), "none", StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(s) || s.Trim().Length < 1)
             		return SvgPaintServer.None;
             	else
-                	return SvgPaintServerFactory.Create(s, (SvgDocument)context);
+                	return SvgPaintServerFactory.Create(s, ((ISvgDocumentProvider)context).Document);
             }
 
             return base.ConvertFrom(context, culture, value);

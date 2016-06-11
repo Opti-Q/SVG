@@ -7,6 +7,11 @@ namespace Svg
 {
     public class DefaultLogger : ILogger
     {
+        public void Debug(string txt)
+        {
+            //System.Diagnostics.Debug.WriteLine(txt);
+        }
+
         public void Info(string txt)
         {
             Trace.Write(txt);

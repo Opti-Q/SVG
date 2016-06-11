@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Net;
 using System.IO;
+using Svg.Interfaces;
 
 namespace Svg
 {
@@ -15,6 +16,10 @@ namespace Svg
     {
         private SvgDocument _document;
         private Dictionary<string, SvgElement> _idValueMap;
+
+        private ISvgElementLoader _loader;
+
+        private ISvgElementLoader ElementLoader => _loader ?? (_loader = Engine.TryResolve<ISvgElementLoader>());
 
         /// <summary>
         /// Retrieves the <see cref="SvgElement"/> with the specified ID.
@@ -41,6 +46,7 @@ namespace Svg
 
         public virtual SvgElement GetElementById(Uri uri)
         {
+
             if (uri.ToString().StartsWith("url(")) uri = new Uri(uri.ToString().Substring(4).TrimEnd(')'), UriKind.Relative);
             if (!uri.IsAbsoluteUri && this._document.BaseUri != null && !uri.ToString().StartsWith("#"))
             {
@@ -69,6 +75,12 @@ namespace Svg
                 }
 
             }
+
+            var loader = ElementLoader;
+            var elt = loader?.Load(uri);
+            if (elt != null)
+                return elt;
+
             return this.GetElementById(uri.ToString());
         }
 

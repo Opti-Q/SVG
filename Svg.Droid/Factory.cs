@@ -18,6 +18,8 @@ namespace Svg
     {
         public static IFactory Instance = new Factory();
 
+        private AndroidColors _colors = new AndroidColors();
+
         public GraphicsPath CreateGraphicsPath()
         {
             return new AndroidGraphicsPath();
@@ -152,11 +154,16 @@ namespace Svg
             return new AndroidRectangleF();
         }
 
-        public Colors Colors { get; }
+        public Colors Colors => _colors;
 
         public Color CreateColorFromArgb(int alpha, Color color)
         {
             return new AndroidColor((byte)alpha, color);
+        }
+
+        public Color CreateColorFromArgb(int alpha, int r, int g, int b)
+        {
+            return new AndroidColor((byte)alpha, (byte)r, (byte)g, (byte)b);
         }
 
         public PointF CreatePointF(float x, float y)
@@ -166,7 +173,7 @@ namespace Svg
 
         public SizeF CreateSizeF(float width, float height)
         {
-            throw new NotImplementedException();
+            return new AndroidSizeF(width, height);
         }
 
         public IXmlTextWriter CreateXmlTextWriter(StringWriter writer)

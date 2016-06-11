@@ -72,16 +72,16 @@ namespace Svg
 							    }
 						    }
 
-                            Color colorpart;
+                            Svg.Interfaces.Color colorpart;
                             if (values[0].Trim().EndsWith("%"))
                             {
-                                colorpart = System.Drawing.Color.FromArgb(alphaValue, (int)(255 * float.Parse(values[0].Trim().TrimEnd('%')) / 100f),
+                                colorpart = Engine.Factory.CreateColorFromArgb(alphaValue, (int)(255 * float.Parse(values[0].Trim().TrimEnd('%')) / 100f),
                                                                                       (int)(255 * float.Parse(values[1].Trim().TrimEnd('%')) / 100f),
                                                                                       (int)(255 * float.Parse(values[2].Trim().TrimEnd('%')) / 100f));
                             }
                             else
                             {
-                                colorpart = System.Drawing.Color.FromArgb(alphaValue, int.Parse(values[0]), int.Parse(values[1]), int.Parse(values[2]));
+                                colorpart = Engine.Factory.CreateColorFromArgb(alphaValue, int.Parse(values[0]), int.Parse(values[1]), int.Parse(values[2]));
                             }
 
 						    return colorpart;
@@ -94,43 +94,43 @@ namespace Svg
                     else if (colour.StartsWith("#") && colour.Length == 4)
                     {
                         colour = string.Format(culture, "#{0}{0}{1}{1}{2}{2}", colour[1], colour[2], colour[3]);
-                        return base.ConvertFrom(context, culture, colour);
+                        return CreateColor((System.Drawing.Color)base.ConvertFrom(context, culture, colour));
                     }
                 
                     switch (colour.ToLowerInvariant())
                     {
-                        case "activeborder": return SystemColors.ActiveBorder;
-                        case "activecaption": return SystemColors.ActiveCaption;
-                        case "appworkspace": return SystemColors.AppWorkspace;
-                        case "background": return SystemColors.Desktop;
-                        case "buttonface": return SystemColors.Control;
-                        case "buttonhighlight": return SystemColors.ControlLightLight;
-                        case "buttonshadow": return SystemColors.ControlDark;
-                        case "buttontext": return SystemColors.ControlText;
-                        case "captiontext": return SystemColors.ActiveCaptionText;
-                        case "graytext": return SystemColors.GrayText;
-                        case "highlight": return SystemColors.Highlight;
-                        case "highlighttext": return SystemColors.HighlightText;
-                        case "inactiveborder": return SystemColors.InactiveBorder;
-                        case "inactivecaption": return SystemColors.InactiveCaption;
-                        case "inactivecaptiontext": return SystemColors.InactiveCaptionText;
-                        case "infobackground": return SystemColors.Info;
-                        case "infotext": return SystemColors.InfoText;
-                        case "menu": return SystemColors.Menu;
-                        case "menutext": return SystemColors.MenuText;
-                        case "scrollbar": return SystemColors.ScrollBar;
-                        case "threeddarkshadow": return SystemColors.ControlDarkDark;
-                        case "threedface": return SystemColors.Control;
-                        case "threedhighlight": return SystemColors.ControlLight;
-                        case "threedlightshadow": return SystemColors.ControlLightLight;
-                        case "window": return SystemColors.Window;
-                        case "windowframe": return SystemColors.WindowFrame;
-                        case "windowtext": return SystemColors.WindowText;
+                        case "activeborder": return CreateColor(SystemColors.ActiveBorder);
+                        case "activecaption": return CreateColor(SystemColors.ActiveCaption);
+                        case "appworkspace": return CreateColor(SystemColors.AppWorkspace);
+                        case "background": return CreateColor(SystemColors.Desktop);
+                        case "buttonface": return CreateColor(SystemColors.Control);
+                        case "buttonhighlight": return CreateColor(SystemColors.ControlLightLight);
+                        case "buttonshadow": return CreateColor(SystemColors.ControlDark);
+                        case "buttontext": return CreateColor(SystemColors.ControlText);
+                        case "captiontext": return CreateColor(SystemColors.ActiveCaptionText);
+                        case "graytext": return CreateColor(SystemColors.GrayText);
+                        case "highlight": return CreateColor(SystemColors.Highlight);
+                        case "highlighttext": return CreateColor(SystemColors.HighlightText);
+                        case "inactiveborder": return CreateColor(SystemColors.InactiveBorder);
+                        case "inactivecaption": return CreateColor(SystemColors.InactiveCaption);
+                        case "inactivecaptiontext": return CreateColor(SystemColors.InactiveCaptionText);
+                        case "infobackground": return CreateColor(SystemColors.Info);
+                        case "infotext": return CreateColor(SystemColors.InfoText);
+                        case "menu": return CreateColor(SystemColors.Menu);
+                        case "menutext": return CreateColor(SystemColors.MenuText);
+                        case "scrollbar": return CreateColor(SystemColors.ScrollBar);
+                        case "threeddarkshadow": return CreateColor(SystemColors.ControlDarkDark);
+                        case "threedface": return CreateColor(SystemColors.Control);
+                        case "threedhighlight": return CreateColor(SystemColors.ControlLight);
+                        case "threedlightshadow": return CreateColor(SystemColors.ControlLightLight);
+                        case "window": return CreateColor(SystemColors.Window);
+                        case "windowframe": return CreateColor(SystemColors.WindowFrame);
+                        case "windowtext": return CreateColor(SystemColors.WindowText);
                     }
 
                     if (!colour.StartsWith("#"))
                     {
-                        return System.Drawing.Color.FromName(colour.ToLowerInvariant());
+                        return CreateColor(System.Drawing.Color.FromName(colour.ToLowerInvariant()));
                     }
                 }
                 finally 
@@ -139,7 +139,12 @@ namespace Svg
                 }
             }
 
-            return base.ConvertFrom(context, culture, value);
+            return CreateColor((System.Drawing.Color)base.ConvertFrom(context, culture, value));
+        }
+
+        private Svg.Interfaces.Color CreateColor(System.Drawing.Color c)
+        {
+            return Engine.Factory.CreateColorFromArgb(c.A, c.R, c.G, c.B);
         }
 
         public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, Type sourceType)

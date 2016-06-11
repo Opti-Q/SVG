@@ -41,6 +41,8 @@ namespace SvgW3CTestRunner.Droid
 
         protected override void OnCreate(Bundle bundle)
         {
+            SvgPlatformSetup.Init(this);
+
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Main);
         }
@@ -177,8 +179,10 @@ namespace SvgW3CTestRunner.Droid
                         watch.Start();
 
                         var svgBitmap = new AndroidBitmap(480, 360);
+                        SvgDocument doc;
+                        using (var str = Assets.Open($"svg/{svg}"))
+                            doc = SvgDocument.Open<SvgDocument>(str);
 
-                        var doc = SvgDocument.Open<SvgDocument>($"svg/{svg}");
                         doc.Draw(svgBitmap);
                         ivSvg.SetImageBitmap(svgBitmap.Image);
 
