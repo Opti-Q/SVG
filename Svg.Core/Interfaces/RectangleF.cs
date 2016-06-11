@@ -29,5 +29,17 @@ namespace Svg.Interfaces
         public abstract float Y { get; set; }
         public abstract RectangleF UnionAndCopy(RectangleF other);
         public abstract RectangleF InflateAndCopy(float x, float y);
+
+
+
+        public static bool operator ==(RectangleF c1, RectangleF c2)
+        {
+            return c1?.X == c2?.X && c1?.Y == c2?.Y && c1?.Width == c2?.Width && c1?.Height == c2?.Height;
+        }
+
+        public static bool operator !=(RectangleF c1, RectangleF c2)
+        {
+            return c1?.X != c2?.X || c1?.Y != c2?.Y || c1?.Width != c2?.Width || c1?.Height != c2?.Height;
+        }
     }
 }

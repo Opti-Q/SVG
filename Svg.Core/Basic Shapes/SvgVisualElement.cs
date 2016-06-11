@@ -133,7 +133,7 @@ namespace Svg
                         }
                         catch (Exception ex)
                         {
-                            //Debug.Print(ex.ToString());
+                            Engine.Logger.Info(ex.ToString());
                         }
                         renderNormal = false;
                     }

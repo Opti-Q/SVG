@@ -224,7 +224,7 @@ namespace Svg
             var pointsToMove = PointsToMove(boundable, specifiedStart, specifiedEnd);
             if (pointsToMove == LinePoints.None)
             {
-                //Debug.Fail("Unexpectedly expanding gradient when not needed!");
+                Engine.Logger.Fatal("Unexpectedly expanding gradient when not needed!");
                 return new GradientPoints(specifiedStart, specifiedEnd);
             }
 

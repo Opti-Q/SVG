@@ -11,6 +11,7 @@ namespace Svg
         private static IFactory _factory = null;
         private static ISvgTypeDescriptor _typeDescriptor = null;
         private static ISvgElementAttributeProvider _attributeProvider = null;
+        private static ILogger _logger = null;
 
         public static IFactory Factory
         {
@@ -36,6 +37,11 @@ namespace Svg
             }
         }
 
+        public static ILogger Logger
+        {
+            get { return _logger; }
+        }
+
         public static void Register<TInterface, TImplementation>(Func<TImplementation> factory)
             where TInterface : class
             where TImplementation : class, TInterface
@@ -51,6 +57,8 @@ namespace Svg
                     _typeDescriptor = (ISvgTypeDescriptor)factory();
                 if (typeof(TInterface) == typeof(ISvgElementAttributeProvider))
                     _attributeProvider = (ISvgElementAttributeProvider)factory();
+                if (typeof(TInterface) == typeof(ILogger))
+                    _logger = (ILogger)factory();
             }
         }
 

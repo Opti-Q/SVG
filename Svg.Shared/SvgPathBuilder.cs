@@ -44,7 +44,7 @@ namespace Svg
             }
             catch (Exception exc)
             {
-                Trace.TraceError("Error parsing path \"{0}\": {1}", path, exc.Message);
+                Engine.Logger.Error($"Error parsing path \"{path}\": {exc.Message}");
             }
 
             return segments;

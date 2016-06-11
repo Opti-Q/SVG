@@ -59,6 +59,9 @@
     <Compile Include="..\Svg.Shared\CharConverter.cs">
       <Link>CharConverter.cs</Link>
     </Compile>
+    <Compile Include="..\Svg.Shared\DefaultLogger.cs">
+      <Link>DefaultLogger.cs</Link>
+    </Compile>
     <Compile Include="..\Svg.Shared\EnumConverters.cs">
       <Link>Painting\EnumConverters.cs</Link>
     </Compile>
