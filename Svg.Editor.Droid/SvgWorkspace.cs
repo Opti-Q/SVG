@@ -9,6 +9,7 @@ using Android.Views;
 using Android.Widget;
 using Svg.Droid.Editor.Services;
 using Svg.Droid.Editor.Tools;
+using Svg.Platform;
 using Color = Android.Graphics.Color;
 
 namespace Svg.Droid.Editor

@@ -4,6 +4,7 @@ using Android.Text;
 using Android.Views;
 using MvvmCross.Platform;
 using Svg.Droid.Editor.Interfaces;
+using Svg.Platform;
 
 namespace Svg.Droid.Editor.Tools
 {

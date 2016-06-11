@@ -6,6 +6,7 @@ using Svg.Core.Commands;
 using Svg.Droid.Editor.Interfaces;
 using Svg.Droid.Editor.Services;
 using Svg.Droid.Editor.Tools;
+using Svg.Platform;
 
 namespace Svg.Droid.Editor
 {

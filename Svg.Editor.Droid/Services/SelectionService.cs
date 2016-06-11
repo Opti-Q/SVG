@@ -13,6 +13,7 @@ using Android.Views;
 using Android.Widget;
 using Svg.Droid.Editor.Interfaces;
 using Svg.Droid.Editor.Tools;
+using Svg.Platform;
 
 namespace Svg.Droid.Editor.Services
 {
