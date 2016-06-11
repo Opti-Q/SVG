@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace Svg.Droid
+namespace Svg.Platform
 {
     public class SelectableAndroidBitmap : AndroidBitmap, IPosition
     {

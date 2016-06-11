@@ -2,7 +2,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using Android.Graphics;
 
-namespace Svg.Droid
+namespace Svg.Platform
 {
     public class AndroidLinearGradientBrush : LinearGradientBrush, IAndroidShader
     {

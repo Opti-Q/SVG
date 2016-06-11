@@ -75,8 +75,6 @@ namespace Svg
         {
             this._innerGraphics.TranslateTransform(dx, dy, order);
         }
-        
-
 
         public SmoothingMode SmoothingMode
         {

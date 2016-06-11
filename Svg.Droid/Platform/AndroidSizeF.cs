@@ -1,6 +1,6 @@
 using Svg.Interfaces;
 
-namespace Svg.Droid
+namespace Svg.Platform
 {
     public class AndroidSizeF : SizeF
     {
@@ -14,14 +14,11 @@ namespace Svg.Droid
         {
             _inner = new System.Drawing.SizeF(width, height);
         }
-
         public AndroidSizeF(System.Drawing.SizeF inner)
         {
             _inner = inner;
         }
-
         public override bool IsEmpty => _inner.IsEmpty;
-
         public override float Width
         {
             get { return _inner.Width; }
@@ -32,12 +29,10 @@ namespace Svg.Droid
             get { return _inner.Height; }
             set { _inner.Height = value; }
         }
-
         public static implicit operator AndroidSizeF(System.Drawing.SizeF other)
         {
             return new AndroidSizeF(other);
         }
-
         public static implicit operator System.Drawing.SizeF(AndroidSizeF other)
         {
             return other._inner;

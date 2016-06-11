@@ -5,20 +5,20 @@ using System.Text;
 
 namespace Svg.Interfaces
 {
-    public interface Color
+    public abstract class Color
     {
-        string Name { get; }
-        bool IsKnownColor { get; }
-        bool IsSystemColor { get; }
-        bool IsNamedColor { get; }
-        bool IsEmpty { get; }
-        byte A { get; }
-        byte R { get; }
-        byte G { get; }
-        byte B { get; }
-        float GetBrightness();
-        float GetSaturation();
-        float GetHue();
-        int ToArgb();
+        public abstract string Name { get; }
+        public abstract bool IsKnownColor { get; }
+        public abstract bool IsSystemColor { get; }
+        public abstract bool IsNamedColor { get; }
+        public abstract bool IsEmpty { get; }
+        public abstract byte A { get; }
+        public abstract byte R { get; }
+        public abstract byte G { get; }
+        public abstract byte B { get; }
+        public abstract float GetBrightness();
+        public abstract float GetSaturation();
+        public abstract float GetHue();
+        public abstract int ToArgb();
     }
 }

@@ -1,6 +1,6 @@
 using Svg.Interfaces;
 
-namespace Svg.Droid
+namespace Svg.Platform
 {
     public class AndroidPointF : PointF
     {
@@ -14,14 +14,11 @@ namespace Svg.Droid
         {
             _inner = new System.Drawing.PointF(x, y);
         }
-
         public AndroidPointF(System.Drawing.PointF inner)
         {
             _inner = inner;
         }
-
         public override bool IsEmpty => _inner.IsEmpty;
-
         public override float X
         {
             get { return _inner.X; }
@@ -32,22 +29,18 @@ namespace Svg.Droid
             get { return _inner.Y; }
             set { _inner.Y = value; }
         }
-
         public static implicit operator AndroidPointF(System.Drawing.PointF other)
         {
             return new AndroidPointF(other);
         }
-
         public static implicit operator System.Drawing.PointF(AndroidPointF other)
         {
             return other._inner;
         }
-
         public static implicit operator AndroidPointF(Android.Graphics.PointF other)
         {
             return new AndroidPointF(other.X, other.Y);
         }
-
         public static implicit operator Android.Graphics.PointF(AndroidPointF other)
         {
             return other._inner.ToPointF();

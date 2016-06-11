@@ -45,6 +45,6 @@ namespace Svg.Interfaces
         Dictionary<string, ElementInfo> AvailableElements { get; }
         void SetPropertyValue(SvgElement svgElement, string key, string value, SvgDocument ownerDocument);
         SvgElement CreateElement(XmlReader reader, SvgDocument svgDocument);
-        T CreateDocument<T>(XmlReader reader);
+        T CreateDocument<T>(XmlReader reader) where T : SvgDocument, new();
     }
 }

@@ -1488,6 +1488,10 @@
     <Content Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Svg.Core\Svg.Core.csproj">
+      <Project>{13edb4db-3977-4c2e-998a-6103ca015881}</Project>
+      <Name>Svg.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Svg.Droid\Svg.Droid.csproj">
       <Project>{03f31ec9-4f97-46da-b8f1-dce99c6954de}</Project>
       <Name>Svg.Droid</Name>

@@ -269,7 +269,9 @@ namespace Svg
 						attributeValue = "1";
 					}
 
-					descriptor.SetValue(element, descriptor.Converter.ConvertFrom(document, CultureInfo.InvariantCulture, attributeValue));
+                    var ctx = new SvgDocumentTypeDescriptorContext(document);
+
+                    descriptor.SetValue(element, descriptor.Converter.ConvertFrom(ctx, CultureInfo.InvariantCulture, attributeValue));
 					
 
                 }
@@ -304,5 +306,49 @@ namespace Svg
             }
         }
 
+    }
+
+    internal class SvgDocumentTypeDescriptorContext : ITypeDescriptorContext
+    {
+        private readonly SvgDocument _document;
+
+        public SvgDocumentTypeDescriptorContext(SvgDocument document)
+        {
+            _document = document;
+        }
+
+        #region ITypeDescriptorContext Members
+
+        IContainer ITypeDescriptorContext.Container
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        object ITypeDescriptorContext.Instance
+        {
+            get { return _document; }
+        }
+
+        void ITypeDescriptorContext.OnComponentChanged()
+        {
+            throw new NotImplementedException();
+        }
+
+        bool ITypeDescriptorContext.OnComponentChanging()
+        {
+            throw new NotImplementedException();
+        }
+
+        PropertyDescriptor ITypeDescriptorContext.PropertyDescriptor
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        object IServiceProvider.GetService(Type serviceType)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

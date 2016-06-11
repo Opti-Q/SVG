@@ -51,6 +51,7 @@
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -75,6 +76,9 @@
     </Compile>
     <Compile Include="..\Svg.Shared\SvgDtdResolver.cs">
       <Link>SvgDtdResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Svg.Shared\SvgElementAttributeProvider.cs">
+      <Link>SvgElementAttributeProvider.cs</Link>
     </Compile>
     <Compile Include="..\Svg.Shared\SvgElementFactory.cs">
       <Link>SvgElementFactory.cs</Link>
@@ -146,7 +150,6 @@
     <Compile Include="Platform\IAndroidShader.cs" />
     <Compile Include="Platform\SelectableAndroidBitmap.cs" />
     <Compile Include="Factory.cs" />
-    <Compile Include="Rendering\SvgRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PlatformSetupSetUp.cs" />
   </ItemGroup>

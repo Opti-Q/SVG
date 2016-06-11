@@ -1,7 +1,7 @@
 using System;
-using System.Drawing;
+using RectangleF = Svg.Interfaces.RectangleF;
 
-namespace Svg.Droid
+namespace Svg.Platform
 {
 
     public class AndroidBitmap : Svg.Bitmap
@@ -40,6 +40,11 @@ namespace Svg.Droid
         public void Dispose()
         {
             _image.Dispose();
+        }
+
+        public BitmapData LockBits(RectangleF rectangle, ImageLockMode lockmode, PixelFormat pixelFormat)
+        {
+            throw new NotImplementedException();
         }
 
         public void UnlockBits(BitmapData bitmapData)

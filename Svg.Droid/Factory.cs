@@ -5,7 +5,6 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using Android.Graphics;
-using Svg.Droid;
 using Svg.Interfaces;
 using Svg.Interfaces.Xml;
 using Svg.Platform;
@@ -181,7 +180,7 @@ namespace Svg
             w.Formatting = Formatting.Indented;
             return w;
         }
-        public ISvgTextReader CreateSvgTextReader(Stream stream, Dictionary<string, string> entities)
+        public XmlReader CreateSvgTextReader(Stream stream, Dictionary<string, string> entities)
         {
             var reader = new SvgTextReader(stream, entities);
             reader.XmlResolver = new SvgDtdResolver();
@@ -189,7 +188,7 @@ namespace Svg
             return reader;
         }
 
-        public ISvgTextReader CreateSvgTextReader(StringReader r, Dictionary<string, string> entities)
+        public XmlReader CreateSvgTextReader(StringReader r, Dictionary<string, string> entities)
         {
             var reader = new SvgTextReader(r, entities);
             reader.XmlResolver = new SvgDtdResolver();

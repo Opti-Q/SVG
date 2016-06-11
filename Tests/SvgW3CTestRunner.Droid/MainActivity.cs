@@ -10,7 +10,7 @@ using Android.OS;
 using Android.Util;
 using Android.Views;
 using Svg;
-using Svg.Droid;
+using Svg.Platform;
 using Exception = Java.Lang.Exception;
 using Orientation = Android.Widget.Orientation;
 

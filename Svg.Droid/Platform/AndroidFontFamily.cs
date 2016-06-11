@@ -1,7 +1,7 @@
 using System;
 using Android.Graphics;
 
-namespace Svg.Droid
+namespace Svg.Platform
 {
     public class AndroidFontFamily : FontFamily
     {

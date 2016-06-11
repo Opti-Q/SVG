@@ -1,4 +1,3 @@
-using Svg.Droid;
 using Svg.Interfaces;
 
 namespace Svg.Platform
@@ -33,37 +32,32 @@ namespace Svg.Platform
             _inner = inner;
         }
 
-        public string Name => _inner.Name;
-        public bool IsKnownColor => _inner.IsKnownColor;
-        public bool IsSystemColor => _inner.IsSystemColor;
-        public bool IsNamedColor => _inner.IsNamedColor;
-        public bool IsEmpty => _inner.IsEmpty;
-        public byte A => _inner.A;
-        public byte R => _inner.R;
-        public byte G => _inner.G;
-        public byte B => _inner.B;
-        public float GetBrightness()
+        public override string Name => _inner.Name;
+        public override bool IsKnownColor => _inner.IsKnownColor;
+        public override bool IsSystemColor => _inner.IsSystemColor;
+        public override bool IsNamedColor => _inner.IsNamedColor;
+        public override bool IsEmpty => _inner.IsEmpty;
+        public override byte A => _inner.A;
+        public override byte R => _inner.R;
+        public override byte G => _inner.G;
+        public override byte B => _inner.B;
+        public override float GetBrightness()
         {
             return _inner.GetBrightness();
         }
-
-        public float GetSaturation()
+        public override float GetSaturation()
         {
             return _inner.GetSaturation();
         }
-
-        public float GetHue()
+        public override float GetHue()
         {
             return _inner.GetHue();
         }
-
-        public int ToArgb()
+        public override int ToArgb()
         {
             return _inner.ToArgb();
         }
-
-
-
+        
         public static implicit operator AndroidColor(System.Drawing.Color other)
         {
             return new AndroidColor(other);

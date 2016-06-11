@@ -5,7 +5,7 @@ using Android.Graphics;
 using Svg.Interfaces;
 using PointF = Svg.Interfaces.PointF;
 
-namespace Svg.Droid
+namespace Svg.Platform
 {
     public class AndroidGraphicsPath : GraphicsPath
     {
@@ -53,7 +53,7 @@ namespace Svg.Droid
         {
             var r = new RectF();
             _path.ComputeBounds(r, true);
-            return new RectangleF(r.Left, r.Top, r.Width(), r.Height());
+            return Engine.Factory.CreateRectangleF(r.Left, r.Top, r.Width(), r.Height());
         }
 
         public void StartFigure()
@@ -103,8 +103,8 @@ namespace Svg.Droid
             // TODO LX: Which direction is correct?
             Path.AddOval(new RectF(x, y, x + width, y + height), Path.Direction.Cw);
 
-            _points.Add(new PointF(x, y));
-            _points.Add(new PointF(x + width, y + height));
+            _points.Add(Engine.Factory.CreatePointF(x, y));
+            _points.Add(Engine.Factory.CreatePointF(x + width, y + height));
             _pathTypes.Add(0); // start of a figure
             _pathTypes.Add(0x80); // last point in closed sublath
         }
@@ -134,28 +134,28 @@ namespace Svg.Droid
 
         public void AddRectangle(RectangleF rectangle)
         {
-            Path.AddRect(rectangle.ToRectF(), Path.Direction.Cw);
-            _points.Add(new PointF(rectangle.Location.X, rectangle.Location.Y));
+            Path.AddRect((AndroidRectangleF)rectangle, Path.Direction.Cw);
+            _points.Add(Engine.Factory.CreatePointF(rectangle.Location.X, rectangle.Location.Y));
             _pathTypes.Add(0); // start of a figure
-            _points.Add(new PointF(rectangle.Location.X + rectangle.Width, rectangle.Location.Y));
+            _points.Add(Engine.Factory.CreatePointF(rectangle.Location.X + rectangle.Width, rectangle.Location.Y));
             _pathTypes.Add(0x7); // TODO LX: ???
-            _points.Add(new PointF(rectangle.Location.X, rectangle.Location.Y + rectangle.Height));
+            _points.Add(Engine.Factory.CreatePointF(rectangle.Location.X, rectangle.Location.Y + rectangle.Height));
             _pathTypes.Add(0x7); // TODO LX: ???
-            _points.Add(new PointF(rectangle.Location.X + rectangle.Width, rectangle.Location.Y + rectangle.Height));
+            _points.Add(Engine.Factory.CreatePointF(rectangle.Location.X + rectangle.Width, rectangle.Location.Y + rectangle.Height));
             _pathTypes.Add(0x80); // TODO LX: ???
         }
 
         public void AddArc(RectangleF rectangle, float startAngle, float sweepAngle)
         {
-            Path.AddArc(rectangle.ToRectF(), startAngle, sweepAngle);
+            Path.AddArc((AndroidRectangleF)rectangle, startAngle, sweepAngle);
 
-            _points.Add(new PointF(rectangle.Location.X, rectangle.Location.Y));
+            _points.Add(Engine.Factory.CreatePointF(rectangle.Location.X, rectangle.Location.Y));
             _pathTypes.Add(1); // start point of line
-            _points.Add(new PointF(rectangle.Location.X + rectangle.Width, rectangle.Location.Y));
+            _points.Add(Engine.Factory.CreatePointF(rectangle.Location.X + rectangle.Width, rectangle.Location.Y));
             _pathTypes.Add(0x20); // TODO LX: ???
-            _points.Add(new PointF(rectangle.Location.X, rectangle.Location.Y + rectangle.Height));
+            _points.Add(Engine.Factory.CreatePointF(rectangle.Location.X, rectangle.Location.Y + rectangle.Height));
             _pathTypes.Add(0x20); // TODO LX: ???
-            _points.Add(new PointF(rectangle.Location.X + rectangle.Width, rectangle.Location.Y + rectangle.Height));
+            _points.Add(Engine.Factory.CreatePointF(rectangle.Location.X + rectangle.Width, rectangle.Location.Y + rectangle.Height));
             _pathTypes.Add(1); // end point of line
         }
 
@@ -208,7 +208,7 @@ namespace Svg.Droid
             Path.MoveTo(x1, y2);
             Path.CubicTo(x2, y2, x3, y3, x4, y4);
 
-            _points.AddRange(new[] { new PointF(x1, y1), new PointF(x2, y2), new PointF(x3, y3), new PointF(x4, y4) });
+            _points.AddRange(new[] { Engine.Factory.CreatePointF(x1, y1), Engine.Factory.CreatePointF(x2, y2), Engine.Factory.CreatePointF(x3, y3), Engine.Factory.CreatePointF(x4, y4) });
             _pathTypes.Add(1); // start point of line
             _pathTypes.Add(3); // control point of cubic bezier spline
             _pathTypes.Add(3); // control point of cubic bezier spline

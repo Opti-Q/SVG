@@ -1,6 +1,6 @@
 using Android.Graphics;
 
-namespace Svg.Droid
+namespace Svg.Platform
 {
     public interface IAndroidShader
     {

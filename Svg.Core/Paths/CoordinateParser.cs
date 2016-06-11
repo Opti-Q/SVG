@@ -6,7 +6,7 @@ using System.Globalization;
 
 namespace Svg
 {
-    internal class CoordinateParser
+    public class CoordinateParser
     {
         private enum NumState
         {

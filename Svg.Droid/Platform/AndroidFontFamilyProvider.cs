@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Android.Graphics;
 
-namespace Svg.Droid
+namespace Svg.Platform
 {
     //http://stackoverflow.com/questions/3532397/how-to-retrieve-a-list-of-available-installed-fonts-in-android
     public class AndroidFontFamilyProvider : FontFamilyProvider

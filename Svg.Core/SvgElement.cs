@@ -19,14 +19,14 @@ namespace Svg
         public const int StyleSpecificity_InlineStyle = 1 << 16;
 
         //optimization
-        protected class PropertyAttributeTuple
+        public class PropertyAttributeTuple
         {
             //public PropertyDescriptor Property;
-            public PropertyInfo Property;
+            public IPropertyDescriptor Property;
             public SvgAttributeAttribute Attribute;
         }
 
-        protected class EventAttributeTuple
+        public class EventAttributeTuple
         {
             public FieldInfo Event;
             public SvgAttributeAttribute Attribute;
@@ -493,18 +493,9 @@ namespace Svg
             CustomAttributes.AttributeChanged += Attributes_AttributeChanged;
 
             //find svg attribute descriptions
-            _svgPropertyAttributes = from PropertyInfo a in TypeDescriptor.GetProperties(this)
-                            let attribute = a.GetCustomAttributes(typeof(SvgAttributeAttribute), true).FirstOrDefault() as SvgAttributeAttribute//a.Attributes[typeof(SvgAttributeAttribute)] as SvgAttributeAttribute
-                                    where attribute != null
-                            select new PropertyAttributeTuple { Property = a, Attribute = attribute };
+            _svgPropertyAttributes = Engine.SvgElementAttributeProvider.GetPropertyAttributes(this);
 
-            _svgEventAttributes = from EventInfo a in TypeDescriptor.GetEvents(this)
-                            let attribute = a.GetCustomAttributes(typeof(SvgAttributeAttribute), true).FirstOrDefault() as SvgAttributeAttribute
-                                  where attribute != null
-                                  //select new EventAttributeTuple { Event = a.ComponentType.GetField(a.Name, BindingFlags.Instance | BindingFlags.NonPublic), Attribute = attribute };
-                                  // TODO LX: is that correct?
-                                  select new EventAttributeTuple { Event = a.EventHandlerType.GetField(a.Name, BindingFlags.Instance | BindingFlags.NonPublic), Attribute = attribute };
-
+            _svgEventAttributes = Engine.SvgElementAttributeProvider.GetEventAttributes(this);
         }
 
         //dispatch attribute event

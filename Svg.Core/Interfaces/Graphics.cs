@@ -22,6 +22,7 @@ namespace Svg
         void FillPath(Brush brush, GraphicsPath path);
         void RotateTransform(float fAngle, MatrixOrder order);
         void ScaleTransform(float sx, float sy, MatrixOrder order);
+        void DrawImage(Image image, PointF location);
         void SetClip(Region region, CombineMode combineMode);
         void TranslateTransform(float dx, float dy, MatrixOrder order);
         Region[] MeasureCharacterRanges(string text, Font font, RectangleF rectangle, StringFormat format);

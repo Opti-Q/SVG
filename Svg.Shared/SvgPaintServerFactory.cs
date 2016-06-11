@@ -54,11 +54,11 @@ namespace Svg
                         switch(CountHexDigits(value, 1))
                         {
                             case 3:
-                                servers.Add(new SvgColourServer((Color)_colourConverter.ConvertFrom(value.Substring(0, 4))));
+                                servers.Add(new SvgColourServer((Svg.Interfaces.Color)_colourConverter.ConvertFrom(value.Substring(0, 4))));
                                 value = value.Substring(4).Trim();
                                 break;
                             case 6:
-                                servers.Add(new SvgColourServer((Color)_colourConverter.ConvertFrom(value.Substring(0, 7))));
+                                servers.Add(new SvgColourServer((Svg.Interfaces.Color)_colourConverter.ConvertFrom(value.Substring(0, 7))));
                                 value = value.Substring(7).Trim();
                                 break;
                             default:
@@ -67,7 +67,7 @@ namespace Svg
                     }
                     else
                     {
-                        return new SvgColourServer((Color)_colourConverter.ConvertFrom(value.Trim()));
+                        return new SvgColourServer((Svg.Interfaces.Color)_colourConverter.ConvertFrom(value.Trim()));
                     }
                 }
 

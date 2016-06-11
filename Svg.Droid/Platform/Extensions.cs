@@ -1,7 +1,7 @@
 using System.Drawing;
 using Android.Graphics;
 
-namespace Svg.Droid
+namespace Svg.Platform
 {
     public static class Extensions
     {

@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using Svg.Interfaces;
 using Svg.Pathing;
+using PointF = Svg.Interfaces.PointF;
 
 namespace Svg
 {
@@ -192,7 +193,7 @@ namespace Svg
                 y = mirror.Y - dy;
             }
 
-            return new PointF(x, y);
+            return Engine.Factory.CreatePointF(x, y);
         }
 
         /// <summary>
@@ -219,7 +220,7 @@ namespace Svg
         /// <returns><see cref="PointF"/> that contains absolute coordinates.</returns>
         private static PointF ToAbsolute(float x, float y, SvgPathSegmentList segments, bool isRelativeX, bool isRelativeY)
         {
-            var point = new PointF(x, y);
+            var point = Engine.Factory.CreatePointF(x, y);
 
             if ((isRelativeX || isRelativeY) && segments.Count > 0)
             {

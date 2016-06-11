@@ -9,5 +9,7 @@ namespace Svg.Interfaces
     {
         object ConvertFrom(string value);
         string ConvertToString(object obj);
+        bool CanConvertTo(Type type);
+        object ConvertTo(object propertyValue, Type type);
     }
 }

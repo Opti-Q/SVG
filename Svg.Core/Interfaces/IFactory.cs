@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Text;
+using System.Xml;
 using Svg.Interfaces;
 using Svg.Interfaces.Xml;
 
@@ -42,8 +43,8 @@ namespace Svg
 
         IXmlTextWriter CreateXmlTextWriter(StringWriter writer);
         IXmlTextWriter CreateXmlTextWriter(Stream stream, Encoding utf8);
-        ISvgTextReader CreateSvgTextReader(Stream stream, Dictionary<string, string> entities);
-        ISvgTextReader CreateSvgTextReader(StringReader reader, Dictionary<string, string> entities);
+        XmlReader CreateSvgTextReader(Stream stream, Dictionary<string, string> entities);
+        XmlReader CreateSvgTextReader(StringReader reader, Dictionary<string, string> entities);
         ISortedList<TKey, TValue> CreateSortedList<TKey, TValue>();
         IDictionary<TKey, TValue> CreateSortedDictionary<TKey, TValue>();
     }

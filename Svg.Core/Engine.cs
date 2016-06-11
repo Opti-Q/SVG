@@ -10,6 +10,7 @@ namespace Svg
         private static readonly Dictionary<Type, Func<object>> _serviceRegistry = new Dictionary<Type, Func<object>>();
         private static IFactory _factory = null;
         private static ISvgTypeDescriptor _typeDescriptor = null;
+        private static ISvgElementAttributeProvider _attributeProvider = null;
 
         public static IFactory Factory
         {
@@ -27,6 +28,14 @@ namespace Svg
             }
         }
 
+        public static ISvgElementAttributeProvider SvgElementAttributeProvider
+        {
+            get
+            {
+                return _attributeProvider;
+            }
+        }
+
         public static void Register<TInterface, TImplementation>(Func<TImplementation> factory)
             where TInterface : class
             where TImplementation : class, TInterface
@@ -40,6 +49,8 @@ namespace Svg
                     _factory = (IFactory)factory();
                 if (typeof(TInterface) == typeof(ISvgTypeDescriptor))
                     _typeDescriptor = (ISvgTypeDescriptor)factory();
+                if (typeof(TInterface) == typeof(ISvgElementAttributeProvider))
+                    _attributeProvider = (ISvgElementAttributeProvider)factory();
             }
         }
 

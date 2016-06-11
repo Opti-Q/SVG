@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -20,7 +17,7 @@ namespace Svg
     /// <summary>
     /// The class used to create and load SVG documents.
     /// </summary>
-    public partial class SvgDocument : SvgFragment, ITypeDescriptorContext
+    public partial class SvgDocument : SvgFragment //, ITypeDescriptorContext
     {
         public static readonly int PointsPerInch = 96;
         private SvgElementIdManager _idManager;
@@ -52,7 +49,7 @@ namespace Svg
         /// <summary>
         /// Gets an <see cref="SvgElementIdManager"/> for this document.
         /// </summary>
-        protected internal virtual SvgElementIdManager IdManager
+        public virtual SvgElementIdManager IdManager
         {
             get
             {
@@ -90,41 +87,7 @@ namespace Svg
         {
             get { return _fileSystem ?? (_fileSystem = Engine.Resolve<IFileSystem>()); }
         }
-
-        #region ITypeDescriptorContext Members
-
-        IContainer ITypeDescriptorContext.Container
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        object ITypeDescriptorContext.Instance
-        {
-            get { return this; }
-        }
-
-        void ITypeDescriptorContext.OnComponentChanged()
-        {
-            throw new NotImplementedException();
-        }
-
-        bool ITypeDescriptorContext.OnComponentChanging()
-        {
-            throw new NotImplementedException();
-        }
-
-        PropertyDescriptor ITypeDescriptorContext.PropertyDescriptor
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        object IServiceProvider.GetService(Type serviceType)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
+        
         /// <summary>
         /// Retrieves the <see cref="SvgElement"/> with the specified ID.
         /// </summary>

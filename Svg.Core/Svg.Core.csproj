@@ -211,7 +211,9 @@
     <Compile Include="Interfaces\ImageAttributes.cs" />
     <Compile Include="Interfaces\ImageLockMode.cs" />
     <Compile Include="Interfaces\IMarshal.cs" />
+    <Compile Include="Interfaces\IPropertyDescriptor.cs" />
     <Compile Include="Interfaces\ISortedList.cs" />
+    <Compile Include="Interfaces\ISvgElementAttributeProvider.cs" />
     <Compile Include="Interfaces\ISvgElementFactory.cs" />
     <Compile Include="Interfaces\ISvgTypeDescriptor.cs" />
     <Compile Include="Interfaces\ISvgUnitConverter.cs" />

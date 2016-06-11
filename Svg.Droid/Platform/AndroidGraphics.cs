@@ -1,9 +1,8 @@
 using System;
 using System.Drawing;
 using Android.Graphics;
-using Point = System.Drawing.Point;
 
-namespace Svg.Droid
+namespace Svg.Platform
 {
     public class AndroidGraphics : Graphics
     {
@@ -23,10 +22,8 @@ namespace Svg.Droid
         public TextRenderingHint TextRenderingHint { get; set; }
         public float DpiY { get { return (float)_canvas.Density; } }
         public Region Clip { get { return _clip; } }
-
         // TODO LX use smootingmode
         public SmoothingMode SmoothingMode { get; set; }
-
         public Matrix Transform
         {
             get { return _matrix; }
@@ -36,52 +33,49 @@ namespace Svg.Droid
                 _canvas.Matrix = _matrix.Matrix;
             }
         }
-
         public void Dispose()
         {
             _canvas.Dispose();
         }
-
-        public void DrawImage(Bitmap bitmap, Rectangle rectangle, int x, int y, int width, int height, GraphicsUnit pixel)
+        public void DrawImage(Bitmap bitmap, Interfaces.RectangleF rectangle, int x, int y, int width, int height, GraphicsUnit pixel)
         {
             var img = (AndroidBitmap) bitmap;
             _canvas.DrawBitmap(img.Image, null, new Rect(x, y, x+width,y+height), null);
         }
-
-        public void DrawImage(Bitmap bitmap, Rectangle rectangle, int x, int y, int width, int height, GraphicsUnit pixel,
+        public void DrawImage(Bitmap bitmap, Interfaces.RectangleF rectangle, int x, int y, int width, int height, GraphicsUnit pixel,
             ImageAttributes attributes)
         {
             throw new NotImplementedException("ImageAttributes not implemented for now: see http://chiuki.github.io/android-shaders-filters/#/");
             //var img = (AndroidBitmap)bitmap;
             //_canvas.DrawBitmap(img.Image, null, new Rect(x, y, x + width, y + height), null);
         }
-
-        public void DrawImage(Image bitmap, RectangleF destRect, RectangleF srcRect, GraphicsUnit graphicsUnit)
+        public void DrawImage(Image bitmap, Interfaces.RectangleF destRect, Interfaces.RectangleF srcRect, GraphicsUnit graphicsUnit)
         {
             var img = (AndroidBitmap) bitmap;
 
-            var src = srcRect.ToRect();
-            var dest = destRect.ToRectF();
+            var src = (Rect)(AndroidRectangleF)srcRect;
+            var dest = (Rect)(AndroidRectangleF)destRect;
 
             _canvas.DrawBitmap(img.Image, src, dest, null);
         }
-
-        public void DrawImageUnscaled(Image image, Point location)
+        public void DrawImageUnscaled(Image image, Svg.Interfaces.PointF location)
         {
             var img = (AndroidBitmap)image;
-            _canvas.DrawBitmap(img.Image, location.X, location.Y, null);
+            _canvas.DrawBitmap(img.Image, (int)location.X, (int)location.Y, null);
         }
-
+        public void DrawImage(Image image, Interfaces.PointF location)
+        {
+            var img = (AndroidBitmap)image;
+            _canvas.DrawBitmap(img.Image, (int)location.X, (int)location.Y, null);
+        }
         public void Flush()
         {
             throw new NotSupportedException("Flushing not supported on android");
         }
-
         public void Save()
         {
             _canvas.Save();
         }
-
         public void DrawPath(Pen pen, GraphicsPath path)
         {
             var p = (AndroidGraphicsPath) path;
@@ -92,7 +86,6 @@ namespace Svg.Droid
             _canvas.DrawPath(p.Path, paint.Paint);
 
         }
-
         public void FillPath(Brush brush, GraphicsPath path)
         {
             var p = (AndroidGraphicsPath)path;
@@ -107,7 +100,6 @@ namespace Svg.Droid
 
             _canvas.DrawPath(p.Path, paint);
         }
-
         private void SetSmoothingMode(Paint paint)
         {
             switch (SmoothingMode)
@@ -124,7 +116,6 @@ namespace Svg.Droid
                 //case SmoothingMode.Invalid:
             }
         }
-
         public void RotateTransform(float fAngle, MatrixOrder order)
         {
             if (order == MatrixOrder.Append)
@@ -136,7 +127,6 @@ namespace Svg.Droid
                 _canvas.Matrix.PreRotate(fAngle);
             }
         }
-
         public void ScaleTransform(float sx, float sy, MatrixOrder order)
         {
             if (order == MatrixOrder.Append)
@@ -148,7 +138,6 @@ namespace Svg.Droid
                 _canvas.Matrix.PreScale(sx, sy);
             }
         }
-
         public void SetClip(Region region, CombineMode combineMode)
         {
             var op = Android.Graphics.Region.Op.Union;
@@ -178,11 +167,10 @@ namespace Svg.Droid
             _clip = region;
 
             if(region != null)
-                _canvas.ClipRect(region.Rect.ToRect(), op);
+                _canvas.ClipRect((Rect)(AndroidRectangleF)region.Rect, op);
             else
                 _canvas.ClipRect(_canvas.ClipBounds, Android.Graphics.Region.Op.Union);
         }
-
         public void TranslateTransform(float dx, float dy, MatrixOrder order)
         {
             if (order == MatrixOrder.Append)
@@ -194,7 +182,10 @@ namespace Svg.Droid
                 _canvas.Matrix.PreTranslate(dx, dy);
             }
         }
-
+        public Region[] MeasureCharacterRanges(string text, Font font, Interfaces.RectangleF rectangle, StringFormat format)
+        {
+            throw new NotImplementedException();
+        }
         public Region[] MeasureCharacterRanges(string text, Font font, Rectangle rectangle, StringFormat format)
         {
             throw new NotImplementedException();

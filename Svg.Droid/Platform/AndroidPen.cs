@@ -1,6 +1,6 @@
 using Android.Graphics;
 
-namespace Svg.Droid
+namespace Svg.Platform
 {
     public class AndroidPen : Pen
     {
@@ -9,7 +9,7 @@ namespace Svg.Droid
         private Paint _paint;
         private DashPathEffect _dashes;
         private float[] _dashPattern;
-        private Engine.LineJoin _lineJoin;
+        private LineJoin _lineJoin;
         private float _miterLimit;
         private LineCap _cap;
         private LineCap _endCap;

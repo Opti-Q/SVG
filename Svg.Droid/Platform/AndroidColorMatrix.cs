@@ -1,6 +1,6 @@
 using System.Linq;
 
-namespace Svg.Droid
+namespace Svg.Platform
 {
     public class AndroidColorMatrix : ColorMatrix
     {

@@ -1,7 +1,7 @@
 using System;
-using System.Drawing;
+using Svg.Interfaces;
 
-namespace Svg.Droid
+namespace Svg.Platform
 {
     public class AndroidMatrix : Matrix
     {
