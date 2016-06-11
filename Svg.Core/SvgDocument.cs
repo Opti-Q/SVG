@@ -476,14 +476,10 @@ namespace Svg
 
         public override void Write(IXmlTextWriter writer)
         {
-            //Save previous culture and switch to invariant for writing
-            var previousCulture = Thread.CurrentThread.CurrentCulture;
-            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-
-            base.Write(writer);
-
-            //Switch culture back
-            Thread.CurrentThread.CurrentCulture = previousCulture;
+            using (var c = Engine.Resolve<ICultureHelper>().UsingCulture(CultureInfo.InvariantCulture))
+            {
+                base.Write(writer);
+            }
         }
 
         public void Write(Stream stream)

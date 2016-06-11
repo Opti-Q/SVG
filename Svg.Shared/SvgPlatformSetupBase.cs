@@ -11,12 +11,14 @@ namespace Svg
         private static readonly SvgCharComverter CharConverter = new SvgCharComverter();
         private static readonly SvgElementAttributeProvider SvgElementAttributeProvider = new SvgElementAttributeProvider();
         private static readonly DefaultLogger DefaultLogger = new DefaultLogger();
+        private static readonly CultureHelper CultureHelper = new CultureHelper();
 
         protected virtual void Initialize()
         {
             Engine.Register<IMarshal, SvgMarshal>(() => Marshal);
             Engine.Register<ISvgTypeDescriptor, SvgTypeDescriptor>(() => SvgTypeDescriptor);
             Engine.Register<ISvgElementAttributeProvider, SvgElementAttributeProvider>(() => SvgElementAttributeProvider);
+            Engine.Register<ICultureHelper, CultureHelper>(() => CultureHelper);
             Engine.Register<ILogger, DefaultLogger>(() => DefaultLogger);
             Engine.Register<ICharConverter, SvgCharComverter>(() => CharConverter);
             Engine.Register<IWebRequest, WebRequestSvc>(() => new WebRequestSvc());

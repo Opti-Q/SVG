@@ -50,19 +50,16 @@ namespace Svg
         public static string GetXML(this SvgElement elem)
         {
             var result = "";
-
-            var currentCulture = Thread.CurrentThread.CurrentCulture;
-            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            
+            using(var c = Engine.Resolve<ICultureHelper>().UsingCulture(CultureInfo.InvariantCulture))
             using (StringWriter str = new StringWriter())
             {
                 using (IXmlTextWriter xml = Engine.Factory.CreateXmlTextWriter(str))
                 {
                     elem.Write(xml);
                     result = str.ToString();
-
                 }
             }
-            Thread.CurrentThread.CurrentCulture = currentCulture;
 
             return result;
         }
