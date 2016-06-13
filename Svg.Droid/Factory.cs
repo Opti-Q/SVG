@@ -109,7 +109,7 @@ namespace Svg
 
         public StringFormat CreateStringFormatGenericTypographic()
         {
-            throw new NotImplementedException();
+            return new AndroidStringFormat();
         }
 
         public Font CreateFont(FontFamily fontFamily, float fontSize, FontStyle fontStyle, GraphicsUnit graphicsUnit)

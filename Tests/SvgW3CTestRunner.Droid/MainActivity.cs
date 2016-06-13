@@ -179,9 +179,8 @@ namespace SvgW3CTestRunner.Droid
                         watch.Start();
 
                         var svgBitmap = new AndroidBitmap(480, 360);
-                        SvgDocument doc;
-                        using (var str = Assets.Open($"svg/{svg}"))
-                            doc = SvgDocument.Open<SvgDocument>(str);
+                        var src = new SvgAssetSource($"svg/{svg}", Assets);
+                        SvgDocument doc = SvgDocument.Open<SvgDocument>(src);
 
                         doc.Draw(svgBitmap);
                         ivSvg.SetImageBitmap(svgBitmap.Image);

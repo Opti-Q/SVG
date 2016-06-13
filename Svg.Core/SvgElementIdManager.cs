@@ -16,11 +16,7 @@ namespace Svg
     {
         private SvgDocument _document;
         private Dictionary<string, SvgElement> _idValueMap;
-
-        private ISvgElementLoader _loader;
-
-        private ISvgElementLoader ElementLoader => _loader ?? (_loader = Engine.TryResolve<ISvgElementLoader>());
-
+        
         /// <summary>
         /// Retrieves the <see cref="SvgElement"/> with the specified ID.
         /// </summary>
@@ -46,6 +42,18 @@ namespace Svg
 
         public virtual SvgElement GetElementById(Uri uri)
         {
+            // if document was loaded from custom source, allow it to load element first
+            // as the requested document might be from the very same source
+            if (_document.SvgSource != null)
+            {
+                var hash = uri.OriginalString.Substring(uri.OriginalString.LastIndexOf('#'));
+                var str = _document.SvgSource.GetFileRelativeTo(uri);
+                if (str != null)
+                {
+                    var doc = SvgDocument.Open<SvgDocument>(str);
+                    return doc.IdManager.GetElementById(hash);
+                }
+            }
 
             if (uri.ToString().StartsWith("url(")) uri = new Uri(uri.ToString().Substring(4).TrimEnd(')'), UriKind.Relative);
             if (!uri.IsAbsoluteUri && this._document.BaseUri != null && !uri.ToString().StartsWith("#"))
@@ -75,11 +83,6 @@ namespace Svg
                 }
 
             }
-
-            var loader = ElementLoader;
-            var elt = loader?.Load(uri);
-            if (elt != null)
-                return elt;
 
             return this.GetElementById(uri.ToString());
         }

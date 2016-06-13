@@ -83,6 +83,8 @@ namespace Svg
         /// </summary>
         public string ExternalCSSHref { get; set; }
 
+        internal ISvgSource SvgSource { get; set; }
+
         private IFileSystem FileSystem
         {
             get { return _fileSystem ?? (_fileSystem = Engine.Resolve<IFileSystem>()); }
@@ -175,6 +177,23 @@ namespace Svg
             return Open<T>(stream, null);
         }
 
+        /// <summary>
+        /// Allows to provide an arbitrary source (e.g. Android Asset)
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="svgSource"></param>
+        /// <returns></returns>
+        public static T Open<T>(ISvgSource svgSource) where T : SvgDocument, new()
+        {
+            using (var str = svgSource.GetStream())
+            {
+                var doc = Open<T>(str, null);
+
+                doc.SvgSource = svgSource;
+
+                return doc;
+            }
+        }
 
         /// <summary>
         /// Attempts to create an SVG document from the specified string data.

@@ -16,7 +16,6 @@ namespace Svg
         public static void Init(Context context)
         {
             new SvgPlatformSetup().Initialize();
-            Engine.Register<ISvgElementLoader, SvgElementLoader>(() => new SvgElementLoader(context.Assets));
         }
     }
 }

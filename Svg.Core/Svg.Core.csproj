@@ -219,7 +219,7 @@
     <Compile Include="Interfaces\ISvgDocumentProvider.cs" />
     <Compile Include="Interfaces\ISvgElementAttributeProvider.cs" />
     <Compile Include="Interfaces\ISvgElementFactory.cs" />
-    <Compile Include="Interfaces\ISvgElementLoader.cs" />
+    <Compile Include="Interfaces\ISvgSource.cs" />
     <Compile Include="Interfaces\ISvgTypeDescriptor.cs" />
     <Compile Include="Interfaces\ISvgUnitConverter.cs" />
     <Compile Include="Interfaces\ITypeConverter.cs" />
