@@ -100,13 +100,13 @@ namespace Svg.Platform
         {
             return new AndroidRectangleF(System.Drawing.RectangleF.Inflate(_inner, x, y));
         }
-        public static implicit operator Rect(AndroidRectangleF other)
+        public static implicit operator Rect(AndroidRectangleF rect)
         {
-            return new Rect((int)other.Left, (int)other.Top, (int)other.Width, (int)other.Height);
+            return new Rect((int)rect.X, (int)rect.Y, (int)rect.X + (int)rect.Width, (int)rect.Y + (int)rect.Height);
         }
-        public static implicit operator Android.Graphics.RectF(AndroidRectangleF other)
+        public static implicit operator Android.Graphics.RectF(AndroidRectangleF rect)
         {
-            return new Android.Graphics.RectF(other.Left, other.Top, other.Width, other.Height);
+            return new Android.Graphics.RectF(rect.X, rect.Y, rect.X + rect.Width, rect.Y + rect.Height);
         }
     }
 }

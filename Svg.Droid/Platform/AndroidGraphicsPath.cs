@@ -9,7 +9,7 @@ namespace Svg.Platform
 {
     public class AndroidGraphicsPath : GraphicsPath
     {
-        private readonly FillMode _fillmode;
+        private FillMode _fillmode;
         private readonly List<PointF> _points = new List<PointF>();
         private readonly List<byte> _pathTypes = new List<byte>();
         private Android.Graphics.Path _path = new Android.Graphics.Path();
@@ -22,17 +22,7 @@ namespace Svg.Platform
 
         public AndroidGraphicsPath(FillMode fillmode)
         {
-            _fillmode = fillmode;
-
-            switch (fillmode)
-            {
-                case FillMode.Alternate:
-                    Path.SetFillType(Path.FillType.EvenOdd);
-                    break;
-                case FillMode.Winding:
-                    Path.SetFillType(Path.FillType.Winding);
-                    break;
-            }
+            FillMode = fillmode;
         }
 
 
@@ -68,7 +58,24 @@ namespace Svg.Platform
 
         public decimal PointCount { get { return _points.Count; } }
         public PointF[] PathPoints { get { return _points.ToArray(); } }
-        public FillMode FillMode { get; set; }
+        public FillMode FillMode
+        {
+            get { return _fillmode; }
+            set
+            {
+                _fillmode = value;
+
+                switch (_fillmode)
+                {
+                    case FillMode.Alternate:
+                        Path.SetFillType(Path.FillType.EvenOdd);
+                        break;
+                    case FillMode.Winding:
+                        Path.SetFillType(Path.FillType.Winding);
+                        break;
+                }
+            }
+        }
 
         /// <summary>
         /// see: https://msdn.microsoft.com/en-us/library/system.drawing.drawing2d.graphicspath.pathtypes%28v=vs.110%29.aspx

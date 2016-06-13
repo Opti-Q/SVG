@@ -166,6 +166,8 @@ namespace SvgW3CTestRunner.Droid
                         // --------------------------------------------------------
 
                         var svg = svgs.FirstOrDefault(@s => s.StartsWith(png.Split('.')[0]));
+                        if (svg == null)
+                            continue;
 
                         var ivSvg = new ImageView(this);
                         ivSvg.SetPadding(0, DpToPx(1), 0, DpToPx(1));

@@ -100,11 +100,10 @@ namespace Svg.Platform
             var shader = (IAndroidShader) brush;
 
             var paint = new Paint();
-            paint.StrokeWidth = 1;
-            paint.SetStyle(Paint.Style.Fill);
+            //paint.StrokeWidth = 1;
+            //paint.SetStyle(Paint.Style.FillAndStroke);
             shader.ApplyTo(paint);
             SetSmoothingMode(paint);
-
             _canvas.DrawPath(p.Path, paint);
         }
         private void SetSmoothingMode(Paint paint)
