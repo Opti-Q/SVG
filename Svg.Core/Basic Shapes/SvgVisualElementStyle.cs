@@ -35,7 +35,7 @@ namespace Svg
         }
 
         // Displayable - false if attribute display="none", true otherwise
-        protected virtual bool Displayable
+        public virtual bool Displayable
         {
             get
             {

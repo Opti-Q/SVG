@@ -204,6 +204,7 @@
     <Compile Include="Interfaces\Graphics.cs" />
     <Compile Include="Interfaces\GraphicsPath.cs" />
     <Compile Include="Interfaces\GraphicsUnit.cs" />
+    <Compile Include="Interfaces\IAlternativeSvgTextRenderer.cs" />
     <Compile Include="Interfaces\ICharConverter.cs" />
     <Compile Include="Interfaces\ICloneable.cs" />
     <Compile Include="Interfaces\ICultureHelper.cs" />

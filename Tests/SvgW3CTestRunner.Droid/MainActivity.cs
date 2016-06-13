@@ -41,7 +41,7 @@ namespace SvgW3CTestRunner.Droid
 
         protected override void OnCreate(Bundle bundle)
         {
-            SvgPlatformSetup.Init(this);
+            SvgPlatformSetup.Init(new SvgAndroidPlatformOptions(this) { EnableFastTextRendering = true });
 
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Main);
@@ -124,11 +124,11 @@ namespace SvgW3CTestRunner.Droid
 
                 var assetManager = Assets;
                 var svgs = assetManager.List("svg")
-                    .Where(@s => s.StartsWith("painting-"))
+                    .Where(@s => s.StartsWith("text-"))
                     .OrderBy(@s => s).ToList();
 
                 var pngs = assetManager.List("png")
-                    .Where(@s => s.StartsWith("painting-"))
+                    .Where(@s => s.StartsWith("text-"))
                     .OrderBy(@s => s).ToList();
 
                 _globalGfxCount = pngs.Count;

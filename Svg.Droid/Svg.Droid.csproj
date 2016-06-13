@@ -153,6 +153,7 @@
     <Compile Include="Platform\AndroidRectangleF.cs" />
     <Compile Include="Platform\AndroidSolidBrush.cs" />
     <Compile Include="Platform\AndroidStringFormat.cs" />
+    <Compile Include="Platform\AndroidTextRenderer.cs" />
     <Compile Include="Platform\AndroidTextureBrush.cs" />
     <Compile Include="Platform\Extensions.cs" />
     <Compile Include="Platform\IAndroidShader.cs" />

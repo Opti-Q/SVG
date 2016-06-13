@@ -99,12 +99,14 @@ namespace Svg.Platform
 
             var shader = (IAndroidShader) brush;
 
-            var paint = new Paint();
-            //paint.StrokeWidth = 1;
-            //paint.SetStyle(Paint.Style.FillAndStroke);
-            shader.ApplyTo(paint);
-            SetSmoothingMode(paint);
-            _canvas.DrawPath(p.Path, paint);
+            using (var paint = new Paint())
+            {
+                //paint.StrokeWidth = 1;
+                paint.SetStyle(Paint.Style.Fill);
+                shader.ApplyTo(paint);
+                SetSmoothingMode(paint);
+                _canvas.DrawPath(p.Path, paint);
+            }
         }
         private void SetSmoothingMode(Paint paint)
         {
@@ -194,6 +196,15 @@ namespace Svg.Platform
             //throw new NotImplementedException();
             return new[] {new Region(rectangle)};
         }
+
+        public void DrawText(string text, float x, float y, Pen pen)
+        {
+            if (text == null)
+                return;
+            var paint = (AndroidPen)pen;
+            _canvas.DrawText(text, x, y, paint.Paint);
+        }
+
         public Region[] MeasureCharacterRanges(string text, Font font, Rectangle rectangle, StringFormat format)
         {
             // TODO LX: wtf?

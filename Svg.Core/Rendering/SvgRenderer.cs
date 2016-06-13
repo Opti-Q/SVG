@@ -76,6 +76,11 @@ namespace Svg
             this._innerGraphics.TranslateTransform(dx, dy, order);
         }
 
+        public void DrawText(string text, float x, float y, Pen pen)
+        {
+            this._innerGraphics.DrawText(text, x, y, pen);
+        }
+
         public SmoothingMode SmoothingMode
         {
             get { return this._innerGraphics.SmoothingMode; }

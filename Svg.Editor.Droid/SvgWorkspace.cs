@@ -24,7 +24,7 @@ namespace Svg.Droid.Editor
         public SvgWorkspace(Context context, IAttributeSet attr) : base(context, attr)
         {
             // Initialize SVG Platform and tie together PCL and platform specific modules
-            SvgPlatformSetup.Init(context);
+            SvgPlatformSetup.Init(new SvgAndroidPlatformOptions(context) {EnableFastTextRendering = true});
 
 
             if(ZoomTool.IsActive)

@@ -19,6 +19,13 @@ namespace Svg
         private string _rotate;
         private List<float> _rotations = new List<float>();
 
+        private static IAlternativeSvgTextRenderer _renderer = null;
+
+        static SvgTextBase()
+        {
+            _renderer = Svg.Engine.TryResolve<IAlternativeSvgTextRenderer>();
+        }
+
         /// <summary>
         /// Gets or sets the text to be rendered.
         /// </summary>
@@ -247,7 +254,7 @@ namespace Svg
         /// <remarks>Necessary to make sure that any internal tspan elements get rendered as well</remarks>
         protected override void Render(ISvgRenderer renderer)
         {
-            if ((this.Path(renderer) != null) && this.Visible && this.Displayable)
+            if (this.Visible && this.Displayable && (_renderer != null || this.Path(renderer) != null))
             {
                 this.PushTransforms(renderer);
                 this.SetClip(renderer);
@@ -257,10 +264,15 @@ namespace Svg
                 {
                     renderer.SmoothingMode = SmoothingMode.AntiAlias;
                 }
-
-                this.RenderFill(renderer);
-                this.RenderStroke(renderer);
-                this.RenderChildren(renderer);
+                
+                if (_renderer != null)
+                    _renderer.Render(this, renderer);
+                else
+                {
+                    this.RenderFill(renderer);
+                    this.RenderStroke(renderer);
+                    this.RenderChildren(renderer);
+                }
 
                 // Reset the smoothing mode
                 if (this.RequiresSmoothRendering && renderer.SmoothingMode == SmoothingMode.AntiAlias)

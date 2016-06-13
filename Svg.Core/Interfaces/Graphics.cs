@@ -26,5 +26,6 @@ namespace Svg
         void SetClip(Region region, CombineMode combineMode);
         void TranslateTransform(float dx, float dy, MatrixOrder order);
         Region[] MeasureCharacterRanges(string text, Font font, RectangleF rectangle, StringFormat format);
+        void DrawText(string text, float x, float y, Pen pen);
     }
 }

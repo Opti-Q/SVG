@@ -140,5 +140,17 @@ namespace Svg.Platform
         {
             get { return _paint; }
         }
+
+        public float TextSize
+        {
+            get { return _paint.TextSize; }
+            set { _paint.TextSize = value; }
+        }
+
+        public Paint.Align TextAlign
+        {
+            get { return _paint.TextAlign; }
+            set { _paint.TextAlign = value; }
+        }
     }
 }

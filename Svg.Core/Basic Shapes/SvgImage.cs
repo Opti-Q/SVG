@@ -238,7 +238,7 @@ namespace Svg
                     }
                 }
 
-                if (!uri.IsAbsoluteUri)
+                if (!uri.IsAbsoluteUri && OwnerDocument.BaseUri != null)
                 {
                     uri = new Uri(OwnerDocument.BaseUri, uri);
                 }

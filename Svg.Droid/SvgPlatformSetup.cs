@@ -1,21 +1,40 @@
 using Android.App;
 using Android.Content;
 using Svg.Interfaces;
+using Svg.Platform;
 
 namespace Svg
 {
-    public class SvgPlatformSetup : SvgPlatformSetupBase
+    public class SvgAndroidPlatformOptions : SvgPlatformOptions
     {
-        protected override void Initialize()
-        {
-            base.Initialize();
+        public Context Context { get; set; }
 
-            Engine.Register<IFactory, Factory>(() => new Factory());
+        public SvgAndroidPlatformOptions(Context context)
+        {
+            Context = context;
         }
 
-        public static void Init(Context context)
+        public bool EnableFastTextRendering { get; set; }
+    }
+
+    public class SvgPlatformSetup : SvgPlatformSetupBase
+    {
+        protected override void Initialize(SvgPlatformOptions options)
         {
-            new SvgPlatformSetup().Initialize();
+            base.Initialize(options);
+
+            Engine.Register<IFactory, Factory>(() => new Factory());
+
+            var ops = (SvgAndroidPlatformOptions)options;
+            if (ops.EnableFastTextRendering)
+            {
+                Engine.Register<IAlternativeSvgTextRenderer, AndroidTextRenderer>(() => new AndroidTextRenderer());
+            }
+        }
+
+        public static void Init(SvgAndroidPlatformOptions options)
+        {
+            new SvgPlatformSetup().Initialize(options);
         }
     }
 }
