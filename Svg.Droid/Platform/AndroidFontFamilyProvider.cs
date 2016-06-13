@@ -21,6 +21,6 @@ namespace Svg.Platform
         public FontFamily GenericSerif { get { return new AndroidFontFamily(Typeface.Serif, "Serif"); } }
         public FontFamily GenericSansSerif { get { return new AndroidFontFamily(Typeface.Serif, "SansSerif"); } }
         public FontFamily GenericMonospace { get { return new AndroidFontFamily(Typeface.Serif, "Monospace"); } }
-        public StringFormat GenericTypographic { get { throw new NotImplementedException();} }
+        public StringFormat GenericTypographic { get { return Svg.Engine.Factory.CreateStringFormatGenericTypographic(); } }
     }
 }

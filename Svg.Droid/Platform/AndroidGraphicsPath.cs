@@ -14,6 +14,7 @@ namespace Svg.Platform
         private readonly List<byte> _pathTypes = new List<byte>();
         private Android.Graphics.Path _path = new Android.Graphics.Path();
         private Paint _paint = new Paint() {Color = Android.Graphics.Color.Black};
+        private readonly List<TextInfo> _texts = new List<TextInfo>();
 
         public AndroidGraphicsPath()
         {
@@ -96,6 +97,11 @@ namespace Svg.Platform
         public Path Path
         {
             get { return _path; }
+        }
+
+        internal List<TextInfo> Texts
+        {
+            get { return _texts; }
         }
 
         public void AddEllipse(float x, float y, float width, float height)
@@ -188,7 +194,8 @@ namespace Svg.Platform
         public void AddString(string text, FontFamily fontFamily, int style, float size, PointF location,
             StringFormat createStringFormatGenericTypographic)
         {
-            throw new NotSupportedException();
+            // little hack as android path does not support text!
+            _texts.Add(new TextInfo(text, fontFamily, style, size, location, createStringFormatGenericTypographic));
         }
 
         public void AddBezier(PointF start, PointF point1, PointF point2, PointF point3)
@@ -257,6 +264,27 @@ namespace Svg.Platform
         public void Reset()
         {
             Path.Reset();
+        }
+
+    
+        internal class TextInfo
+        {
+            public string text;
+            public FontFamily fontFamily;
+            public int style;
+            public float size;
+            public PointF location;
+            StringFormat createStringFormatGenericTypographic;
+
+            public TextInfo(string text, FontFamily fontFamily, int style, float size, PointF location, StringFormat createStringFormatGenericTypographic)
+            {
+                this.text = text;
+                this.fontFamily = fontFamily;
+                this.style = style;
+                this.size = size;
+                this.location = location;
+                this.createStringFormatGenericTypographic = createStringFormatGenericTypographic;
+            }
         }
     }
 }

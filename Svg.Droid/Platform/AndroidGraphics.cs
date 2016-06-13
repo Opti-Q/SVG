@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Linq;
 using Android.Graphics;
 
 namespace Svg.Platform
@@ -84,6 +85,12 @@ namespace Svg.Platform
             SetSmoothingMode(paint.Paint);
             
             _canvas.DrawPath(p.Path, paint.Paint);
+
+            // little hack as android path does not support text!
+            foreach (var text in p.Texts)
+            {
+                _canvas.DrawText(text.text, text.location.X, text.location.Y, paint.Paint);
+            }
 
         }
         public void FillPath(Brush brush, GraphicsPath path)
@@ -184,11 +191,14 @@ namespace Svg.Platform
         }
         public Region[] MeasureCharacterRanges(string text, Font font, Interfaces.RectangleF rectangle, StringFormat format)
         {
-            throw new NotImplementedException();
+            // TODO LX: wtf?
+            //throw new NotImplementedException();
+            return new[] {new Region(rectangle)};
         }
         public Region[] MeasureCharacterRanges(string text, Font font, Rectangle rectangle, StringFormat format)
         {
-            throw new NotImplementedException();
+            // TODO LX: wtf?
+            return new[] { new Region(Engine.Factory.CreateRectangleF(rectangle.X, rectangle.Y,rectangle.Width, rectangle.Height)) };
         }
     }
 }

@@ -29,12 +29,15 @@ namespace Svg
 
         public void Exclude(GraphicsPath path)
         {
-            throw new System.NotImplementedException();
+            //_rect = _rect - path.GetBounds();
+
+            // TODO LX: wtf?
         }
 
         public RectangleF GetBounds(Graphics graphics)
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
+            return _rect;
         }
     }
 }
