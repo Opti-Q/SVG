@@ -29,10 +29,10 @@ namespace Svg.Core
             _tools = new ObservableCollection<ITool>
             { 
                     new ZoomTool(),
-                    new GridTool(this),
             //        new SelectionTool(),
             //        new MoveSvgTool(),
-            //        new PanTool(),
+                    new PanTool(),
+                    new GridTool(this), // must be after zoom and pan tools!
             //        new SnappingTool(),
             };
         }

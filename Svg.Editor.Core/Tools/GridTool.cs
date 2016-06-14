@@ -6,12 +6,10 @@ using Svg.Core.Interfaces;
 
 namespace Svg.Core.Tools
 {
-    public class GridTool : ITool
+    public class GridTool : ToolBase
     {
         private readonly ICanInvalidateCanvas _canvas;
         public const float StepSize = 40;
-        private double _length = 0;
-        private const float MaxZoom = 1f;//ZoomTool.MaxScale;
         private static double A;
         private static double B;
         private static double C;
@@ -24,6 +22,7 @@ namespace Svg.Core.Tools
         private readonly List<IToolCommand> _commands = new List<IToolCommand>();
 
         public GridTool(ICanInvalidateCanvas canvas)
+            : base("Grid")
         {
             _canvas = canvas;
             // using triangle calculation to determine the x and y steps based on stepsize (y) and angle (alpha)
@@ -40,13 +39,14 @@ namespace Svg.Core.Tools
                 IsVisible = !IsVisible;
                 _canvas.InvalidateCanvas();
             }, (obj) => true));
+            Commands = _commands;
         }
 
         public bool IsVisible { get; set; } = true;
-        public bool IsActive { get; set; }
+
         private Pen Pen => _pen ?? (_pen = Svg.Engine.Factory.CreatePen(Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 210, 210, 210)), 1));
 
-        public void OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
+        public override void OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
             //--------------------------------------------------
             // TODO DO THIS ONLY ONCE; NOT FOR EVERY ON DRAW
@@ -54,10 +54,6 @@ namespace Svg.Core.Tools
 
             if (!IsVisible)
                 return;
-
-            if(_length <= 0) // compute this only once
-                _length = Math.Sqrt((renderer.Width * renderer.Width) + (renderer.Height * renderer.Height)) * MaxZoom * 2;
-
 
             var canvasx = -ws.Translate.X;
             var canvasy = -ws.Translate.Y;
@@ -67,33 +63,38 @@ namespace Svg.Core.Tools
 
             var relativeCanvasTranslationX = (canvasx) % StepSizeX;
             var relativeCanvasTranslationY = (canvasy) % StepSize;
-
-            var dist = Math.Max(renderer.Width, renderer.Height)*MaxZoom*2;
+            
+            var gridLength = (Math.Max(renderer.Width, renderer.Height)/ws.ZoomFactor);
             var stepSize = (int) Math.Round(StepSize, 0);
 
-            for (var i = -dist; i <= dist; i += stepSize)
+
+            var x = canvasx - relativeCanvasTranslationX - (stepSize*2); // subtract 2x stepsize so gridlines always start from "out of sight" and lines do not start from a visible x-border
+            var y = canvasy - relativeCanvasTranslationY;
+            var lineLength = Math.Sqrt(Math.Pow(renderer.Width / ws.ZoomFactor, 2) + Math.Pow(renderer.Height / ws.ZoomFactor, 2)) * 1.2f; // multiply by 1.2f as we later also start drawing from a minus x coordinate (- 2*stepsize)
+            
+            for (var i = -gridLength; i <= gridLength; i += stepSize)
             {
-                DrawLineLeftToTop(renderer, i, canvasx - relativeCanvasTranslationX, canvasy - relativeCanvasTranslationY);       /* / */
-                DrawLineLeftToBottom(renderer, i, canvasx - relativeCanvasTranslationX, canvasy - relativeCanvasTranslationY);    /* \ */
+                DrawLineLeftToTop(renderer, i, x, y, lineLength);       /* / */
+                DrawLineLeftToBottom(renderer, i, x, y, lineLength);    /* \ */
             }
 
-            //canvas.DrawCircle(0, 0, 200, Paint2);
-            //canvas.DrawCircle(canvasx, canvasy, 100, Paint2);
-            //canvas.DrawCircle((-canvasx)+canvas.Width, (-canvasy)+canvas.Height, 100, Paint2);
+            //renderer.DrawCircle(0, 0, 200, Pen); // point should remain in top left corner on screen
+            //renderer.DrawCircle(canvasx, canvasy, 100, Pen); // point on canvas - should move along
         }
-        public void OnTouch(UserInputEvent userInputEvent, SvgDrawingCanvas ws)
+
+        public override void OnTouch(UserInputEvent userInputEvent, SvgDrawingCanvas ws)
         {
             // You know nothing Jon Snow
         }
-
-
+        
         // line looks like this -> /
-        private void DrawLineLeftToTop(IRenderer renderer, float y, float canvasX, float canvasY)
+        private void DrawLineLeftToTop(IRenderer renderer, float y, float canvasX, float canvasY, double lineLength)
         {
-            var startX = -(renderer.Width * MaxZoom) + canvasX;
+            var startX = canvasX;
             var startY = y + canvasY;
-            var stopX = (-(renderer.Width * MaxZoom) + ((float)(_length * Math.Cos(Alpha * (Math.PI / 180))))) + canvasX;
-            var stopY = (y - (float)(_length * Math.Sin(Alpha * (Math.PI / 180)))) + canvasY;
+            var stopX = ((float)(lineLength * Math.Cos(Alpha * (Math.PI / 180)))) + canvasX;
+            var stopY = (y - (float)(lineLength * Math.Sin(Alpha * (Math.PI / 180)))) + canvasY;
+            
 
             renderer.DrawLine(
                 startX,
@@ -104,12 +105,12 @@ namespace Svg.Core.Tools
         }
 
         // line looks like this -> \
-        private void DrawLineLeftToBottom(IRenderer renderer, float y, float canvasX, float canvasY)
+        private void DrawLineLeftToBottom(IRenderer renderer, float y, float canvasX, float canvasY, double lineLength)
         {
-            var startX = (-(renderer.Width * MaxZoom)) + canvasX;
+            var startX = canvasX;
             var startY = y + canvasY;
-            var endX = (-(renderer.Width * MaxZoom) + ((float)(_length * Math.Cos(Alpha * (Math.PI / 180))))) + canvasX;
-            var endY = (y + (float)(_length * Math.Sin(Alpha * (Math.PI / 180)))) + canvasY;
+            var endX = ((float)(lineLength * Math.Cos(Alpha * (Math.PI / 180)))) + canvasX;
+            var endY = (y + (float)(lineLength * Math.Sin(Alpha * (Math.PI / 180)))) + canvasY;
 
             renderer.DrawLine(
                 startX,
@@ -133,16 +134,7 @@ namespace Svg.Core.Tools
         //        Paint);
         //}
 
-        public void Reset()
-        {
-            // You know nothing Jon Snow
-        }
-
-        public IEnumerable<IToolCommand> Commands => _commands;
-
-        public string Name => "Grid";
-
-        public void Dispose()
+        public override void Dispose()
         {
             Pen.Dispose();
         }

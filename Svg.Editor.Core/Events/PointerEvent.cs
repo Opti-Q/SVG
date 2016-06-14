@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Svg.Interfaces;
+﻿using Svg.Interfaces;
 
 namespace Svg.Core.Events
 {
     public enum EventType
     {
         PointerDown,
+        Move,
         PointerUp,
     }
 
-    public class TouchEvent : UserInputEvent
+    public class PointerEvent : UserInputEvent
     {
         public EventType EventType { get; private set; }
 
-        public TouchEvent(EventType eventType, PointF pointer1DownPositon, PointF pointer1Position)
+        public PointerEvent(EventType eventType, PointF pointer1DownPositon, PointF pointer1Position)
         {
             EventType = eventType;
             Pointer1DownPosition = pointer1DownPositon;

@@ -14,12 +14,12 @@ namespace Svg.Droid.Editor
 {
     public class SvgDrawingCanvasView : ImageView
     {
-        private SvgDrawingCanvas _drawingCanvas;
-        private GestureDetector _detector;
         private const int Size = 2000;
+        private readonly SvgDrawingCanvas _drawingCanvas;
+        private readonly GestureDetector _detector;
 
         public SvgDrawingCanvas DrawingCanvas => _drawingCanvas;
-        public AndroidBitmap MainBitmap { get; } = new AndroidBitmap(Size, Size);
+        public AndroidBitmap Bitmap { get; } = new AndroidBitmap(Size, Size);
 
         public SvgDrawingCanvasView(Context context, IAttributeSet attr) : base(context, attr)
         {
@@ -95,7 +95,7 @@ namespace Svg.Droid.Editor
             if (disposing)
             {
                 DrawingCanvas?.Dispose();
-                MainBitmap?.Dispose();
+                Bitmap?.Dispose();
             }
             base.Dispose(disposing);
         }

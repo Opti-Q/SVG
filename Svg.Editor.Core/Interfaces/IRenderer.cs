@@ -10,7 +10,9 @@ namespace Svg.Core.Interfaces
     {
         int Width { get; }
         int Height { get; }
-        void DrawLine(float startX, float startY, float stopX, float stopY, Pen paint);
-        void Scale(float zoomFactor, float p1, float focusX, float focusY);
+        void DrawLine(float startX, float startY, float stopX, float stopY, Pen pen);
+        void Scale(float zoomFactor, float focusX, float focusY);
+        void Translate(float deltaX, float deltaY);
+        void DrawCircle(float x, float y, int radius, Pen pen);
     }
 }

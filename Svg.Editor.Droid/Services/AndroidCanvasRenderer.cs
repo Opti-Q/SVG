@@ -18,14 +18,24 @@ namespace Svg.Droid.Editor.Services
 
         public int Height => _canvas.Height;
 
-        public void DrawLine(float startX, float startY, float stopX, float stopY, Pen paint)
+        public void DrawLine(float startX, float startY, float stopX, float stopY, Pen pen)
         {
-            _canvas.DrawLine(startX, startY, stopX, stopY, ((AndroidPen) paint).Paint);
+            _canvas.DrawLine(startX, startY, stopX, stopY, ((AndroidPen) pen).Paint);
         }
 
-        public void Scale(float zoomFactor, float p1, float focusX, float focusY)
+        public void Scale(float zoomFactor, float focusX, float focusY)
         {
             _canvas.Scale(zoomFactor, zoomFactor, focusX, focusY);
+        }
+
+        public void Translate(float deltaX, float deltaY)
+        {
+            _canvas.Translate(deltaX, deltaY);
+        }
+
+        public void DrawCircle(float x, float y, int radius, Pen pen)
+        {
+            _canvas.DrawCircle(x, y, radius, ((AndroidPen)pen).Paint);
         }
     }
 }

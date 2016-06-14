@@ -1,5 +1,4 @@
-﻿using Svg.Interfaces;
-
+﻿
 namespace Svg.Core.Events
 {
 
