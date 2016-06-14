@@ -64,7 +64,7 @@ namespace Svg.Core.Tools
             var relativeCanvasTranslationX = (canvasx) % StepSizeX;
             var relativeCanvasTranslationY = (canvasy) % StepSize;
             
-            var gridLength = (Math.Max(renderer.Width, renderer.Height)/ws.ZoomFactor);
+            var gridLength = (Math.Max(renderer.Width, renderer.Height)/ws.ZoomFactor)*1.5f;
             var stepSize = (int) Math.Round(StepSize, 0);
 
 
