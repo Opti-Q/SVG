@@ -5,7 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-  <Svg.Droid.Editor.SvgWorkspace
+  <Svg.Droid.Editor.SvgDrawingCanvasView
       android:id="@+id/pad"
       android:clickable="true"
       android:gravity="center|center_vertical"

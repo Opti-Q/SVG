@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Svg.Core.Commands
+namespace Svg.Core.Interfaces
 {
-    public interface ICommand
+    public interface ICanInvalidateCanvas
     {
-        void Execute();
-        void Undo();
+        void InvalidateCanvas();
     }
 }

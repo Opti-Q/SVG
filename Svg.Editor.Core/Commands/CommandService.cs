@@ -8,19 +8,19 @@ namespace Svg.Core.Commands
 {
     public class CommandService : ICommandService
     {
-        private readonly Stack<ICommand> _commands; 
+        private readonly Stack<IUndoRedoCommand> _commands; 
 
         public CommandService()
         {
-            _commands = new Stack<ICommand>();
+            _commands = new Stack<IUndoRedoCommand>();
         }
 
-        public bool Execute(ICommand command)
+        public bool Execute(IUndoRedoCommand command)
         {
             try
             {
                 _commands.Push(command);
-                command.Execute();
+                command.Execute(null);
                 return true;
             }
             catch (Exception exception)

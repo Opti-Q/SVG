@@ -1,6 +1,7 @@
 using System;
 using Android.Graphics;
 using Android.Views;
+using Svg.Core.Tools;
 using Svg.Droid.Editor.Interfaces;
 using Svg.Platform;
 

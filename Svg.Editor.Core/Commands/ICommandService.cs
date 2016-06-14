@@ -2,7 +2,7 @@
 {
     public interface ICommandService
     {
-        bool Execute(ICommand command);
+        bool Execute(IUndoRedoCommand command);
         bool Undo();
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using MvvmCross.Core.ViewModels;
+using Svg.Core;
 
 namespace Svg.Droid.SampleEditor.Core.ViewModels
 {
@@ -45,6 +46,8 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
         {
             get { return new MvxCommand(AddText, CanAddText); }
         }
+
+        public SvgDrawingCanvas Canvas { get; set; }
 
         private void AddText()
         {

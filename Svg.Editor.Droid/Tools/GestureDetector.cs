@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using Android.Graphics;
 using Android.Views;
-using Svg.Droid.Editor.Interfaces;
+using Svg.Core.Tools;
 using Svg.Droid.Editor.Services;
 using Svg.Platform;
 
 namespace Svg.Droid.Editor.Tools
 {
-    public class SharedMasterTool : ITool
+    public class GestureDetector
     {
         public ScaleGestureDetector ScaleDetector;
 
@@ -26,27 +26,20 @@ namespace Svg.Droid.Editor.Tools
         public float LastTouchX;
         public float LastTouchY;
 
-        public float LastGestureX;
-        public float LastGestureY;
-
         public const int InvalidPointerId = -1;
         public int ActivePointerId = InvalidPointerId;
 
-        private static SharedMasterTool _instance;
+        private static GestureDetector _instance;
 
-        private SharedMasterTool()
+        private GestureDetector()
         {
             
         }
 
-        public static SharedMasterTool Instance => _instance ?? (_instance = new SharedMasterTool());
+        public static GestureDetector Instance => _instance ?? (_instance = new GestureDetector());
 
-        public void OnDraw(Canvas canvas, IPosition anyItemSelected)
-        {
-            
-        }
 
-        public void OnTouch(MotionEvent ev, SvgWorkspace svgWorkspace, ISelectionService selectionService)
+        public void OnTouch(MotionEvent ev, SvgDrawingCanvasView svgDrawingCanvasView)
         {
             int action = (int)ev.Action;
             switch (action & (int)MotionEventActions.Mask)
@@ -102,23 +95,7 @@ namespace Svg.Droid.Editor.Tools
             LastTouchX = 0;
             LastTouchY = 0;
 
-            LastGestureX = 0;
-            LastGestureY = 0;
-
             ActivePointerId = InvalidPointerId;
         }
-
-        public Action Command()
-        {
-            throw new NotSupportedException();
-        }
-
-        public Action UndoCommand()
-        {
-            throw new NotSupportedException();
-        }
-
-        public int DrawOrder => 0;
-        public int CommandOrder => 0;
     }
 }
