@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Svg.Editor.Droid", "Svg.Edi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Svg.Editor.Sample.Core", "Svg.Editor.Sample.Core\Svg.Editor.Sample.Core.csproj", "{8739CED3-5844-4F18-B2E3-C99036B31B33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Svg.Droid.SampleEditor", "Svg.Editor.Sample.Droid\Svg.Droid.SampleEditor.csproj", "{062829A8-39A4-444E-AB44-98284E164644}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Svg.Editor.Sample.Droid", "Svg.Editor.Sample.Droid\Svg.Editor.Sample.Droid.csproj", "{062829A8-39A4-444E-AB44-98284E164644}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

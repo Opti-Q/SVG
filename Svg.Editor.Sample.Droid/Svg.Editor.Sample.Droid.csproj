@@ -274,11 +274,11 @@
     </ProjectReference>
     <ProjectReference Include="..\Svg.Editor.Droid\Svg.Editor.Droid.csproj">
       <Project>{ec21b42f-da0d-4e7b-a2f4-757abc917e07}</Project>
-      <Name>Svg.Droid.Editor</Name>
+      <Name>Svg.Editor.Droid</Name>
     </ProjectReference>
     <ProjectReference Include="..\Svg.Editor.Sample.Core\Svg.Editor.Sample.Core.csproj">
       <Project>{8739ced3-5844-4f18-b2e3-c99036b31b33}</Project>
-      <Name>Svg.Droid.SampleEditor.Core</Name>
+      <Name>Svg.Editor.Sample.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Svg.Droid\Svg.Droid.csproj">
       <Project>{03f31ec9-4f97-46da-b8f1-dce99c6954de}</Project>
