@@ -123,17 +123,8 @@ namespace Svg.Droid.SampleEditor
 			// aapt resource value: 0x7f040003
 			public const int MyButton = 2130968579;
 			
-			// aapt resource value: 0x7f040006
-			public const int add_text = 2130968582;
-			
-			// aapt resource value: 0x7f040004
-			public const int delete = 2130968580;
-			
 			// aapt resource value: 0x7f040002
 			public const int pad = 2130968578;
-			
-			// aapt resource value: 0x7f040005
-			public const int show_grid = 2130968581;
 			
 			static Id()
 			{
@@ -163,22 +154,6 @@ namespace Svg.Droid.SampleEditor
 			}
 			
 			private Layout()
-			{
-			}
-		}
-		
-		public partial class Menu
-		{
-			
-			// aapt resource value: 0x7f070000
-			public const int editor = 2131165184;
-			
-			static Menu()
-			{
-				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
-			}
-			
-			private Menu()
 			{
 			}
 		}

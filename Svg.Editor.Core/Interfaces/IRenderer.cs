@@ -11,5 +11,6 @@ namespace Svg.Core.Interfaces
         int Width { get; }
         int Height { get; }
         void DrawLine(float startX, float startY, float stopX, float stopY, Pen paint);
+        void Scale(float zoomFactor, float p1, float focusX, float focusY);
     }
 }

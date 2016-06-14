@@ -46,13 +46,17 @@
     <Compile Include="Commands\CommandService.cs" />
     <Compile Include="Commands\IUndoRedoCommand.cs" />
     <Compile Include="Commands\ICommandService.cs" />
+    <Compile Include="Events\ScaleEvent.cs" />
+    <Compile Include="Events\TouchEvent.cs" />
     <Compile Include="Interfaces\ICanInvalidateCanvas.cs" />
     <Compile Include="SvgDrawingCanvas.cs" />
-    <Compile Include="Events\InputEvent.cs" />
+    <Compile Include="Events\UserInputEvent.cs" />
     <Compile Include="Interfaces\IRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\GridTool.cs" />
     <Compile Include="Tools\ITool.cs" />
+    <Compile Include="Tools\TextTool.cs" />
+    <Compile Include="Tools\ZoomTool.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Svg.Core\Svg.Core.csproj">

@@ -22,5 +22,10 @@ namespace Svg.Droid.Editor.Services
         {
             _canvas.DrawLine(startX, startY, stopX, stopY, ((AndroidPen) paint).Paint);
         }
+
+        public void Scale(float zoomFactor, float p1, float focusX, float focusY)
+        {
+            _canvas.Scale(zoomFactor, zoomFactor, focusX, focusY);
+        }
     }
 }

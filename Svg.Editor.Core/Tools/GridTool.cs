@@ -42,11 +42,11 @@ namespace Svg.Core.Tools
             }, (obj) => true));
         }
 
-        public bool IsVisible { get; set; }
+        public bool IsVisible { get; set; } = true;
         public bool IsActive { get; set; }
         private Pen Pen => _pen ?? (_pen = Svg.Engine.Factory.CreatePen(Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 210, 210, 210)), 1));
 
-        public void OnDraw(IRenderer renderer, SvgDrawingCanvas svgDrawing)
+        public void OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
             //--------------------------------------------------
             // TODO DO THIS ONLY ONCE; NOT FOR EVERY ON DRAW
@@ -59,8 +59,8 @@ namespace Svg.Core.Tools
                 _length = Math.Sqrt((renderer.Width * renderer.Width) + (renderer.Height * renderer.Height)) * MaxZoom * 2;
 
 
-            var canvasx = -svgDrawing.Translate.X;
-            var canvasy = -svgDrawing.Translate.Y;
+            var canvasx = -ws.Translate.X;
+            var canvasy = -ws.Translate.Y;
 
             //for (var i = -canvas.Width * MaxZoom; i <= canvas.Width * MaxZoom; i += StepSize - 2.5f)
             //    DrawTopDownIsoLine(canvas, i, canvasx, canvasy);      /* | */
@@ -81,7 +81,7 @@ namespace Svg.Core.Tools
             //canvas.DrawCircle(canvasx, canvasy, 100, Paint2);
             //canvas.DrawCircle((-canvasx)+canvas.Width, (-canvasy)+canvas.Height, 100, Paint2);
         }
-        public void OnTouch(InputEvent inputEvent, SvgDrawingCanvas canvas)
+        public void OnTouch(UserInputEvent userInputEvent, SvgDrawingCanvas ws)
         {
             // You know nothing Jon Snow
         }
@@ -138,11 +138,8 @@ namespace Svg.Core.Tools
             // You know nothing Jon Snow
         }
 
-
         public IEnumerable<IToolCommand> Commands => _commands;
 
-        public int DrawOrder => 100;
-        public int CommandOrder => 10;
         public string Name => "Grid";
 
         public void Dispose()

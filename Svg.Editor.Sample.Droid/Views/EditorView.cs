@@ -21,17 +21,14 @@ namespace Svg.Droid.SampleEditor.Views
             this.ViewModel.Canvas = _padView.DrawingCanvas;
         }
 
-        //protected override void OnViewModelSet()
-        //{
-        //    base.OnViewModelSet();
-        //}
-
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
-            //this.MenuInflater.Inflate(Resource.Menu.editor, menu);
             foreach (var commands in ViewModel.Canvas.ToolCommands)
             {
                 var cmds = commands.ToArray();
+                if (cmds.Length == 0)
+                    continue;
+
                 if (cmds.Count() == 1)
                 {
                     var cmd = cmds.Single();
@@ -53,21 +50,6 @@ namespace Svg.Droid.SampleEditor.Views
             return true;
         }
 
-        protected override void OnResume()
-        {
-            //ViewModel.GridVisibilityChanged += ViewModelGridVisibilityChanged;
-
-            base.OnResume();
-        }
-        
-
-        protected override void OnPause()
-        {
-            //ViewModel.GridVisibilityChanged -= ViewModelGridVisibilityChanged;
-
-            base.OnPause();
-        }
-
         public new EditorViewModel ViewModel
         {
             get { return (EditorViewModel)base.ViewModel; }
@@ -76,22 +58,7 @@ namespace Svg.Droid.SampleEditor.Views
 
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            //switch (item.ItemId)
-            //{
-            //    case Resource.Id.delete:
-            //        ViewModel.DeleteSelectionCommand.Execute(null);
-            //        return true;
-            //    case Resource.Id.add_text:
-            //        ViewModel.AddTextCommand.Execute(null);
-            //        return true;
-            //    case Resource.Id.show_grid:
-            //        ViewModel.ToggleGridCommand.Execute(null);
-            //        return true;
-            //    default:
-            //        return base.OnOptionsItemSelected(item);
-            //}
-            var cmd =
-                ViewModel.Canvas.ToolCommands.SelectMany(c => c).FirstOrDefault(c => c.GetHashCode() == item.ItemId);
+            var cmd = ViewModel.Canvas.ToolCommands.SelectMany(c => c).FirstOrDefault(c => c.GetHashCode() == item.ItemId);
             if (cmd != null)
             {
                 cmd.Execute(_padView);
@@ -99,10 +66,5 @@ namespace Svg.Droid.SampleEditor.Views
             }
             return base.OnOptionsItemSelected(item);
         }
-
-        //private void ViewModelGridVisibilityChanged()
-        //{
-        //    _padView.ToggleGridVisibility();
-        //}
     }
 }

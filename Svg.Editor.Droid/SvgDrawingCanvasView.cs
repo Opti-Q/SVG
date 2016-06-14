@@ -1,27 +1,21 @@
 using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using Android.Content;
 using Android.Graphics;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Svg.Core;
-using Svg.Core.Interfaces;
-using Svg.Core.Tools;
 using Svg.Droid.Editor.Services;
-using Svg.Droid.Editor.Tools;
 using Svg.Platform;
 using Color = Android.Graphics.Color;
 using GestureDetector = Svg.Droid.Editor.Tools.GestureDetector;
-using InputEvent = Svg.Core.Events.InputEvent;
 
 namespace Svg.Droid.Editor
 {
     public class SvgDrawingCanvasView : ImageView
     {
         private SvgDrawingCanvas _drawingCanvas;
+        private GestureDetector _detector;
         private const int Size = 2000;
 
         public SvgDrawingCanvas DrawingCanvas => _drawingCanvas;
@@ -33,8 +27,7 @@ namespace Svg.Droid.Editor
             SvgPlatformSetup.Init(new SvgAndroidPlatformOptions(context) {EnableFastTextRendering = true});
 
             _drawingCanvas = new SvgDrawingCanvas();
-            //if (ZoomTool.IsActive)
-            //    GestureDetector.Instance.ScaleDetector = new ScaleGestureDetector(context, new ZoomTool.ScaleListener(this, ViewModel.SelectionService));
+            _detector = new GestureDetector(this.Context, (e) => DrawingCanvas.OnEvent(e));
         }
 
         public void AddSvg(SvgDocument svgDocument)
@@ -63,27 +56,14 @@ namespace Svg.Droid.Editor
 
         public override bool OnTouchEvent(MotionEvent ev)
         {
-            // Let the ScaleGestureDetector inspect all events.
-            if(GestureDetector.Instance.ScaleDetector != null)
-                GestureDetector.Instance.ScaleDetector.OnTouchEvent(ev); 
-
-            DrawingCanvas.OnEvent(FromMotionEvent(ev));
-
+            _detector.OnTouch(ev);
+            
             return true;
-        }
-
-        private InputEvent FromMotionEvent(MotionEvent ev)
-        {
-            // TODO LX: convert event information
-            return new InputEvent();
         }
 
         protected override void OnDraw(Canvas canvas)
         {
             canvas.DrawColor(Color.White);
-
-            //foreach (var tool in ViewModel.Tools.OrderBy(t => t.DrawOrder))
-            //    tool.OnDraw(canvas, ViewModel.SelectionService.SelectedItem);
 
             //foreach (var bitmap in ViewModel.Elements)
             //    canvas.DrawBitmap(bitmap.Image, bitmap.X, bitmap.Y, null);
@@ -91,8 +71,7 @@ namespace Svg.Droid.Editor
 
             base.OnDraw(canvas);
         }
-
-
+        
         protected override void OnAttachedToWindow()
         {
             base.OnAttachedToWindow();
@@ -110,27 +89,6 @@ namespace Svg.Droid.Editor
             _drawingCanvas.CanvasInvalidated -= OnCanvasInvalidated;
             base.OnDetachedFromWindow();
         }
-
-
-        //private void ResetTools()
-        //{
-        //    foreach (var tool in ViewModel.Tools.OrderBy(t => t.CommandOrder))
-        //        tool.Reset();
-        //}
-
-        //public void ToggleGridVisibility()
-        //{
-        //    GridTool.IsVisible = !GridTool.IsVisible;
-        //    Invalidate();
-        //}
-
-        //public void RemoveSelectedItem()
-        //{
-        //    ViewModel.Elements.Remove(ViewModel.SelectionService.SelectedItem);
-        //    ViewModel.SelectionService.SelectedItem = null;
-        //    ViewModel.SelectedItemChanged?.Invoke(false);
-        //    Invalidate();
-        //}
 
         protected override void Dispose(bool disposing)
         {

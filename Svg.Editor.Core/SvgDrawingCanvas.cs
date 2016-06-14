@@ -28,7 +28,7 @@ namespace Svg.Core
 
             _tools = new ObservableCollection<ITool>
             { 
-            //        new ZoomTool(),
+                    new ZoomTool(),
                     new GridTool(this),
             //        new SelectionTool(),
             //        new MoveSvgTool(),
@@ -52,7 +52,7 @@ namespace Svg.Core
         /// </summary>
         /// <param name="ev"></param>
         /// <param name="view"></param>
-        public void OnEvent(InputEvent ev)
+        public void OnEvent(UserInputEvent ev)
         {
             foreach (var tool in Tools)
             {
@@ -70,6 +70,13 @@ namespace Svg.Core
             {
                 tool.OnDraw(renderer, this);
             }
+        }
+
+        public IEnumerable<SvgVisualElement> GetElementsUnder(float x, float y)
+        {
+            var hitRectangle = Svg.Engine.Factory.CreateRectangleF(x, y, 10, 10);
+            return Document.Children.OfType<SvgVisualElement>().Where(c => c.Visible && c.Displayable && c.Bounds.IntersectsWith(hitRectangle));
+            //return Enumerable.Empty<SvgVisualElement>();
         }
 
         public void Dispose()

@@ -8,16 +8,13 @@ namespace Svg.Core.Tools
 {
     public interface ITool : IDisposable
     {
-        void OnDraw(IRenderer renderer, SvgDrawingCanvas svgWorkspace);
-        void OnTouch(InputEvent @event, SvgDrawingCanvas svgWorkspace);
+        void OnDraw(IRenderer renderer, SvgDrawingCanvas ws);
+        void OnTouch(UserInputEvent @event, SvgDrawingCanvas ws);
         void Reset();
 
         IEnumerable<IToolCommand> Commands { get; }
 
         bool IsActive { get; set; }
-
-        int DrawOrder { get; }
-        int CommandOrder { get; }
         string Name { get; }
     }
 

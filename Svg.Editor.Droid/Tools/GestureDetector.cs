@@ -1,67 +1,58 @@
 using System;
-using System.Collections.Generic;
-using Android.Graphics;
+using Android.Content;
 using Android.Views;
-using Svg.Core.Tools;
-using Svg.Droid.Editor.Services;
-using Svg.Platform;
+using Svg.Core.Events;
 
 namespace Svg.Droid.Editor.Tools
 {
     public class GestureDetector
     {
-        public ScaleGestureDetector ScaleDetector;
-
-        public bool IsScaleDetectorInProgress()
-        {
-            if(Instance.ScaleDetector == null)
-                return false;
-
-            return Instance.ScaleDetector.IsInProgress;
-        }
-
-        public float CanvasTranslatedPosX;
-        public float CanvasTranslatedPosY;
-
+        private readonly Action<UserInputEvent> _callback;
+        public const int InvalidPointerId = -1;
+        public int ActivePointerId = InvalidPointerId;
+        
         public float LastTouchX;
         public float LastTouchY;
 
-        public const int InvalidPointerId = -1;
-        public int ActivePointerId = InvalidPointerId;
+        private bool _scaleInProgress = false;
+        private ScaleGestureDetector _scaleDetector;
 
-        private static GestureDetector _instance;
-
-        private GestureDetector()
+        public GestureDetector(Context ctx, Action<UserInputEvent> callback)
         {
-            
+            _callback = callback;
+            _scaleDetector = new ScaleGestureDetector(ctx, new ZoomDetector(this));
         }
 
-        public static GestureDetector Instance => _instance ?? (_instance = new GestureDetector());
-
-
-        public void OnTouch(MotionEvent ev, SvgDrawingCanvasView svgDrawingCanvasView)
+        public void OnTouch(MotionEvent ev)
         {
+            _scaleDetector.OnTouchEvent(ev);
+
+            if (_scaleInProgress)
+                return;
+
+            UserInputEvent uie = null;
+
+            var x = ev.GetX();
+            var y = ev.GetY();
+
             int action = (int)ev.Action;
             switch (action & (int)MotionEventActions.Mask)
             {
                 case (int)MotionEventActions.Down:
-                    if (!IsScaleDetectorInProgress())
-                    {
-                        var x = ev.GetX();
-                        var y = ev.GetY();
-
-                        Instance.LastTouchX = x;
-                        Instance.LastTouchY = y;
-                        Instance.ActivePointerId = ev.GetPointerId(0);
-                    }
+                    uie = new TouchEvent(EventType.PointerDown, Svg.Factory.Instance.CreatePointF(LastTouchX, LastTouchY), Svg.Factory.Instance.CreatePointF(x, y));
+                    LastTouchX = x;
+                    LastTouchY = y;
+                    ActivePointerId = ev.GetPointerId(0);
                     break;
 
                 case (int)MotionEventActions.Up:
-                    Instance.ActivePointerId = InvalidPointerId;
+                    ActivePointerId = InvalidPointerId;
+                    uie = new TouchEvent(EventType.PointerUp, Svg.Factory.Instance.CreatePointF(LastTouchX, LastTouchY), Svg.Factory.Instance.CreatePointF(x, y));
                     break;
 
                 case (int)MotionEventActions.Cancel:
-                    Instance.ActivePointerId = InvalidPointerId;
+                    ActivePointerId = InvalidPointerId;
+                    uie = null;
                     break;
 
                 case (int)MotionEventActions.PointerUp:
@@ -70,24 +61,35 @@ namespace Svg.Droid.Editor.Tools
                             >> (int)MotionEventActions.PointerIndexShift;
 
                     int pointerId = ev.GetPointerId(pointerIndex2);
-                    if (pointerId == Instance.ActivePointerId)
+                    if (pointerId == ActivePointerId)
                     {
                         // This was our active pointer going up. Choose a new
                         // active pointer and adjust accordingly.
                         int newPointerIndex = pointerIndex2 == 0 ? 1 : 0;
-                        Instance.LastTouchX = ev.GetX(newPointerIndex);
-                        Instance.LastTouchY = ev.GetY(newPointerIndex);
-                        Instance.ActivePointerId = ev.GetPointerId(newPointerIndex);
+                        x = ev.GetX(newPointerIndex);
+                        y = ev.GetY(newPointerIndex);
+                        uie = new TouchEvent(EventType.PointerUp, Svg.Factory.Instance.CreatePointF(LastTouchX, LastTouchY), Svg.Factory.Instance.CreatePointF(x, y));
+
+                        LastTouchX = x;
+                        LastTouchY = y;
+                        ActivePointerId = ev.GetPointerId(newPointerIndex);
                     }
                     else
                     {
-                        int tempPointerIndex = ev.FindPointerIndex(Instance.ActivePointerId);
-                        Instance.LastTouchX = ev.GetX(tempPointerIndex);
-                        Instance.LastTouchY = ev.GetY(tempPointerIndex);
+                        int tempPointerIndex = ev.FindPointerIndex(ActivePointerId);
+                        x = ev.GetX(tempPointerIndex);
+                        y = ev.GetY(tempPointerIndex);
+                        uie = new TouchEvent(EventType.PointerUp, Svg.Factory.Instance.CreatePointF(LastTouchX, LastTouchY), Svg.Factory.Instance.CreatePointF(x, y));
+
+                        LastTouchX = ev.GetX(tempPointerIndex);
+                        LastTouchY = ev.GetY(tempPointerIndex);
                     }
 
                     break;
             }
+
+            if (uie != null)
+                _callback(uie);
         }
 
         public void Reset()
@@ -96,6 +98,39 @@ namespace Svg.Droid.Editor.Tools
             LastTouchY = 0;
 
             ActivePointerId = InvalidPointerId;
+        }
+
+        private class ZoomDetector : ScaleGestureDetector.SimpleOnScaleGestureListener
+        {
+            private readonly GestureDetector _owner;
+
+            public ZoomDetector(GestureDetector owner)
+            {
+                _owner = owner;
+            }
+
+            public override bool OnScaleBegin(ScaleGestureDetector detector)
+            {
+                _owner._scaleInProgress = true;
+                var uie = new ScaleEvent(ScaleStatus.Start, detector.ScaleFactor, detector.FocusX, detector.FocusY);
+                _owner._callback(uie);
+                return true;
+            }
+
+            public override bool OnScale(ScaleGestureDetector detector)
+            {
+                var uie = new ScaleEvent(ScaleStatus.Scaling, detector.ScaleFactor, detector.FocusX, detector.FocusY);
+                _owner._callback(uie);
+
+                return true;
+            }
+
+            public override void OnScaleEnd(ScaleGestureDetector detector)
+            {
+                var uie = new ScaleEvent(ScaleStatus.End, detector.ScaleFactor, detector.FocusX, detector.FocusY);
+                _owner._callback(uie);
+                _owner._scaleInProgress = false;
+            }
         }
     }
 }
