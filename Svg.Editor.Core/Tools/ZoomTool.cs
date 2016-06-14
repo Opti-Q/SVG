@@ -19,7 +19,7 @@ namespace Svg.Core.Tools
 
         public float MaxScale { get; set; }
 
-        public override void OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
+        public override void OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
             if (IsScalingInProgress())
                 renderer.Scale(ws.ZoomFactor, _scaleEvent.FocusX, _scaleEvent.FocusY);
@@ -27,7 +27,7 @@ namespace Svg.Core.Tools
                 renderer.Scale(ws.ZoomFactor, 0f, 0f/*SharedMasterTool.Instance.LastGestureX, SharedMasterTool.Instance.LastGestureY*/);
         }
 
-        public override void OnTouch(UserInputEvent @event, SvgDrawingCanvas ws)
+        public override void OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
             _scaleEvent = @event as ScaleEvent;
             if (_scaleEvent == null)

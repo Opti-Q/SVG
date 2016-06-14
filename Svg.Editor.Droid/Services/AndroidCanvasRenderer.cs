@@ -12,6 +12,7 @@ namespace Svg.Droid.Editor.Services
         public AndroidCanvasRenderer(Canvas canvas)
         {
             _canvas = canvas;
+            Graphics = new AndroidGraphics(canvas);
         }
 
         public int Width => _canvas.Width;
@@ -37,5 +38,7 @@ namespace Svg.Droid.Editor.Services
         {
             _canvas.DrawCircle(x, y, radius, ((AndroidPen)pen).Paint);
         }
+
+        public Graphics Graphics { get; }
     }
 }

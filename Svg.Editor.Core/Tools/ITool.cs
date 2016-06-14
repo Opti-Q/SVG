@@ -9,7 +9,8 @@ namespace Svg.Core.Tools
     public interface ITool : IDisposable
     {
         void OnDraw(IRenderer renderer, SvgDrawingCanvas ws);
-        void OnTouch(UserInputEvent @event, SvgDrawingCanvas ws);
+        void OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws);
+        void OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws);
         void Reset();
 
         IEnumerable<IToolCommand> Commands { get; }

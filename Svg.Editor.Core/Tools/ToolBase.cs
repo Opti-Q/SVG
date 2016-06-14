@@ -16,9 +16,15 @@ namespace Svg.Core.Tools
         {
         }
 
-        public abstract void OnTouch(UserInputEvent @event, SvgDrawingCanvas ws);
+        public virtual void OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
+        {
+        }
 
-
+        public virtual void OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
+        {
+            
+        }
+        
         public virtual void Reset()
         {
         }

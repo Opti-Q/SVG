@@ -15,12 +15,12 @@ namespace Svg.Core.Tools
         {
         }
 
-        public override void OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
+        public override void OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
             renderer.Translate(ws.Translate.X, ws.Translate.Y);
         }
 
-        public override void OnTouch(UserInputEvent @event, SvgDrawingCanvas ws)
+        public override void OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
             var ev = @event as MoveEvent;
 

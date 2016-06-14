@@ -13,6 +13,9 @@ namespace Svg.Core
     {
         private readonly ObservableCollection<SvgElement> _selectedElements = new ObservableCollection<SvgElement>();
         private readonly ObservableCollection<ITool> _tools;
+        private SvgDocument _document;
+        private Bitmap _rawImage;
+        private ISvgRenderer _svgRenderer;
 
         public event EventHandler CanvasInvalidated;
 
@@ -41,7 +44,21 @@ namespace Svg.Core
 
         public ObservableCollection<ITool> Tools => _tools;
 
-        public SvgDocument Document { get; set; }
+        public SvgDocument Document
+        {
+            get
+            {
+                if(_document == null)
+                    _document = new SvgDocument();
+                return _document;
+            }
+            set { _document = value; }
+        }
+
+        public Bitmap GetOrCreate(int width, int height)
+        {
+            return _rawImage ?? (_rawImage = Engine.Factory.CreateBitmap(width, height));
+        }
 
         public PointF Translate { get; set; }
 
@@ -56,7 +73,7 @@ namespace Svg.Core
         {
             foreach (var tool in Tools)
             {
-                tool.OnTouch(ev, this);
+                tool.OnUserInput(ev, this);
             }
         }
 
@@ -66,6 +83,13 @@ namespace Svg.Core
         /// <param name="renderer"></param>
         public void OnDraw(IRenderer renderer)
         {
+            foreach (var tool in Tools)
+            {
+                tool.OnPreDraw(renderer, this);
+            }
+
+            Document.Draw(GetOrCreateRenderer(renderer.Graphics));
+
             foreach (var tool in Tools)
             {
                 tool.OnDraw(renderer, this);
@@ -81,10 +105,18 @@ namespace Svg.Core
 
         public void Dispose()
         {
+            _rawImage?.Dispose();
+            _svgRenderer?.Dispose();
+
             foreach(var tool in Tools)
                 tool.Dispose();
         }
 
         public IEnumerable<IEnumerable<IToolCommand>> ToolCommands => Tools.Select(t => t.Commands);
+
+        private ISvgRenderer GetOrCreateRenderer(Graphics graphics)
+        {
+            return _svgRenderer ?? (_svgRenderer = SvgRenderer.FromGraphics(graphics));
+        }
     }
 }

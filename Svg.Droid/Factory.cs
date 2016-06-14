@@ -45,6 +45,13 @@ namespace Svg
             return new AndroidMatrix();
         }
 
+        public Matrix CreateIdentityMatrix()
+        {
+            var m = new Android.Graphics.Matrix();
+            m.Reset();
+            return new AndroidMatrix(m);
+        }
+
         public Matrix CreateMatrix(float i, float i1, float i2, float i3, float i4, float i5)
         {
             return new AndroidMatrix(i, i1, i2, i3, i4, i5);

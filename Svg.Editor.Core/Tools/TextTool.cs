@@ -4,27 +4,9 @@ using Svg.Core.Interfaces;
 
 namespace Svg.Core.Tools
 {
-    public class TextTool : ITool
+    public class TextTool : ToolBase
     {
-        private List<IToolCommand> _commands;
-
-        public void OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
-        {
-        }
-
-        public void OnTouch(UserInputEvent @event, SvgDrawingCanvas ws)
-        {
-        }
-
-        public void Reset()
-        {
-        }
-
-        public IEnumerable<IToolCommand> Commands => _commands;
-        public bool IsActive { get; set; }
-        public string Name => "Text";
-
-        public void Dispose()
+        public TextTool() : base("Text")
         {
         }
     }

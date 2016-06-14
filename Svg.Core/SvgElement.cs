@@ -327,7 +327,7 @@ namespace Svg
         protected internal virtual void PopTransforms(ISvgRenderer renderer)
         {
             renderer.Transform = _graphicsMatrix;
-            _graphicsMatrix = null;
+            _graphicsMatrix = null; 
             //renderer.SetClip(_graphicsClip); // TODO LX causes error in text- rendering tests (as text vanishes)
             _graphicsClip = null;
         }

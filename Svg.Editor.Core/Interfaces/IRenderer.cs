@@ -14,5 +14,7 @@ namespace Svg.Core.Interfaces
         void Scale(float zoomFactor, float focusX, float focusY);
         void Translate(float deltaX, float deltaY);
         void DrawCircle(float x, float y, int radius, Pen pen);
+
+        Graphics Graphics { get; }
     }
 }

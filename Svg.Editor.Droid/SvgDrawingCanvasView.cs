@@ -17,15 +17,15 @@ namespace Svg.Droid.Editor
         private const int Size = 2000;
         private readonly SvgDrawingCanvas _drawingCanvas;
         private readonly GestureDetector _detector;
+        private Canvas _canvas;
 
         public SvgDrawingCanvas DrawingCanvas => _drawingCanvas;
-        public AndroidBitmap Bitmap { get; } = new AndroidBitmap(Size, Size);
 
         public SvgDrawingCanvasView(Context context, IAttributeSet attr) : base(context, attr)
         {
             // Initialize SVG Platform and tie together PCL and platform specific modules
             SvgPlatformSetup.Init(new SvgAndroidPlatformOptions(context) {EnableFastTextRendering = true});
-
+            
             _drawingCanvas = new SvgDrawingCanvas();
             _detector = new GestureDetector(this.Context, (e) => DrawingCanvas.OnEvent(e));
         }
@@ -63,15 +63,26 @@ namespace Svg.Droid.Editor
 
         protected override void OnDraw(Canvas canvas)
         {
+            //var canvas = GetOrCreateCanvas(c);
             canvas.DrawColor(Color.White);
 
             //foreach (var bitmap in ViewModel.Elements)
             //    canvas.DrawBitmap(bitmap.Image, bitmap.X, bitmap.Y, null);
             DrawingCanvas.OnDraw(new AndroidCanvasRenderer(canvas));
-
             base.OnDraw(canvas);
         }
-        
+
+        private Canvas GetOrCreateCanvas(Canvas currentCanvas)
+        {
+            if (_canvas != null)
+                return _canvas;
+            var bitmap = (AndroidBitmap)_drawingCanvas.GetOrCreate(currentCanvas.Width, currentCanvas.Height);
+            _canvas = new Canvas(bitmap.Image);
+            //this.SetImageBitmap(bitmap.Image);
+
+            return _canvas;
+        }
+
         protected override void OnAttachedToWindow()
         {
             base.OnAttachedToWindow();
@@ -95,7 +106,7 @@ namespace Svg.Droid.Editor
             if (disposing)
             {
                 DrawingCanvas?.Dispose();
-                Bitmap?.Dispose();
+                _canvas?.Dispose();
             }
             base.Dispose(disposing);
         }

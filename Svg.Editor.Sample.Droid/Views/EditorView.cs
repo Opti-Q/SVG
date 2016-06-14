@@ -3,8 +3,12 @@ using Android.OS;
 using Android.Views;
 using System.Linq;
 using MvvmCross.Droid.Views;
+using Svg.Core.Tools;
 using Svg.Droid.Editor;
+using Svg.Droid.SampleEditor.Core;
+using Svg.Droid.SampleEditor.Core.Tools;
 using Svg.Droid.SampleEditor.Core.ViewModels;
+using Svg.Platform;
 
 namespace Svg.Droid.SampleEditor.Views
 {
@@ -18,6 +22,19 @@ namespace Svg.Droid.SampleEditor.Views
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.EditorVIew);
             _padView = FindViewById<SvgDrawingCanvasView>(Resource.Id.pad);
+            
+            // modify tool so that 
+            var tool = _padView.DrawingCanvas.Tools.OfType<AddRandomItemTool>().FirstOrDefault();
+            if (tool == null)
+            {
+                tool = new AddRandomItemTool(_padView.DrawingCanvas);
+                _padView.DrawingCanvas.Tools.Add(tool);    
+            }
+            // this surely creates a memory leak!!
+            tool.SourceProvider = (str) => new SvgAssetSource(str, this.Assets);
+
+        
+            // set canvas in viewmodel
             this.ViewModel.Canvas = _padView.DrawingCanvas;
         }
 

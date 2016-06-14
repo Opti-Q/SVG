@@ -7,15 +7,19 @@ namespace Svg.Platform
 {
     public class AndroidGraphics : Graphics
     {
-        private readonly AndroidBitmap _image;
-        private Canvas _canvas;
+        private readonly Canvas _canvas;
         private AndroidMatrix _matrix;
         private Region _clip;
 
         public AndroidGraphics(AndroidBitmap image)
         {
-            _image = image;
-            _canvas = new Canvas(_image.Image);
+            _canvas = new Canvas(image.Image);
+            _matrix = new AndroidMatrix(_canvas.Matrix);
+        }
+
+        public AndroidGraphics(Canvas canvas)
+        {
+            _canvas = canvas;
             _matrix = new AndroidMatrix(_canvas.Matrix);
         }
 

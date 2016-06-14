@@ -46,7 +46,7 @@ namespace Svg.Core.Tools
 
         private Pen Pen => _pen ?? (_pen = Svg.Engine.Factory.CreatePen(Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 210, 210, 210)), 1));
 
-        public override void OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
+        public override void OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
             //--------------------------------------------------
             // TODO DO THIS ONLY ONCE; NOT FOR EVERY ON DRAW
@@ -82,7 +82,7 @@ namespace Svg.Core.Tools
             //renderer.DrawCircle(canvasx, canvasy, 100, Pen); // point on canvas - should move along
         }
 
-        public override void OnTouch(UserInputEvent userInputEvent, SvgDrawingCanvas ws)
+        public override void OnUserInput(UserInputEvent userInputEvent, SvgDrawingCanvas ws)
         {
             // You know nothing Jon Snow
         }

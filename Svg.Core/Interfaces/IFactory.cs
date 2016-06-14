@@ -15,6 +15,7 @@ namespace Svg
         Region CreateRegion(RectangleF rect);
         Pen CreatePen(Brush brush, float strokeWidth);
         Matrix CreateMatrix();
+        Matrix CreateIdentityMatrix();
         Bitmap CreateBitmap(Image inputImage);
         Bitmap CreateBitmap(int width, int height);
         Graphics CreateGraphicsFromImage(Bitmap input);
