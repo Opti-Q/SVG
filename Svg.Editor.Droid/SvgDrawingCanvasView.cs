@@ -4,7 +4,9 @@ using Android.Graphics;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+using MvvmCross.Platform.Core;
 using Svg.Core;
+using Svg.Core.Interfaces;
 using Svg.Droid.Editor.Services;
 using Svg.Platform;
 using Color = Android.Graphics.Color;
@@ -18,6 +20,7 @@ namespace Svg.Droid.Editor
         private readonly SvgDrawingCanvas _drawingCanvas;
         private readonly GestureDetector _detector;
         private Canvas _canvas;
+        private IRenderer _renderer;
 
         public SvgDrawingCanvas DrawingCanvas => _drawingCanvas;
 
@@ -63,24 +66,8 @@ namespace Svg.Droid.Editor
 
         protected override void OnDraw(Canvas canvas)
         {
-            //var canvas = GetOrCreateCanvas(c);
-            canvas.DrawColor(Color.White);
-
-            //foreach (var bitmap in ViewModel.Elements)
-            //    canvas.DrawBitmap(bitmap.Image, bitmap.X, bitmap.Y, null);
             DrawingCanvas.OnDraw(new AndroidCanvasRenderer(canvas));
             base.OnDraw(canvas);
-        }
-
-        private Canvas GetOrCreateCanvas(Canvas currentCanvas)
-        {
-            if (_canvas != null)
-                return _canvas;
-            var bitmap = (AndroidBitmap)_drawingCanvas.GetOrCreate(currentCanvas.Width, currentCanvas.Height);
-            _canvas = new Canvas(bitmap.Image);
-            //this.SetImageBitmap(bitmap.Image);
-
-            return _canvas;
         }
 
         protected override void OnAttachedToWindow()

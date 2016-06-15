@@ -9,5 +9,6 @@ namespace Svg.Interfaces
     {
         Color Black { get; }
         Color Transparent { get; }
+        Color White { get; }
     }
 }

@@ -10,6 +10,7 @@ namespace Svg.Platform
         private readonly Canvas _canvas;
         private AndroidMatrix _matrix;
         private Region _clip;
+        private Matrix _constantTransform = Engine.Factory.CreateIdentityMatrix();
 
         public AndroidGraphics(AndroidBitmap image)
         {
@@ -38,6 +39,7 @@ namespace Svg.Platform
                 _canvas.Matrix = _matrix.Matrix;
             }
         }
+
         public void Dispose()
         {
             _canvas.Dispose();
@@ -89,6 +91,13 @@ namespace Svg.Platform
             SetSmoothingMode(paint.Paint);
             
             _canvas.DrawPath(p.Path, paint.Paint);
+
+            if (_canvas.Matrix != null)
+            {
+                var hc = _canvas.GetHashCode();
+                var m = new AndroidMatrix(_canvas.Matrix);
+                var point = m.Elements;
+            }
 
             // little hack as android path does not support text!
             foreach (var text in p.Texts)

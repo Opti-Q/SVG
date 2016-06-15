@@ -33,7 +33,10 @@ namespace Svg.Droid.SampleEditor.Views
             // this surely creates a memory leak!!
             tool.SourceProvider = (str) => new SvgAssetSource(str, this.Assets);
 
-        
+
+            //_padView.DrawingCanvas.Document = SvgDocument.Open<SvgDocument>(new SvgAssetSource("isolib/Straights/solid and broken/solid1.svg", Assets));
+            _padView.DrawingCanvas.Document = SvgDocument.Open<SvgDocument>(new SvgAssetSource("svg/painting-control-01-f.svg", Assets));
+            
             // set canvas in viewmodel
             this.ViewModel.Canvas = _padView.DrawingCanvas;
         }

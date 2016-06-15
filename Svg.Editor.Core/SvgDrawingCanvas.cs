@@ -83,13 +83,21 @@ namespace Svg.Core
         /// <param name="renderer"></param>
         public void OnDraw(IRenderer renderer)
         {
+            // draw default background
+            renderer.FillEntireCanvasWithColor(Engine.Factory.Colors.White);
+
+            // prerender step (e.g. gridlines, etc.)
             foreach (var tool in Tools)
             {
                 tool.OnPreDraw(renderer, this);
             }
 
+            // render svg step
+            renderer.Graphics.Transform = renderer.Matrix; // set constant transform matrix, so svg document can be panned, zoomed, etc.
+            Document.ViewBox = new SvgViewBox(0, 0, renderer.Width/ZoomFactor, renderer.Height/ZoomFactor); // set viewbox to have the same dimension as the canvas! (otherwise it would get clipped)
             Document.Draw(GetOrCreateRenderer(renderer.Graphics));
 
+            // post render step (e.g. selection borders, etc.)
             foreach (var tool in Tools)
             {
                 tool.OnDraw(renderer, this);
@@ -116,7 +124,8 @@ namespace Svg.Core
 
         private ISvgRenderer GetOrCreateRenderer(Graphics graphics)
         {
-            return _svgRenderer ?? (_svgRenderer = SvgRenderer.FromGraphics(graphics));
+            //return _svgRenderer ?? (_svgRenderer = SvgRenderer.FromGraphics(graphics));
+            return SvgRenderer.FromGraphics(graphics);
         }
     }
 }

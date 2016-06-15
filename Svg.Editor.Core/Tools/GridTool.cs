@@ -20,6 +20,7 @@ namespace Svg.Core.Tools
         private Pen _pen;
 
         private readonly List<IToolCommand> _commands = new List<IToolCommand>();
+        private Pen _pen2;
 
         public GridTool(ICanInvalidateCanvas canvas)
             : base("Grid")
@@ -45,6 +46,7 @@ namespace Svg.Core.Tools
         public bool IsVisible { get; set; } = true;
 
         private Pen Pen => _pen ?? (_pen = Svg.Engine.Factory.CreatePen(Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 210, 210, 210)), 1));
+        private Pen Pen2 => _pen2 ?? (_pen2 = Svg.Engine.Factory.CreatePen(Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 255, 0, 0)), 2));
 
         public override void OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
@@ -78,8 +80,10 @@ namespace Svg.Core.Tools
                 DrawLineLeftToBottom(renderer, i, x, y, lineLength);    /* \ */
             }
 
-            //renderer.DrawCircle(0, 0, 200, Pen); // point should remain in top left corner on screen
-            //renderer.DrawCircle(canvasx, canvasy, 100, Pen); // point on canvas - should move along
+            renderer.DrawCircle(0, 0, 20, Pen); // point should remain in top left corner on screen
+            renderer.DrawCircle(canvasx, canvasy, 10, Pen); // point on canvas - should move along
+
+            renderer.DrawLine(1f, 1f, 200f, 1f, Pen2);
         }
 
         public override void OnUserInput(UserInputEvent userInputEvent, SvgDrawingCanvas ws)
@@ -136,7 +140,8 @@ namespace Svg.Core.Tools
 
         public override void Dispose()
         {
-            Pen.Dispose();
+            _pen?.Dispose();
+            _pen2?.Dispose();
         }
 
         private static double SinDegree(double value)
