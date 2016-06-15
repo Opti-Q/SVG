@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 
@@ -41,9 +39,10 @@ namespace Svg.Core.Tools
 
         public override void OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
-            var m = renderer.Matrix;
-            m.Scale(ws.ZoomFactor, ws.ZoomFactor, MatrixOrder.Append);
-            renderer.Matrix = m;
+            //var m = renderer.Matrix;
+            //m.Scale(ws.ZoomFactor, ws.ZoomFactor, MatrixOrder.Append);
+            //renderer.Matrix = m;
+            renderer.Scale(ws.ZoomFactor, 0f, 0f);
         }
 
         public override void OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)

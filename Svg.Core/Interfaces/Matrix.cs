@@ -1,6 +1,7 @@
 
 using System;
 using System.Drawing;
+using System.Linq;
 using Svg.Interfaces;
 
 namespace Svg
@@ -20,14 +21,26 @@ namespace Svg
         public abstract float[] Elements { get; }
         public abstract float OffsetX { get;  }
         public abstract float OffsetY { get;  }
+        public abstract float ScaleX { get; }
+        public abstract float ScaleY { get; }
         public abstract void Rotate(float fAngle);
         public abstract void Shear(float f, float f1);
         public virtual void Dispose()
         { }
+
         public override string ToString()
         {
             var e = Elements;
             return $"[{e[0]};{e[1]};{e[2]}],[{e[3]};{e[4]};{e[5]}],[{e[6]};{e[7]};{e[8]}]";
+        }
+
+        public override bool Equals(object obj)
+        {
+            var matrix = obj as Matrix;
+            if (matrix == null)
+                return false;
+
+            return Elements.SequenceEqual(matrix.Elements);
         }
     }
 }

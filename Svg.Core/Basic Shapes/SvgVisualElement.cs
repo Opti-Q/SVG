@@ -114,9 +114,6 @@ namespace Svg
             if (this.Visible && this.Displayable && this.PushTransforms(renderer) &&
                 (!Renderable || this.Path(renderer) != null))
             {
-                // TODO LX: store last transform matrix, so we still can use it in hittest detection after rendering!
-                RenderTransform = renderer.Transform;
-
                 bool renderNormal = true;
 
                 if (renderFilter && this.Filter != null)
@@ -175,11 +172,6 @@ namespace Svg
 
             }
         }
-
-        /// <summary>
-        /// Gets the transform matrix of the last render call, which can e.g. be used it in hittest detection
-        /// </summary>
-        public Matrix RenderTransform { get; protected set; } = null;
 
         /// <summary>
         /// Renders the fill of the <see cref="SvgVisualElement"/> to the specified <see cref="ISvgRenderer"/>

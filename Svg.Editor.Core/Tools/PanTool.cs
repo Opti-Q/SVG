@@ -32,6 +32,9 @@ namespace Svg.Core.Tools
         public override void OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
             renderer.Translate(ws.Translate.X, ws.Translate.Y);
+            //var m = renderer.Matrix;
+            //m.Translate(ws.Translate.X, ws.Translate.Y, MatrixOrder.Append);
+            //renderer.Matrix = m;
         }
 
         public override void OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)

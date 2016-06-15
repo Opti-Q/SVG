@@ -226,6 +226,26 @@ namespace Svg.Platform
             }
         }
 
+        public override float ScaleX
+        {
+            get
+            {
+                var vals = new float[9];
+                _m.GetValues(vals);
+                return vals[Android.Graphics.Matrix.MscaleX];
+            }
+        }
+
+        public override float ScaleY
+        {
+            get
+            {
+                var vals = new float[9];
+                _m.GetValues(vals);
+                return vals[Android.Graphics.Matrix.MscaleY];
+            }
+        }
+
         public Android.Graphics.Matrix Matrix { get { return _m; }}
 
         public override void Shear(float f, float f1)

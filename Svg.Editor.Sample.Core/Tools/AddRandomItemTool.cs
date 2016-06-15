@@ -5,6 +5,7 @@ using Svg.Core;
 using Svg.Core.Events;
 using Svg.Core.Tools;
 using Svg.Interfaces;
+using Svg.Transforms;
 
 namespace Svg.Droid.SampleEditor.Core.Tools
 {
@@ -23,11 +24,20 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 {
                     if (SourceProvider == null)
                         return;
-                    //var provider = SourceProvider("isolib/Straights/solid and broken/solid1.svg");
-                    var provider = SourceProvider("svg/painting-control-01-f.svg");
+                    var provider = SourceProvider("isolib/Straights/solid and broken/solid1.svg");
+                    //var provider = SourceProvider("svg/painting-control-01-f.svg");
                     var otherDoc = SvgDocument.Open<SvgDocument>(provider);
                     var child = otherDoc.Children.OfType<SvgVisualElement>().First(e => e.Displayable && e.Visible);
-                    
+
+                    var trans = child.Transforms.OfType<SvgTranslate>().FirstOrDefault();
+                    SvgTranslate tl = new SvgTranslate(-canvas.Translate.X, -canvas.Translate.Y);
+                    if (trans != null)
+                    {
+                        child.Transforms.Remove(trans);
+                        tl = new SvgTranslate(trans.X - tl.X, trans.Y - tl.Y);
+                    }
+                    child.Transforms.Add(tl);
+
                     _canvas.Document.Children.Add(child);
 
                     _canvas.InvalidateCanvas();

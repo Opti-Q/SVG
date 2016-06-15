@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 
@@ -59,10 +58,10 @@ namespace Svg.Core.Tools
 
             var canvasx = -ws.Translate.X;
             var canvasy = -ws.Translate.Y;
-
+           
             //for (var i = -canvas.Width * MaxZoom; i <= canvas.Width * MaxZoom; i += StepSize - 2.5f)
             //    DrawTopDownIsoLine(canvas, i, canvasx, canvasy);      /* | */
-            
+
             var relativeCanvasTranslationX = (canvasx) % StepSizeX;
             var relativeCanvasTranslationY = (canvasy) % StepSizeY;
 
@@ -79,13 +78,13 @@ namespace Svg.Core.Tools
                 DrawLineLeftToBottom(renderer, i, x, lineLength);    /* \ */
             }
 
-            for (var i = y; i <= y + 2*yPosition; i += stepSize)
+            for (var i = y; i <= y + 2 * yPosition; i += stepSize)
             {
                 DrawLineLeftToTop(renderer, i, x, lineLength);       /* / */
             }
 
+            renderer.DrawCircle(canvasx, canvasy, 50, Pen); // point should remain in top left corner on screen
             renderer.DrawCircle(0, 0, 20, Pen2); // point on canvas - should move along
-            renderer.DrawCircle(canvasx, canvasy, 10, Pen); // point should remain in top left corner on screen
             renderer.DrawLine(1f, 1f, 200f, 1f, Pen2);
         }
 

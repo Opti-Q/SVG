@@ -36,6 +36,8 @@ namespace Svg.Platform
             {
                 _matrix = (AndroidMatrix)value;
                 _canvas.Matrix = _matrix.Matrix;
+                //_canvas.Scale(_matrix.ScaleX, _matrix.ScaleY);
+                //_canvas.Translate(_matrix.OffsetX, _matrix.OffsetY);
             }
         }
         public void Dispose()
@@ -89,7 +91,7 @@ namespace Svg.Platform
             
             _canvas.DrawPath(p.Path, paint.Paint);
 
-            System.Diagnostics.Debug.WriteLine($"DrawPath with {Transform?.ToString()}");
+            //System.Diagnostics.Debug.WriteLine($"DrawPath with {Transform?.ToString()}");
 
             // little hack as android path does not support text!
             foreach (var text in p.Texts)
