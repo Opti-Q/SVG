@@ -12,7 +12,8 @@ namespace Svg.Platform
         }
         public AndroidMatrix(Android.Graphics.Matrix src)
         {
-            _m = new Android.Graphics.Matrix(src);
+            //_m = new Android.Graphics.Matrix(src);
+            _m = src;
         }
         //
         // Summary:
@@ -43,17 +44,17 @@ namespace Svg.Platform
             _m.SetValues(new float[] { i, i1, i3, i4, i2, i5, 0, 0, 1 });
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             _m.Dispose();
         }
 
-        public void Scale(float width, float height)
+        public override void Scale(float width, float height)
         {
             _m.SetScale(width, height);
         }
 
-        public void Scale(float width, float height, MatrixOrder order)
+        public override void Scale(float width, float height, MatrixOrder order)
         {
             if(order == MatrixOrder.Append)
                 _m.PostScale(width, height);
@@ -61,7 +62,7 @@ namespace Svg.Platform
                 _m.PreScale(width, height);
         }
 
-        public void Translate(float left, float top, MatrixOrder order)
+        public override void Translate(float left, float top, MatrixOrder order)
         {
             if (order == MatrixOrder.Append)
                 _m.PostTranslate(left, top);
@@ -69,7 +70,7 @@ namespace Svg.Platform
                 _m.PreTranslate(left, top);
         }
 
-        public void TransformVectors(PointF[] points)
+        public override void TransformVectors(PointF[] points)
         {
             var a = new float[points.Length*2];
             for (int i = 0; i < points.Length; i++)
@@ -87,12 +88,12 @@ namespace Svg.Platform
             }
         }
 
-        public void Translate(float left, float top)
+        public override void Translate(float left, float top)
         {
             _m.SetTranslate(left, top);
         }
 
-        public void Multiply(Matrix matrix)
+        public override void Multiply(Matrix matrix)
         {
             var other = (AndroidMatrix) matrix;
 
@@ -163,14 +164,13 @@ namespace Svg.Platform
                 return kHasil;
             }
         }
-
-
-        public void TransformPoints(PointF[] points)
+        
+        public override void TransformPoints(PointF[] points)
         {
             TransformVectors(points);
         }
 
-        public void RotateAt(float angle, PointF midPoint, MatrixOrder order)
+        public override void RotateAt(float angle, PointF midPoint, MatrixOrder order)
         {
             if (order == MatrixOrder.Append)
                 _m.PostRotate(angle, midPoint.X, midPoint.Y);
@@ -178,24 +178,25 @@ namespace Svg.Platform
                 _m.PreRotate(angle, midPoint.X, midPoint.Y);
         }
 
-        public void Rotate(float angle, MatrixOrder order)
+        public override void Rotate(float angle, MatrixOrder order)
         {
             if (order == MatrixOrder.Append)
                 _m.PostRotate(angle);
             else
                 _m.PreRotate(angle);
         }
-        public void Rotate(float fAngle)
+
+        public override void Rotate(float fAngle)
         {
             _m.SetRotate(fAngle);
         }
 
-        public Matrix Clone()
+        public override Matrix Clone()
         {
             return new AndroidMatrix(_m);
         }
 
-        public float[] Elements
+        public override float[] Elements
         {
             get
             {
@@ -205,7 +206,7 @@ namespace Svg.Platform
             }
         }
 
-        public float OffsetX
+        public override float OffsetX
         {
             get
             {
@@ -215,7 +216,7 @@ namespace Svg.Platform
             }
         }
 
-        public float OffsetY
+        public override float OffsetY
         {
             get
             {
@@ -227,9 +228,10 @@ namespace Svg.Platform
 
         public Android.Graphics.Matrix Matrix { get { return _m; }}
 
-        public void Shear(float f, float f1)
+        public override void Shear(float f, float f1)
         {
             _m.SetSkew(f, f1);
         }
+
     }
 }
