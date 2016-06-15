@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,9 +11,22 @@ namespace Svg.Core.Tools
 {
     public class PanTool : ToolBase
     {
-        public PanTool() 
+        private readonly SvgDrawingCanvas _owner;
+
+        public PanTool(SvgDrawingCanvas owner) 
             : base("Pan")
         {
+            _owner = owner;
+
+            Commands = new List<IToolCommand>()
+            {
+                new ToolCommand(this, "Center at 0:0", (x) =>
+                {
+                    _owner.Translate.X = 0f;
+                    _owner.Translate.Y = 0f;
+                    _owner.InvalidateCanvas();
+                }),
+            };
         }
 
         public override void OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)

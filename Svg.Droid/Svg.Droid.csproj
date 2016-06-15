@@ -129,7 +129,7 @@
       <Link>DataTypes\SvgViewBox.cs</Link>
     </Compile>
     <Compile Include="..\Svg.Shared\SvgXmlTextWriter.cs">
-      <Link>Platform\Xml\SvgXmlTextWriter.cs</Link>
+      <Link>SvgXmlTextWriter.cs</Link>
     </Compile>
     <Compile Include="..\Svg.Shared\WebRequestSvc.cs">
       <Link>WebRequestSvc.cs</Link>

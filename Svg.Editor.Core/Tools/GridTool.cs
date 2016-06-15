@@ -9,7 +9,7 @@ namespace Svg.Core.Tools
     public class GridTool : ToolBase
     {
         private readonly ICanInvalidateCanvas _canvas;
-        public const float StepSize = 40;
+        private static float StepSizeY = 40;
         private static double A;
         private static double B;
         private static double C;
@@ -28,7 +28,7 @@ namespace Svg.Core.Tools
             _canvas = canvas;
             // using triangle calculation to determine the x and y steps based on stepsize (y) and angle (alpha)
             // http://www.arndt-bruenner.de/mathe/scripts/Dreiecksberechnung.htm
-            A = StepSize;
+            A = StepSizeY;
             Beta = 180f - (Alpha + Gamma);
             B = (A * SinDegree(Beta)) / SinDegree(Alpha);
             C = (A * SinDegree(Gamma)) / SinDegree(Alpha);
@@ -62,27 +62,30 @@ namespace Svg.Core.Tools
 
             //for (var i = -canvas.Width * MaxZoom; i <= canvas.Width * MaxZoom; i += StepSize - 2.5f)
             //    DrawTopDownIsoLine(canvas, i, canvasx, canvasy);      /* | */
-
-            var relativeCanvasTranslationX = (canvasx) % StepSizeX;
-            var relativeCanvasTranslationY = (canvasy) % StepSize;
             
-            var gridLength = (Math.Max(renderer.Width, renderer.Height)/ws.ZoomFactor)*1.5f;
-            var stepSize = (int) Math.Round(StepSize, 0);
+            var relativeCanvasTranslationX = (canvasx) % StepSizeX;
+            var relativeCanvasTranslationY = (canvasy) % StepSizeY;
 
+            var height = renderer.Height/ws.ZoomFactor;
+            var yPosition = (height - (height % StepSizeY) + (StepSizeY*2));
+            var stepSize = (int) Math.Round(StepSizeY, 0);
 
             var x = canvasx - relativeCanvasTranslationX - (stepSize*2); // subtract 2x stepsize so gridlines always start from "out of sight" and lines do not start from a visible x-border
             var y = canvasy - relativeCanvasTranslationY;
-            var lineLength = Math.Sqrt(Math.Pow(renderer.Width / ws.ZoomFactor, 2) + Math.Pow(renderer.Height / ws.ZoomFactor, 2)) * 1.2f; // multiply by 1.2f as we later also start drawing from a minus x coordinate (- 2*stepsize)
-            
-            for (var i = -gridLength; i <= gridLength; i += stepSize)
+            var lineLength = Math.Sqrt(Math.Pow(renderer.Width, 2) + Math.Pow(renderer.Height, 2)) / ws.ZoomFactor + (stepSize * 2); // multiply by 1.2f as we later also start drawing from a minus x coordinate (- 2*stepsize)
+
+            for (var i = y - yPosition; i <= y + yPosition; i += stepSize)
             {
-                DrawLineLeftToTop(renderer, i, x, y, lineLength);       /* / */
-                DrawLineLeftToBottom(renderer, i, x, y, lineLength);    /* \ */
+                DrawLineLeftToBottom(renderer, i, x, lineLength);    /* \ */
             }
 
-            renderer.DrawCircle(0, 0, 20, Pen); // point should remain in top left corner on screen
-            renderer.DrawCircle(canvasx, canvasy, 10, Pen); // point on canvas - should move along
+            for (var i = y; i <= y + 2*yPosition; i += stepSize)
+            {
+                DrawLineLeftToTop(renderer, i, x, lineLength);       /* / */
+            }
 
+            renderer.DrawCircle(0, 0, 20, Pen2); // point on canvas - should move along
+            renderer.DrawCircle(canvasx, canvasy, 10, Pen); // point should remain in top left corner on screen
             renderer.DrawLine(1f, 1f, 200f, 1f, Pen2);
         }
 
@@ -92,12 +95,12 @@ namespace Svg.Core.Tools
         }
         
         // line looks like this -> /
-        private void DrawLineLeftToTop(IRenderer renderer, float y, float canvasX, float canvasY, double lineLength)
+        private void DrawLineLeftToTop(IRenderer renderer, float y, float canvasX, double lineLength)
         {
             var startX = canvasX;
-            var startY = y + canvasY;
+            var startY = y ;
             var stopX = ((float)(lineLength * Math.Cos(Alpha * (Math.PI / 180)))) + canvasX;
-            var stopY = (y - (float)(lineLength * Math.Sin(Alpha * (Math.PI / 180)))) + canvasY;
+            var stopY = (y - (float)(lineLength * Math.Sin(Alpha * (Math.PI / 180)))) ;
             
 
             renderer.DrawLine(
@@ -109,12 +112,12 @@ namespace Svg.Core.Tools
         }
 
         // line looks like this -> \
-        private void DrawLineLeftToBottom(IRenderer renderer, float y, float canvasX, float canvasY, double lineLength)
+        private void DrawLineLeftToBottom(IRenderer renderer, float y, float canvasX, double lineLength)
         {
             var startX = canvasX;
-            var startY = y + canvasY;
+            var startY = y;
             var endX = ((float)(lineLength * Math.Cos(Alpha * (Math.PI / 180)))) + canvasX;
-            var endY = (y + (float)(lineLength * Math.Sin(Alpha * (Math.PI / 180)))) + canvasY;
+            var endY = (y + (float)(lineLength * Math.Sin(Alpha * (Math.PI / 180))));
 
             renderer.DrawLine(
                 startX,

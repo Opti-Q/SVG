@@ -42,7 +42,7 @@
       </font-face-src>
     </font-face>
   </defs>
-  <g id="test-body-content" font-family="SVGFreeSansASCII,sans-serif" font-size="18">
+  <!--<g id="test-body-content" font-family="SVGFreeSansASCII,sans-serif" font-size="18">
 
     <rect width="48px" height="48px" fill="red" />
     <rect width="48px" height="48px" display="inline" />
@@ -92,12 +92,15 @@
     <rect x="150px" y="150px" width="48px" height="48px" fill="red" />
     <rect x="150px" y="150px" width="48px" height="48px" display="table-caption" />
 
-  </g>
-  <g font-family="SVGFreeSansASCII,sans-serif" font-size="32">
-    <text id="revision" x="10" y="340" stroke="none"
-      fill="black">$Revision: 1.4 $</text>
-  </g>
-  <rect id="test-frame" x="1" y="1" width="478" height="358" fill="none" stroke="#000"/>
+  </g>-->
+  <!--<g transform="translate(0,129)">-->
+    <g font-family="SVGFreeSansASCII,sans-serif" font-size="32">
+      <text id="revision" x="10" y="340" stroke="none"
+        fill="black">$Revision: 1.4 $</text>
+    </g>
+    <rect id="test-frame" x="1" y="1" width="478" height="358" fill="none" stroke="#000"/>
+  <!--</g>-->
+  <ellipse id="ellipse-object" fill="blue" cx="0" cy="0" rx="5" ry="5"/>
   <!-- comment out this watermark once the test is approved
   <g id="draft-watermark">
     <rect x="1" y="1" width="478" height="20" fill="red" stroke="black" stroke-width="1"/>

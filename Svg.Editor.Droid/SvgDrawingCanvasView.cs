@@ -16,11 +16,8 @@ namespace Svg.Droid.Editor
 {
     public class SvgDrawingCanvasView : ImageView
     {
-        private const int Size = 2000;
         private readonly SvgDrawingCanvas _drawingCanvas;
         private readonly GestureDetector _detector;
-        private Canvas _canvas;
-        private IRenderer _renderer;
 
         public SvgDrawingCanvas DrawingCanvas => _drawingCanvas;
 
@@ -31,30 +28,6 @@ namespace Svg.Droid.Editor
             
             _drawingCanvas = new SvgDrawingCanvas();
             _detector = new GestureDetector(this.Context, (e) => DrawingCanvas.OnEvent(e));
-        }
-
-        public void AddSvg(SvgDocument svgDocument)
-        {
-            //// TODO PUT ME IN THE VIEWMODEL
-
-            //ViewModel.AddSvg(svgDocument);
-            //var bitmap = (AndroidBitmap) svgDocument.Draw();
-            //var x = (Width / 2) - (bitmap.Width / 2) - (int) SharedMasterTool.Instance.CanvasTranslatedPosX;
-            //var y = (Height / 2) - (bitmap.Height / 2) - (int) SharedMasterTool.Instance.CanvasTranslatedPosY;
-
-            //if (SnappingTool.IsActive)
-            //{
-            //    x = (int) (Math.Round((x) / SnappingTool.StepSize) * SnappingTool.StepSize);
-            //    y = (int) (Math.Round((y) / SnappingTool.StepSize) * SnappingTool.StepSize);
-            //}
-
-            //var selBitmap = new SelectableAndroidBitmap(bitmap, x, y);
-
-            //ViewModel.Elements.Add(selBitmap);
-            ////ViewModel.Select(selBitmap);
-
-            //ViewModel.Select(ViewModel.Elements.LastOrDefault());
-            //Invalidate();
         }
 
         public override bool OnTouchEvent(MotionEvent ev)
@@ -93,7 +66,6 @@ namespace Svg.Droid.Editor
             if (disposing)
             {
                 DrawingCanvas?.Dispose();
-                _canvas?.Dispose();
             }
             base.Dispose(disposing);
         }

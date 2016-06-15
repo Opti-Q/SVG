@@ -10,7 +10,6 @@ namespace Svg.Platform
         private readonly Canvas _canvas;
         private AndroidMatrix _matrix;
         private Region _clip;
-        private Matrix _constantTransform = Engine.Factory.CreateIdentityMatrix();
 
         public AndroidGraphics(AndroidBitmap image)
         {
@@ -39,7 +38,6 @@ namespace Svg.Platform
                 _canvas.Matrix = _matrix.Matrix;
             }
         }
-
         public void Dispose()
         {
             _canvas.Dispose();
@@ -49,8 +47,7 @@ namespace Svg.Platform
             var img = (AndroidBitmap) bitmap;
             _canvas.DrawBitmap(img.Image, null, new Rect(x, y, x+width,y+height), null);
         }
-        public void DrawImage(Bitmap bitmap, Interfaces.RectangleF rectangle, int x, int y, int width, int height, GraphicsUnit pixel,
-            ImageAttributes attributes)
+        public void DrawImage(Bitmap bitmap, Interfaces.RectangleF rectangle, int x, int y, int width, int height, GraphicsUnit pixel, ImageAttributes attributes)
         {
             throw new NotImplementedException("ImageAttributes not implemented for now: see http://chiuki.github.io/android-shaders-filters/#/");
             //var img = (AndroidBitmap)bitmap;
@@ -91,13 +88,6 @@ namespace Svg.Platform
             SetSmoothingMode(paint.Paint);
             
             _canvas.DrawPath(p.Path, paint.Paint);
-
-            if (_canvas.Matrix != null)
-            {
-                var hc = _canvas.GetHashCode();
-                var m = new AndroidMatrix(_canvas.Matrix);
-                var point = m.Elements;
-            }
 
             // little hack as android path does not support text!
             foreach (var text in p.Texts)
@@ -209,7 +199,6 @@ namespace Svg.Platform
             //throw new NotImplementedException();
             return new[] {new Region(rectangle)};
         }
-
         public void DrawText(string text, float x, float y, Pen pen)
         {
             if (text == null)
@@ -217,7 +206,6 @@ namespace Svg.Platform
             var paint = (AndroidPen)pen;
             _canvas.DrawText(text, x, y, paint.Paint);
         }
-
         public Region[] MeasureCharacterRanges(string text, Font font, Rectangle rectangle, StringFormat format)
         {
             // TODO LX: wtf?

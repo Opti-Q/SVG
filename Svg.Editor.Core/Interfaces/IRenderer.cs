@@ -15,7 +15,7 @@ namespace Svg.Core.Interfaces
         void Translate(float deltaX, float deltaY);
         void DrawCircle(float x, float y, int radius, Pen pen);
         void FillEntireCanvasWithColor(Svg.Interfaces.Color color);
-        Matrix Matrix { get; }
+        Matrix Matrix { get; set; }
 
         Graphics Graphics { get; }
     }

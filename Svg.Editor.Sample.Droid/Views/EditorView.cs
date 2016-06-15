@@ -3,9 +3,7 @@ using Android.OS;
 using Android.Views;
 using System.Linq;
 using MvvmCross.Droid.Views;
-using Svg.Core.Tools;
 using Svg.Droid.Editor;
-using Svg.Droid.SampleEditor.Core;
 using Svg.Droid.SampleEditor.Core.Tools;
 using Svg.Droid.SampleEditor.Core.ViewModels;
 using Svg.Platform;
@@ -36,7 +34,7 @@ namespace Svg.Droid.SampleEditor.Views
 
             //_padView.DrawingCanvas.Document = SvgDocument.Open<SvgDocument>(new SvgAssetSource("isolib/Straights/solid and broken/solid1.svg", Assets));
             _padView.DrawingCanvas.Document = SvgDocument.Open<SvgDocument>(new SvgAssetSource("svg/painting-control-01-f.svg", Assets));
-            
+
             // set canvas in viewmodel
             this.ViewModel.Canvas = _padView.DrawingCanvas;
         }

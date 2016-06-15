@@ -57,44 +57,19 @@ namespace Svg.Droid.Editor.Tools
                     break;
 
                 case (int)MotionEventActions.Move:
-                    // Only move if the ScaleGestureDetector isn't processing a gesture.
-                    //if (!SharedMasterTool.Instance.IsScaleDetectorInProgress())
-                    //{
-                        var pointerIndex = ev.FindPointerIndex(ActivePointerId);
-                        x = ev.GetX(pointerIndex);
-                        y = ev.GetY(pointerIndex);
+                    var pointerIndex = ev.FindPointerIndex(ActivePointerId);
+                    x = ev.GetX(pointerIndex);
+                    y = ev.GetY(pointerIndex);
                     
-                        var absoluteDeltaX = x - LastTouchX;
-                        var absoluteDeltaY = y - LastTouchY;
+                    var absoluteDeltaX = x - LastTouchX;
+                    var absoluteDeltaY = y - LastTouchY;
 
-                        System.Diagnostics.Debug.WriteLine($"{absoluteDeltaX}:{absoluteDeltaY}");
+                    System.Diagnostics.Debug.WriteLine($"{absoluteDeltaX}:{absoluteDeltaY}");
 
-                        uie = new MoveEvent(Svg.Factory.Instance.CreatePointF(LastTouchX, LastTouchY), Svg.Factory.Instance.CreatePointF(x, y), Svg.Factory.Instance.CreatePointF(absoluteDeltaX, absoluteDeltaY));
-
-                        //SharedMasterTool.Instance.CanvasTranslatedPosX += dx / ZoomTool.ScaleFactor;
-                        //SharedMasterTool.Instance.CanvasTranslatedPosY += dy / ZoomTool.ScaleFactor;
-
-                    //svgWorkspace.Invalidate();
-
-                        LastTouchX = x;
-                        LastTouchY = y;
-                    //}
-                    //else
-                    //{
-                    //    var gx = SharedMasterTool.Instance.ScaleDetector.FocusX;
-                    //    var gy = SharedMasterTool.Instance.ScaleDetector.FocusY;
-
-                    //    var gdx = gx - SharedMasterTool.Instance.LastGestureX;
-                    //    var gdy = gy - SharedMasterTool.Instance.LastGestureY;
-
-                    //    SharedMasterTool.Instance.CanvasTranslatedPosX += gdx / ZoomTool.ScaleFactor;
-                    //    SharedMasterTool.Instance.CanvasTranslatedPosY += gdy / ZoomTool.ScaleFactor;
-
-                    //    svgWorkspace.Invalidate();
-
-                    //    SharedMasterTool.Instance.LastGestureX = gx;
-                    //    SharedMasterTool.Instance.LastGestureY = gy;
-                    //}
+                    uie = new MoveEvent(Svg.Factory.Instance.CreatePointF(LastTouchX, LastTouchY), Svg.Factory.Instance.CreatePointF(x, y), Svg.Factory.Instance.CreatePointF(absoluteDeltaX, absoluteDeltaY));
+                    
+                    LastTouchX = x;
+                    LastTouchY = y;
 
                     break;
 

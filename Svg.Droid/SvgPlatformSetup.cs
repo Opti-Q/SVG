@@ -1,4 +1,3 @@
-using Android.App;
 using Android.Content;
 using Svg.Interfaces;
 using Svg.Platform;
@@ -14,7 +13,7 @@ namespace Svg
             Context = context;
         }
 
-        public bool EnableFastTextRendering { get; set; }
+        public bool EnableFastTextRendering { get; set; } = true;
     }
 
     public class SvgPlatformSetup : SvgPlatformSetupBase

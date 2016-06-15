@@ -22,12 +22,6 @@ namespace Svg.Droid.Editor.Services
         public void DrawLine(float startX, float startY, float stopX, float stopY, Pen pen)
         {
             _canvas.DrawLine(startX, startY, stopX, stopY, ((AndroidPen) pen).Paint);
-
-            if (_canvas.Matrix != null)
-            {
-                var m = new AndroidMatrix(_canvas.Matrix);
-                var point = m.Elements;
-            }
         }
 
         public void Scale(float zoomFactor, float focusX, float focusY)
@@ -38,12 +32,6 @@ namespace Svg.Droid.Editor.Services
         public void Translate(float deltaX, float deltaY)
         {
             _canvas.Translate(deltaX, deltaY);
-            if (_canvas.Matrix != null)
-            {
-                var hc = _canvas.GetHashCode();
-                var m = new AndroidMatrix(_canvas.Matrix);
-                var point = m.Elements;
-            }
         }
 
         public void DrawCircle(float x, float y, int radius, Pen pen)
@@ -57,7 +45,11 @@ namespace Svg.Droid.Editor.Services
             _canvas.DrawColor(c);
         }
 
-        public Matrix Matrix => new AndroidMatrix(_canvas.Matrix);
+        public Matrix Matrix
+        {
+            get { return new AndroidMatrix(_canvas.Matrix); }
+            set { _canvas.Matrix = ((AndroidMatrix) value).Matrix; }
+        }
 
         public Graphics Graphics { get; }
     }

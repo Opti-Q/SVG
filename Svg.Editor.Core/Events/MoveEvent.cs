@@ -1,7 +1,10 @@
-﻿using Svg.Interfaces;
+﻿using System;
+using System.Diagnostics;
+using Svg.Interfaces;
 
 namespace Svg.Core.Events
 {
+    [DebuggerDisplay("{DebuggerDisplay}")]
     public class MoveEvent : PointerEvent
     {
         public PointF AbsoluteDelta { get; private set; }
@@ -11,5 +14,7 @@ namespace Svg.Core.Events
         {
             AbsoluteDelta = absoluteDelta;
         }
+
+        public override string DebuggerDisplay => $"Move from x:{Pointer1DownPosition?.X} y:{Pointer1DownPosition?.Y} to x:{Pointer1Position?.X} y:{Pointer1Position?.Y}";
     }
 }

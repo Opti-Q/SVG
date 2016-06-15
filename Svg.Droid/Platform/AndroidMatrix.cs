@@ -209,7 +209,7 @@ namespace Svg.Platform
         {
             get
             {
-                var vals = new float[6];
+                var vals = new float[9];
                 _m.GetValues(vals);
                 return vals[Android.Graphics.Matrix.MtransX];
             }
@@ -219,7 +219,7 @@ namespace Svg.Platform
         {
             get
             {
-                var vals = new float[6];
+                var vals = new float[9];
                 _m.GetValues(vals);
                 return vals[Android.Graphics.Matrix.MtransY];
             }

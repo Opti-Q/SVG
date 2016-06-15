@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
@@ -11,11 +12,10 @@ namespace Svg.Core
 {
     public class SvgDrawingCanvas : IDisposable, ICanInvalidateCanvas
     {
-        private readonly ObservableCollection<SvgElement> _selectedElements = new ObservableCollection<SvgElement>();
+        private readonly ObservableCollection<SvgVisualElement> _selectedElements = new ObservableCollection<SvgVisualElement>();
         private readonly ObservableCollection<ITool> _tools;
         private SvgDocument _document;
         private Bitmap _rawImage;
-        private ISvgRenderer _svgRenderer;
 
         public event EventHandler CanvasInvalidated;
 
@@ -31,16 +31,16 @@ namespace Svg.Core
 
             _tools = new ObservableCollection<ITool>
             { 
-                    new ZoomTool(),
+                    new ZoomTool(this),
+                    new PanTool(this),
             //        new SelectionTool(),
             //        new MoveSvgTool(),
-                    new PanTool(),
                     new GridTool(this), // must be after zoom and pan tools!
             //        new SnappingTool(),
             };
         }
 
-        public ObservableCollection<SvgElement> SelectedElements => _selectedElements;
+        public ObservableCollection<SvgVisualElement> SelectedElements => _selectedElements;
 
         public ObservableCollection<ITool> Tools => _tools;
 
@@ -71,6 +71,8 @@ namespace Svg.Core
         /// <param name="view"></param>
         public void OnEvent(UserInputEvent ev)
         {
+            Debug.WriteLine($"{ev}");
+
             foreach (var tool in Tools)
             {
                 tool.OnUserInput(ev, this);
@@ -114,7 +116,6 @@ namespace Svg.Core
         public void Dispose()
         {
             _rawImage?.Dispose();
-            _svgRenderer?.Dispose();
 
             foreach(var tool in Tools)
                 tool.Dispose();
@@ -124,7 +125,6 @@ namespace Svg.Core
 
         private ISvgRenderer GetOrCreateRenderer(Graphics graphics)
         {
-            //return _svgRenderer ?? (_svgRenderer = SvgRenderer.FromGraphics(graphics));
             return SvgRenderer.FromGraphics(graphics);
         }
     }
