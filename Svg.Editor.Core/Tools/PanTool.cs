@@ -44,8 +44,8 @@ namespace Svg.Core.Tools
             if (ev == null)
                 return;
 
-            ws.Translate.X += ev.AbsoluteDelta.X / ws.ZoomFactor;
-            ws.Translate.Y += ev.AbsoluteDelta.Y / ws.ZoomFactor;
+            ws.Translate.X += ev.AbsoluteDelta.X /*/ ws.ZoomFactor*/;
+            ws.Translate.Y += ev.AbsoluteDelta.Y /*/ ws.ZoomFactor*/;
             System.Diagnostics.Debug.WriteLine($"{ws.Translate.X}:{ws.Translate.Y}");
 
             ws.InvalidateCanvas();

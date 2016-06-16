@@ -301,6 +301,8 @@ namespace Svg
             _graphicsMatrix = renderer.Transform;
             _graphicsClip = renderer.GetClip();
 
+            renderer.Graphics.Save();
+
             // Return if there are no transforms
             if (this.Transforms == null || this.Transforms.Count == 0)
             {
@@ -326,7 +328,8 @@ namespace Svg
         /// <param name="renderer">The <see cref="ISvgRenderer"/> that should have transforms removed.</param>
         protected internal virtual void PopTransforms(ISvgRenderer renderer)
         {
-            renderer.Transform = _graphicsMatrix;
+            renderer.Graphics.Restore();
+            //renderer.Transform = _graphicsMatrix; // this causes errors in Android.Canvas - even if matrices are equal!! => use .Restore()
             _graphicsMatrix = null; 
             //renderer.SetClip(_graphicsClip); // TODO LX causes error in text- rendering tests (as text vanishes)
             _graphicsClip = null;

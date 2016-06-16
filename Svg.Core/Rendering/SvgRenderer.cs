@@ -81,6 +81,8 @@ namespace Svg
             this._innerGraphics.DrawText(text, x, y, pen);
         }
 
+        public Graphics Graphics => _innerGraphics;
+
         public SmoothingMode SmoothingMode
         {
             get { return this._innerGraphics.SmoothingMode; }

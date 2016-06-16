@@ -11,6 +11,7 @@ namespace Svg
         void DrawImage(Bitmap bitmap, RectangleF rectangle, int x, int y, int width, int height, GraphicsUnit pixel, ImageAttributes attributes);
         void Flush();
         void Save();
+        void Restore();
         TextRenderingHint TextRenderingHint { get; set; }
         float DpiY { get; }
         Region Clip { get; }

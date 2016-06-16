@@ -29,9 +29,9 @@ namespace Svg.Core
             ZoomFactor = 1f;
 
             _tools = new ObservableCollection<ITool>
-            { 
-                    new ZoomTool(this),
+            {
                     new PanTool(this),
+                    new ZoomTool(this),
             //        new SelectionTool(),
             //        new MoveSvgTool(),
                     new GridTool(this), // must be after zoom and pan tools!
@@ -47,11 +47,21 @@ namespace Svg.Core
         {
             get
             {
-                if(_document == null)
+                if (_document == null)
+                {
                     _document = new SvgDocument();
+                    _document.ViewBox = SvgViewBox.Empty;
+                }
                 return _document;
             }
-            set { _document = value; }
+            set
+            {
+                _document = value;
+                if (_document != null)
+                {
+                    _document.ViewBox = SvgViewBox.Empty;
+                }
+            }
         }
 
         public Bitmap GetOrCreate(int width, int height)
@@ -94,11 +104,8 @@ namespace Svg.Core
             }
 
             // render svg step
-            renderer.Graphics.Transform = renderer.Matrix; // set constant transform matrix, so svg document can be panned, zoomed, etc.
-            Document.ViewBox = new SvgViewBox(0, 0, renderer.Width/ZoomFactor, renderer.Height/ZoomFactor); // set viewbox to have the same dimension as the canvas! (otherwise it would get clipped)
             Document.Draw(GetOrCreateRenderer(renderer.Graphics));
-
-
+            
             // post render step (e.g. selection borders, etc.)
             foreach (var tool in Tools)
             {

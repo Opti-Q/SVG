@@ -56,8 +56,8 @@ namespace Svg.Core.Tools
             if (!IsVisible)
                 return;
 
-            var canvasx = -ws.Translate.X;
-            var canvasy = -ws.Translate.Y;
+            var canvasx = (-ws.Translate.X) / ws.ZoomFactor;
+            var canvasy = (-ws.Translate.Y) / ws.ZoomFactor;
            
             //for (var i = -canvas.Width * MaxZoom; i <= canvas.Width * MaxZoom; i += StepSize - 2.5f)
             //    DrawTopDownIsoLine(canvas, i, canvasx, canvasy);      /* | */

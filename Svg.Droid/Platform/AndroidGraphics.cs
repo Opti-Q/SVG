@@ -80,6 +80,11 @@ namespace Svg.Platform
         {
             _canvas.Save();
         }
+
+        public void Restore()
+        {
+            _canvas.Restore();
+        }
         public void DrawPath(Pen pen, GraphicsPath path)
         {
             var p = (AndroidGraphicsPath) path;
@@ -89,7 +94,7 @@ namespace Svg.Platform
             
             _canvas.DrawPath(p.Path, paint.Paint);
 
-            System.Diagnostics.Debug.WriteLine($"DrawPath with {Transform?.ToString()}");
+            //System.Diagnostics.Debug.WriteLine($"DrawPath with {Transform?.ToString()}");
 
             // little hack as android path does not support text!
             foreach (var text in p.Texts)
@@ -178,10 +183,10 @@ namespace Svg.Platform
             }
             _clip = region;
 
-            if(region != null)
-                _canvas.ClipRect((Rect)(AndroidRectangleF)region.Rect, op);
-            else
-                _canvas.ClipRect(_canvas.ClipBounds, Android.Graphics.Region.Op.Union);
+            //if (region != null)
+            //    _canvas.ClipRect((Rect)(AndroidRectangleF)region.Rect, op);
+            //else
+            //    _canvas.ClipRect(_canvas.ClipBounds, Android.Graphics.Region.Op.Union);
         }
         public void TranslateTransform(float dx, float dy, MatrixOrder order)
         {

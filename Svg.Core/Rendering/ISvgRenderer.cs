@@ -22,5 +22,6 @@ namespace Svg
         Matrix Transform { get; set; }
         void TranslateTransform(float dx, float dy, MatrixOrder order = MatrixOrder.Append);
         void DrawText(string text, float x, float y, Pen pen);
+        Graphics Graphics { get; }
     }
 }
