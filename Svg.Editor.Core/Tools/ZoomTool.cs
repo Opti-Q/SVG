@@ -39,10 +39,10 @@ namespace Svg.Core.Tools
 
         public override void OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
-            //var m = renderer.Matrix;
-            //m.Scale(ws.ZoomFactor, ws.ZoomFactor, MatrixOrder.Append);
-            //renderer.Matrix = m;
-            renderer.Scale(ws.ZoomFactor, 0f, 0f);
+            //renderer.Scale(ws.ZoomFactor, 0f, 0f);
+            var m = renderer.Matrix;
+            m.Scale(ws.ZoomFactor, ws.ZoomFactor, MatrixOrder.Append);
+            renderer.Matrix = m;
         }
 
         public override void OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)

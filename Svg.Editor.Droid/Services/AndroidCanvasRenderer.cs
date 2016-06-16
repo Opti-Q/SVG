@@ -47,8 +47,8 @@ namespace Svg.Droid.Editor.Services
 
         public Matrix Matrix
         {
-            get { return new AndroidMatrix(_canvas.Matrix); }
-            set { _canvas.Matrix = ((AndroidMatrix) value).Matrix; }
+            get { return (AndroidMatrix)_canvas.Matrix; }
+            set { _canvas.Matrix = ((AndroidMatrix) value); }
         }
 
         public Graphics Graphics { get; }

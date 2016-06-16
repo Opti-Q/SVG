@@ -124,11 +124,15 @@ namespace SvgW3CTestRunner.Droid
 
                 var assetManager = Assets;
                 var svgs = assetManager.List("svg")
-                    .Where(@s => s.StartsWith("text-"))
+                    //.Where(@s => s.StartsWith("painting-"))
+                    //.Where(@s => s.StartsWith("text-"))
+                    .Where(@s => s.StartsWith("coords-"))
                     .OrderBy(@s => s).ToList();
 
                 var pngs = assetManager.List("png")
-                    .Where(@s => s.StartsWith("text-"))
+                    //.Where(@s => s.StartsWith("painting-"))
+                    //.Where(@s => s.StartsWith("text-"))
+                    .Where(@s => s.StartsWith("coords-"))
                     .OrderBy(@s => s).ToList();
 
                 _globalGfxCount = pngs.Count;

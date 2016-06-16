@@ -36,8 +36,6 @@ namespace Svg.Platform
             {
                 _matrix = (AndroidMatrix)value;
                 _canvas.Matrix = _matrix.Matrix;
-                //_canvas.Scale(_matrix.ScaleX, _matrix.ScaleY);
-                //_canvas.Translate(_matrix.OffsetX, _matrix.OffsetY);
             }
         }
         public void Dispose()
