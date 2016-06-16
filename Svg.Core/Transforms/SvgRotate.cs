@@ -35,6 +35,11 @@ namespace Svg.Transforms
             }
         }
 
+        public override void ApplyTo(Matrix other)
+        {
+            other.RotateAt(Angle, Engine.Factory.CreatePointF(CenterX, CenterY), MatrixOrder.Prepend);
+        }
+
         public override string WriteToString()
         {
             return string.Format(CultureInfo.InvariantCulture, "rotate({0}, {1}, {2})", this.Angle, this.CenterX, this.CenterY);

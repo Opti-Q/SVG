@@ -16,18 +16,42 @@ namespace Svg.Transforms
             set { this.points = value; }
         }
 
+	    private const int ScaleX = 0;
+	    private const int ScaleY = 3;
+	    private const int RotateX = 1;
+	    private const int RotateY = 2;
+	    private const int TranslateX = 4;
+        private const int TranslateY = 5;
+
         public override Matrix Matrix
         {
             get
             {
-            	Matrix matrix = Engine.Factory.CreateMatrix(
-            		this.points[0],
-            		this.points[1],
-            		this.points[3],
-            		this.points[4],
-            		this.points[2],
-            		this.points[5]
-            	);
+                /* according to http://tutorials.jenkov.com/svg/svg-transformation.html
+                 * a matrix like
+                 *      sx  rx  tx
+                 *      ry  sy  ty
+                 *      0   0   1
+                 * 
+                 * is specified like: transform="matrix(sx,rx,ry,sy,tx,ty)"
+                 * sx, sy is scaling
+                 * rx, ry is rotation/skew
+                 * tx, ty is translation
+                 */
+                Matrix matrix = Engine.Factory.CreateMatrix(
+                    this.points[ScaleX],
+                    this.points[RotateX],
+                    this.points[RotateY],
+                    this.points[ScaleY],
+                    this.points[TranslateX],
+                    this.points[TranslateY]
+                    //this.points[0],
+                    //this.points[1],
+                    //this.points[3],
+                    //this.points[4],
+                    //this.points[2],
+                    //this.points[5]
+                );
                 return matrix;
             }
         }

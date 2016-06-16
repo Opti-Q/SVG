@@ -27,7 +27,7 @@ namespace Svg
         TextureBrush CreateTextureBrush(Bitmap image);
         LinearGradientBrush CreateLinearGradientBrush(PointF start, PointF end, Color startColor, Color endColor);
         PathGradientBrush CreatePathGradientBrush(GraphicsPath path);
-        Matrix CreateMatrix(float i, float i1, float i2, float i3, float i4, float i5);
+        Matrix CreateMatrix(float scaleX, float rotateX, float rotateY, float scaleY, float transX, float transY);
         StringFormat CreateStringFormatGenericTypographic();
         Font CreateFont(FontFamily fontFamily, float fontSize, FontStyle fontStyle, GraphicsUnit graphicsUnit);
         FontFamilyProvider GetFontFamilyProvider();

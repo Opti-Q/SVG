@@ -132,17 +132,22 @@ namespace Svg.Platform
 
         public void AddLine(PointF start, PointF end)
         {
-            Path.MoveTo(start.X, start.Y);
+            var lp = GetLastPoint();
+            if(lp == null || lp != start)
+            { 
+                Path.MoveTo(start.X, start.Y);
+                _points.Add(start);
+                _pathTypes.Add(1); // start of a line
+            }
+
             Path.LineTo(end.X, end.Y);
-            _points.Add(start);
             _points.Add(end);
-            _pathTypes.Add(1); // start of a line
             _pathTypes.Add(1); // end point of line
         }
 
         public PointF GetLastPoint()
         {
-            return _points.LastOrDefault();
+            return _points.Count == 0 ? null : _points[_points.Count - 1];
         }
 
         public void AddRectangle(RectangleF rectangle)

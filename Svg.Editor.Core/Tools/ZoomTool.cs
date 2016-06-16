@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 
@@ -39,23 +40,32 @@ namespace Svg.Core.Tools
 
         public override void OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
-            //renderer.Scale(ws.ZoomFactor, 0f, 0f);
-            var m = renderer.Matrix;
-            m.Scale(ws.ZoomFactor, ws.ZoomFactor, MatrixOrder.Append);
-            renderer.Matrix = m;
+            renderer.Scale(ws.ZoomFactor, 0f, 0f);
+            //var m = renderer.Matrix;
+            //m.Scale(ws.ZoomFactor, ws.ZoomFactor, MatrixOrder.Append);
+            //renderer.Matrix = m;
         }
 
         public override void OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
             var se = @event as ScaleEvent;
+            if (se == null)
+                return;
 
-            if (se?.Status == ScaleStatus.Scaling)
+            //if (se.Status == ScaleStatus.Start)
+            //{
+                
+            //}
+            if (se.Status == ScaleStatus.Scaling)
             {
                 // Don't let the object get too small or too large.
                 ws.ZoomFactor = GetBoundedZoomFactor(se, ws);
 
                 ws.InvalidateCanvas();
             }
+            //else if(se.Status == ScaleStatus.End)
+            //{
+            //}
         }
 
         private float GetBoundedZoomFactor(ScaleEvent se, SvgDrawingCanvas ws)

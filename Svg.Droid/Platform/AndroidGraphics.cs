@@ -89,7 +89,7 @@ namespace Svg.Platform
             
             _canvas.DrawPath(p.Path, paint.Paint);
 
-            //System.Diagnostics.Debug.WriteLine($"DrawPath with {Transform?.ToString()}");
+            System.Diagnostics.Debug.WriteLine($"DrawPath with {Transform?.ToString()}");
 
             // little hack as android path does not support text!
             foreach (var text in p.Texts)

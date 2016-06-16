@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using Java.Lang;
 using Svg.Interfaces;
 
 namespace Svg.Platform
@@ -23,28 +25,26 @@ namespace Svg.Platform
         //     Initializes a new instance of the System.Drawing.Drawing2D.Matrix class with
         //     the specified elements.
         //
-        // Parameters:
-        //   m11:
-        //     The value in the first row and first column of the new System.Drawing.Drawing2D.Matrix.
-        //
-        //   m12:
-        //     The value in the first row and second column of the new System.Drawing.Drawing2D.Matrix.
-        //
-        //   m21:
-        //     The value in the second row and first column of the new System.Drawing.Drawing2D.Matrix.
-        //
-        //   m22:
-        //     The value in the second row and second column of the new System.Drawing.Drawing2D.Matrix.
-        //
-        //   dx:
-        //     The value in the third row and first column of the new System.Drawing.Drawing2D.Matrix.
-        //
-        //   dy:
-        //     The value in the third row and second column of the new System.Drawing.Drawing2D.Matrix.
-        public AndroidMatrix(float i, float i1, float i2, float i3, float i4, float i5)
+        // see: https://msdn.microsoft.com/en-us/library/system.drawing.drawing2d.matrix(v=vs.110).aspx
+        public AndroidMatrix(float scaleX, float rotateX, float rotateY, float scaleY, float transX, float transY)
         {
             _m = new Android.Graphics.Matrix();
-            _m.SetValues(new float[] { i, i1, i3, i4, i2, i5, 0, 0, 1 });
+
+            /*
+             * In android, rotateX and rotateY are switched for whatever reason!!
+             */
+            var vals = new float[9];
+            vals[Android.Graphics.Matrix.MscaleX] = scaleX;
+            vals[Android.Graphics.Matrix.MskewX] = rotateY;
+            vals[Android.Graphics.Matrix.MtransX] = transX;
+            vals[Android.Graphics.Matrix.MskewY] = rotateX;
+            vals[Android.Graphics.Matrix.MscaleY] = scaleY;
+            vals[Android.Graphics.Matrix.MtransY] = transY;
+            vals[Android.Graphics.Matrix.Mpersp0] = 0;
+            vals[Android.Graphics.Matrix.Mpersp1] = 0;
+            vals[Android.Graphics.Matrix.Mpersp2] = 1;
+
+            _m.SetValues(vals);
         }
 
         public override void Dispose()
@@ -104,7 +104,7 @@ namespace Svg.Platform
         {
             var other = (AndroidMatrix) matrix;
 
-            this.Matrix.PreConcat(other.Matrix);
+            _m.PreConcat(other.Matrix);
 
         }
 
@@ -131,7 +131,8 @@ namespace Svg.Platform
 
         public override void Rotate(float fAngle)
         {
-            _m.SetRotate(fAngle);
+            //_m.SetRotate(fAngle);
+            _m.PreRotate(fAngle);
         }
 
         public override Matrix Clone()
@@ -189,7 +190,7 @@ namespace Svg.Platform
             }
         }
 
-        public Android.Graphics.Matrix Matrix { get { return _m; }}
+        public Android.Graphics.Matrix Matrix => _m;
 
         public override void Shear(float f, float f1)
         {

@@ -9,6 +9,11 @@ namespace Svg.Transforms
         public abstract string WriteToString();
 
     	public abstract object Clone();
+
+        public virtual void ApplyTo(Matrix other)
+        {
+            other.Multiply(Matrix);
+        }
     	
     	#region Equals implementation
     	public override bool Equals(object obj)
