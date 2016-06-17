@@ -94,8 +94,6 @@ namespace Svg.Platform
             
             _canvas.DrawPath(p.Path, paint.Paint);
 
-            //System.Diagnostics.Debug.WriteLine($"DrawPath with {Transform?.ToString()}");
-
             // little hack as android path does not support text!
             foreach (var text in p.Texts)
             {
@@ -114,6 +112,7 @@ namespace Svg.Platform
                 paint.SetStyle(Paint.Style.Fill);
                 shader.ApplyTo(paint);
                 SetSmoothingMode(paint);
+                
                 _canvas.DrawPath(p.Path, paint);
             }
         }

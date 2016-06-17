@@ -298,8 +298,7 @@ namespace Svg
         /// <param name="renderer">The <see cref="ISvgRenderer"/> to be transformed.</param>
         protected internal virtual bool PushTransforms(ISvgRenderer renderer)
         {
-            _graphicsMatrix = renderer.Transform;
-            _graphicsClip = renderer.GetClip();
+            _graphicsMatrix = null;
 
             // Return if there are no transforms
             if (this.Transforms == null || this.Transforms.Count == 0)
@@ -308,6 +307,9 @@ namespace Svg
             }
             if (this.Transforms.Count == 1 && this.Transforms[0].Matrix.Equals(_zeroMatrix)) return false;
             
+            renderer.Graphics.Save();
+            _graphicsMatrix = renderer.Transform;
+            _graphicsClip = renderer.GetClip();
 
             Matrix transformMatrix = renderer.Transform.Clone();
 
@@ -327,10 +329,14 @@ namespace Svg
         /// <param name="renderer">The <see cref="ISvgRenderer"/> that should have transforms removed.</param>
         protected internal virtual void PopTransforms(ISvgRenderer renderer)
         {
-            renderer.Transform = _graphicsMatrix;
-            _graphicsMatrix = null;
-            //renderer.SetClip(_graphicsClip); // TODO LX causes error in text- rendering tests (as text vanishes)
-            _graphicsClip = null;
+            if(_graphicsMatrix != null)
+            {
+                renderer.Transform = _graphicsMatrix;
+                renderer.Graphics.Restore();
+                _graphicsMatrix = null;
+                //renderer.SetClip(_graphicsClip); // TODO LX causes error in text- rendering tests (as text vanishes)
+                _graphicsClip = null;
+            }
         }
 
         /// <summary>

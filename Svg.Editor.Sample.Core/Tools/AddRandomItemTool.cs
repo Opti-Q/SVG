@@ -30,7 +30,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     var child = otherDoc.Children.OfType<SvgVisualElement>().First(e => e.Displayable && e.Visible);
 
                     var trans = child.Transforms.OfType<SvgTranslate>().FirstOrDefault();
-                    SvgTranslate tl = new SvgTranslate(canvas.Translate.X, canvas.Translate.Y);
+                    SvgTranslate tl = new SvgTranslate(-canvas.Translate.X, -canvas.Translate.Y);
                     if (trans != null)
                     {
                         child.Transforms.Remove(trans);

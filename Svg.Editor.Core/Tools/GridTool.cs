@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 
@@ -20,6 +21,7 @@ namespace Svg.Core.Tools
 
         private readonly List<IToolCommand> _commands = new List<IToolCommand>();
         private Pen _pen2;
+        private Brush _brush;
 
         public GridTool(ICanInvalidateCanvas canvas)
             : base("Grid")
@@ -44,7 +46,8 @@ namespace Svg.Core.Tools
 
         public bool IsVisible { get; set; } = true;
 
-        private Pen Pen => _pen ?? (_pen = Svg.Engine.Factory.CreatePen(Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 210, 210, 210)), 1));
+        private Brush Brush => _brush ?? (_brush = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 210, 210, 210)));
+        private Pen Pen => _pen ?? (_pen = Svg.Engine.Factory.CreatePen(Brush, 1));
         private Pen Pen2 => _pen2 ?? (_pen2 = Svg.Engine.Factory.CreatePen(Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 255, 0, 0)), 2));
 
         public override void OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
@@ -86,6 +89,15 @@ namespace Svg.Core.Tools
             renderer.DrawCircle(canvasx, canvasy, 50, Pen); // point should remain in top left corner on screen
             renderer.DrawCircle(0, 0, 20, Pen2); // point on canvas - should move along
             renderer.DrawLine(1f, 1f, 200f, 1f, Pen2);
+
+            //var p = Engine.Factory.CreateGraphicsPath(FillMode.Winding);
+            //p.StartFigure();
+            //p.AddRectangle(Engine.Factory.CreateRectangleF(0, 0, 50, 50));
+            //p.CloseFigure();
+            ////renderer.DrawPath(p, Pen2);
+            //renderer.Graphics.FillPath(Brush, p);
+
+            Debug.WriteLine($"grid tool at {renderer.Matrix}");
         }
 
         public override void OnUserInput(UserInputEvent userInputEvent, SvgDrawingCanvas ws)

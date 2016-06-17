@@ -1,4 +1,5 @@
 
+using System;
 using Android.Graphics;
 using Svg.Core.Interfaces;
 using Svg.Platform;
@@ -37,6 +38,11 @@ namespace Svg.Droid.Editor.Services
         public void DrawCircle(float x, float y, int radius, Pen pen)
         {
             _canvas.DrawCircle(x, y, radius, ((AndroidPen)pen).Paint);
+        }
+
+        public void DrawPath(GraphicsPath path, Pen pen)
+        {
+            _canvas.DrawPath(((AndroidGraphicsPath)path).Path, ((AndroidPen)pen).Paint);
         }
 
         public void FillEntireCanvasWithColor(Svg.Interfaces.Color color)

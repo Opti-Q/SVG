@@ -27,7 +27,7 @@ namespace Svg.Transforms
 			
 			for (int i = 0; i < 6; i++) 
 			{
-				if(thisMatrix[i] != otherMatrix[i])
+				if(object.Equals(thisMatrix[i], otherMatrix[i]))
 					return false;
 			}
 			

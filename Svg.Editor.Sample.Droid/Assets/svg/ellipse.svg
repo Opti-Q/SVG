@@ -4,5 +4,5 @@
   <title id="test-title">Ellipse</title>
 
   <rect id="ellipse-01" fill="black" stroke="blue" stroke-width="2"  x="0" y="0" width="40" height="40" />
-  <ellipse id="ellipse-02" fill="white" cx="20" cy="20" rx="20" ry="20"/>
+  <!--<ellipse id="ellipse-02" fill="white" cx="20" cy="20" rx="20" ry="20"/>-->
 </svg>

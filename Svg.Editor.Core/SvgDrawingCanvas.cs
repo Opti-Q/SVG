@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
@@ -88,6 +89,9 @@ namespace Svg.Core
             }
         }
 
+        private Brush _brush;
+        private Brush Brush => _brush ?? (_brush = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 200, 050, 210)));
+
         /// <summary>
         /// Called by platform specific implementation to allow tools to draw something onto the canvas
         /// </summary>
@@ -103,9 +107,22 @@ namespace Svg.Core
                 tool.OnPreDraw(renderer, this);
             }
 
+
             // render svg step
+            renderer.Graphics.Save();
             Document.Draw(GetOrCreateRenderer(renderer.Graphics));
+            renderer.Graphics.Restore();
             
+            //Debug.WriteLine($"document drawn => {renderer.Graphics.Transform}");
+
+            //var p = Engine.Factory.CreateGraphicsPath(FillMode.Winding);
+            //p.StartFigure();
+            //p.AddRectangle(Engine.Factory.CreateRectangleF(0, 0, 50, 50));
+            //p.CloseFigure();
+            ////renderer.DrawPath(p, Pen2);
+            //renderer.Graphics.FillPath(Brush, p);
+
+
             // post render step (e.g. selection borders, etc.)
             foreach (var tool in Tools)
             {
