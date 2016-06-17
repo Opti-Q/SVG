@@ -52,6 +52,11 @@ namespace Svg.Platform
             _m.Dispose();
         }
 
+        public override void Invert()
+        {
+            _m.Invert(_m);
+        }
+
         public override void Scale(float width, float height)
         {
             //_m.SetScale(width, height);

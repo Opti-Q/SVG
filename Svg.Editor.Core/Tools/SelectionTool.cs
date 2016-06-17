@@ -69,7 +69,17 @@ namespace Svg.Core.Tools
         public override void OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
             if (_selectionRectangle != null)
+            {
+                renderer.Graphics.Save();
+
+                var m = renderer.Matrix.Clone();
+                m.Invert();
+                renderer.Graphics.Concat(m);
                 renderer.DrawRectangle(_selectionRectangle, Pen);
+
+
+                renderer.Graphics.Save();
+            }
         }
 
         private class ToggleSelectionToolCommand : ToolCommand

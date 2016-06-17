@@ -148,5 +148,6 @@ namespace Svg
 
         //    return !c1.Elements.SequenceEqual(c2.Elements);
         //}
+        public abstract void Invert();
     }
 }
