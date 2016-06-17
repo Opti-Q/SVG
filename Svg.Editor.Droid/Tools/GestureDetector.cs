@@ -57,7 +57,7 @@ namespace Svg.Droid.Editor.Tools
 
                 case (int)MotionEventActions.Cancel:
                     ActivePointerId = InvalidPointerId;
-                    uie = null;
+                    uie = new PointerEvent(EventType.Cancel, Svg.Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY), Svg.Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY), Svg.Factory.Instance.CreatePointF(x, y));
                     break;
 
                 case (int)MotionEventActions.Move:

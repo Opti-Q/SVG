@@ -64,6 +64,16 @@ namespace Svg.Core.Tools
                 //Debug.WriteLine($"select: {_selectionRectangle}");
                 ws.FireInvalidateCanvas();
             }
+
+            var p = @event as PointerEvent;
+            if (p != null)
+            {
+                if (p.EventType == EventType.PointerUp || p.EventType == EventType.Cancel)
+                {
+                    _selectionRectangle = null;
+                    ws.FireInvalidateCanvas();
+                }
+            }
         }
 
         public override void OnDraw(IRenderer renderer, SvgDrawingCanvas ws)

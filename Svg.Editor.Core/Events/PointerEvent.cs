@@ -9,6 +9,7 @@ namespace Svg.Core.Events
         PointerDown,
         Move,
         PointerUp,
+        Cancel,
     }
 
     [DebuggerDisplay("{DebuggerDisplay}")]
