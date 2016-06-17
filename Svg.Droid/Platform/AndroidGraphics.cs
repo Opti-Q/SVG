@@ -31,7 +31,7 @@ namespace Svg.Platform
         public SmoothingMode SmoothingMode { get; set; }
         public Matrix Transform
         {
-            get { return _matrix; }
+            get { return (AndroidMatrix)_canvas.Matrix; }
             set
             {
                 _matrix = (AndroidMatrix)value;

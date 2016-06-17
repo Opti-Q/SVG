@@ -12,7 +12,7 @@ namespace Svg.Transforms
 
         public virtual void ApplyTo(Matrix other)
         {
-            other.Multiply(Matrix);
+            other.Multiply(Matrix, MatrixOrder.Prepend);
         }
     	
     	#region Equals implementation

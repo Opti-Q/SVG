@@ -54,7 +54,8 @@ namespace Svg.Platform
 
         public override void Scale(float width, float height)
         {
-            _m.SetScale(width, height);
+            //_m.SetScale(width, height);
+            _m.PreScale(width, height);
         }
 
         public override void Scale(float width, float height, MatrixOrder order)
@@ -93,7 +94,8 @@ namespace Svg.Platform
 
         public override void Translate(float left, float top)
         {
-            _m.SetTranslate(left, top);
+            //_m.SetTranslate(left, top);
+            _m.PreTranslate(left, top);
         }
 
         /// <summary>
@@ -106,6 +108,14 @@ namespace Svg.Platform
 
             _m.PreConcat(other.Matrix);
 
+        }
+
+        public override void Multiply(Matrix matrix, MatrixOrder order)
+        {
+            if (order == MatrixOrder.Append)
+                _m.PostConcat((AndroidMatrix)matrix);
+            else
+                _m.PreConcat((AndroidMatrix)matrix);
         }
 
         public override void TransformPoints(PointF[] points)
@@ -128,6 +138,8 @@ namespace Svg.Platform
             else
                 _m.PreRotate(angle);
         }
+
+        public override bool IsIdentity => _m.IsIdentity;
 
         public override void Rotate(float fAngle)
         {
@@ -194,7 +206,8 @@ namespace Svg.Platform
 
         public override void Shear(float f, float f1)
         {
-            _m.SetSkew(f, f1);
+            //_m.SetSkew(f, f1);
+            _m.PreSkew(f, f1);
         }
 
         public static implicit operator AndroidMatrix(Android.Graphics.Matrix other)

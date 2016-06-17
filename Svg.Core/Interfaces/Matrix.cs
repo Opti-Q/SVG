@@ -14,6 +14,7 @@ namespace Svg
         public abstract void TransformVectors(PointF[] points);
         public abstract void Translate(float left, float top);
         public abstract void Multiply(Matrix matrix);
+        public abstract void Multiply(Matrix matrix, MatrixOrder prepend);
         public abstract void TransformPoints(PointF[] points);
         public abstract void RotateAt(float f, PointF midPoint, MatrixOrder prepend);
         public abstract void Rotate(float fAngle, MatrixOrder append);
@@ -23,6 +24,8 @@ namespace Svg
         public abstract float OffsetY { get;  }
         public abstract float ScaleX { get; }
         public abstract float ScaleY { get; }
+        public abstract bool IsIdentity { get; }
+
         public abstract void Rotate(float fAngle);
         public abstract void Shear(float f, float f1);
         public virtual void Dispose()
@@ -124,26 +127,26 @@ namespace Svg
         }
 
 
-        public static bool operator ==(Matrix c1, Matrix c2)
-        {
-            if (c1 == null && c2 != null)
-                return false;
+        //public static bool operator ==(Matrix c1, Matrix c2)
+        //{
+        //    if (c1 == null && c2 != null)
+        //        return false;
 
-            if (c1 != null && c2 == null)
-                return false;
+        //    if (c1 != null && c2 == null)
+        //        return false;
 
-            return c1.Elements.SequenceEqual(c2.Elements);
-        }
+        //    return c1.Elements.SequenceEqual(c2.Elements);
+        //}
 
-        public static bool operator !=(Matrix c1, Matrix c2)
-        {
-            if (c1 == null && c2 != null)
-                return true;
+        //public static bool operator !=(Matrix c1, Matrix c2)
+        //{
+        //    if (c1 == null && c2 != null)
+        //        return true;
 
-            if (c1 != null && c2 == null)
-                return true;
+        //    if (c1 != null && c2 == null)
+        //        return true;
 
-            return !c1.Elements.SequenceEqual(c2.Elements);
-        }
+        //    return !c1.Elements.SequenceEqual(c2.Elements);
+        //}
     }
 }
