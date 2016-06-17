@@ -29,19 +29,6 @@ namespace Svg.Platform
         public Region Clip { get { return _clip; } }
         // TODO LX use smootingmode
         public SmoothingMode SmoothingMode { get; set; }
-        public Matrix Transform
-        {
-            get { return (AndroidMatrix)_canvas.Matrix; }
-            set
-            {
-                _matrix = (AndroidMatrix)value;
-                _canvas.Matrix = _matrix.Matrix;
-            }
-        }
-        public void Dispose()
-        {
-            _canvas.Dispose();
-        }
         public void DrawImage(Bitmap bitmap, Interfaces.RectangleF rectangle, int x, int y, int width, int height, GraphicsUnit pixel)
         {
             var img = (AndroidBitmap) bitmap;
@@ -71,19 +58,6 @@ namespace Svg.Platform
         {
             var img = (AndroidBitmap)image;
             _canvas.DrawBitmap(img.Image, (int)location.X, (int)location.Y, null);
-        }
-        public void Flush()
-        {
-            throw new NotSupportedException("Flushing not supported on android");
-        }
-        public void Save()
-        {
-            _canvas.Save();
-        }
-
-        public void Restore()
-        {
-            _canvas.Restore();
         }
         public void DrawPath(Pen pen, GraphicsPath path)
         {
@@ -116,6 +90,13 @@ namespace Svg.Platform
                 _canvas.DrawPath(p.Path, paint);
             }
         }
+        public void DrawText(string text, float x, float y, Pen pen)
+        {
+            if (text == null)
+                return;
+            var paint = (AndroidPen)pen;
+            _canvas.DrawText(text, x, y, paint.Paint);
+        }
         private void SetSmoothingMode(Paint paint)
         {
             switch (SmoothingMode)
@@ -130,28 +111,6 @@ namespace Svg.Platform
                 //case SmoothingMode.HighQuality:
                 //case SmoothingMode.HighSpeed:
                 //case SmoothingMode.Invalid:
-            }
-        }
-        public void RotateTransform(float fAngle, MatrixOrder order)
-        {
-            if (order == MatrixOrder.Append)
-            {
-                _canvas.Matrix.PostRotate(fAngle);
-            }
-            else
-            {
-                _canvas.Matrix.PreRotate(fAngle);
-            }
-        }
-        public void ScaleTransform(float sx, float sy, MatrixOrder order)
-        {
-            if (order == MatrixOrder.Append)
-            {
-                _canvas.Matrix.PostScale(sx, sy);
-            }
-            else
-            {
-                _canvas.Matrix.PreScale(sx, sy);
             }
         }
         public void SetClip(Region region, CombineMode combineMode)
@@ -187,6 +146,28 @@ namespace Svg.Platform
             //else
             //    _canvas.ClipRect(_canvas.ClipBounds, Android.Graphics.Region.Op.Union);
         }
+        public Region[] MeasureCharacterRanges(string text, Font font, Interfaces.RectangleF rectangle, StringFormat format)
+        {
+            // TODO LX: wtf?
+            //throw new NotImplementedException();
+            return new[] {new Region(rectangle)};
+        }
+        public Region[] MeasureCharacterRanges(string text, Font font, Rectangle rectangle, StringFormat format)
+        {
+            // TODO LX: wtf?
+            return new[] { new Region(Engine.Factory.CreateRectangleF(rectangle.X, rectangle.Y,rectangle.Width, rectangle.Height)) };
+        }
+
+        public Matrix Transform
+        {
+            get { return (AndroidMatrix)_canvas.Matrix; }
+            set
+            {
+                _matrix = (AndroidMatrix)value;
+                _canvas.Matrix = _matrix.Matrix;
+            }
+        }
+
         public void TranslateTransform(float dx, float dy, MatrixOrder order)
         {
             if (order == MatrixOrder.Append)
@@ -195,26 +176,51 @@ namespace Svg.Platform
             }
             else
             {
-                _canvas.Matrix.PreTranslate(dx, dy);
+                _canvas.Translate(dx, dy);
             }
         }
-        public Region[] MeasureCharacterRanges(string text, Font font, Interfaces.RectangleF rectangle, StringFormat format)
+        public void RotateTransform(float fAngle, MatrixOrder order)
         {
-            // TODO LX: wtf?
-            //throw new NotImplementedException();
-            return new[] {new Region(rectangle)};
+            if (order == MatrixOrder.Append)
+            {
+                _canvas.Matrix.PostRotate(fAngle);
+            }
+            else
+            {
+                _canvas.Rotate(fAngle);
+            }
         }
-        public void DrawText(string text, float x, float y, Pen pen)
+        public void ScaleTransform(float sx, float sy, MatrixOrder order)
         {
-            if (text == null)
-                return;
-            var paint = (AndroidPen)pen;
-            _canvas.DrawText(text, x, y, paint.Paint);
+            if (order == MatrixOrder.Append)
+            {
+                _canvas.Matrix.PostScale(sx, sy);
+            }
+            else
+            {
+                _canvas.Scale(sx, sy);
+            }
         }
-        public Region[] MeasureCharacterRanges(string text, Font font, Rectangle rectangle, StringFormat format)
+        public void Concat(Matrix matrix)
         {
-            // TODO LX: wtf?
-            return new[] { new Region(Engine.Factory.CreateRectangleF(rectangle.X, rectangle.Y,rectangle.Width, rectangle.Height)) };
+            _canvas.Concat((AndroidMatrix)matrix);
+        }
+
+        public void Flush()
+        {
+            throw new NotSupportedException("Flushing not supported on android");
+        }
+        public void Save()
+        {
+            _canvas.Save();
+        }
+        public void Restore()
+        {
+            _canvas.Restore();
+        }
+        public void Dispose()
+        {
+            _canvas.Dispose();
         }
     }
 }

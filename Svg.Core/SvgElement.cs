@@ -310,16 +310,12 @@ namespace Svg
             renderer.Graphics.Save();
             _graphicsMatrix = renderer.Transform;
             _graphicsClip = renderer.GetClip();
-
-            Matrix transformMatrix = renderer.Transform.Clone();
-
+            
             foreach (SvgTransform transformation in this.Transforms)
             {
-                transformation.ApplyTo(transformMatrix);
+                transformation.ApplyTo(renderer);
             }
-
-            renderer.Transform = transformMatrix;
-
+            
             return true;
         }
 
@@ -331,7 +327,6 @@ namespace Svg
         {
             if(_graphicsMatrix != null)
             {
-                renderer.Transform = _graphicsMatrix;
                 renderer.Graphics.Restore();
                 _graphicsMatrix = null;
                 //renderer.SetClip(_graphicsClip); // TODO LX causes error in text- rendering tests (as text vanishes)

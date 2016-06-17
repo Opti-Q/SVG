@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 
@@ -22,6 +21,7 @@ namespace Svg.Core.Tools
         private readonly List<IToolCommand> _commands = new List<IToolCommand>();
         private Pen _pen2;
         private Brush _brush;
+        private Brush _brush2;
 
         public GridTool(ICanInvalidateCanvas canvas)
             : base("Grid")
@@ -47,23 +47,18 @@ namespace Svg.Core.Tools
         public bool IsVisible { get; set; } = true;
 
         private Brush Brush => _brush ?? (_brush = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 210, 210, 210)));
+        private Brush Brush2 => _brush2 ?? (_brush2 = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 255, 0, 0)));
         private Pen Pen => _pen ?? (_pen = Svg.Engine.Factory.CreatePen(Brush, 1));
-        private Pen Pen2 => _pen2 ?? (_pen2 = Svg.Engine.Factory.CreatePen(Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 255, 0, 0)), 2));
+        private Pen Pen2 => _pen2 ?? (_pen2 = Svg.Engine.Factory.CreatePen(Brush2, 2));
 
         public override void OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
-            //--------------------------------------------------
-            // TODO DO THIS ONLY ONCE; NOT FOR EVERY ON DRAW
-            //--------------------------------------------------
-
             if (!IsVisible)
                 return;
 
             var canvasx = (-ws.Translate.X) / ws.ZoomFactor;
             var canvasy = (-ws.Translate.Y) / ws.ZoomFactor;
            
-            //for (var i = -canvas.Width * MaxZoom; i <= canvas.Width * MaxZoom; i += StepSize - 2.5f)
-            //    DrawTopDownIsoLine(canvas, i, canvasx, canvasy);      /* | */
 
             var relativeCanvasTranslationX = (canvasx) % StepSizeX;
             var relativeCanvasTranslationY = (canvasy) % StepSizeY;
@@ -86,18 +81,9 @@ namespace Svg.Core.Tools
                 DrawLineLeftToTop(renderer, i, x, lineLength);       /* / */
             }
 
-            renderer.DrawCircle(canvasx, canvasy, 50, Pen); // point should remain in top left corner on screen
-            renderer.DrawCircle(0, 0, 20, Pen2); // point on canvas - should move along
-            renderer.DrawLine(1f, 1f, 200f, 1f, Pen2);
-
-            //var p = Engine.Factory.CreateGraphicsPath(FillMode.Winding);
-            //p.StartFigure();
-            //p.AddRectangle(Engine.Factory.CreateRectangleF(0, 0, 50, 50));
-            //p.CloseFigure();
-            ////renderer.DrawPath(p, Pen2);
-            //renderer.Graphics.FillPath(Brush, p);
-
-            Debug.WriteLine($"grid tool at {renderer.Matrix}");
+            //renderer.DrawCircle(canvasx, canvasy, 50, Pen); // point should remain in top left corner on screen
+            //renderer.DrawCircle(0, 0, 20, Pen2); // point on canvas - should move along
+            //renderer.DrawLine(1f, 1f, 200f, 1f, Pen2);
         }
 
         public override void OnUserInput(UserInputEvent userInputEvent, SvgDrawingCanvas ws)
@@ -138,24 +124,12 @@ namespace Svg.Core.Tools
                 Pen);
         }
 
-        //// line looks like this -> |
-        //private void DrawTopDownIsoLine(ICanvas canvas, float y)
-        //{
-        //    if(ZoomTool.ScaleFactor < 0.85f)
-        //        return;
-
-        //    canvas.DrawLine(
-        //        (y),
-        //        (-(canvas.Height * MaxZoom)),
-        //        (y),
-        //        (canvas.Height * MaxZoom),
-        //        Paint);
-        //}
-
         public override void Dispose()
         {
             _pen?.Dispose();
             _pen2?.Dispose();
+            _brush?.Dispose();
+            _brush2?.Dispose();
         }
 
         private static double SinDegree(double value)

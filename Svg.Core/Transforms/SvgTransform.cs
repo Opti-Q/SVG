@@ -14,9 +14,14 @@ namespace Svg.Transforms
         {
             other.Multiply(Matrix, MatrixOrder.Prepend);
         }
-    	
-    	#region Equals implementation
-    	public override bool Equals(object obj)
+
+        public virtual void ApplyTo(ISvgRenderer renderer)
+        {
+            renderer.Graphics.Concat(Matrix);
+        }
+
+        #region Equals implementation
+        public override bool Equals(object obj)
 		{
 			SvgTransform other = obj as SvgTransform;
 			if (other == null)
