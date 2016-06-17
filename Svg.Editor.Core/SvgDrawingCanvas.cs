@@ -70,6 +70,8 @@ namespace Svg.Core
             return _rawImage ?? (_rawImage = Engine.Factory.CreateBitmap(width, height));
         }
 
+        public PointF RelativeTranslate => Engine.Factory.CreatePointF(Translate.X/ZoomFactor, Translate.Y/ZoomFactor);
+
         public PointF Translate { get; set; }
 
         public float ZoomFactor { get; set; }
@@ -98,6 +100,9 @@ namespace Svg.Core
         /// <param name="renderer"></param>
         public void OnDraw(IRenderer renderer)
         {
+            this.Width = renderer.Width;
+            this.Height = renderer.Height;
+
             // draw default background
             renderer.FillEntireCanvasWithColor(Engine.Factory.Colors.White);
             
@@ -107,21 +112,10 @@ namespace Svg.Core
                 tool.OnPreDraw(renderer, this);
             }
 
-
             // render svg step
             renderer.Graphics.Save();
             Document.Draw(GetOrCreateRenderer(renderer.Graphics));
             renderer.Graphics.Restore();
-            
-            //Debug.WriteLine($"document drawn => {renderer.Graphics.Transform}");
-
-            //var p = Engine.Factory.CreateGraphicsPath(FillMode.Winding);
-            //p.StartFigure();
-            //p.AddRectangle(Engine.Factory.CreateRectangleF(0, 0, 50, 50));
-            //p.CloseFigure();
-            ////renderer.DrawPath(p, Pen2);
-            //renderer.Graphics.FillPath(Brush, p);
-
 
             // post render step (e.g. selection borders, etc.)
             foreach (var tool in Tools)
@@ -129,6 +123,9 @@ namespace Svg.Core
                 tool.OnDraw(renderer, this);
             }
         }
+
+        public int Width { get; private set; }
+        public int Height { get; private set; }
 
         public IEnumerable<SvgVisualElement> GetElementsUnder(float x, float y)
         {

@@ -28,14 +28,14 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     //var provider = SourceProvider("svg/painting-control-01-f.svg");
                     var otherDoc = SvgDocument.Open<SvgDocument>(provider);
                     var child = otherDoc.Children.OfType<SvgVisualElement>().First(e => e.Displayable && e.Visible);
+                    var z = canvas.ZoomFactor;
+                    var halfRelWidth = canvas.Width/z/2;
+                    var halfRelHeight = canvas.Height/z/2;
+                    var childBounds = child.Bounds;
+                    var halfRelChildWidth = childBounds.Width/2;
+                    var halfRelChildHeight = childBounds.Height/2;
 
-                    var trans = child.Transforms.OfType<SvgTranslate>().FirstOrDefault();
-                    SvgTranslate tl = new SvgTranslate(-canvas.Translate.X, -canvas.Translate.Y);
-                    if (trans != null)
-                    {
-                        child.Transforms.Remove(trans);
-                        tl = new SvgTranslate(trans.X - tl.X, trans.Y - tl.Y);
-                    }
+                    SvgTranslate tl = new SvgTranslate(-canvas.RelativeTranslate.X + halfRelWidth - halfRelChildWidth, -canvas.RelativeTranslate.Y + halfRelHeight - halfRelChildHeight);
                     child.Transforms.Add(tl);
 
                     _canvas.Document.Children.Add(child);

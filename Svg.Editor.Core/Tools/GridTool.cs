@@ -56,8 +56,10 @@ namespace Svg.Core.Tools
             if (!IsVisible)
                 return;
 
-            var canvasx = (-ws.Translate.X) / ws.ZoomFactor;
-            var canvasy = (-ws.Translate.Y) / ws.ZoomFactor;
+            //var canvasx = (-ws.Translate.X) / ws.ZoomFactor;
+            //var canvasy = (-ws.Translate.Y) / ws.ZoomFactor;
+            var canvasx = -ws.RelativeTranslate.X;
+            var canvasy = -ws.RelativeTranslate.Y;
            
 
             var relativeCanvasTranslationX = (canvasx) % StepSizeX;
@@ -81,9 +83,9 @@ namespace Svg.Core.Tools
                 DrawLineLeftToTop(renderer, i, x, lineLength);       /* / */
             }
 
-            //renderer.DrawCircle(canvasx, canvasy, 50, Pen); // point should remain in top left corner on screen
-            //renderer.DrawCircle(0, 0, 20, Pen2); // point on canvas - should move along
-            //renderer.DrawLine(1f, 1f, 200f, 1f, Pen2);
+            renderer.DrawCircle(canvasx, canvasy, 50, Pen); // point should remain in top left corner on screen
+            renderer.DrawCircle(0, 0, 20, Pen2); // point on canvas - should move along
+            renderer.DrawLine(1f, 1f, 200f, 1f, Pen2);
         }
 
         public override void OnUserInput(UserInputEvent userInputEvent, SvgDrawingCanvas ws)
