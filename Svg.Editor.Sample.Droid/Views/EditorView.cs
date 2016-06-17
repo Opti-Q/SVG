@@ -46,11 +46,11 @@ namespace Svg.Droid.SampleEditor.Views
         {
             foreach (var commands in ViewModel.Canvas.ToolCommands)
             {
-                var cmds = commands.ToArray();
+                var cmds = commands.Where(c => c.CanExecute(null)).ToArray();
                 if (cmds.Length == 0)
                     continue;
 
-                if (cmds.Count() == 1)
+                if (cmds.Length == 1)
                 {
                     var cmd = cmds.Single();
                     menu.Add(cmd.GetHashCode(), cmd.GetHashCode(), 1, cmd.Name);

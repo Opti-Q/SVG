@@ -18,10 +18,16 @@ namespace Svg.Core
         private Bitmap _rawImage;
 
         public event EventHandler CanvasInvalidated;
+        public event EventHandler ToolCommandsChanged;
 
-        public void InvalidateCanvas()
+        public void FireInvalidateCanvas()
         {
             CanvasInvalidated?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void FireToolCommandsChanged()
+        {
+            ToolCommandsChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public SvgDrawingCanvas()
@@ -31,13 +37,16 @@ namespace Svg.Core
 
             _tools = new ObservableCollection<ITool>
             {
-                    new PanTool(this),
-                    new ZoomTool(this),
-            //        new SelectionTool(),
+                    new PanTool(),
+                    new ZoomTool(),
+                    new SelectionTool(),
             //        new MoveSvgTool(),
-                    new GridTool(this), // must be after zoom and pan tools!
+                    new GridTool(), // must be after zoom and pan tools!
             //        new SnappingTool(),
             };
+
+            foreach (var tool in _tools)
+                tool.Initialize(this);
         }
 
         public ObservableCollection<SvgVisualElement> SelectedElements => _selectedElements;

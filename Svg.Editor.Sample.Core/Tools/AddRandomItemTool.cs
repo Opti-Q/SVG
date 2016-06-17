@@ -40,7 +40,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
 
                     _canvas.Document.Children.Add(child);
 
-                    _canvas.InvalidateCanvas();
+                    _canvas.FireInvalidateCanvas();
                 } )
             };
         }

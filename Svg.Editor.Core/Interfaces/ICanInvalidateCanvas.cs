@@ -8,6 +8,6 @@ namespace Svg.Core.Interfaces
 {
     public interface ICanInvalidateCanvas
     {
-        void InvalidateCanvas();
+        void FireInvalidateCanvas();
     }
 }

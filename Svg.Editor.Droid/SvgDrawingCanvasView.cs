@@ -1,4 +1,5 @@
 using System;
+using Android.App;
 using Android.Content;
 using Android.Graphics;
 using Android.Util;
@@ -48,6 +49,15 @@ namespace Svg.Droid.Editor
             base.OnAttachedToWindow();
             _drawingCanvas.CanvasInvalidated -= OnCanvasInvalidated;
             _drawingCanvas.CanvasInvalidated += OnCanvasInvalidated;
+            _drawingCanvas.ToolCommandsChanged -= OnToolCommandsChanged;
+            _drawingCanvas.ToolCommandsChanged += OnToolCommandsChanged;
+        }
+
+        protected override void OnDetachedFromWindow()
+        {
+            _drawingCanvas.CanvasInvalidated -= OnCanvasInvalidated;
+            _drawingCanvas.ToolCommandsChanged -= OnToolCommandsChanged;
+            base.OnDetachedFromWindow();
         }
 
         private void OnCanvasInvalidated(object sender, EventArgs e)
@@ -55,10 +65,9 @@ namespace Svg.Droid.Editor
             Invalidate();
         }
 
-        protected override void OnDetachedFromWindow()
+        private void OnToolCommandsChanged(object sender, EventArgs e)
         {
-            _drawingCanvas.CanvasInvalidated -= OnCanvasInvalidated;
-            base.OnDetachedFromWindow();
+            ((Activity)this.Context).InvalidateOptionsMenu();
         }
 
         protected override void Dispose(bool disposing)

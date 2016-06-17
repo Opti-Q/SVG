@@ -7,7 +7,7 @@ namespace Svg.Core.Tools
 {
     public class GridTool : ToolBase
     {
-        private readonly ICanInvalidateCanvas _canvas;
+        private ICanInvalidateCanvas _canvas;
         private static float StepSizeY = 40;
         private static double A;
         private static double B;
@@ -18,15 +18,13 @@ namespace Svg.Core.Tools
         private static double Beta;
         private Pen _pen;
 
-        private readonly List<IToolCommand> _commands = new List<IToolCommand>();
         private Pen _pen2;
         private Brush _brush;
         private Brush _brush2;
 
-        public GridTool(ICanInvalidateCanvas canvas)
+        public GridTool()
             : base("Grid")
         {
-            _canvas = canvas;
             // using triangle calculation to determine the x and y steps based on stepsize (y) and angle (alpha)
             // http://www.arndt-bruenner.de/mathe/scripts/Dreiecksberechnung.htm
             A = StepSizeY;
@@ -34,14 +32,20 @@ namespace Svg.Core.Tools
             B = (A * SinDegree(Beta)) / SinDegree(Alpha);
             C = (A * SinDegree(Gamma)) / SinDegree(Alpha);
             StepSizeX = (float)B;
-            
+        }
+
+        public override void Initialize(SvgDrawingCanvas ws)
+        {
+            _canvas = ws;
             // add tool commands
-            _commands.Add(new ToolCommand(this, "Toggle Grid", (obj) =>
+            Commands = new List<IToolCommand>
             {
-                IsVisible = !IsVisible;
-                _canvas.InvalidateCanvas();
-            }, (obj) => true));
-            Commands = _commands;
+                new ToolCommand(this, "Toggle Grid", (obj) =>
+                {
+                    IsVisible = !IsVisible;
+                    _canvas.FireInvalidateCanvas();
+                }, (obj) => true)
+            };
         }
 
         public bool IsVisible { get; set; } = true;
@@ -55,13 +59,10 @@ namespace Svg.Core.Tools
         {
             if (!IsVisible)
                 return;
-
-            //var canvasx = (-ws.Translate.X) / ws.ZoomFactor;
-            //var canvasy = (-ws.Translate.Y) / ws.ZoomFactor;
+            
             var canvasx = -ws.RelativeTranslate.X;
             var canvasy = -ws.RelativeTranslate.Y;
            
-
             var relativeCanvasTranslationX = (canvasx) % StepSizeX;
             var relativeCanvasTranslationY = (canvasy) % StepSizeY;
 

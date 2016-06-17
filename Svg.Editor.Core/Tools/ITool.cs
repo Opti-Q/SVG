@@ -8,6 +8,7 @@ namespace Svg.Core.Tools
 {
     public interface ITool : IDisposable
     {
+        void Initialize(SvgDrawingCanvas ws);
         void OnDraw(IRenderer renderer, SvgDrawingCanvas ws);
         void OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws);
         void OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws);
@@ -45,12 +46,12 @@ namespace Svg.Core.Tools
             Description = description;
         }
 
-        public bool CanExecute(object parameter)
+        public virtual bool CanExecute(object parameter)
         {
             return _canExecute?.Invoke(parameter) ?? true;
         }
 
-        public void Execute(object parameter)
+        public virtual void Execute(object parameter)
         {
             _execute.Invoke(parameter);
         }
