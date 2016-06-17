@@ -1,4 +1,6 @@
 ﻿
+using Svg.Interfaces;
+
 namespace Svg.Core.Interfaces
 {
     public interface IRenderer
@@ -9,6 +11,7 @@ namespace Svg.Core.Interfaces
         void Scale(float zoomFactor, float focusX, float focusY);
         void Translate(float deltaX, float deltaY);
         void DrawCircle(float x, float y, int radius, Pen pen);
+        void DrawRectangle(RectangleF rectangleF, Pen pen);
         void DrawPath(GraphicsPath path, Pen pen);
         void FillEntireCanvasWithColor(Svg.Interfaces.Color color);
         Matrix Matrix { get; set; }

@@ -11,11 +11,13 @@ namespace Svg.Droid.Editor.Tools
         public const int InvalidPointerId = -1;
         public int ActivePointerId = InvalidPointerId;
         
-        public float LastTouchX;
-        public float LastTouchY;
+        private float _lastTouchX;
+        private float _lastTouchY;
 
         private bool _scaleInProgress = false;
         private readonly ScaleGestureDetector _scaleDetector;
+        private float _pointerDownX;
+        private float _pointerDownY;
 
         public GestureDetector(Context ctx, Action<UserInputEvent> callback)
         {
@@ -40,15 +42,17 @@ namespace Svg.Droid.Editor.Tools
             switch (action & (int)MotionEventActions.Mask)
             {
                 case (int)MotionEventActions.Down:
-                    uie = new PointerEvent(EventType.PointerDown, Svg.Factory.Instance.CreatePointF(LastTouchX, LastTouchY), Svg.Factory.Instance.CreatePointF(x, y));
-                    LastTouchX = x;
-                    LastTouchY = y;
+                    uie = new PointerEvent(EventType.PointerDown, Svg.Factory.Instance.CreatePointF(_pointerDownX, _pointerDownX), Svg.Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY), Svg.Factory.Instance.CreatePointF(x, y));
+                    _lastTouchX = x;
+                    _lastTouchY = y;
+                    _pointerDownX = x;
+                    _pointerDownY = y;
                     ActivePointerId = ev.GetPointerId(0);
                     break;
 
                 case (int)MotionEventActions.Up:
                     ActivePointerId = InvalidPointerId;
-                    uie = new PointerEvent(EventType.PointerUp, Svg.Factory.Instance.CreatePointF(LastTouchX, LastTouchY), Svg.Factory.Instance.CreatePointF(x, y));
+                    uie = new PointerEvent(EventType.PointerUp, Svg.Factory.Instance.CreatePointF(_pointerDownX, _pointerDownX), Svg.Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY), Svg.Factory.Instance.CreatePointF(x, y));
                     break;
 
                 case (int)MotionEventActions.Cancel:
@@ -61,15 +65,15 @@ namespace Svg.Droid.Editor.Tools
                     x = ev.GetX(pointerIndex);
                     y = ev.GetY(pointerIndex);
                     
-                    var absoluteDeltaX = x - LastTouchX;
-                    var absoluteDeltaY = y - LastTouchY;
+                    var absoluteDeltaX = x - _lastTouchX;
+                    var absoluteDeltaY = y - _lastTouchY;
 
-                    System.Diagnostics.Debug.WriteLine($"{absoluteDeltaX}:{absoluteDeltaY}");
+                    //System.Diagnostics.Debug.WriteLine($"{absoluteDeltaX}:{absoluteDeltaY}");
 
-                    uie = new MoveEvent(Svg.Factory.Instance.CreatePointF(LastTouchX, LastTouchY), Svg.Factory.Instance.CreatePointF(x, y), Svg.Factory.Instance.CreatePointF(absoluteDeltaX, absoluteDeltaY));
+                    uie = new MoveEvent(Svg.Factory.Instance.CreatePointF(_pointerDownX, _pointerDownX), Svg.Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY), Svg.Factory.Instance.CreatePointF(x, y), Svg.Factory.Instance.CreatePointF(absoluteDeltaX, absoluteDeltaY));
                     
-                    LastTouchX = x;
-                    LastTouchY = y;
+                    _lastTouchX = x;
+                    _lastTouchY = y;
 
                     break;
 
@@ -86,10 +90,10 @@ namespace Svg.Droid.Editor.Tools
                         int newPointerIndex = pointerIndex2 == 0 ? 1 : 0;
                         x = ev.GetX(newPointerIndex);
                         y = ev.GetY(newPointerIndex);
-                        uie = new PointerEvent(EventType.PointerUp, Svg.Factory.Instance.CreatePointF(LastTouchX, LastTouchY), Svg.Factory.Instance.CreatePointF(x, y));
+                        uie = new PointerEvent(EventType.PointerUp, Svg.Factory.Instance.CreatePointF(_pointerDownX, _pointerDownX), Svg.Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY), Svg.Factory.Instance.CreatePointF(x, y));
 
-                        LastTouchX = x;
-                        LastTouchY = y;
+                        _lastTouchX = x;
+                        _lastTouchY = y;
                         ActivePointerId = ev.GetPointerId(newPointerIndex);
                     }
                     else
@@ -97,10 +101,10 @@ namespace Svg.Droid.Editor.Tools
                         int tempPointerIndex = ev.FindPointerIndex(ActivePointerId);
                         x = ev.GetX(tempPointerIndex);
                         y = ev.GetY(tempPointerIndex);
-                        uie = new PointerEvent(EventType.PointerUp, Svg.Factory.Instance.CreatePointF(LastTouchX, LastTouchY), Svg.Factory.Instance.CreatePointF(x, y));
+                        uie = new PointerEvent(EventType.PointerUp, Svg.Factory.Instance.CreatePointF(_pointerDownX, _pointerDownX), Svg.Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY), Svg.Factory.Instance.CreatePointF(x, y));
 
-                        LastTouchX = ev.GetX(tempPointerIndex);
-                        LastTouchY = ev.GetY(tempPointerIndex);
+                        _lastTouchX = ev.GetX(tempPointerIndex);
+                        _lastTouchY = ev.GetY(tempPointerIndex);
                     }
 
                     break;
@@ -112,8 +116,8 @@ namespace Svg.Droid.Editor.Tools
 
         public void Reset()
         {
-            LastTouchX = 0;
-            LastTouchY = 0;
+            _lastTouchX = 0;
+            _lastTouchY = 0;
 
             ActivePointerId = InvalidPointerId;
         }

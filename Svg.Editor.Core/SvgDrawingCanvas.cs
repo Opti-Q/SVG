@@ -92,7 +92,7 @@ namespace Svg.Core
         /// <param name="view"></param>
         public void OnEvent(UserInputEvent ev)
         {
-            //Debug.WriteLine($"{ev}");
+            Debug.WriteLine($"{ev}");
 
             foreach (var tool in Tools)
             {

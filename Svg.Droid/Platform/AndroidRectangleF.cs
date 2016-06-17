@@ -108,5 +108,10 @@ namespace Svg.Platform
         {
             return new Android.Graphics.RectF(rect.X, rect.Y, rect.X + rect.Width, rect.Y + rect.Height);
         }
+
+        public override string ToString()
+        {
+            return $"x:{X} y:{Y} width:{Width} height:{Height}";
+        }
     }
 }

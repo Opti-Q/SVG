@@ -1,17 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Svg.Core.Events;
+using Svg.Core.Interfaces;
+using Svg.Interfaces;
 
 namespace Svg.Core.Tools
 {
     public class SelectionTool : ToolBase
     {
+        private RectangleF _selectionRectangle = null;
+        private Brush _brush;
+        private Pen _pen;
+
         public SelectionTool() : base("Select")
         {
         }
+
+        private Brush Brush => _brush ?? (_brush = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
+        private Pen Pen => _pen ?? (_pen = Svg.Engine.Factory.CreatePen(Brush, 1));
 
         public override void Initialize(SvgDrawingCanvas ws)
         {
@@ -29,12 +39,37 @@ namespace Svg.Core.Tools
             if (!IsActive)
                 return;
 
-            var e = @event as PointerEvent;
-            if (e == null)
-                return;
+            var e = @event as MoveEvent;
+            if (e != null)
+            {
+                float startX = e.Pointer1Down.X;
+                float startY = e.Pointer1Down.Y;
+                float endX = e.Pointer1Position.X;
+                float endY = e.Pointer1Position.Y;
 
+                if (startX > endX)
+                {
+                    var t = startX;
+                    startX = endX;
+                    endX = t;
+                }
+                if (startY > endY)
+                {
+                    var t = startY;
+                    startY = endY;
+                    endY = t;
+                }
+                _selectionRectangle = Engine.Factory.CreateRectangleF(startX, startY, endX - startX, endY - startY);
 
-            
+                //Debug.WriteLine($"select: {_selectionRectangle}");
+                ws.FireInvalidateCanvas();
+            }
+        }
+
+        public override void OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
+        {
+            if (_selectionRectangle != null)
+                renderer.DrawRectangle(_selectionRectangle, Pen);
         }
 
         private class ToggleSelectionToolCommand : ToolCommand
@@ -48,12 +83,18 @@ namespace Svg.Core.Tools
 
             public override void Execute(object parameter)
             {
-                Tool.IsActive = !Tool.IsActive;
+                var selectionTool = (SelectionTool)this.Tool;
+                selectionTool.IsActive = !selectionTool.IsActive;
+
                 var panTool = _canvas.Tools.OfType<PanTool>().FirstOrDefault();
                 if (panTool != null)
-                    panTool.IsActive = !Tool.IsActive;
+                    panTool.IsActive = !selectionTool.IsActive;
 
-                Name = this.Tool.IsActive ? "Pan" : "Select";
+                Name = selectionTool.IsActive ? "Pan" : "Select";
+
+                // also reset selection triangle
+                if (!selectionTool.IsActive)
+                    selectionTool._selectionRectangle = null;
 
                 _canvas.FireToolCommandsChanged();
             }

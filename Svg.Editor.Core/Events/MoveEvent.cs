@@ -9,12 +9,12 @@ namespace Svg.Core.Events
     {
         public PointF AbsoluteDelta { get; private set; }
 
-        public MoveEvent(PointF pointer1DownPositon, PointF pointer1Position, PointF absoluteDelta)
-            : base(EventType.Move, pointer1DownPositon, pointer1Position)
+        public MoveEvent(PointF pointer1Down, PointF lastPointer1Position, PointF pointer1Position, PointF absoluteDelta)
+            : base(EventType.Move, pointer1Down, lastPointer1Position, pointer1Position)
         {
             AbsoluteDelta = absoluteDelta;
         }
 
-        public override string DebuggerDisplay => $"Move from x:{Pointer1DownPosition?.X} y:{Pointer1DownPosition?.Y} to x:{Pointer1Position?.X} y:{Pointer1Position?.Y}";
+        public override string DebuggerDisplay => $"Move from x:{LastPointer1DownPosition?.X} y:{LastPointer1DownPosition?.Y} to x:{Pointer1Position?.X} y:{Pointer1Position?.Y} (pointer down x:{Pointer1Down.X} y:{Pointer1Down.Y}";
     }
 }
