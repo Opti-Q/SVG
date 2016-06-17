@@ -43,8 +43,8 @@ namespace Svg.Core.Tools
             if (ev == null)
                 return;
 
-            ws.Translate.X += ev.AbsoluteDelta.X;
-            ws.Translate.Y += ev.AbsoluteDelta.Y;
+            ws.Translate.X += ev.RelativeDelta.X;
+            ws.Translate.Y += ev.RelativeDelta.Y;
             ws.FireInvalidateCanvas();
         }
     }
