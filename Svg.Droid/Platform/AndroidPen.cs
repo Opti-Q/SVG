@@ -27,6 +27,7 @@ namespace Svg.Platform
             _brush = brush;
             _paint = new Paint();
             _paint.StrokeWidth = strokeWidth;
+            _paint.SetStyle(Paint.Style.Stroke);
             
             var shader = (IAndroidShader) brush;
             shader.ApplyTo(this.Paint);

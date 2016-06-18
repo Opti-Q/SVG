@@ -125,7 +125,20 @@ namespace Svg.Platform
 
         public override void TransformPoints(PointF[] points)
         {
-            TransformVectors(points);
+            var a = new float[points.Length * 2];
+            for (int i = 0; i < points.Length; i++)
+            {
+                a[i * 2] = points[i].X;
+                a[i * 2 + 1] = points[i].Y;
+            }
+
+            _m.MapPoints(a);
+
+            for (int i = 0; i < points.Length; i++)
+            {
+                points[i].X = a[i * 2];
+                points[i].Y = a[i * 2 + 1];
+            }
         }
 
         public override void RotateAt(float angle, PointF midPoint, MatrixOrder order)

@@ -303,9 +303,15 @@ namespace Svg
             // Return if there are no transforms
             if (this.Transforms == null || this.Transforms.Count == 0)
             {
+                RenderTransform = renderer.Transform.Clone();
                 return true;
             }
-            if (this.Transforms.Count == 1 && this.Transforms[0].Matrix.Equals(_zeroMatrix)) return false;
+            if (this.Transforms.Count == 1 && this.Transforms[0].Matrix.Equals(_zeroMatrix))
+            {
+
+                RenderTransform = renderer.Transform.Clone();
+                return false;
+            }
             
             renderer.Graphics.Save();
             _graphicsMatrix = renderer.Transform;
@@ -315,10 +321,18 @@ namespace Svg
             {
                 transformation.ApplyTo(renderer);
             }
+
+            RenderTransform = renderer.Transform.Clone();
             
             return true;
         }
 
+        /// <summary>
+        /// Gets the transformation that was active, when this element has been rendered
+        /// can be used to transform the bounding rectangle in order to do proper hittesting
+        /// </summary>
+        public Matrix RenderTransform { get; private set; }
+        
         /// <summary>
         /// Removes any previously applied transforms from the specified <see cref="ISvgRenderer"/>.
         /// </summary>
@@ -328,7 +342,7 @@ namespace Svg
             if(_graphicsMatrix != null)
             {
                 renderer.Graphics.Restore();
-                _graphicsMatrix = null;
+                _graphicsMatrix = null; // we keep the graphicsmatrix so we know, how where this element has been rendered - important for hittesting!
                 //renderer.SetClip(_graphicsClip); // TODO LX causes error in text- rendering tests (as text vanishes)
                 _graphicsClip = null;
             }

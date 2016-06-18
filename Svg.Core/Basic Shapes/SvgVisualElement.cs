@@ -13,6 +13,7 @@ namespace Svg
     {
         private bool _requiresSmoothRendering;
         private Region _previousClip;
+        private RectangleF _renderBounds;
 
         /// <summary>
         /// Gets the <see cref="GraphicsPath"/> for this element.
@@ -40,6 +41,36 @@ namespace Svg
         /// </summary>
         /// <value>The bounds.</value>
         public abstract RectangleF Bounds { get; }
+        
+        /// <summary>
+        /// Returns the bounding rectangle transformed by the render matrix
+        /// or: return the bounds that this item had when it was last rendered
+        /// If the render transform is identity matrix, it returns the Bounds property
+        /// </summary>
+        public RectangleF RenderBounds
+        {
+            get
+            {
+                // return cached bounds
+                if (_renderBounds != null)
+                    return _renderBounds;
+
+                if (RenderTransform == null || RenderTransform.IsIdentity)
+                    return this.Bounds;
+                
+                var bound = Bounds;
+                var start = Engine.Factory.CreatePointF(bound.X, bound.Y);
+                var end = Engine.Factory.CreatePointF(bound.X + bound.Width, bound.Y + bound.Height);
+                var pts = new[] { start, end };
+
+                RenderTransform.TransformPoints(pts);
+
+                _renderBounds = Engine.Factory.CreateRectangleF(start.X, start.Y, end.X - start.X, end.Y - start.Y);
+
+                return _renderBounds;
+            }
+            private set { _renderBounds = value; }
+        }
 
         /// <summary>
         /// Gets the associated <see cref="SvgClipPath"/> if one has been specified.
@@ -106,6 +137,7 @@ namespace Svg
         /// <param name="renderer">The <see cref="ISvgRenderer"/> object to render to.</param>
         protected override void Render(ISvgRenderer renderer)
         {
+            RenderBounds = null; // clear render bounds on each render attempt
             this.Render(renderer, true);
         }
 
