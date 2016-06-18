@@ -126,28 +126,8 @@ namespace Svg
             }
         }
 
-
-        //public static bool operator ==(Matrix c1, Matrix c2)
-        //{
-        //    if (c1 == null && c2 != null)
-        //        return false;
-
-        //    if (c1 != null && c2 == null)
-        //        return false;
-
-        //    return c1.Elements.SequenceEqual(c2.Elements);
-        //}
-
-        //public static bool operator !=(Matrix c1, Matrix c2)
-        //{
-        //    if (c1 == null && c2 != null)
-        //        return true;
-
-        //    if (c1 != null && c2 == null)
-        //        return true;
-
-        //    return !c1.Elements.SequenceEqual(c2.Elements);
-        //}
         public abstract void Invert();
+
+        public abstract RectangleF TransformRectangle(RectangleF bounds);
     }
 }

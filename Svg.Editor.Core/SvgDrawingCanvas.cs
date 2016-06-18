@@ -49,10 +49,6 @@ namespace Svg.Core
                 tool.Initialize(this);
         }
 
-        public ObservableCollection<SvgVisualElement> SelectedElements => _selectedElements;
-
-        public ObservableCollection<ITool> Tools => _tools;
-
         public SvgDocument Document
         {
             get
@@ -83,16 +79,21 @@ namespace Svg.Core
             }
         }
 
-        public Bitmap GetOrCreate(int width, int height)
-        {
-            return _rawImage ?? (_rawImage = Engine.Factory.CreateBitmap(width, height));
-        }
+        public ObservableCollection<SvgVisualElement> SelectedElements => _selectedElements;
+
+        public ObservableCollection<ITool> Tools => _tools;
+
+        public IEnumerable<IEnumerable<IToolCommand>> ToolCommands => Tools.Select(t => t.Commands);
 
         public PointF RelativeTranslate => Engine.Factory.CreatePointF(Translate.X/ZoomFactor, Translate.Y/ZoomFactor);
 
         public PointF Translate { get; set; }
 
         public float ZoomFactor { get; set; }
+
+        public int ScreenWidth { get; private set; }
+
+        public int ScreenHeight { get; private set; }
 
         /// <summary>
         /// Called by the platform specific input event detector whenever the user interacts with the model
@@ -108,18 +109,15 @@ namespace Svg.Core
                 tool.OnUserInput(ev, this);
             }
         }
-
-        private Brush _brush;
-        private Brush Brush => _brush ?? (_brush = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 200, 050, 210)));
-
+        
         /// <summary>
         /// Called by platform specific implementation to allow tools to draw something onto the canvas
         /// </summary>
         /// <param name="renderer"></param>
         public void OnDraw(IRenderer renderer)
         {
-            this.Width = renderer.Width;
-            this.Height = renderer.Height;
+            this.ScreenWidth = renderer.Width;
+            this.ScreenHeight = renderer.Height;
 
             // apply global panning and zooming
             renderer.Translate(Translate.X, Translate.Y);
@@ -145,9 +143,6 @@ namespace Svg.Core
                 tool.OnDraw(renderer, this);
             }
         }
-
-        public int Width { get; private set; }
-        public int Height { get; private set; }
         
         public void Dispose()
         {
@@ -157,11 +152,14 @@ namespace Svg.Core
                 tool.Dispose();
         }
 
-        public IEnumerable<IEnumerable<IToolCommand>> ToolCommands => Tools.Select(t => t.Commands);
-
         private ISvgRenderer GetOrCreateRenderer(Graphics graphics)
         {
             return SvgRenderer.FromGraphics(graphics);
+        }
+
+        public Bitmap GetOrCreate(int width, int height)
+        {
+            return _rawImage ?? (_rawImage = Engine.Factory.CreateBitmap(width, height));
         }
 
         /// <summary>

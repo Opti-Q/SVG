@@ -57,15 +57,10 @@ namespace Svg
 
                 if (RenderTransform == null || RenderTransform.IsIdentity)
                     return this.Bounds;
-                
-                var bound = Bounds;
-                var start = Engine.Factory.CreatePointF(bound.X, bound.Y);
-                var end = Engine.Factory.CreatePointF(bound.X + bound.Width, bound.Y + bound.Height);
-                var pts = new[] { start, end };
 
-                RenderTransform.TransformPoints(pts);
+                var b = this.Bounds;
 
-                _renderBounds = Engine.Factory.CreateRectangleF(start.X, start.Y, end.X - start.X, end.Y - start.Y);
+                _renderBounds = RenderTransform.TransformRectangle(b);
 
                 return _renderBounds;
             }

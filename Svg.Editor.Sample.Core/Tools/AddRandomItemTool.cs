@@ -29,8 +29,8 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     var otherDoc = SvgDocument.Open<SvgDocument>(provider);
                     var child = otherDoc.Children.OfType<SvgVisualElement>().First(e => e.Displayable && e.Visible);
                     var z = canvas.ZoomFactor;
-                    var halfRelWidth = canvas.Width/z/2;
-                    var halfRelHeight = canvas.Height/z/2;
+                    var halfRelWidth = canvas.ScreenWidth/z/2;
+                    var halfRelHeight = canvas.ScreenHeight/z/2;
                     var childBounds = child.Bounds;
                     var halfRelChildWidth = childBounds.Width/2;
                     var halfRelChildHeight = childBounds.Height/2;

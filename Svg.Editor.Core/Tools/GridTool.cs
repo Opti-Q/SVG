@@ -2,14 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
+using Svg.Transforms;
 
 namespace Svg.Core.Tools
 {
     public class GridTool : ToolBase
     {
-        private ICanInvalidateCanvas _canvas;
+        private SvgDrawingCanvas _canvas;
         private float StepSizeY = 40;
         private double A;
         private double B;
@@ -26,7 +28,7 @@ namespace Svg.Core.Tools
 
         private bool _isSnappingInProgress = false;
 
-        public GridTool(float angle = 30f, int stepSizeY = 40)
+        public GridTool(float angle = 30f, int stepSizeY = 20)
             : base("Grid")
         {
             StepSizeY = stepSizeY;
@@ -105,8 +107,7 @@ namespace Svg.Core.Tools
             var x = canvasx - relativeCanvasTranslationX - (stepSize * 2);
             // subtract 2x stepsize so gridlines always start from "out of sight" and lines do not start from a visible x-border
             var y = canvasy - relativeCanvasTranslationY;
-            var lineLength = Math.Sqrt(Math.Pow(renderer.Width, 2) + Math.Pow(renderer.Height, 2)) / ws.ZoomFactor + (stepSize * 2);
-            // multiply by 1.2f as we later also start drawing from a minus x coordinate (- 2*stepsize)
+            var lineLength = Math.Sqrt(Math.Pow(renderer.Width, 2) + Math.Pow(renderer.Height, 2)) / ws.ZoomFactor + (stepSize * 4);
 
             for (var i = y - yPosition; i <= y + yPosition; i += stepSize)
             {
@@ -119,8 +120,7 @@ namespace Svg.Core.Tools
             }
             return canvasx;
         }
-
-
+        
         // line looks like this -> /
         private void DrawLineLeftToTop(IRenderer renderer, float y, float canvasX, double lineLength)
         {
@@ -237,16 +237,73 @@ namespace Svg.Core.Tools
 
         private void SnapToGrid(SvgElement element)
         {
+            var ve = element as SvgVisualElement;
+            if (ve == null)
+                return;
+
             try
             {
                 _isSnappingInProgress = true;
 
-                Debug.WriteLine($"Snapping {element}");
+                // scale element so its width and height are a multiple of the stepsizes
 
+
+                // snap to grid:
+                // get absolute point
+                var bounds = ve.Bounds;
+                var m = ve.Transforms.GetMatrix();
+                var b = m.TransformRectangle(bounds);
+
+                // determine next intersection of gridlines
+                var diffX = b.X % StepSizeX;
+                var deltaX = 0f;
+                if (diffX > StepSizeX / 2)
+                    deltaX = StepSizeX;
+                var absoluteDeltaX = 0 - diffX + deltaX;
+
+                var diffY = b.Y % StepSizeY;
+                var deltaY = 0f;
+                if (diffY > StepSizeY / 2)
+                    deltaY = StepSizeY;
+                var absoluteDeltaY = 0 - diffY + deltaY;
+
+                AddTranslate(ve, absoluteDeltaX, absoluteDeltaY);
+                
+
+                // and translate element to that next intersection
+                
             }
             finally
             {
                 _isSnappingInProgress = false;
+            }
+        }
+
+        private static void AddTranslate(SvgVisualElement element, float deltaX, float deltaY)
+        {
+            SvgTranslate trans = null;
+            int index = -1;
+            for (int i = element.Transforms.Count - 1; i >= 0; i--)
+            {
+                var translate = element.Transforms[i] as SvgTranslate;
+                if (translate != null)
+                {
+                    trans = translate;
+                    index = i;
+                    break;
+                }
+            }
+
+            var transforms = element.Transforms;
+            if (trans == null)
+            {
+                trans = new SvgTranslate(deltaX, deltaY);
+                transforms.Add(trans);
+            }
+            else
+            {
+                var t = new SvgTranslate(trans.X + deltaX, trans.Y + deltaY);
+                transforms[index] = t; // we MUST explicitly set the transform so the "OnTransformChanged" event is fired!
             }
         }
 

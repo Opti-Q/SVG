@@ -67,34 +67,39 @@ namespace Svg.Core.Tools
                     // add translation to every element
                     foreach (var element in ws.SelectedElements)
                     {
-                        SvgTranslate trans = null;
-                        int index = -1;
-                        for (int i = element.Transforms.Count - 1; i >= 0; i--)
-                        {
-                            var translate = element.Transforms[i] as SvgTranslate;
-                            if (translate != null)
-                            {
-                                trans = translate;
-                                index = i;
-                                break;
-                            }
-                        }
-
-                        var transforms = element.Transforms;
-                        if (trans == null)
-                        {
-                            trans = new SvgTranslate(deltaX, deltaY);
-                            transforms.Add(trans);
-                        }
-                        else
-                        {
-                            var t = new SvgTranslate(trans.X + deltaX, trans.Y + deltaY);
-                            transforms[index] = t; // we MUST explicitly set the transform so the "OnTransformChanged" event is fired!
-                        }
+                        AddTranslate(element, deltaX, deltaY);
                     }   
 
                     ws.FireInvalidateCanvas();
                 }
+            }
+        }
+
+        private static void AddTranslate(SvgVisualElement element, float deltaX, float deltaY)
+        {
+            SvgTranslate trans = null;
+            int index = -1;
+            for (int i = element.Transforms.Count - 1; i >= 0; i--)
+            {
+                var translate = element.Transforms[i] as SvgTranslate;
+                if (translate != null)
+                {
+                    trans = translate;
+                    index = i;
+                    break;
+                }
+            }
+
+            var transforms = element.Transforms;
+            if (trans == null)
+            {
+                trans = new SvgTranslate(deltaX, deltaY);
+                transforms.Add(trans);
+            }
+            else
+            {
+                var t = new SvgTranslate(trans.X + deltaX, trans.Y + deltaY);
+                transforms[index] = t; // we MUST explicitly set the transform so the "OnTransformChanged" event is fired!
             }
         }
     }

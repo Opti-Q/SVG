@@ -57,6 +57,17 @@ namespace Svg.Platform
             _m.Invert(_m);
         }
 
+        public override RectangleF TransformRectangle(RectangleF bound)
+        {
+            var start = Engine.Factory.CreatePointF(bound.X, bound.Y);
+            var end = Engine.Factory.CreatePointF(bound.X + bound.Width, bound.Y + bound.Height);
+            var pts = new[] { start, end };
+
+            TransformPoints(pts);
+
+            return Engine.Factory.CreateRectangleF(start.X, start.Y, end.X - start.X, end.Y - start.Y);
+        }
+
         public override void Scale(float width, float height)
         {
             //_m.SetScale(width, height);
