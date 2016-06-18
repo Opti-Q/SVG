@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 using Svg.Interfaces;
@@ -21,6 +17,7 @@ namespace Svg.Core.Tools
         private RectangleF _selectionRectangle = null;
         private Brush _brush;
         private Pen _pen;
+        private bool _reselectsElements;
 
         public SelectionTool() : base("Select")
         {
@@ -42,6 +39,12 @@ namespace Svg.Core.Tools
 
         public override void OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
+            // skip if movetool is active
+            var moveTool = ws.Tools.OfType<MoveTool>().SingleOrDefault();
+            if (moveTool.IsActive)
+                return;
+            
+
             if (!IsActive)
                 return;
 
@@ -73,13 +76,23 @@ namespace Svg.Core.Tools
             var p = @event as PointerEvent;
             if (p != null)
             {
-                // if the user never moved, but clicked on an item, we try to select that spot
-                if (p.EventType == EventType.PointerUp && _selectionRectangle == null)
+                // if the user points down on an selected item, we do not draw the selection rectangle, so check that as well
+                if (p.EventType == EventType.PointerDown)
                 {
-                    // select elements under point
-                    float halfFingerThickness = 10;
-                    var rect = Engine.Factory.CreateRectangleF(p.Pointer1Position.X-halfFingerThickness, p.Pointer1Position.Y - halfFingerThickness, halfFingerThickness*2, halfFingerThickness*2); // "10 pixel fat finger"
-                    SelectElementsUnder(rect, ws, SelectionType.Intersect);
+                    if (!ws.SelectedElements.Any())
+                        _reselectsElements = false;
+
+                    var elements = ws.GetElementsUnder(ws.GetPointerRectangle(p.Pointer1Position), SelectionType.Intersect);
+                    if (elements.Any(element => ws.SelectedElements.Contains(element)))
+                    {
+                        _reselectsElements = true;
+                    }
+                }
+                // if the user never moved, but clicked on an item, we try to select that spot
+                else if (p.EventType == EventType.PointerUp && _selectionRectangle == null)
+                {
+                    // select elements under pointer
+                    SelectElementsUnder(ws.GetPointerRectangle(p.Pointer1Position), ws, SelectionType.Intersect);
                     _selectionRectangle = null;
 
                     ws.FireInvalidateCanvas();
@@ -102,28 +115,10 @@ namespace Svg.Core.Tools
 
             // the canvas has not been scaled and translated yet
             // we need to compare our rectangle to the translated boundingboxes of the svg elements
-            
-            // to speed up selection, this only takes first-level children into account!
-            var children = ws.Document?.Children.OfType<SvgVisualElement>() ?? Enumerable.Empty<SvgVisualElement>();
-            foreach (var child in children)
-            {
-                // get its transformed boundingbox (renderbounds)
-                var renderBounds = child.RenderBounds;
+            var selected = ws.GetElementsUnder(selectionRectangle, selectionType);
 
-                // then check if it intersects with selectionrectangle
-                if (selectionType == SelectionType.Intersect && selectionRectangle.IntersectsWith(renderBounds))
-                {
-                    ws.SelectedElements.Add(child);
-                }
-                // then check if the selectionrectangle contains it
-                else if (selectionType == SelectionType.Contain && selectionRectangle.Contains(renderBounds))
-                {
-                    ws.SelectedElements.Add(child);
-                }
-            }
-
-            // if elements are selected, activate the move tool
-            // if none are selected, remain active
+            foreach (var element in selected)
+                ws.SelectedElements.Add(element);
         }
 
         public override void OnDraw(IRenderer renderer, SvgDrawingCanvas ws)

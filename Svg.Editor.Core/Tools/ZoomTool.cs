@@ -41,12 +41,7 @@ namespace Svg.Core.Tools
                 })
             };
         }
-
-        public override void OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
-        {
-            renderer.Scale(ws.ZoomFactor, 0f, 0f);
-        }
-
+        
         public override void OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
             if (!IsActive)

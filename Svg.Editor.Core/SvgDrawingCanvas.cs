@@ -37,10 +37,10 @@ namespace Svg.Core
 
             _tools = new ObservableCollection<ITool>
             {
+                    new MoveTool(), // must be before pantool as it decides whether or not it is active based on selection
                     new PanTool(),
                     new ZoomTool(),
                     new SelectionTool(),
-            //        new MoveSvgTool(),
                     new GridTool(), // must be after zoom and pan tools!
             //        new SnappingTool(),
             };
@@ -112,6 +112,10 @@ namespace Svg.Core
             this.Width = renderer.Width;
             this.Height = renderer.Height;
 
+            // apply global panning and zooming
+            renderer.Translate(Translate.X, Translate.Y);
+            renderer.Scale(ZoomFactor, 0f, 0f);
+
             // draw default background
             renderer.FillEntireCanvasWithColor(Engine.Factory.Colors.White);
             
@@ -135,14 +139,7 @@ namespace Svg.Core
 
         public int Width { get; private set; }
         public int Height { get; private set; }
-
-        public IEnumerable<SvgVisualElement> GetElementsUnder(float x, float y)
-        {
-            var hitRectangle = Svg.Engine.Factory.CreateRectangleF(x, y, 10, 10);
-            return Document.Children.OfType<SvgVisualElement>().Where(c => c.Visible && c.Displayable && c.Bounds.IntersectsWith(hitRectangle));
-            //return Enumerable.Empty<SvgVisualElement>();
-        }
-
+        
         public void Dispose()
         {
             _rawImage?.Dispose();
@@ -156,6 +153,57 @@ namespace Svg.Core
         private ISvgRenderer GetOrCreateRenderer(Graphics graphics)
         {
             return SvgRenderer.FromGraphics(graphics);
+        }
+
+        /// <summary>
+        /// Returns a rectangle with width and height 20px that surrounds the given point
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        public RectangleF GetPointerRectangle(PointF p)
+        {
+            float halfFingerThickness = 10 / ZoomFactor;
+            return Engine.Factory.CreateRectangleF(p.X - halfFingerThickness, p.Y - halfFingerThickness, halfFingerThickness * 2, halfFingerThickness * 2); // "10 pixel fat finger"
+        }
+
+        /// <summary>
+        /// the selection rectangle must be in absolute screen coordinates (so not transformed by canvas.Translate or canvas.ZoomFactor)
+        /// </summary>
+        /// <param name="selectionRectangle"></param>
+        /// <param name="selectionType"></param>
+        /// <returns></returns>
+        public IList<SvgVisualElement> GetElementsUnder(RectangleF selectionRectangle, SelectionType selectionType)
+        {
+            var selected = new List<SvgVisualElement>();
+            // to speed up selection, this only takes first-level children into account!
+            var children = Document?.Children.OfType<SvgVisualElement>() ?? Enumerable.Empty<SvgVisualElement>();
+            foreach (var child in children)
+            {
+                // get its transformed boundingbox (renderbounds)
+                var renderBounds = child.RenderBounds;
+
+                // then check if it intersects with selectionrectangle
+                if (selectionType == SelectionType.Intersect && selectionRectangle.IntersectsWith(renderBounds))
+                {
+                    selected.Add(child);
+                }
+                // then check if the selectionrectangle contains it
+                else if (selectionType == SelectionType.Contain && selectionRectangle.Contains(renderBounds))
+                {
+                    selected.Add(child);
+                }
+            }
+            return selected;
+        }
+
+        /// <summary>
+        /// gets all visual elements under the given pointer (a 20px rectangle surrounding the given point to simulate thick finger)
+        /// </summary>
+        /// <param name="pointer1Position"></param>
+        /// <returns></returns>
+        public IList<SvgVisualElement> GetElementsUnderPointer(PointF pointer1Position)
+        {
+            return GetElementsUnder(GetPointerRectangle(pointer1Position), SelectionType.Intersect);
         }
     }
 }
