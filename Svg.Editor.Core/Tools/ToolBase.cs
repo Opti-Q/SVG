@@ -12,6 +12,12 @@ namespace Svg.Core.Tools
             Name = name;
         }
 
+        public string Name { get; protected set; }
+
+        public virtual bool IsActive { get; set; } = true;
+
+        public IEnumerable<IToolCommand> Commands { get; protected set; } = Enumerable.Empty<IToolCommand>();
+
         public virtual void Initialize(SvgDrawingCanvas ws) { }
 
         public virtual void OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
@@ -26,14 +32,15 @@ namespace Svg.Core.Tools
         {
             
         }
-        
+
+        public virtual void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
+        {
+
+        }
+
         public virtual void Reset()
         {
         }
-
-        public IEnumerable<IToolCommand> Commands { get; protected set; } = Enumerable.Empty<IToolCommand>();
-        public virtual bool IsActive { get; set; } = true;
-        public string Name { get; protected set; }
 
         public virtual void Dispose()
         {

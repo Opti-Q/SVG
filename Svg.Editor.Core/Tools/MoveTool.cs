@@ -65,18 +65,31 @@ namespace Svg.Core.Tools
                     var deltaY = e.RelativeDelta.Y / ws.ZoomFactor;
 
                     // add translation to every element
-                    foreach (var elemnt in ws.SelectedElements)
+                    foreach (var element in ws.SelectedElements)
                     {
-                        var trans = elemnt.Transforms.OfType<SvgTranslate>().LastOrDefault();
+                        SvgTranslate trans = null;
+                        int index = -1;
+                        for (int i = element.Transforms.Count - 1; i >= 0; i--)
+                        {
+                            var translate = element.Transforms[i] as SvgTranslate;
+                            if (translate != null)
+                            {
+                                trans = translate;
+                                index = i;
+                                break;
+                            }
+                        }
+
+                        var transforms = element.Transforms;
                         if (trans == null)
                         {
                             trans = new SvgTranslate(deltaX, deltaY);
-                            elemnt.Transforms.Add(trans);
+                            transforms.Add(trans);
                         }
                         else
                         {
-                            trans.X += deltaX;
-                            trans.Y += deltaY;
+                            var t = new SvgTranslate(trans.X + deltaX, trans.Y + deltaY);
+                            transforms[index] = t; // we MUST explicitly set the transform so the "OnTransformChanged" event is fired!
                         }
                     }   
 

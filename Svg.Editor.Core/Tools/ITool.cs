@@ -8,16 +8,15 @@ namespace Svg.Core.Tools
 {
     public interface ITool : IDisposable
     {
+        string Name { get; }
+        bool IsActive { get; set; }
+        IEnumerable<IToolCommand> Commands { get; }
         void Initialize(SvgDrawingCanvas ws);
         void OnDraw(IRenderer renderer, SvgDrawingCanvas ws);
         void OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws);
         void OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws);
+        void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument);
         void Reset();
-
-        IEnumerable<IToolCommand> Commands { get; }
-
-        bool IsActive { get; set; }
-        string Name { get; }
     }
 
     public interface IToolCommand : ICommand

@@ -41,7 +41,7 @@ namespace Svg.Core
                     new PanTool(),
                     new ZoomTool(),
                     new SelectionTool(),
-                    new GridTool(), // must be after zoom and pan tools!
+                    new GridTool(angle:27.3f), // must be after zoom and pan tools!
             //        new SnappingTool(),
             };
 
@@ -61,16 +61,25 @@ namespace Svg.Core
                 {
                     _document = new SvgDocument();
                     _document.ViewBox = SvgViewBox.Empty;
+
+                    // fire document changed
+                    foreach (var tool in Tools)
+                        tool.OnDocumentChanged(null, _document);
                 }
                 return _document;
             }
             set
             {
+                var oldDocument = _document;
                 _document = value;
                 if (_document != null)
                 {
                     _document.ViewBox = SvgViewBox.Empty;
                 }
+
+                // fire document changed
+                foreach (var tool in Tools)
+                    tool.OnDocumentChanged(oldDocument, _document);
             }
         }
 

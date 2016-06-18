@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 
@@ -8,23 +10,28 @@ namespace Svg.Core.Tools
     public class GridTool : ToolBase
     {
         private ICanInvalidateCanvas _canvas;
-        private static float StepSizeY = 40;
-        private static double A;
-        private static double B;
-        private static double C;
-        private static float StepSizeX;
-        private const double Alpha = 27.3f;
-        private const double Gamma = 90f;
-        private static double Beta;
+        private float StepSizeY = 40;
+        private double A;
+        private double B;
+        private double C;
+        private float StepSizeX;
+        private double Alpha = 27.3f;
+        private double Gamma = 90f;
+        private double Beta;
         private Pen _pen;
 
         private Pen _pen2;
         private Brush _brush;
         private Brush _brush2;
 
-        public GridTool()
+        private bool _isSnappingInProgress = false;
+
+        public GridTool(float angle = 30f, int stepSizeY = 40)
             : base("Grid")
         {
+            StepSizeY = stepSizeY;
+            Alpha = angle;
+
             // using triangle calculation to determine the x and y steps based on stepsize (y) and angle (alpha)
             // http://www.arndt-bruenner.de/mathe/scripts/Dreiecksberechnung.htm
             A = StepSizeY;
@@ -46,6 +53,9 @@ namespace Svg.Core.Tools
                     _canvas.FireInvalidateCanvas();
                 }, (obj) => true)
             };
+
+            // initialize with callbacks
+            this.WatchDocument(ws.Document);
         }
 
         public bool IsVisible { get; set; } = true;
@@ -59,41 +69,58 @@ namespace Svg.Core.Tools
         {
             if (!IsVisible)
                 return;
-            
+
+            // draw gridlines
+            DrawGridLines(renderer, ws);
+
+            // draw debug stuff
             var canvasx = -ws.RelativeTranslate.X;
             var canvasy = -ws.RelativeTranslate.Y;
-           
-            var relativeCanvasTranslationX = (canvasx) % StepSizeX;
-            var relativeCanvasTranslationY = (canvasy) % StepSizeY;
-
-            var height = renderer.Height/ws.ZoomFactor;
-            var yPosition = (height - (height % StepSizeY) + (StepSizeY*2));
-            var stepSize = (int) Math.Round(StepSizeY, 0);
-
-            var x = canvasx - relativeCanvasTranslationX - (stepSize*2); // subtract 2x stepsize so gridlines always start from "out of sight" and lines do not start from a visible x-border
-            var y = canvasy - relativeCanvasTranslationY;
-            var lineLength = Math.Sqrt(Math.Pow(renderer.Width, 2) + Math.Pow(renderer.Height, 2)) / ws.ZoomFactor + (stepSize * 2); // multiply by 1.2f as we later also start drawing from a minus x coordinate (- 2*stepsize)
-
-            for (var i = y - yPosition; i <= y + yPosition; i += stepSize)
-            {
-                DrawLineLeftToBottom(renderer, i, x, lineLength);    /* \ */
-            }
-
-            for (var i = y; i <= y + 2 * yPosition; i += stepSize)
-            {
-                DrawLineLeftToTop(renderer, i, x, lineLength);       /* / */
-            }
-
             renderer.DrawCircle(canvasx, canvasy, 50, Pen); // point should remain in top left corner on screen
             renderer.DrawCircle(0, 0, 20, Pen2); // point on canvas - should move along
             renderer.DrawLine(1f, 1f, 200f, 1f, Pen2);
         }
 
-        public override void OnUserInput(UserInputEvent userInputEvent, SvgDrawingCanvas ws)
+        public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
         {
-            // You know nothing Jon Snow
+            // add watch for element snapping
+            WatchDocument(newDocument);
+            UnWatchDocument(oldDocument);
         }
+
+        #region GridLines
         
+        private float DrawGridLines(IRenderer renderer, SvgDrawingCanvas ws)
+        {
+            var canvasx = -ws.RelativeTranslate.X;
+            var canvasy = -ws.RelativeTranslate.Y;
+
+            var relativeCanvasTranslationX = (canvasx) % StepSizeX;
+            var relativeCanvasTranslationY = (canvasy) % StepSizeY;
+
+            var height = renderer.Height / ws.ZoomFactor;
+            var yPosition = (height - (height % StepSizeY) + (StepSizeY * 2));
+            var stepSize = (int)Math.Round(StepSizeY, 0);
+
+            var x = canvasx - relativeCanvasTranslationX - (stepSize * 2);
+            // subtract 2x stepsize so gridlines always start from "out of sight" and lines do not start from a visible x-border
+            var y = canvasy - relativeCanvasTranslationY;
+            var lineLength = Math.Sqrt(Math.Pow(renderer.Width, 2) + Math.Pow(renderer.Height, 2)) / ws.ZoomFactor + (stepSize * 2);
+            // multiply by 1.2f as we later also start drawing from a minus x coordinate (- 2*stepsize)
+
+            for (var i = y - yPosition; i <= y + yPosition; i += stepSize)
+            {
+                DrawLineLeftToBottom(renderer, i, x, lineLength); /* \ */
+            }
+
+            for (var i = y; i <= y + 2 * yPosition; i += stepSize)
+            {
+                DrawLineLeftToTop(renderer, i, x, lineLength); /* / */
+            }
+            return canvasx;
+        }
+
+
         // line looks like this -> /
         private void DrawLineLeftToTop(IRenderer renderer, float y, float canvasX, double lineLength)
         {
@@ -126,6 +153,104 @@ namespace Svg.Core.Tools
                 endY,
                 Pen);
         }
+
+        #endregion
+
+        #region Snapping
+        /// <summary>
+        /// Subscribes to all visual elements "Add/RemoveChild" handlers and their "transformCollection changed" event
+        /// </summary>
+        /// <param name="document"></param>
+        private void WatchDocument(SvgDocument document)
+        {
+            if (document == null)
+                return;
+
+            document.ChildAdded -= OnChildAdded;
+            document.ChildAdded += OnChildAdded;
+
+            foreach (var child in document.Children.OfType<SvgVisualElement>())
+            {
+                Subscribe(child);
+            }
+        }
+
+        private void UnWatchDocument(SvgDocument document)
+        {
+            if (document == null)
+                return;
+
+            document.ChildAdded -= OnChildAdded;
+
+            foreach (var child in document.Children.OfType<SvgVisualElement>())
+            {
+                Unsubscribe(child);
+            }
+        }
+
+        private void Subscribe(SvgElement child)
+        {
+            if (!(child is SvgVisualElement))
+                return;
+
+            child.ChildAdded -= OnChildAdded;
+            child.ChildAdded += OnChildAdded;
+            child.ChildRemoved -= OnChildRemoved;
+            child.ChildRemoved += OnChildRemoved;
+            child.AttributeChanged -= OnAttributeChanged;
+            child.AttributeChanged += OnAttributeChanged;
+        }
+
+        private void Unsubscribe(SvgElement child)
+        {
+            if (!(child is SvgVisualElement))
+                return;
+
+            child.ChildAdded -= OnChildAdded;
+            child.ChildRemoved -= OnChildRemoved;
+            child.AttributeChanged -= OnAttributeChanged;
+        }
+
+        private void OnChildAdded(object sender, ChildAddedEventArgs e)
+        {
+            Subscribe(e.NewChild);
+            SnapToGrid(e.NewChild);
+        }
+
+        private void OnChildRemoved(object sender, ChildRemovedEventArgs e)
+        {
+            Unsubscribe(e.RemovedChild);
+        }
+
+        private void OnAttributeChanged(object sender, AttributeEventArgs e)
+        {
+            // if snapping is currently in progress, just skip (otherwise we might cause stackoverflowexception!
+            if (_isSnappingInProgress)
+                return;
+
+            if (!string.Equals(e.Attribute, "transform"))
+                return;
+            var element = (SvgElement)sender;
+            // otherwise we need to reevaluate the translate of that particular element
+            SnapToGrid(element);
+        }
+
+        private void SnapToGrid(SvgElement element)
+        {
+            try
+            {
+                _isSnappingInProgress = true;
+
+                Debug.WriteLine($"Snapping {element}");
+
+            }
+            finally
+            {
+                _isSnappingInProgress = false;
+            }
+        }
+
+        #endregion
 
         public override void Dispose()
         {

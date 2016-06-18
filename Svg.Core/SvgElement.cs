@@ -77,8 +77,6 @@ namespace Svg
             }
             _styles = null;
         }
-
-
         public bool ContainsAttribute(string name)
         {
             IDictionary<int, string> rules;
@@ -467,11 +465,8 @@ namespace Svg
             {
             	sibling = Children[index + 1];
             }
-            var handler = ChildAdded;
-            if(handler != null)
-            {
-            	handler(this, new ChildAddedEventArgs { NewChild = child, BeforeSibling = sibling });
-            }
+
+            ChildAdded?.Invoke(this, new ChildAddedEventArgs { NewChild = child, BeforeSibling = sibling });
         }
 
         /// <summary>
@@ -483,6 +478,8 @@ namespace Svg
         {
         }
 
+        public event EventHandler<ChildRemovedEventArgs> ChildRemoved;
+
         /// <summary>
         /// Calls the <see cref="RemoveElement"/> method with the specified <see cref="SvgElement"/> as the parameter.
         /// </summary>
@@ -490,6 +487,9 @@ namespace Svg
         internal void OnElementRemoved(SvgElement child)
         {
             this.RemoveElement(child);
+
+            
+            ChildRemoved?.Invoke(this, new ChildRemovedEventArgs { RemovedChild = child});
         }
 
         /// <summary>
@@ -1105,14 +1105,16 @@ namespace Svg
     {
     	public string Content;
     }
-    
-    /// <summary>
-    /// Describes the Attribute which was set
-    /// </summary>
+
     public class ChildAddedEventArgs : SVGArg
     {
     	public SvgElement NewChild;
     	public SvgElement BeforeSibling;
+    }
+
+    public class ChildRemovedEventArgs : SVGArg
+    {
+        public SvgElement RemovedChild;
     }
 
 #if Net4
