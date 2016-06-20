@@ -5,13 +5,9 @@ using Android.Graphics;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
-using MvvmCross.Platform.Core;
 using Svg.Core;
-using Svg.Core.Interfaces;
 using Svg.Core.Tools;
 using Svg.Droid.Editor.Services;
-using Svg.Platform;
-using Color = Android.Graphics.Color;
 using GestureDetector = Svg.Droid.Editor.Services.GestureDetector;
 
 namespace Svg.Droid.Editor

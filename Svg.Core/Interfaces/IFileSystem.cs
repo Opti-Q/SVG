@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 
 namespace Svg.Interfaces
 {
@@ -17,5 +13,11 @@ namespace Svg.Interfaces
         Stream OpenWrite(string path);
 
         string GetFullPath(string path);
+
+        string GetDefaultStoragePath();
+        string GetDownloadFolder();
+
+        string PathCombine(params string[] segments);
+        void DeleteFile(string storagePath);
     }
 }
