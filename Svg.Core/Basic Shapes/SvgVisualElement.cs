@@ -64,7 +64,7 @@ namespace Svg
 
                 return _renderBounds;
             }
-            private set { _renderBounds = value; }
+            protected set { _renderBounds = value; }
         }
 
         /// <summary>

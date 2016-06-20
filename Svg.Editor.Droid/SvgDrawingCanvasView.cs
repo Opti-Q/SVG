@@ -8,10 +8,11 @@ using Android.Widget;
 using MvvmCross.Platform.Core;
 using Svg.Core;
 using Svg.Core.Interfaces;
+using Svg.Core.Tools;
 using Svg.Droid.Editor.Services;
 using Svg.Platform;
 using Color = Android.Graphics.Color;
-using GestureDetector = Svg.Droid.Editor.Tools.GestureDetector;
+using GestureDetector = Svg.Droid.Editor.Services.GestureDetector;
 
 namespace Svg.Droid.Editor
 {
@@ -29,17 +30,21 @@ namespace Svg.Droid.Editor
             
             _drawingCanvas = new SvgDrawingCanvas();
             _detector = new GestureDetector(this.Context, (e) => DrawingCanvas.OnEvent(e));
+
+            Engine.Register<ITextInputService, TextInputService>(() => new TextInputService(context));
         }
 
         public override bool OnTouchEvent(MotionEvent ev)
         {
-            _detector.OnTouch(ev);
+            // this is intentionally not awaited
+            _detector.OnTouch(ev).ConfigureAwait(false);
             
             return true;
         }
 
         protected override void OnDraw(Canvas canvas)
         {
+            // this is intentionally not awaited
             DrawingCanvas.OnDraw(new AndroidCanvasRenderer(canvas))
                 .ContinueWith(t => base.OnDraw(canvas));
         }

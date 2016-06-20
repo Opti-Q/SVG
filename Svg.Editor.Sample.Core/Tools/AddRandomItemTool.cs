@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Svg.Core;
-using Svg.Core.Events;
 using Svg.Core.Tools;
 using Svg.Interfaces;
 using Svg.Transforms;

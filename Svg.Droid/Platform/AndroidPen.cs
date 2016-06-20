@@ -153,5 +153,11 @@ namespace Svg.Platform
             get { return _paint.TextAlign; }
             set { _paint.TextAlign = value; }
         }
+
+        public Paint.Style Style
+        {
+            get { return _paint.GetStyle(); }
+            set { _paint.SetStyle(value);}
+        }
     }
 }

@@ -19,11 +19,11 @@ namespace Svg
         private string _rotate;
         private List<float> _rotations = new List<float>();
 
-        private static IAlternativeSvgTextRenderer _renderer = null;
+        private static IAlternativeSvgTextRenderer _alternativeTextRenderer = null;
 
         static SvgTextBase()
         {
-            _renderer = Svg.Engine.TryResolve<IAlternativeSvgTextRenderer>();
+            _alternativeTextRenderer = Svg.Engine.TryResolve<IAlternativeSvgTextRenderer>();
         }
 
         /// <summary>
@@ -238,6 +238,9 @@ namespace Svg
         {
             get
             {
+                if (_alternativeTextRenderer != null)
+                    return _alternativeTextRenderer.GetBounds(this, SvgRenderer.FromNull());
+
                 var path = this.Path(null);
                 foreach (var elem in this.Children.OfType<SvgVisualElement>())
                 {
@@ -254,7 +257,9 @@ namespace Svg
         /// <remarks>Necessary to make sure that any internal tspan elements get rendered as well</remarks>
         protected override void Render(ISvgRenderer renderer)
         {
-            if (this.Visible && this.Displayable && (_renderer != null || this.Path(renderer) != null))
+            RenderBounds = null; // clear render bounds on each render attempt
+
+            if (this.Visible && this.Displayable && (_alternativeTextRenderer != null || this.Path(renderer) != null))
             {
                 this.PushTransforms(renderer);
                 this.SetClip(renderer);
@@ -265,8 +270,8 @@ namespace Svg
                     renderer.SmoothingMode = SmoothingMode.AntiAlias;
                 }
                 
-                if (_renderer != null)
-                    _renderer.Render(this, renderer);
+                if (_alternativeTextRenderer != null)
+                    _alternativeTextRenderer.Render(this, renderer);
                 else
                 {
                     this.RenderFill(renderer);

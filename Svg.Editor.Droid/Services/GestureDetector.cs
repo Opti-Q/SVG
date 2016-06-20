@@ -4,7 +4,7 @@ using Android.Content;
 using Android.Views;
 using Svg.Core.Events;
 
-namespace Svg.Droid.Editor.Tools
+namespace Svg.Droid.Editor.Services
 {
     public class GestureDetector
     {

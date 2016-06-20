@@ -42,6 +42,7 @@ namespace Svg.Core
                     new MoveTool(), // must be before pantool as it decides whether or not it is active based on selection
                     new PanTool(),
                     new ZoomTool(),
+                    new TextTool(),
                     new SelectionTool(),
             };
         }
@@ -113,6 +114,7 @@ namespace Svg.Core
         /// <param name="renderer"></param>
         public async Task OnDraw(IRenderer renderer)
         {
+            // make sure all tools have been initialized successfully
             await EnsureInitialized();
 
             this.ScreenWidth = renderer.Width;
