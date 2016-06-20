@@ -37,11 +37,29 @@ namespace Svg.Core.Tools
 
             // using triangle calculation to determine the x and y steps based on stepsize (y) and angle (alpha)
             // http://www.arndt-bruenner.de/mathe/scripts/Dreiecksberechnung.htm
-            A = StepSizeY;
+            /*
+                                                  XXX+
+                                               XXX   |
+                                             XX      |
+                                          XXX  B = ? |
+                                        XXX          |
+                                      XXX            |
+                           c = ?   XXX               |
+                                 XXX                 |
+                               XXX                   |  a = 20
+                             XXX                     |
+                           XXX                       |
+                         XXX                         |
+                       XXX                           |
+                     XXX    A = 27.3          G = 90 |
+                    XX-------------------------------+
+                              b = ?
+             * */
+            A = StepSizeY/2;
             Beta = 180f - (Alpha + Gamma);
             B = (A * SinDegree(Beta)) / SinDegree(Alpha);
             C = (A * SinDegree(Gamma)) / SinDegree(Alpha);
-            StepSizeX = (float)B;
+            StepSizeX = (float)B * 2;
         }
 
         public override void Initialize(SvgDrawingCanvas ws)
@@ -246,33 +264,89 @@ namespace Svg.Core.Tools
             try
             {
                 _isSnappingInProgress = true;
-
-                // scale element so its width and height are a multiple of the stepsizes
-
-
+                
                 // snap to grid:
                 // get absolute point
                 var bounds = ve.Bounds;
                 var m = ve.Transforms.GetMatrix();
                 var b = m.TransformRectangle(bounds);
-                
+
                 // determine next intersection of gridlines
+                // so we determine which point P1, P2 is the nearest one
+                // afterwards, see if the intermediary points (Px, Pz) are even closer 
+                // and in that case transition to those.
+
+                // so when we have the ankle points (P1, P2), determine if an intermediate point (Px, Pz) is even nearer
+                /*
+                                                        Px
+                                                                                                  Px = P1 + Vx
+                                                     XXX+XX
+                                                  XXXX  | XXXX                                    Px = P1 + (P1.x + b)
+                                                XXX     |    XXXX                                           (P1.y - a)
+                                              XX   B = ?|       XXX
+                                           XXX          |         XXX
+                                         XXX            |            XXX
+                         c = ?         XXX              |               XXX
+                                    XXX                 |                 XXX
+                                  XXX                   |  a = 20            XXX
+                                XXX                     |                      XXX
+                              XXX                       |                         XXX
+                            XXX                         |                           XX
+                          XXX                    G = 90 |                            XXX
+                        XXX    A = 27.3                 |                              XXX
+                    P1 XX---------------------------------------------------------------+    P2
+                       XXX           b = ?              |                             XX
+                          XX                            |                           XXX
+                           XXX                          |                         XXX
+                              XXX                       |                       XXX
+                                XXX                     |                     XXX
+                                  XXX                   |                  XXXX
+                                    XXX                 |                XXX
+                                      XXXX              |              XXX
+                                         XX             |            XXX
+                                          XXX           |          XXX
+                                            XXX         |       XXXX
+                                              XXX       |     XXX
+                                                XXX     |   XXX
+                                                  XXX  ++ XXX
+                                                     XXX XX
+
+                                                       Pz
+
+                 * 
+                 * */
+
                 var diffX = b.X % StepSizeX;
-                
                 var deltaX = 0f;
                 if (diffX > StepSizeX / 2)
                     deltaX = StepSizeX;
                 var absoluteDeltaX = 0 - diffX + deltaX;
-
+                
                 var diffY = b.Y % StepSizeY;
                 var deltaY = 0f;
                 if (diffY > StepSizeY / 2)
                     deltaY = StepSizeY;
                 var absoluteDeltaY = 0 - diffY + deltaY;
 
-                AddTranslate(ve, absoluteDeltaX, absoluteDeltaY);
+
+                // see if intermediary point is even nearer but also take Y coordinate into consideration!!
+                if (diffX > StepSizeX/2)
+                {
+                    // transition to intermediary point
+                    deltaX = StepSizeX/2;
+
+                    if (diffY > StepSizeY/2)
+                        deltaY = StepSizeY/2;
+                    else
+                        deltaY = StepSizeY/2;
+
+                    absoluteDeltaX = 0 - diffX + deltaX;
+                    absoluteDeltaY = 0 - diffY + deltaY;
+                }
+
 
                 // and translate element to that next intersection
+                AddTranslate(ve, absoluteDeltaX, absoluteDeltaY);
 
             }
             finally
