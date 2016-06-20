@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Android.Content;
 using Android.Views;
 using Svg.Core.Events;
@@ -7,7 +8,7 @@ namespace Svg.Droid.Editor.Tools
 {
     public class GestureDetector
     {
-        private readonly Action<UserInputEvent> _callback;
+        private readonly Func<UserInputEvent, Task> _callback;
         public const int InvalidPointerId = -1;
         public int ActivePointerId = InvalidPointerId;
         
@@ -19,13 +20,13 @@ namespace Svg.Droid.Editor.Tools
         private float _pointerDownX;
         private float _pointerDownY;
 
-        public GestureDetector(Context ctx, Action<UserInputEvent> callback)
+        public GestureDetector(Context ctx, Func<UserInputEvent, Task> callback)
         {
             _callback = callback;
             _scaleDetector = new ScaleGestureDetector(ctx, new ZoomDetector(this));
         }
 
-        public void OnTouch(MotionEvent ev)
+        public async Task OnTouch(MotionEvent ev)
         {
             // detectors always have priority
             _scaleDetector.OnTouchEvent(ev);
@@ -111,7 +112,9 @@ namespace Svg.Droid.Editor.Tools
             }
 
             if (uie != null)
-                _callback(uie);
+                await _callback(uie);
+
+            return;
         }
 
         public void Reset()

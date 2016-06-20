@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 using Svg.Core.Tools;
@@ -15,6 +16,7 @@ namespace Svg.Core
         private readonly ObservableCollection<ITool> _tools;
         private SvgDocument _document;
         private Bitmap _rawImage;
+        private bool _initialized = false;
 
         public event EventHandler CanvasInvalidated;
         public event EventHandler ToolCommandsChanged;
@@ -41,11 +43,7 @@ namespace Svg.Core
                     new PanTool(),
                     new ZoomTool(),
                     new SelectionTool(),
-            //        new SnappingTool(),
             };
-
-            foreach (var tool in _tools)
-                tool.Initialize(this);
         }
 
         public SvgDocument Document
@@ -99,13 +97,13 @@ namespace Svg.Core
         /// </summary>
         /// <param name="ev"></param>
         /// <param name="view"></param>
-        public void OnEvent(UserInputEvent ev)
+        public async Task OnEvent(UserInputEvent ev)
         {
-            //Debug.WriteLine($"{ev}");
+            await EnsureInitialized();
 
             foreach (var tool in Tools)
             {
-                tool.OnUserInput(ev, this);
+                await tool.OnUserInput(ev, this);
             }
         }
         
@@ -113,8 +111,10 @@ namespace Svg.Core
         /// Called by platform specific implementation to allow tools to draw something onto the canvas
         /// </summary>
         /// <param name="renderer"></param>
-        public void OnDraw(IRenderer renderer)
+        public async Task OnDraw(IRenderer renderer)
         {
+            await EnsureInitialized();
+
             this.ScreenWidth = renderer.Width;
             this.ScreenHeight = renderer.Height;
 
@@ -128,7 +128,7 @@ namespace Svg.Core
             // prerender step (e.g. gridlines, etc.)
             foreach (var tool in Tools)
             {
-                tool.OnPreDraw(renderer, this);
+                await tool.OnPreDraw(renderer, this);
             }
 
             // render svg step
@@ -139,7 +139,20 @@ namespace Svg.Core
             // post render step (e.g. selection borders, etc.)
             foreach (var tool in Tools)
             {
-                tool.OnDraw(renderer, this);
+                await tool.OnDraw(renderer, this);
+            }
+        }
+
+        private async Task EnsureInitialized()
+        {
+            if (!_initialized)
+            {
+                foreach (var tool in Tools)
+                    await tool.Initialize(this);
+
+                _initialized = true;
+                
+                FireToolCommandsChanged();
             }
         }
         

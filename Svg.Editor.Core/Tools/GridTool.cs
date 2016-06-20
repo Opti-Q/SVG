@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 using Svg.Interfaces;
@@ -64,7 +65,7 @@ namespace Svg.Core.Tools
             StepSizeX = (float)B * 2;
         }
 
-        public override void Initialize(SvgDrawingCanvas ws)
+        public override Task Initialize(SvgDrawingCanvas ws)
         {
             _canvas = ws;
             // add tool commands
@@ -79,6 +80,8 @@ namespace Svg.Core.Tools
 
             // initialize with callbacks
             this.WatchDocument(ws.Document);
+
+            return Task.FromResult(true);
         }
 
         public bool IsVisible { get; set; } = true;
@@ -88,10 +91,10 @@ namespace Svg.Core.Tools
         private Pen Pen => _pen ?? (_pen = Svg.Engine.Factory.CreatePen(Brush, 1));
         private Pen Pen2 => _pen2 ?? (_pen2 = Svg.Engine.Factory.CreatePen(Brush2, 2));
 
-        public override void OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
+        public override Task OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
             if (!IsVisible)
-                return;
+                return Task.FromResult(true); ;
 
             // draw gridlines
             DrawGridLines(renderer, ws);
@@ -102,6 +105,8 @@ namespace Svg.Core.Tools
             renderer.DrawCircle(canvasx, canvasy, 50, Pen); // point should remain in top left corner on screen
             renderer.DrawCircle(0, 0, 20, Pen2); // point on canvas - should move along
             renderer.DrawLine(1f, 1f, 200f, 1f, Pen2);
+
+            return Task.FromResult(true);
         }
 
         public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
@@ -111,7 +116,7 @@ namespace Svg.Core.Tools
             UnWatchDocument(oldDocument);
         }
 
-        public override void OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
+        public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
             var me = @event as MoveEvent;
             if (me != null)
@@ -124,6 +129,7 @@ namespace Svg.Core.Tools
                 _generalTranslation = null;
                 _areElementsMoved = false;
             }
+            return Task.FromResult(true);
         }
 
         #region GridLines

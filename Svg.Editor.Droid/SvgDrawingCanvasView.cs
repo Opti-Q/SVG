@@ -40,8 +40,8 @@ namespace Svg.Droid.Editor
 
         protected override void OnDraw(Canvas canvas)
         {
-            DrawingCanvas.OnDraw(new AndroidCanvasRenderer(canvas));
-            base.OnDraw(canvas);
+            DrawingCanvas.OnDraw(new AndroidCanvasRenderer(canvas))
+                .ContinueWith(t => base.OnDraw(canvas));
         }
 
         protected override void OnAttachedToWindow()

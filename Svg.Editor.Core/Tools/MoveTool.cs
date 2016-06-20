@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Interfaces;
 using Svg.Transforms;
@@ -15,7 +16,7 @@ namespace Svg.Core.Tools
         {
         }
 
-        public override void Initialize(SvgDrawingCanvas ws)
+        public override Task Initialize(SvgDrawingCanvas ws)
         {
             Commands = new List<IToolCommand>
             {
@@ -31,9 +32,11 @@ namespace Svg.Core.Tools
 
                 }, (obj) => !this.IsActive)
             };
+
+            return Task.FromResult(true);
         }
         
-        public override void OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
+        public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
             var p = @event as PointerEvent;
             if (p != null)
@@ -62,7 +65,7 @@ namespace Svg.Core.Tools
 
             // skip moving if inactive
             if (!this.IsActive)
-                return;
+                return Task.FromResult(true);
 
 
             var e = @event as MoveEvent;
@@ -103,6 +106,8 @@ namespace Svg.Core.Tools
                     ws.FireInvalidateCanvas();
                 }
             }
+
+            return Task.FromResult(true);
         }
 
         private void AddTranslate(SvgVisualElement element, float deltaX, float deltaY)

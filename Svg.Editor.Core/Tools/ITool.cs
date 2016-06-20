@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
@@ -11,10 +12,10 @@ namespace Svg.Core.Tools
         string Name { get; }
         bool IsActive { get; set; }
         IEnumerable<IToolCommand> Commands { get; }
-        void Initialize(SvgDrawingCanvas ws);
-        void OnDraw(IRenderer renderer, SvgDrawingCanvas ws);
-        void OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws);
-        void OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws);
+        Task Initialize(SvgDrawingCanvas ws);
+        Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws);
+        Task OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws);
+        Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws);
         void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument);
         void Reset();
     }

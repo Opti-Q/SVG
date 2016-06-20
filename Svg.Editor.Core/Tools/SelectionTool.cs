@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 using Svg.Interfaces;
@@ -26,7 +27,7 @@ namespace Svg.Core.Tools
         private Brush Brush => _brush ?? (_brush = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
         private Pen Pen => _pen ?? (_pen = Svg.Engine.Factory.CreatePen(Brush, 5));
 
-        public override void Initialize(SvgDrawingCanvas ws)
+        public override Task Initialize(SvgDrawingCanvas ws)
         {
             Commands = new List<IToolCommand>
             {
@@ -35,18 +36,20 @@ namespace Svg.Core.Tools
 
             // make sure selection is inactive in case that panning is active at start
             this.IsActive = !ws.Tools.OfType<PanTool>().FirstOrDefault()?.IsActive ?? true;
+
+            return Task.FromResult(true);
         }
 
-        public override void OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
+        public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
             // skip if movetool is active
             var moveTool = ws.Tools.OfType<MoveTool>().SingleOrDefault();
             if (moveTool.IsActive)
-                return;
-            
+                return Task.FromResult(true);
+
 
             if (!IsActive)
-                return;
+                return Task.FromResult(true);
 
             var e = @event as MoveEvent;
             if (e != null)
@@ -107,6 +110,8 @@ namespace Svg.Core.Tools
                     ws.FireInvalidateCanvas();
                 }
             }
+
+            return Task.FromResult(true);
         }
 
         private void SelectElementsUnder(RectangleF selectionRectangle, SvgDrawingCanvas ws, SelectionType selectionType)
@@ -121,7 +126,7 @@ namespace Svg.Core.Tools
                 ws.SelectedElements.Add(element);
         }
 
-        public override void OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
+        public override Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
             // we draw the selection rectangle
             if (_selectionRectangle != null)
@@ -155,6 +160,8 @@ namespace Svg.Core.Tools
 
                 renderer.Graphics.Save();
             }
+
+            return Task.FromResult(true);
         }
 
         private class ToggleSelectionToolCommand : ToolCommand

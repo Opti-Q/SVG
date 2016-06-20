@@ -45,11 +45,5 @@ namespace Svg.Droid.SampleEditor.Core.Tools
             };
         }
         public Func<string, ISvgSource> SourceProvider { get; set; }
-
-        public override void OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
-        {
-        }
-
-        
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 
@@ -18,19 +19,24 @@ namespace Svg.Core.Tools
 
         public IEnumerable<IToolCommand> Commands { get; protected set; } = Enumerable.Empty<IToolCommand>();
 
-        public virtual void Initialize(SvgDrawingCanvas ws) { }
-
-        public virtual void OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
+        public virtual Task Initialize(SvgDrawingCanvas ws)
         {
+            return Task.FromResult(true);
         }
 
-        public virtual void OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
+        public virtual Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
+            return Task.FromResult(true);
         }
 
-        public virtual void OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
+        public virtual Task OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
-            
+            return Task.FromResult(true);
+        }
+
+        public virtual Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
+        {
+            return Task.FromResult(true);
         }
 
         public virtual void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)

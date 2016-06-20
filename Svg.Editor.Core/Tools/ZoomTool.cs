@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 
@@ -21,7 +22,7 @@ namespace Svg.Core.Tools
 
         public float MaxScale { get; set; }
 
-        public override void Initialize(SvgDrawingCanvas ws)
+        public override Task Initialize(SvgDrawingCanvas ws)
         {
             _owner = ws;
 
@@ -40,16 +41,18 @@ namespace Svg.Core.Tools
                     _owner.FireInvalidateCanvas();
                 })
             };
+
+            return Task.FromResult(true);
         }
         
-        public override void OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
+        public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
             if (!IsActive)
-                return;
+                return Task.FromResult(true);
 
             var se = @event as ScaleEvent;
             if (se == null)
-                return;
+                return Task.FromResult(true);
 
             if (se.Status == ScaleStatus.Scaling)
             {
@@ -57,6 +60,8 @@ namespace Svg.Core.Tools
                 ws.ZoomFactor = GetBoundedZoomFactor(se, ws);
                 ws.FireInvalidateCanvas();
             }
+
+            return Task.FromResult(true);
         }
 
         private float GetBoundedZoomFactor(ScaleEvent se, SvgDrawingCanvas ws)

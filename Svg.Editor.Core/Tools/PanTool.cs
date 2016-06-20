@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 
@@ -13,7 +14,7 @@ namespace Svg.Core.Tools
         {
         }
 
-        public override void Initialize(SvgDrawingCanvas ws)
+        public override Task Initialize(SvgDrawingCanvas ws)
         {
             _owner = ws;
 
@@ -26,21 +27,25 @@ namespace Svg.Core.Tools
                     _owner.FireInvalidateCanvas();
                 }),
             };
+
+            return Task.FromResult(true);
         }
 
-        public override void OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
+        public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
             if (!IsActive)
-                return;
+                return Task.FromResult(true);
 
             var ev = @event as MoveEvent;
 
             if (ev == null)
-                return;
+                return Task.FromResult(true);
 
             ws.Translate.X += ev.RelativeDelta.X;
             ws.Translate.Y += ev.RelativeDelta.Y;
             ws.FireInvalidateCanvas();
+
+            return Task.FromResult(true);
         }
     }
 }
