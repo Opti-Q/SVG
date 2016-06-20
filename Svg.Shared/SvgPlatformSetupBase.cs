@@ -22,9 +22,13 @@ namespace Svg
         private static readonly SvgElementAttributeProvider SvgElementAttributeProvider = new SvgElementAttributeProvider();
         private static readonly DefaultLogger DefaultLogger = new DefaultLogger();
         private static readonly CultureHelper CultureHelper = new CultureHelper();
+        private bool _isInitialized = false;
 
         protected virtual void Initialize(SvgPlatformOptions options)
         {
+            if (_isInitialized)
+                return;
+
             Engine.Register<IMarshal, SvgMarshal>(() => Marshal);
             Engine.Register<ISvgTypeDescriptor, SvgTypeDescriptor>(() => SvgTypeDescriptor);
             Engine.Register<ISvgElementAttributeProvider, SvgElementAttributeProvider>(() => SvgElementAttributeProvider);
@@ -68,6 +72,8 @@ namespace Svg
             TypeDescriptor.AddAttributes(typeof(SvgTextAnchor), new TypeConverterAttribute(typeof(SvgTextAnchorConverter)));
             TypeDescriptor.AddAttributes(typeof(SvgTransformCollection), new TypeConverterAttribute(typeof(SvgTransformConverter)));
             TypeDescriptor.AddAttributes(typeof(SvgVisible), new TypeConverterAttribute(typeof(SvgVisibleConverter)));
+
+            _isInitialized = true;
         }
     }
 }

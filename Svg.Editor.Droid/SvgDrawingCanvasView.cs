@@ -18,10 +18,14 @@ namespace Svg.Droid.Editor
 {
     public class SvgDrawingCanvasView : ImageView
     {
-        private readonly SvgDrawingCanvas _drawingCanvas;
         private readonly GestureDetector _detector;
+        private SvgDrawingCanvas _drawingCanvas;
 
-        public SvgDrawingCanvas DrawingCanvas => _drawingCanvas;
+        public SvgDrawingCanvas DrawingCanvas
+        {
+            get { return _drawingCanvas; }
+            set { _drawingCanvas = value; }
+        }
 
         public SvgDrawingCanvasView(Context context, IAttributeSet attr) : base(context, attr)
         {
