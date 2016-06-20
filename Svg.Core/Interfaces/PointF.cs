@@ -40,5 +40,10 @@ namespace Svg.Interfaces
         {
             return c1?.X != c2?.X || c1?.Y != c2?.Y;
         }
+
+        public override string ToString()
+        {
+            return $"x:{X.ToString("00.0")} y:{Y.ToString("00.0")}";
+        }
     }
 }

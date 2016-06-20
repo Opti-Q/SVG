@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Svg.Core.Events;
 using Svg.Interfaces;
@@ -68,12 +67,16 @@ namespace Svg.Core.Tools
 
             var e = @event as MoveEvent;
 
-            if (e != null)
+            if (e == null)
+            {
+                _offsets.Clear();
+                _translates.Clear();
+            }
+            else
             {
                 // if there is no selection, we just skip
                 if (ws.SelectedElements.Any())
                 {
-
                     var absoluteDeltaX = e.AbsoluteDelta.X / ws.ZoomFactor;
                     var absoluteDeltaY = e.AbsoluteDelta.Y / ws.ZoomFactor;
 
@@ -89,6 +92,7 @@ namespace Svg.Core.Tools
                         var relativeDeltaX = absoluteDeltaX - previousDelta.X;
                         var relativeDeltaY = absoluteDeltaY - previousDelta.Y;
 
+                        
                         previousDelta.X = absoluteDeltaX;
                         previousDelta.Y = absoluteDeltaY;
                         _offsets[element] = previousDelta;
@@ -105,17 +109,21 @@ namespace Svg.Core.Tools
         {
             SvgTranslate trans = null;
             int index = -1;
-            for (int i = element.Transforms.Count - 1; i >= 0; i--)
+            
+            //if (element.Transforms.OfType<SvgTranslate>().Count() > 1)
             {
-                var translate = element.Transforms[i] as SvgTranslate;
-                if (translate != null)
+                for (int i = element.Transforms.Count - 1; i >= 0; i--)
                 {
-                    trans = translate;
-                    index = i;
-                    break;
+                    var translate = element.Transforms[i] as SvgTranslate;
+                    if (translate != null)
+                    {
+                        trans = translate;
+                        index = i;
+                        break;
+                    }
                 }
             }
-            
+
             // the movetool stores the last translation explicitly for each element
             // that way, if another tool manipulates the translation (e.g. the snapping tool)
             // the movetool is not interfered by that

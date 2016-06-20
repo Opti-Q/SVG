@@ -28,6 +28,8 @@ namespace Svg.Core.Tools
         private Brush _brush2;
 
         private bool _isSnappingInProgress = false;
+        private bool _areElementsMoved = false;
+        private PointF _generalTranslation = null;
 
         public GridTool(float angle = 30f, int stepSizeY = 20)
             : base("Grid")
@@ -107,6 +109,21 @@ namespace Svg.Core.Tools
             // add watch for element snapping
             WatchDocument(newDocument);
             UnWatchDocument(oldDocument);
+        }
+
+        public override void OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
+        {
+            var me = @event as MoveEvent;
+            if (me != null)
+            {
+                _areElementsMoved = true;
+                _generalTranslation = null;
+            }
+            else
+            {
+                _generalTranslation = null;
+                _areElementsMoved = false;
+            }
         }
 
         #region GridLines
@@ -315,35 +332,48 @@ namespace Svg.Core.Tools
 
                  * 
                  * */
+                float deltaX, deltaY;
 
                 var diffX = b.X % StepSizeX;
-                var deltaX = 0f;
-                if (diffX > StepSizeX / 2)
-                    deltaX = StepSizeX;
-                var absoluteDeltaX = 0 - diffX + deltaX;
-                
                 var diffY = b.Y % StepSizeY;
-                var deltaY = 0f;
-                if (diffY > StepSizeY / 2)
-                    deltaY = StepSizeY;
-                var absoluteDeltaY = 0 - diffY + deltaY;
 
-
-                // see if intermediary point is even nearer but also take Y coordinate into consideration!!
-                if (diffX > StepSizeX/2)
+                // for the first moved element, store the translation and translate all other elements by the same translation
+                // so if multiple elements are moved, their position relative to each other stays the same
+                if (_areElementsMoved && _generalTranslation != null)
                 {
-                    // transition to intermediary point
-                    deltaX = StepSizeX/2;
+                    deltaX = _generalTranslation.X;
+                    deltaY = _generalTranslation.Y;
+                }
+                else
+                {
+                    deltaX = 0f;
+                    if (diffX > StepSizeX/2)
+                        deltaX = StepSizeX;
 
+                    deltaY = 0f;
                     if (diffY > StepSizeY/2)
-                        deltaY = StepSizeY/2;
-                    else
-                        deltaY = StepSizeY/2;
+                        deltaY = StepSizeY;
 
-                    absoluteDeltaX = 0 - diffX + deltaX;
-                    absoluteDeltaY = 0 - diffY + deltaY;
+
+                    // see if intermediary point is even nearer but also take Y coordinate into consideration!!
+                    if (diffX > StepSizeX/2)
+                    {
+                        // transition to intermediary point
+                        deltaX = StepSizeX/2;
+
+                        if (diffY > StepSizeY/2)
+                            deltaY = StepSizeY/2;
+                        else
+                            deltaY = StepSizeY/2;
+                    }
+
+                    if (_generalTranslation == null)
+                        _generalTranslation = Engine.Factory.CreatePointF(deltaX, deltaY);
+
                 }
 
+                var absoluteDeltaX = 0 - diffX + deltaX;
+                var absoluteDeltaY = 0 - diffY + deltaY;
 
                 // and translate element to that next intersection
                 AddTranslate(ve, absoluteDeltaX, absoluteDeltaY);
@@ -359,14 +389,18 @@ namespace Svg.Core.Tools
         {
             SvgTranslate trans = null;
             int index = -1;
-            for (int i = element.Transforms.Count - 1; i >= 0; i--)
+
+            //if (element.Transforms.OfType<SvgTranslate>().Count() > 1)
             {
-                var translate = element.Transforms[i] as SvgTranslate;
-                if (translate != null)
+                for (int i = element.Transforms.Count - 1; i >= 0; i--)
                 {
-                    trans = translate;
-                    index = i;
-                    break;
+                    var translate = element.Transforms[i] as SvgTranslate;
+                    if (translate != null)
+                    {
+                        trans = translate;
+                        index = i;
+                        break;
+                    }
                 }
             }
 

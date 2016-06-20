@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
@@ -37,11 +36,11 @@ namespace Svg.Core
 
             _tools = new ObservableCollection<ITool>
             {
+                    new GridTool(angle:27.3f), // must be before movetool!
                     new MoveTool(), // must be before pantool as it decides whether or not it is active based on selection
                     new PanTool(),
                     new ZoomTool(),
                     new SelectionTool(),
-                    new GridTool(angle:27.3f), // must be after zoom and pan tools!
             //        new SnappingTool(),
             };
 
