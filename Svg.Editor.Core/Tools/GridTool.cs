@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
+using Svg.Interfaces;
 using Svg.Transforms;
 
 namespace Svg.Core.Tools
@@ -157,6 +158,7 @@ namespace Svg.Core.Tools
         #endregion
 
         #region Snapping
+
         /// <summary>
         /// Subscribes to all visual elements "Add/RemoveChild" handlers and their "transformCollection changed" event
         /// </summary>
@@ -253,9 +255,10 @@ namespace Svg.Core.Tools
                 var bounds = ve.Bounds;
                 var m = ve.Transforms.GetMatrix();
                 var b = m.TransformRectangle(bounds);
-
+                
                 // determine next intersection of gridlines
                 var diffX = b.X % StepSizeX;
+                
                 var deltaX = 0f;
                 if (diffX > StepSizeX / 2)
                     deltaX = StepSizeX;
@@ -268,10 +271,9 @@ namespace Svg.Core.Tools
                 var absoluteDeltaY = 0 - diffY + deltaY;
 
                 AddTranslate(ve, absoluteDeltaX, absoluteDeltaY);
-                
 
                 // and translate element to that next intersection
-                
+
             }
             finally
             {

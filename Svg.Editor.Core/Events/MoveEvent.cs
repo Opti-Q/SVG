@@ -7,7 +7,21 @@ namespace Svg.Core.Events
     [DebuggerDisplay("{DebuggerDisplay}")]
     public class MoveEvent : PointerEvent
     {
+        private PointF _absoluteDelta;
+
         public PointF RelativeDelta { get; private set; }
+
+        public PointF AbsoluteDelta
+        {
+            get
+            {
+                if (_absoluteDelta == null)
+                {
+                    _absoluteDelta = Engine.Factory.CreatePointF(Pointer1Position.X - Pointer1Down.X, Pointer1Position.Y - Pointer1Down.Y);
+                }
+                return _absoluteDelta;
+            }
+        }
 
         public MoveEvent(PointF pointer1Down, PointF lastPointer1Position, PointF pointer1Position, PointF relativeDelta)
             : base(EventType.Move, pointer1Down, lastPointer1Position, pointer1Position)

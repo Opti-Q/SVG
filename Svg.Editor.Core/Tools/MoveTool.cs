@@ -1,12 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Svg.Core.Events;
+using Svg.Interfaces;
 using Svg.Transforms;
 
 namespace Svg.Core.Tools
 {
     public class MoveTool : ToolBase
     {
+        private readonly Dictionary<object, PointF> _offsets = new Dictionary<object, PointF>();
+        private readonly Dictionary<object, PointF> _translates = new Dictionary<object, PointF>();
+
         public MoveTool() : base("Move")
         {
         }
@@ -31,22 +36,29 @@ namespace Svg.Core.Tools
         
         public override void OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
-
             var p = @event as PointerEvent;
-            if (p != null && p.EventType == EventType.PointerDown)
+            if (p != null)
             {
-                // determine if active by searching thorough selection and determining whether pointer was put on selected element
-                // if there are selected elements and pointer was put down on one of them, activate tool, otherwhise deactivate
-                if (ws.SelectedElements.Count != 0 &&
-                    ws.GetElementsUnderPointer(p.Pointer1Position).Any(eup => ws.SelectedElements.Contains(eup)))
+                if (p.EventType == EventType.PointerDown)
                 {
-                    this.IsActive = true;
+                    // determine if active by searching thorough selection and determining whether pointer was put on selected element
+                    // if there are selected elements and pointer was put down on one of them, activate tool, otherwhise deactivate
+                    if (ws.SelectedElements.Count != 0 &&
+                        ws.GetElementsUnderPointer(p.Pointer1Position).Any(eup => ws.SelectedElements.Contains(eup)))
+                    {
+                        this.IsActive = true;
+                    }
+                    else
+                    {
+                        this.IsActive = false;
+                    }
                 }
-                else
+                // clear offsets 
+                else if (p.EventType == EventType.Cancel || p.EventType == EventType.PointerUp)
                 {
-                    this.IsActive = false;
+                    _offsets.Clear();
+                    _translates.Clear();
                 }
-
             }
 
             // skip moving if inactive
@@ -61,13 +73,27 @@ namespace Svg.Core.Tools
                 // if there is no selection, we just skip
                 if (ws.SelectedElements.Any())
                 {
-                    var deltaX = e.RelativeDelta.X / ws.ZoomFactor;
-                    var deltaY = e.RelativeDelta.Y / ws.ZoomFactor;
+
+                    var absoluteDeltaX = e.AbsoluteDelta.X / ws.ZoomFactor;
+                    var absoluteDeltaY = e.AbsoluteDelta.Y / ws.ZoomFactor;
 
                     // add translation to every element
                     foreach (var element in ws.SelectedElements)
                     {
-                        AddTranslate(element, deltaX, deltaY);
+                        PointF previousDelta;
+                        if (!_offsets.TryGetValue(element, out previousDelta))
+                        {
+                            previousDelta = Engine.Factory.CreatePointF(0f, 0f);
+                        }
+                        
+                        var relativeDeltaX = absoluteDeltaX - previousDelta.X;
+                        var relativeDeltaY = absoluteDeltaY - previousDelta.Y;
+
+                        previousDelta.X = absoluteDeltaX;
+                        previousDelta.Y = absoluteDeltaY;
+                        _offsets[element] = previousDelta;
+                        
+                        AddTranslate(element, relativeDeltaX, relativeDeltaY);
                     }   
 
                     ws.FireInvalidateCanvas();
@@ -75,7 +101,7 @@ namespace Svg.Core.Tools
             }
         }
 
-        private static void AddTranslate(SvgVisualElement element, float deltaX, float deltaY)
+        private void AddTranslate(SvgVisualElement element, float deltaX, float deltaY)
         {
             SvgTranslate trans = null;
             int index = -1;
@@ -89,16 +115,32 @@ namespace Svg.Core.Tools
                     break;
                 }
             }
+            
+            // the movetool stores the last translation explicitly for each element
+            // that way, if another tool manipulates the translation (e.g. the snapping tool)
+            // the movetool is not interfered by that
+            PointF previousTranslate;
+            if (!_translates.TryGetValue(element, out previousTranslate))
+            {
+                if (trans != null)
+                    previousTranslate = Engine.Factory.CreatePointF(trans.X, trans.Y);
+                else
+                    previousTranslate = Engine.Factory.CreatePointF(0f, 0f);
+            }
 
             var transforms = element.Transforms;
             if (trans == null)
             {
                 trans = new SvgTranslate(deltaX, deltaY);
+                _translates[element] = Engine.Factory.CreatePointF(deltaX, deltaY);
+
                 transforms.Add(trans);
             }
             else
             {
-                var t = new SvgTranslate(trans.X + deltaX, trans.Y + deltaY);
+                var t = new SvgTranslate(previousTranslate.X + deltaX, previousTranslate.Y + deltaY);
+                _translates[element] = Engine.Factory.CreatePointF(t.X, t.Y);
+
                 transforms[index] = t; // we MUST explicitly set the transform so the "OnTransformChanged" event is fired!
             }
         }
