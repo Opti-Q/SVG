@@ -69,6 +69,11 @@ namespace Svg
             _w.WriteRaw(content);
         }
 
+        public void WriteStartDocument()
+        {
+            _w.WriteStartDocument(false);
+        }
+
         public void Dispose()
         {
             _w.Dispose();

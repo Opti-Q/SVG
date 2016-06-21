@@ -18,7 +18,6 @@ namespace Svg.Core.Tools
         private RectangleF _selectionRectangle = null;
         private Brush _brush;
         private Pen _pen;
-        private bool _reselectsElements;
 
         public SelectionTool() : base("Select")
         {
@@ -79,20 +78,8 @@ namespace Svg.Core.Tools
             var p = @event as PointerEvent;
             if (p != null)
             {
-                // if the user points down on an selected item, we do not draw the selection rectangle, so check that as well
-                if (p.EventType == EventType.PointerDown)
-                {
-                    if (!ws.SelectedElements.Any())
-                        _reselectsElements = false;
-
-                    var elements = ws.GetElementsUnder(ws.GetPointerRectangle(p.Pointer1Position), SelectionType.Intersect);
-                    if (elements.Any(element => ws.SelectedElements.Contains(element)))
-                    {
-                        _reselectsElements = true;
-                    }
-                }
                 // if the user never moved, but clicked on an item, we try to select that spot
-                else if (p.EventType == EventType.PointerUp && _selectionRectangle == null)
+                if (p.EventType == EventType.PointerUp && _selectionRectangle == null)
                 {
                     // select elements under pointer
                     SelectElementsUnder(ws.GetPointerRectangle(p.Pointer1Position), ws, SelectionType.Intersect);
@@ -112,6 +99,12 @@ namespace Svg.Core.Tools
             }
 
             return Task.FromResult(true);
+        }
+
+        public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
+        {
+            _selectionRectangle = null;
+
         }
 
         private void SelectElementsUnder(RectangleF selectionRectangle, SvgDrawingCanvas ws, SelectionType selectionType)

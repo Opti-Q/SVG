@@ -171,7 +171,7 @@ namespace Svg
         {
             if (destinationType == typeof(string))
             {
-                var colour = (Color)value;
+                var colour = (Svg.Interfaces.Color)value;
                 return "#" + colour.R.ToString("X2", null) + colour.G.ToString("X2", null) + colour.B.ToString("X2", null);
             }
 

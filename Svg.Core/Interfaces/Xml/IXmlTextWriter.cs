@@ -15,5 +15,6 @@ namespace Svg.Interfaces.Xml
         void WriteEndElement();
         void WriteString(string content);
         void WriteRaw(string content);
+        void WriteStartDocument();
     }
 }

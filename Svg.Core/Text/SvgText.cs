@@ -28,6 +28,11 @@ namespace Svg
             return DeepCopy<SvgText>();
         }
 
+        public override bool ShouldWriteElement()
+        {
+            return (!string.IsNullOrEmpty(this.Text)) || base.ShouldWriteElement();
+        }
+
         public override SvgElement DeepCopy<T>()
         {
             var newObj = base.DeepCopy<T>() as SvgText;

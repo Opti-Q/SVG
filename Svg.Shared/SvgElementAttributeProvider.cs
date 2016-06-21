@@ -11,15 +11,21 @@ namespace Svg
     {
         public IEnumerable<SvgElement.PropertyAttributeTuple> GetPropertyAttributes(object instance)
         {
-            return from PropertyDescriptor a in TypeDescriptor.GetProperties(this)
+            var attrs  = (from PropertyDescriptor a in TypeDescriptor.GetProperties(instance)
             let attribute = a.Attributes[typeof(SvgAttributeAttribute)] as SvgAttributeAttribute//a.Attributes[typeof(SvgAttributeAttribute)] as SvgAttributeAttribute
             where attribute != null
-            select new SvgElement.PropertyAttributeTuple { Property = new SvgPropertyDescriptor(a), Attribute = attribute };
+            select new SvgElement.PropertyAttributeTuple { Property = new SvgPropertyDescriptor(a), Attribute = attribute }).ToArray();
+
+            var visibilityAttribute = attrs.SingleOrDefault(a => a.Attribute.Name.ToLower() == "visibility");
+            if(visibilityAttribute != null)
+                ((SvgPropertyDescriptor)visibilityAttribute.Property).Converter = new SvgTypeConverter(new SvgBoolConverter());
+
+            return attrs;
         }
 
         public IEnumerable<SvgElement.EventAttributeTuple> GetEventAttributes(object instance)
         {
-            return from EventDescriptor a in TypeDescriptor.GetEvents(this)
+            return from EventDescriptor a in TypeDescriptor.GetEvents(instance)
                    let attribute = a.Attributes[typeof(SvgAttributeAttribute)] as SvgAttributeAttribute
                    where attribute != null
                    select new SvgElement.EventAttributeTuple { Event = a.ComponentType.GetField(a.Name, BindingFlags.Instance | BindingFlags.NonPublic), Attribute = attribute };
@@ -29,13 +35,19 @@ namespace Svg
     public class SvgPropertyDescriptor : IPropertyDescriptor
     {
         private readonly PropertyDescriptor _desc;
+        private ITypeConverter _conv;
 
         public SvgPropertyDescriptor(PropertyDescriptor desc)
         {
             _desc = desc;
         }
 
-        public ITypeConverter Converter => new SvgTypeConverter(_desc.Converter);
+        public ITypeConverter Converter
+        {
+            get { return _conv ?? (_conv = new SvgTypeConverter(_desc.Converter)); }
+            set { _conv = value; }
+        }
+
         public object GetValue(object instance)
         {
             return _desc.GetValue(instance);

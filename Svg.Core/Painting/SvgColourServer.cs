@@ -99,7 +99,7 @@ namespace Svg
 
         public override int GetHashCode()
         {
-            return _colour.GetHashCode();
+            return _colour?.GetHashCode() ?? base.GetHashCode();
         }
     }
 }

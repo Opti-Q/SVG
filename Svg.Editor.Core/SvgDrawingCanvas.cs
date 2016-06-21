@@ -56,9 +56,7 @@ namespace Svg.Core
                     _document = new SvgDocument();
                     _document.ViewBox = SvgViewBox.Empty;
 
-                    // fire document changed
-                    foreach (var tool in Tools)
-                        tool.OnDocumentChanged(null, _document);
+                    OnDocumentChanged(null, _document);
                 }
                 return _document;
             }
@@ -71,10 +69,25 @@ namespace Svg.Core
                     _document.ViewBox = SvgViewBox.Empty;
                 }
 
-                // fire document changed
-                foreach (var tool in Tools)
-                    tool.OnDocumentChanged(oldDocument, _document);
+                OnDocumentChanged(oldDocument, _document);
             }
+        }
+
+        private void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
+        {
+            // fire document changed
+            foreach (var tool in Tools)
+                tool.OnDocumentChanged(oldDocument, newDocument);
+
+            // selection is not valid anymore
+            SelectedElements.Clear();
+
+            // also reset translate and zoomfactor
+            Translate = Svg.Engine.Factory.CreatePointF(0f, 0f);
+            ZoomFactor = 1f;
+
+            // re-render
+            FireInvalidateCanvas();
         }
 
         public ObservableCollection<SvgVisualElement> SelectedElements => _selectedElements;

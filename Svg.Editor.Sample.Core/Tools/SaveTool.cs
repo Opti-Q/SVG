@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using MvvmCross.Platform;
 using MvvmCross.Plugins.Email;
@@ -15,10 +12,12 @@ namespace Svg.Droid.SampleEditor.Core.Tools
     public class SaveTool : ToolBase
     {
         private readonly bool _autoLoad;
+        private readonly Func<string> _fileName;
 
-        public SaveTool(bool autoLoad) : base("Save/Load")
+        public SaveTool(bool autoLoad = true, Func<string> fileName = null ) : base("Save/Load")
         {
             _autoLoad = autoLoad;
+            _fileName = fileName ?? (() => "svg_image.svg");
         }
 
         public override Task Initialize(SvgDrawingCanvas ws)
@@ -28,9 +27,8 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 new ToolCommand(this, "Save", (obj) =>
                 {
                     var fs = Svg.Engine.Resolve<IFileSystem>();
-
                     var path = fs.GetDownloadFolder();
-                    var storagePath = fs.PathCombine(path, "svg_file.svg");
+                    var storagePath = fs.PathCombine(path, _fileName());
 
                     if (fs.FileExists(storagePath))
                     {
@@ -41,59 +39,61 @@ namespace Svg.Droid.SampleEditor.Core.Tools
 
                     ws.FireToolCommandsChanged();
 
-                }, (obj) => ws.Document != null),
+                }, 
+                (obj) => ws.Document != null),
                 new ToolCommand(this, "Load", (obj) =>
                 {
                     var fs = Svg.Engine.Resolve<IFileSystem>();
-
                     var path = fs.GetDownloadFolder();
-                    var storagePath = fs.PathCombine(path, "svg_file.svg");
+                    var storagePath = fs.PathCombine(path, _fileName());
 
                     if (fs.FileExists(storagePath))
                     {
-                        try
-                        {
-                            ws.Document = Svg.SvgDocument.Open<SvgDocument>(storagePath);
-                        }
-                        catch (Exception)
-                        {
-                            fs.DeleteFile(storagePath);
-                        }
+                       ws.Document = Svg.SvgDocument.Open<SvgDocument>(storagePath);
                     }
                     ws.FireToolCommandsChanged();
 
-                }, (obj) =>
+                }, 
+                (obj) =>
                 {
                     var fs = Svg.Engine.Resolve<IFileSystem>();
-
                     var path = fs.GetDownloadFolder();
-                    var storagePath = fs.PathCombine(path, "svg_file.svg");
+                    var storagePath = fs.PathCombine(path, _fileName());
                     return fs.FileExists(storagePath);
                 }),
-
                 new ToolCommand(this, "Share", (obj) =>
                 {
                     var fs = Svg.Engine.Resolve<IFileSystem>();
 
                     var path = fs.GetDownloadFolder();
-                    var storagePath = fs.PathCombine(path, "svg_file.svg");
+                    var storagePath = fs.PathCombine(path, _fileName());
 
                     if (fs.FileExists(storagePath))
                     {
                         using (var stream = fs.OpenRead(storagePath))
                         {
                             var share = Mvx.Resolve<IMvxComposeEmailTaskEx>();
-                            share.ComposeEmail(new [] {"alexander.marek@outlook.com"} , subject:$"SVG {DateTime.Now.ToString()}", attachments: new [] {new EmailAttachment {Content=stream, ContentType = "image/svg+xml", FileName = "svg_file.svg"} });
+                            share.ComposeEmail(new [] {"someone@somewhere.com"} , subject:$"SVG {DateTime.Now.ToString()}", attachments: new [] {new EmailAttachment {Content=stream, ContentType = "image/svg+xml", FileName = "svg_file.svg"} });
                         }
                     }
 
-                }, (obj) =>
+                }, 
+                (obj) =>
                 {
                     var fs = Svg.Engine.Resolve<IFileSystem>();
-
                     var path = fs.GetDownloadFolder();
-                    var storagePath = fs.PathCombine(path, "svg_file.svg");
+                    var storagePath = fs.PathCombine(path, _fileName());
                     return fs.FileExists(storagePath);
+                }),
+                new ToolCommand(this, "Test SaveLoad", (obj) =>
+                {
+                    ws.Document = new SvgDocument();
+                    this.Commands.Single(c => c.Name == "Save").Execute(null);
+                    this.Commands.Single(c => c.Name == "Load").Execute(null);
+                }),
+                new ToolCommand(this, "Clear", (obj) =>
+                {
+                    ws.Document = new SvgDocument();
                 })
 
             };

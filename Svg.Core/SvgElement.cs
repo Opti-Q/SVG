@@ -572,6 +572,9 @@ namespace Svg
                     (!attr.Attribute.InAttributeDictionary || _attributes.ContainsKey(attr.Attribute.Name)))
                 {
                     object propertyValue = attr.Property.GetValue(this);
+                    if (propertyValue == null)
+                        continue;
+
                     string value = (string)attr.Property.Converter.ConvertTo(propertyValue, typeof(string));
 
                     forceWrite = false;
