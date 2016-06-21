@@ -35,6 +35,8 @@ namespace Svg.Droid.SampleEditor.Views
 
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
+            var shownActions = 2;
+
             foreach (var commands in ViewModel.Canvas.ToolCommands)
             {
                 var cmds = commands.Where(c => c.CanExecute(null)).ToArray();
@@ -44,7 +46,11 @@ namespace Svg.Droid.SampleEditor.Views
                 if (cmds.Length == 1)
                 {
                     var cmd = cmds.Single();
-                    menu.Add(cmd.GetHashCode(), cmd.GetHashCode(), 1, cmd.Name);
+                    var mi = menu.Add(cmd.GetHashCode(), cmd.GetHashCode(), 1, cmd.Name);
+                    if (shownActions > 0)
+                        mi.SetShowAsAction(ShowAsAction.IfRoom);
+                    else
+                        mi.SetShowAsAction(ShowAsAction.Never);
                 }
                 else
                 {
@@ -55,8 +61,14 @@ namespace Svg.Droid.SampleEditor.Views
                     {
                         m.Add(cmd.GetHashCode(), cmd.GetHashCode(), 1, cmd.Name);
                     }
+                    if (shownActions > 0)
+                        m.Item.SetShowAsAction(ShowAsAction.IfRoom);
+                    else
+                        m.Item.SetShowAsAction(ShowAsAction.Never);
 
                 }
+
+                shownActions--;
             }
 
             return true;

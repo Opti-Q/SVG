@@ -75,7 +75,7 @@ namespace Svg.Core.Tools
                 {
                     IsVisible = !IsVisible;
                     _canvas.FireInvalidateCanvas();
-                }, (obj) => true)
+                }, (obj) => true, iconName:"toggleGrid.png", sort:2000)
             };
 
             // initialize with callbacks

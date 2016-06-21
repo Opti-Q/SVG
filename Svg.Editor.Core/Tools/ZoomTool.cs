@@ -33,13 +33,23 @@ namespace Svg.Core.Tools
                     var f =_owner.ZoomFactor + 0.25f;
                     _owner.ZoomFactor = ws.ZoomFactor = Math.Max(MinScale, Math.Min(f, MaxScale));
                     _owner.FireInvalidateCanvas();
-                }),
+                }, iconName:"zoomIn.png", sort:1500),
                 new ToolCommand(this, "Zoom out -", (x) =>
                 {
                     var f =_owner.ZoomFactor - 0.25f;
                     _owner.ZoomFactor = ws.ZoomFactor = Math.Max(MinScale, Math.Min(f, MaxScale));
                     _owner.FireInvalidateCanvas();
-                })
+                }, iconName:"zoomOut.png", sort:1550),
+                new ToolCommand(this, "100 %", (x) =>
+                {
+                    _owner.ZoomFactor = ws.ZoomFactor = Math.Max(MinScale, Math.Min(1, MaxScale));
+                    _owner.FireInvalidateCanvas();
+                }, iconName:"zoom100.png", sort:1600),
+                new ToolCommand(this, "200 %", (x) =>
+                {
+                    _owner.ZoomFactor = ws.ZoomFactor = Math.Max(MinScale, Math.Min(2, MaxScale));
+                    _owner.FireInvalidateCanvas();
+                }, iconName:"zoom200.png", sort:1650),
             };
 
             return Task.FromResult(true);

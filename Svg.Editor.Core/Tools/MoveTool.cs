@@ -18,20 +18,20 @@ namespace Svg.Core.Tools
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
-            Commands = new List<IToolCommand>
-            {
-                new ToolCommand(this, "Move", (obj) =>
-                {
-                    this.IsActive = !this.IsActive;
-                    var panTool = ws.Tools.OfType<PanTool>().FirstOrDefault();
-                    if (panTool != null)
-                    {
-                        // only either pantool or movetool can be active
-                        panTool.IsActive = !this.IsActive;
-                    }
+            //Commands = new List<IToolCommand>
+            //{
+            //    new ToolCommand(this, "Move", (obj) =>
+            //    {
+            //        this.IsActive = !this.IsActive;
+            //        var panTool = ws.Tools.OfType<PanTool>().FirstOrDefault();
+            //        if (panTool != null)
+            //        {
+            //            // only either pantool or movetool can be active
+            //            panTool.IsActive = !this.IsActive;
+            //        }
 
-                }, (obj) => !this.IsActive)
-            };
+            //    }, (obj) => !this.IsActive)
+            //};
 
             return Task.FromResult(true);
         }

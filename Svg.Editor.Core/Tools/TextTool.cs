@@ -14,6 +14,9 @@ namespace Svg.Core.Tools
 
     public class TextTool : ToolBase
     {
+        // if user moves cursor, she does not want to add/edit text
+        private bool _moveEventWasRegistered;
+
         public TextTool() : base("Text")
         {
         }
@@ -27,8 +30,6 @@ namespace Svg.Core.Tools
                 new ToolCommand(this, "Text", (obj) =>
                 {
                     this.IsActive = !this.IsActive;
-                    
-                    
                 })
             };
 
@@ -42,9 +43,26 @@ namespace Svg.Core.Tools
             if (!this.IsActive)
                 return;
 
-            var pe = @event as PointerEvent;
-            if (pe != null && pe.EventType == EventType.PointerUp)
+            // if user moves cursor, she does not want to add/edit text
+            var me = @event as MoveEvent;
+            if (me != null)
             {
+                _moveEventWasRegistered = true;
+            }
+
+            var pe = @event as PointerEvent;
+            if (pe != null && pe.EventType == EventType.PointerDown)
+            {
+                _moveEventWasRegistered = false;
+            }
+            else if (pe != null && pe.EventType == EventType.PointerUp)
+            {
+                if (_moveEventWasRegistered)
+                {
+                    return;
+                }
+                
+                                
                 var dX = pe.Pointer1Position.X - pe.Pointer1Down.X;
                 var dY = pe.Pointer1Position.Y - pe.Pointer1Down.Y;
 

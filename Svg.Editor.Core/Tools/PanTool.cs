@@ -18,15 +18,15 @@ namespace Svg.Core.Tools
         {
             _owner = ws;
 
-            Commands = new List<IToolCommand>()
-            {
-                new ToolCommand(this, "Center at 0:0", (x) =>
-                {
-                    _owner.Translate.X = 0f;
-                    _owner.Translate.Y = 0f;
-                    _owner.FireInvalidateCanvas();
-                }),
-            };
+            //Commands = new List<IToolCommand>()
+            //{
+            //    new ToolCommand(this, "Center at 0:0", (x) =>
+            //    {
+            //        _owner.Translate.X = 0f;
+            //        _owner.Translate.Y = 0f;
+            //        _owner.FireInvalidateCanvas();
+            //    }, sort:2000),
+            //};
 
             return Task.FromResult(true);
         }

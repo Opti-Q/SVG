@@ -94,7 +94,10 @@ namespace Svg.Core
 
         public ObservableCollection<ITool> Tools => _tools;
 
-        public IEnumerable<IEnumerable<IToolCommand>> ToolCommands => Tools.Select(t => t.Commands);
+        public IEnumerable<IEnumerable<IToolCommand>> ToolCommands
+            =>
+                Tools.Select(t => t.Commands.OrderBy(tc => tc.Sort))
+                    .OrderBy(t => t.FirstOrDefault()?.Sort ?? int.MaxValue);
 
         public PointF RelativeTranslate => Engine.Factory.CreatePointF(Translate.X/ZoomFactor, Translate.Y/ZoomFactor);
 
@@ -158,7 +161,7 @@ namespace Svg.Core
             }
         }
 
-        private async Task EnsureInitialized()
+        public async Task EnsureInitialized()
         {
             if (!_initialized)
             {

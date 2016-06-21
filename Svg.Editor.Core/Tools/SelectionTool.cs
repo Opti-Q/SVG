@@ -161,7 +161,7 @@ namespace Svg.Core.Tools
         {
             private readonly SvgDrawingCanvas _canvas;
 
-            public ToggleSelectionToolCommand(SelectionTool tool, SvgDrawingCanvas canvas) : base(tool, "Select", (obj)=> {})
+            public ToggleSelectionToolCommand(SelectionTool tool, SvgDrawingCanvas canvas) : base(tool, "Select", (obj)=> {}, sort:100)
             {
                 _canvas = canvas;
             }
@@ -175,7 +175,8 @@ namespace Svg.Core.Tools
                 if (panTool != null)
                     panTool.IsActive = !selectionTool.IsActive;
 
-                Name = selectionTool.IsActive ? "Pan" : "Select";
+                Name = selectionTool.IsActive ? "Select" : "Pan";
+                IconName = selectionTool.IsActive ? "selectionTool.png" : "panTool.png";
 
                 // also reset selection triangle
                 if (!selectionTool.IsActive)
