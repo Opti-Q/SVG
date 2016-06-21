@@ -6,6 +6,7 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using Svg.Core;
+using Svg.Core.Interfaces;
 using Svg.Core.Tools;
 using Svg.Droid.Editor.Services;
 using GestureDetector = Svg.Droid.Editor.Services.GestureDetector;
@@ -27,6 +28,7 @@ namespace Svg.Droid.Editor
         {
             // Initialize SVG Platform and tie together PCL and platform specific modules
             SvgPlatformSetup.Init(new SvgAndroidPlatformOptions(context) {EnableFastTextRendering = true});
+            Engine.Register<IRendererFactory, AndroidCanvasRendererFactory>(() => new AndroidCanvasRendererFactory());
             
             _drawingCanvas = new SvgDrawingCanvas();
             _detector = new GestureDetector(this.Context, (e) => DrawingCanvas.OnEvent(e));

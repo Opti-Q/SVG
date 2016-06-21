@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using MvvmCross.Platform;
 using MvvmCross.Plugins.Email;
 using Svg.Core;
+using Svg.Core.Interfaces;
 using Svg.Core.Tools;
+using Svg.Droid.SampleEditor.Core.Interfaces;
 using Svg.Interfaces;
 
 namespace Svg.Droid.SampleEditor.Core.Tools
@@ -61,7 +63,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     var storagePath = fs.PathCombine(path, _fileName());
                     return fs.FileExists(storagePath);
                 }),
-                new ToolCommand(this, "Share", (obj) =>
+                new ToolCommand(this, "Share SVG", (obj) =>
                 {
                     var fs = Svg.Engine.Resolve<IFileSystem>();
 
@@ -78,6 +80,41 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     }
 
                 }, 
+                (obj) =>
+                {
+                    var fs = Svg.Engine.Resolve<IFileSystem>();
+                    var path = fs.GetDownloadFolder();
+                    var storagePath = fs.PathCombine(path, _fileName());
+                    return fs.FileExists(storagePath);
+                }),
+                new ToolCommand(this, "Share PNG", (obj) =>
+                {
+                    var fs = Engine.Resolve<IFileSystem>();
+                    var storer = Engine.Resolve<IImageStorer>();
+
+                    using (var bmp = ws.GetOrCreate(ws.ScreenWidth, ws.ScreenHeight))
+                    {
+                        // fill canvas with white color (otherwise it would be transparent!
+                        var renderer = Engine.Resolve<IRendererFactory>().Create(bmp);
+                        renderer.FillEntireCanvasWithColor(Engine.Factory.Colors.White);
+
+                        ws.Document.Draw(bmp);
+                        var path = fs.PathCombine(fs.GetDownloadFolder(), "svg_image.png");
+                        if (fs.FileExists(path))
+                            fs.DeleteFile(path);
+
+                        using (var stream = fs.OpenWrite(path))
+                        {
+                            storer.SaveAsPng(bmp, stream);
+                        }
+
+                        using(var stream = fs.OpenRead(path))
+                        {
+                            var share = Mvx.Resolve<IMvxComposeEmailTaskEx>();
+                            share.ComposeEmail(new [] {"someone@somewhere.com"} , subject:$"SVG {DateTime.Now.ToString()}", attachments: new [] {new EmailAttachment {Content=stream, ContentType = "image/png", FileName = "svg_file.png"} });
+                        }
+                    }
+                },
                 (obj) =>
                 {
                     var fs = Svg.Engine.Resolve<IFileSystem>();
