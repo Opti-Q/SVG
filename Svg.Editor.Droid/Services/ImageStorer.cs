@@ -1,9 +1,8 @@
 using System.IO;
-using Android.Content;
-using Svg.Droid.SampleEditor.Core.Interfaces;
+using Svg.Core.Interfaces;
 using Svg.Platform;
 
-namespace Svg.Droid.SampleEditor.Services
+namespace Svg.Droid.Editor.Services
 {
     public class ImageStorer: IImageStorer
     {

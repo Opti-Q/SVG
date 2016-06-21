@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Svg.Droid.SampleEditor.Core.Interfaces
+namespace Svg.Core.Interfaces
 {
     public interface IImageStorer
     {

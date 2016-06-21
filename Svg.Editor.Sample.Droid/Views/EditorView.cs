@@ -6,11 +6,10 @@ using System.Linq;
 using Android.Content.Res;
 using MvvmCross.Droid.Views;
 using Svg.Droid.Editor;
+using Svg.Droid.Editor.Services;
 using Svg.Droid.SampleEditor.Core;
-using Svg.Droid.SampleEditor.Core.Interfaces;
 using Svg.Droid.SampleEditor.Core.Tools;
 using Svg.Droid.SampleEditor.Core.ViewModels;
-using Svg.Droid.SampleEditor.Services;
 using Svg.Interfaces;
 using Svg.Platform;
 
@@ -26,7 +25,6 @@ namespace Svg.Droid.SampleEditor.Views
             // register first
             SvgPlatformSetup.Init(new SvgAndroidPlatformOptions(this) {EnableFastTextRendering = true});
             Engine.Register<ISvgSourceFactory, SvgSourceFactory>(() => new SvgSourceFactory(Assets));
-            Engine.Register<IImageStorer, IImageStorer>(() => new ImageStorer());
 
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.EditorVIew);

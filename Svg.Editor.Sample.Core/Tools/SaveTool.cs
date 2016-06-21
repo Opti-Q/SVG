@@ -7,7 +7,6 @@ using MvvmCross.Plugins.Email;
 using Svg.Core;
 using Svg.Core.Interfaces;
 using Svg.Core.Tools;
-using Svg.Droid.SampleEditor.Core.Interfaces;
 using Svg.Interfaces;
 
 namespace Svg.Droid.SampleEditor.Core.Tools
