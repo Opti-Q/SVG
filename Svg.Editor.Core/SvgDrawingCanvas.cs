@@ -239,5 +239,22 @@ namespace Svg.Core
         {
             return GetElementsUnder(GetPointerRectangle(pointer1Position), SelectionType.Intersect);
         }
+
+        public RectangleF CalculateDocumentBounds()
+        {
+            RectangleF documentSize = Engine.Factory.CreateRectangleF(0, 0, 0, 0);
+            
+            foreach (var element in Document.Children.OfType<SvgVisualElement>())
+            {
+                RectangleF bounds = element.Bounds;
+                var m = element.Transforms?.GetMatrix();
+                if (m != null)
+                    bounds = m.TransformRectangle(bounds);
+
+                documentSize = documentSize.UnionAndCopy(bounds);
+            }
+            
+            return documentSize;
+        }
     }
 }

@@ -25,10 +25,7 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
             tool.SourceProvider = GetSource;
             
             Canvas.Tools.Add(new SaveTool(true));
-            //Canvas.Document = SvgDocument.Open<SvgDocument>(GetSource("isolib/Straights/solid and broken/solid1.svg"));
-            //_padView.DrawingCanvas.Document = SvgDocument.Open<SvgDocument>(new SvgAssetSource("svg/painting-control-01-f.svg", Assets));
-            //_padView.DrawingCanvas.Document = SvgDocument.Open<SvgDocument>(new SvgAssetSource("svg/ellipse.svg", Assets));
-            //_padView.DrawingCanvas.Document = SvgDocument.Open<SvgDocument>(new SvgAssetSource("svg/coords-trans-09-t.svg", Assets));
+            //Canvas.Document = SvgDocument.Open<SvgDocument>(GetSource("svg/ellipse.svg"));
             
         }
 

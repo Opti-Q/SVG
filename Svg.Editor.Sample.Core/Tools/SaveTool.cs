@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using MvvmCross.Platform;
@@ -36,6 +37,10 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     {
                         fs.DeleteFile(storagePath);
                     }
+                    
+                    var documentSize = ws.CalculateDocumentBounds();
+                    ws.Document.Width = new SvgUnit(SvgUnitType.Pixel, documentSize.Width);
+                    ws.Document.Height = new SvgUnit(SvgUnitType.Pixel, documentSize.Height);
 
                     ws.Document.Write(storagePath);
 
@@ -92,14 +97,19 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     var fs = Engine.Resolve<IFileSystem>();
                     var storer = Engine.Resolve<IImageStorer>();
 
+                    var documentSize = ws.CalculateDocumentBounds();
+
                     //using (var bmp = ws.GetOrCreate(ws.ScreenWidth, ws.ScreenHeight))
-                    using (var bmp = ws.GetOrCreate(1600, 1200)) // 2MP (see https://de.wikipedia.org/wiki/Bildaufl%C3%B6sungen_in_der_Digitalfotografie)
+                    using (var bmp = ws.GetOrCreate((int)documentSize.Width, (int)documentSize.Height)) // 2MP (see https://de.wikipedia.org/wiki/Bildaufl%C3%B6sungen_in_der_Digitalfotografie)
                     {
                         // fill canvas with white color (otherwise it would be transparent!
                         var renderer = Engine.Resolve<IRendererFactory>().Create(bmp);
                         renderer.FillEntireCanvasWithColor(Engine.Factory.Colors.White);
-
+                        
+                        // draw document
                         ws.Document.Draw(bmp);
+                        
+                        // now save it as PNG
                         var path = fs.PathCombine(fs.GetDownloadFolder(), "svg_image.png");
                         if (fs.FileExists(path))
                             fs.DeleteFile(path);
@@ -109,6 +119,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                             storer.SaveAsPng(bmp, stream);
                         }
 
+                        // then share it using MVVMCross plugin
                         using(var stream = fs.OpenRead(path))
                         {
                             var share = Mvx.Resolve<IMvxComposeEmailTaskEx>();
