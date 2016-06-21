@@ -92,7 +92,8 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     var fs = Engine.Resolve<IFileSystem>();
                     var storer = Engine.Resolve<IImageStorer>();
 
-                    using (var bmp = ws.GetOrCreate(ws.ScreenWidth, ws.ScreenHeight))
+                    //using (var bmp = ws.GetOrCreate(ws.ScreenWidth, ws.ScreenHeight))
+                    using (var bmp = ws.GetOrCreate(1600, 1200)) // 2MP (see https://de.wikipedia.org/wiki/Bildaufl%C3%B6sungen_in_der_Digitalfotografie)
                     {
                         // fill canvas with white color (otherwise it would be transparent!
                         var renderer = Engine.Resolve<IRendererFactory>().Create(bmp);
