@@ -185,11 +185,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="14.481547"
-     inkscape:cx="21.305291"
-     inkscape:cy="2.7049261"
+     inkscape:zoom="10.24"
+     inkscape:cx="-4.625765"
+     inkscape:cy="24.790657"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g4513"
      showgrid="true"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
@@ -222,36 +222,34 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(-0.13173532,-0.062394)">
+     id="layer1">
     <g
-       transform="matrix(2.1900758,0,0,-2.4014884,-14.738161,-28.173825)"
        inkscape:label="welds"
        id="g4513">
+      <rect
+         id="rect3369"
+         width="38.54213"
+         height="20.138107"
+         x="0.04283981"
+         y="0.12447512"
+         style="fill:#000000;fill-opacity:0" />
       <path
          id="path4515"
          style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none"
-         d="m 13.921348,-16.177466 c 0,0.8 0.698,1.44 1.56,1.44 0.862,0 1.56,-0.64 1.56,-1.44 0,-0.8 -0.698,-1.44 -1.56,-1.44 -0.862,0 -1.56,0.64 -1.56,1.44 z"
+         d="m 17.632285,9.8967525 c 0,0.8000005 0.698,1.4400005 1.56,1.4400005 0.862,0 1.56,-0.64 1.56,-1.4400005 0,-0.8 -0.698,-1.44 -1.56,-1.44 -0.862,0 -1.56,0.64 -1.56,1.44 z"
          inkscape:connector-curvature="0" />
       <path
          id="path4517"
          style="fill:none;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
-         d="m 14.01375,-16.07125 c 0,0.8 0.698,1.44 1.56,1.44 0.862,0 1.56,-0.64 1.56,-1.44 0,-0.8 -0.698,-1.44 -1.56,-1.44 -0.862,0 -1.56,0.64 -1.56,1.44 z"
+         d="m 17.724687,10.002969 c 0,0.8 0.698,1.44 1.56,1.44 0.862,0 1.56,-0.64 1.56,-1.44 0,-0.8000005 -0.698,-1.4400005 -1.56,-1.4400005 -0.862,0 -1.56,0.64 -1.56,1.4400005 z"
          inkscape:connector-curvature="0" />
     </g>
-    <rect
-       id="rect3369"
-       width="38.54213"
-       height="20.138107"
-       x="0.04283981"
-       y="0.12447512"
-       style="fill:#000000;fill-opacity:0" />
   </g>
 </svg>

@@ -85,9 +85,13 @@ namespace Svg
         /// <value>The bounds.</value>
         public override RectangleF Bounds
         {
-			get { return Engine.Factory.CreateRectangleF(this.Location.ToDeviceValue(null, this),
+			get {
+                var b = Engine.Factory.CreateRectangleF(this.Location.ToDeviceValue(null, this),
                                         Engine.Factory.CreateSizeF(this.Width.ToDeviceValue(null, UnitRenderingType.Horizontal, this), 
-                                                  this.Height.ToDeviceValue(null, UnitRenderingType.Vertical, this))); }
+                                                  this.Height.ToDeviceValue(null, UnitRenderingType.Vertical, this)));
+
+                return this.Transforms != null ? this.Transforms.GetMatrix().TransformRectangle(b) : b;
+            }
         }
 
         /// <summary>

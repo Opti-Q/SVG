@@ -23,8 +23,8 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 {
                     if (SourceProvider == null)
                         return;
-                    //var provider = SourceProvider("isolib/Welds/solid/weld1.svg");
-                    var provider = SourceProvider("isolib/Valves/Valves/valve1.svg");
+                    var provider = SourceProvider("isolib/Welds/solid/weld1.svg");
+                    //var provider = SourceProvider("isolib/Valves/Valves/valve1.svg");
                     //var provider = SourceProvider("isolib/Valves/Valves/valve2.svg");
                     //var provider = SourceProvider("isolib/Valves/Valves/valve3.svg");
                     //var provider = SourceProvider("isolib/Valves/Valves/valve4.svg");

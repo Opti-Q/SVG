@@ -61,7 +61,11 @@ namespace Svg
 
         public override Svg.Interfaces.RectangleF Bounds
         {
-            get { return Engine.Factory.CreateRectangleF(); }
+            get
+            {
+                var b = Engine.Factory.CreateRectangleF();
+                return this.Transforms != null ? this.Transforms.GetMatrix().TransformRectangle(b) : b;
+            }
         }
 
         protected override bool Renderable { get { return false; } }

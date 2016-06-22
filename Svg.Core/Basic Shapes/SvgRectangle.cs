@@ -167,7 +167,11 @@ namespace Svg
         /// <value>The bounds.</value>
         public override RectangleF Bounds
         {
-            get { return Path(null).GetBounds(); }
+            get
+            {
+                var b = Path(null).GetBounds();
+                return this.Transforms != null ? this.Transforms.GetMatrix().TransformRectangle(b) : b;
+            }
         }
 
         /// <summary>

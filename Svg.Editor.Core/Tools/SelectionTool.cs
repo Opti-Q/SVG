@@ -158,8 +158,9 @@ namespace Svg.Core.Tools
                 
                 // we draw a selection adorner around all elements
                 // as the canvas is already translated, we do not need to use the renderbounds, but the bounds themselves
-                var b = element.Transforms.GetMatrix().TransformRectangle(element.Bounds);
-                renderer.DrawRectangle(b, Pen);
+                //var b = element.Transforms.GetMatrix().TransformRectangle(element.Bounds);
+                //renderer.DrawRectangle(b, Pen);
+                renderer.DrawRectangle(element.Bounds, Pen);
                 
 
                 renderer.Graphics.Restore();

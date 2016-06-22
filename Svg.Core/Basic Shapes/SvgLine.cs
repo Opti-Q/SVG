@@ -170,7 +170,11 @@ namespace Svg
 
         public override Svg.Interfaces.RectangleF Bounds
         {
-            get { return this.Path(null).GetBounds(); }
+            get
+            {
+                var b =this.Path(null).GetBounds();
+                return this.Transforms != null ? this.Transforms.GetMatrix().TransformRectangle(b) : b;
+            }
         }
 
 		public override SvgElement DeepCopy()

@@ -297,17 +297,15 @@ namespace Svg
         protected internal virtual bool PushTransforms(ISvgRenderer renderer)
         {
             _graphicsMatrix = null;
+            RenderTransform = renderer.Transform.Clone();
 
             // Return if there are no transforms
             if (this.Transforms == null || this.Transforms.Count == 0)
             {
-                RenderTransform = renderer.Transform.Clone();
                 return true;
             }
             if (this.Transforms.Count == 1 && this.Transforms[0].Matrix.Equals(_zeroMatrix))
             {
-
-                RenderTransform = renderer.Transform.Clone();
                 return false;
             }
             
@@ -319,8 +317,6 @@ namespace Svg
             {
                 transformation.ApplyTo(renderer);
             }
-
-            RenderTransform = renderer.Transform.Clone();
             
             return true;
         }

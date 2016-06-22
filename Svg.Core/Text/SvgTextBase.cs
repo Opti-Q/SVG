@@ -238,15 +238,22 @@ namespace Svg
         {
             get
             {
+                RectangleF b;
                 if (_alternativeTextRenderer != null)
-                    return _alternativeTextRenderer.GetBounds(this, SvgRenderer.FromNull());
-
-                var path = this.Path(null);
-                foreach (var elem in this.Children.OfType<SvgVisualElement>())
                 {
-                    path.AddPath(elem.Path(null), false);
+                    b = _alternativeTextRenderer.GetBounds(this, SvgRenderer.FromNull());
                 }
-                return path.GetBounds();
+                else
+                {
+                    var path = this.Path(null);
+                    foreach (var elem in this.Children.OfType<SvgVisualElement>())
+                    {
+                        path.AddPath(elem.Path(null), false);
+                    }
+                    b = path.GetBounds();
+                }
+
+                return this.Transforms != null ? this.Transforms.GetMatrix().TransformRectangle(b) : b;
             }
         }
 

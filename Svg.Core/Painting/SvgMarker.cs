@@ -101,7 +101,10 @@ namespace Svg
             {
                 var path = this.Path(null);
                 if (path != null)
-                    return path.GetBounds();
+                {
+                    var b = path.GetBounds();
+                    return this.Transforms != null ? this.Transforms.GetMatrix().TransformRectangle(b) : b;
+                }
                 return Engine.Factory.CreateRectangleF();
             }
         }

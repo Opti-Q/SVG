@@ -41,7 +41,7 @@ namespace Svg
         /// </summary>
         /// <value>The bounds.</value>
         public abstract RectangleF Bounds { get; }
-        
+
         /// <summary>
         /// Returns the bounding rectangle transformed by the render matrix
         /// or: return the bounds that this item had when it was last rendered
