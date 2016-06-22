@@ -138,8 +138,8 @@ namespace Svg
             var width = (frag == null ? this.Width : frag.Width.ToDeviceValue(renderer, UnitRenderingType.Horizontal, frag));
             var height = (frag == null ? this.Height : frag.Height.ToDeviceValue(renderer, UnitRenderingType.Vertical, frag));
 
-            var fScaleX = width / this.Width;
-            var fScaleY = height / this.Height; //(this.MinY < 0 ? -1 : 1) * 
+            var fScaleX = width > this.Width ? this.Width / width : width / this.Width;
+            var fScaleY = height > this.Height ? this.Height / height : height / this.Height; //(this.MinY < 0 ? -1 : 1) * 
             var fMinX = -this.MinX;
             var fMinY = -this.MinY;
 
