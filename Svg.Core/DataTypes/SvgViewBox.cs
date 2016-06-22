@@ -199,9 +199,9 @@ namespace Svg
             }
 
             renderer.SetClip(new Region(Engine.Factory.CreateRectangleF(x, y, width, height)), CombineMode.Intersect);
+            renderer.TranslateTransform(x, y, MatrixOrder.Prepend);
+            renderer.TranslateTransform(fMinX, fMinY, MatrixOrder.Prepend);
             renderer.ScaleTransform(fScaleX, fScaleY, MatrixOrder.Prepend);
-            renderer.TranslateTransform(x, y);
-            renderer.TranslateTransform(fMinX, fMinY);
         }
     }
 }

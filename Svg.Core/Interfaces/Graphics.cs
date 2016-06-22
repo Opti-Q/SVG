@@ -29,5 +29,6 @@ namespace Svg
         Region[] MeasureCharacterRanges(string text, Font font, RectangleF rectangle, StringFormat format);
         void DrawText(string text, float x, float y, Pen pen);
         void Concat(Matrix matrix);
+        void FillBackground(Color color);
     }
 }

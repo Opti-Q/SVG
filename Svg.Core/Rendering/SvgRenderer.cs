@@ -59,21 +59,27 @@ namespace Svg
         {
             return this._innerGraphics.Clip;
         }
-        public void RotateTransform(float fAngle, MatrixOrder order = MatrixOrder.Append)
+        public void RotateTransform(float fAngle, MatrixOrder order = MatrixOrder.Prepend)
         {
-            this._innerGraphics.RotateTransform(fAngle, order);
+            this._innerGraphics.RotateTransform(fAngle, MatrixOrder.Prepend);
         }
-        public void ScaleTransform(float sx, float sy, MatrixOrder order = MatrixOrder.Append)
+        public void ScaleTransform(float sx, float sy, MatrixOrder order = MatrixOrder.Prepend)
         {
-            this._innerGraphics.ScaleTransform(sx, sy, order);
+            this._innerGraphics.ScaleTransform(sx, sy, MatrixOrder.Prepend);
+        }
+        public void TranslateTransform(float dx, float dy, MatrixOrder order = MatrixOrder.Prepend)
+        {
+            this._innerGraphics.TranslateTransform(dx, dy, MatrixOrder.Prepend);
         }
         public void SetClip(Region region, CombineMode combineMode = CombineMode.Replace)
         {
             this._innerGraphics.SetClip(region, combineMode);
         }
-        public void TranslateTransform(float dx, float dy, MatrixOrder order = MatrixOrder.Append)
+
+        public void FillBackground(Color color)
         {
-            this._innerGraphics.TranslateTransform(dx, dy, order);
+            if (color == null) throw new ArgumentNullException(nameof(color));
+            this._innerGraphics.FillBackground(color);
         }
 
         public void DrawText(string text, float x, float y, Pen pen)

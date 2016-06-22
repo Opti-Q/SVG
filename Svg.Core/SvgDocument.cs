@@ -461,17 +461,28 @@ namespace Svg
             return bitmap;
         }
 
+
         /// <summary>
         /// Renders the <see cref="SvgDocument"/> into a given Bitmap <see cref="Bitmap"/>.
         /// </summary>
         public virtual void Draw(Bitmap bitmap)
         {
-            //Trace.TraceInformation("Begin Render");
+            Draw(bitmap, null);
+        }
 
+
+        /// <summary>
+        /// Renders the <see cref="SvgDocument"/> into a given Bitmap <see cref="Bitmap"/>.
+        /// </summary>
+        public virtual void Draw(Bitmap bitmap, Color backgroundColor)
+        {
             try
             {
 				using (var renderer = SvgRenderer.FromImage(bitmap))
 				{
+				    if (backgroundColor != null)
+				        renderer.FillBackground(backgroundColor);
+
 					renderer.SetBoundable(new GenericBoundable(0, 0, bitmap.Width, bitmap.Height));
 
 					//EO, 2014-12-05: Requested to ensure proper zooming (draw the svg in the bitmap size, ==> proper scaling)
@@ -489,8 +500,81 @@ namespace Svg
             {
                 throw;
             }
+        }
 
-            //Trace.TraceInformation("End Render");
+        public Bitmap DrawAllContents(Color backgroundColor = null)
+        {
+            var bounds = CalculateDocumentBounds();
+            return DrawAllContents((int)bounds.Width, (int)bounds.Height, backgroundColor);
+        }
+
+        public Bitmap DrawAllContents(int width, int height, Color backgroundColor = null)
+        {
+            Bitmap bitmap = null;
+            try
+            {
+                bitmap = Engine.Factory.CreateBitmap(width, height);
+                DrawAllContents(bitmap, backgroundColor);
+                return bitmap;
+            }
+            catch
+            {
+                bitmap?.Dispose();
+                throw;
+            }
+        }
+
+        public void DrawAllContents(Bitmap bitmap, Color backgroundColor = null)
+        {
+            // draw document
+            var oldX = X;
+            var oldY = Y;
+            var oldWidth = Width;
+            var oldHeight = Height;
+            var oldViewBox = ViewBox;
+            var oldAspectRatio = AspectRatio;
+            try
+            {
+                var bounds = CalculateDocumentBounds().InflateAndCopy(10, 10);
+                X = new SvgUnit(SvgUnitType.Pixel, 0);
+                Y = new SvgUnit(SvgUnitType.Pixel, 0);
+                Width = new SvgUnit(SvgUnitType.Pixel, bounds.Width);
+                Height = new SvgUnit(SvgUnitType.Pixel, bounds.Height);
+
+                
+                AspectRatio = new SvgAspectRatio(SvgPreserveAspectRatio.xMinYMin);
+                ViewBox = new SvgViewBox(bounds.X, bounds.Y, bounds.Width, bounds.Height);
+                Draw(bitmap, backgroundColor);
+            }
+            finally
+            {
+                ViewBox = oldViewBox;
+                AspectRatio = oldAspectRatio;
+                Height = oldHeight;
+                Width = oldWidth;
+                X = oldX;
+                Y = oldY;
+            }
+        }
+
+        public RectangleF CalculateDocumentBounds()
+        {
+            RectangleF documentSize = null;
+
+            foreach (var element in Children.OfType<SvgVisualElement>())
+            {
+                RectangleF bounds = element.Bounds;
+                var m = element.Transforms?.GetMatrix();
+                if (m != null)
+                    bounds = m.TransformRectangle(bounds);
+
+                if (documentSize == null)
+                    documentSize = bounds;
+                else
+                    documentSize = documentSize.UnionAndCopy(bounds);
+            }
+
+            return documentSize;
         }
 
         public override void Write(IXmlTextWriter writer)

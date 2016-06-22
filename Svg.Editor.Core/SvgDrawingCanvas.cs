@@ -19,7 +19,6 @@ namespace Svg.Core
         private readonly ObservableCollection<ITool> _tools;
         private List<IToolCommand> _toolSelectors = null;
         private SvgDocument _document;
-        private Bitmap _rawImage;
         private bool _initialized = false;
         private ITool _activeTool;
 
@@ -208,8 +207,6 @@ namespace Svg.Core
         
         public void Dispose()
         {
-            _rawImage?.Dispose();
-
             foreach(var tool in Tools)
                 tool.Dispose();
         }
@@ -219,9 +216,9 @@ namespace Svg.Core
             return SvgRenderer.FromGraphics(graphics);
         }
 
-        public Bitmap GetOrCreate(int width, int height)
+        public Bitmap CreateBitmap(int width, int height)
         {
-            return _rawImage ?? (_rawImage = Engine.Factory.CreateBitmap(width, height));
+            return Engine.Factory.CreateBitmap(width, height);
         }
 
         /// <summary>
@@ -278,24 +275,7 @@ namespace Svg.Core
         {
             return GetElementsUnder(GetPointerRectangle(pointer1Position), SelectionType.Intersect);
         }
-
-        public RectangleF CalculateDocumentBounds()
-        {
-            RectangleF documentSize = Engine.Factory.CreateRectangleF(0, 0, 0, 0);
-            
-            foreach (var element in Document.Children.OfType<SvgVisualElement>())
-            {
-                RectangleF bounds = element.Bounds;
-                var m = element.Transforms?.GetMatrix();
-                if (m != null)
-                    bounds = m.TransformRectangle(bounds);
-
-                documentSize = documentSize.UnionAndCopy(bounds);
-            }
-            
-            return documentSize;
-        }
-
+        
         public void AddItemInScreenCenter(SvgVisualElement element)
         {
             var z = ZoomFactor;

@@ -9,7 +9,8 @@ namespace Svg.Droid.Editor.Services
         public IRenderer Create(Bitmap bitmap)
         {
             var androidBitmap = (AndroidBitmap) bitmap;
-            return new AndroidCanvasRenderer(new Canvas(androidBitmap.Image));
+            var c = new Canvas(androidBitmap.Image);
+            return new AndroidCanvasRenderer(c);
         }
     }
 }

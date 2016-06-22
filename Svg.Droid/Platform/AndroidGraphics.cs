@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Linq;
 using Android.Graphics;
+using Svg.Interfaces;
 
 namespace Svg.Platform
 {
@@ -204,6 +205,12 @@ namespace Svg.Platform
         public void Concat(Matrix matrix)
         {
             _canvas.Concat((AndroidMatrix)matrix);
+        }
+
+        public void FillBackground(Svg.Interfaces.Color color)
+        {
+            var c = (AndroidColor)color;
+            _canvas.DrawColor(c);
         }
 
         public void Flush()

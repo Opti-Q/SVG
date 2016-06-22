@@ -38,7 +38,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                         fs.DeleteFile(storagePath);
                     }
                     
-                    var documentSize = ws.CalculateDocumentBounds();
+                    var documentSize = ws.Document.CalculateDocumentBounds();
                     ws.Document.Width = new SvgUnit(SvgUnitType.Pixel, documentSize.Width);
                     ws.Document.Height = new SvgUnit(SvgUnitType.Pixel, documentSize.Height);
 
@@ -97,18 +97,9 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     var fs = Engine.Resolve<IFileSystem>();
                     var storer = Engine.Resolve<IImageStorer>();
 
-                    var documentSize = ws.CalculateDocumentBounds();
-
                     //using (var bmp = ws.GetOrCreate(ws.ScreenWidth, ws.ScreenHeight))
-                    using (var bmp = ws.GetOrCreate((int)documentSize.Width, (int)documentSize.Height)) // 2MP (see https://de.wikipedia.org/wiki/Bildaufl%C3%B6sungen_in_der_Digitalfotografie)
+                    using (var bmp = ws.Document.DrawAllContents(Engine.Factory.Colors.White)) // 2MP (see https://de.wikipedia.org/wiki/Bildaufl%C3%B6sungen_in_der_Digitalfotografie)
                     {
-                        // fill canvas with white color (otherwise it would be transparent!
-                        var renderer = Engine.Resolve<IRendererFactory>().Create(bmp);
-                        renderer.FillEntireCanvasWithColor(Engine.Factory.Colors.White);
-                        
-                        // draw document
-                        ws.Document.Draw(bmp);
-                        
                         // now save it as PNG
                         var path = fs.PathCombine(fs.GetDownloadFolder(), "svg_image.png");
                         if (fs.FileExists(path))
@@ -139,23 +130,42 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     var fs = Engine.Resolve<IFileSystem>();
                     var storer = Engine.Resolve<IImageStorer>();
 
-                    var documentSize = ws.CalculateDocumentBounds();
-
-                    //using (var bmp = ws.GetOrCreate(ws.ScreenWidth, ws.ScreenHeight))
-                    using (var bmp = ws.GetOrCreate(160, 160)) // 2MP (see https://de.wikipedia.org/wiki/Bildaufl%C3%B6sungen_in_der_Digitalfotografie)
+                    using (var bmp = ws.Document.DrawAllContents(160, 160, Engine.Factory.Colors.White))
                     {
-                        // fill canvas with white color (otherwise it would be transparent!
-                        var renderer = Engine.Resolve<IRendererFactory>().Create(bmp);
-                        renderer.FillEntireCanvasWithColor(Engine.Factory.Colors.White);
-                        
-                        // draw document
-                        var oldViewBox = ws.Document.ViewBox;
-                        ws.Document.ViewBox = new SvgViewBox(0f, 0f, 160, 160);
-                        ws.Document.Draw(bmp);
-                        ws.Document.ViewBox = oldViewBox;
-
                         // now save it as PNG
-                        var path = fs.PathCombine(fs.GetDownloadFolder(), "svg_image.png");
+                        var path = fs.PathCombine(fs.GetDownloadFolder(), "svg_image_thumb.png");
+                        if (fs.FileExists(path))
+                            fs.DeleteFile(path);
+
+                        using (var stream = fs.OpenWrite(path))
+                        {
+                            storer.SaveAsPng(bmp, stream);
+                        }
+
+                        // then share it using MVVMCross plugin
+                        using(var stream = fs.OpenRead(path))
+                        {
+                            var share = Mvx.Resolve<IMvxComposeEmailTaskEx>();
+                            share.ComposeEmail(new [] {"someone@somewhere.com"} , subject:$"SVG {DateTime.Now.ToString()}", attachments: new [] {new EmailAttachment {Content=stream, ContentType = "image/png", FileName = "svg_file.png"} });
+                        }
+                    }
+                },
+                (obj) =>
+                {
+                    var fs = Svg.Engine.Resolve<IFileSystem>();
+                    var path = fs.GetDownloadFolder();
+                    var storagePath = fs.PathCombine(path, _fileName());
+                    return fs.FileExists(storagePath);
+                }),
+                new ToolCommand(this, "Share PNG XL", (obj) =>
+                {
+                    var fs = Engine.Resolve<IFileSystem>();
+                    var storer = Engine.Resolve<IImageStorer>();
+
+                    using (var bmp = ws.Document.DrawAllContents(2048, 1920, Engine.Factory.Colors.White))
+                    {
+                        // now save it as PNG
+                        var path = fs.PathCombine(fs.GetDownloadFolder(), "svg_image_XL.png");
                         if (fs.FileExists(path))
                             fs.DeleteFile(path);
 
