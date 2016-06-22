@@ -31,6 +31,7 @@ namespace Svg.Core.Tools
         private bool _isSnappingInProgress = false;
         private bool _areElementsMoved = false;
         private PointF _generalTranslation = null;
+        
 
         public GridTool(float angle = 30f, int stepSizeY = 20)
             : base("Grid")
@@ -65,19 +66,22 @@ namespace Svg.Core.Tools
             StepSizeX = (float)B * 2;
         }
 
+        public string IconGridOn { get; set; } = "ic_grid_on_white_48dp.png";
+        public string IconGridOFf { get; set; } = "ic_grid_off_white_48dp.png";
+
+        public bool IsVisible { get; set; } = true;
+        private Brush Brush => _brush ?? (_brush = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 210, 210, 210)));
+        private Brush Brush2 => _brush2 ?? (_brush2 = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 255, 0, 0)));
+        private Pen Pen => _pen ?? (_pen = Svg.Engine.Factory.CreatePen(Brush, 1));
+        private Pen Pen2 => _pen2 ?? (_pen2 = Svg.Engine.Factory.CreatePen(Brush2, 2));
+
         public override Task Initialize(SvgDrawingCanvas ws)
         {
             _canvas = ws;
             // add tool commands
             Commands = new List<IToolCommand>
             {
-                new ToolCommand(this, "Toggle Grid", (obj) =>
-                {
-                    IsVisible = !IsVisible;
-                    this.IconName = IsVisible ? "ic_grid_off_white_48dp.png" : "ic_grid_on_white_48dp.png";
-                    _canvas.FireInvalidateCanvas();
-                    _canvas.FireToolCommandsChanged();
-                }, (obj) => true, iconName:"toggleGrid.png", sortFunc:(x) => 2000)
+                new ToggleGridCommand(ws, this, "Toggle Grid")
             };
 
             // initialize with callbacks
@@ -85,14 +89,7 @@ namespace Svg.Core.Tools
 
             return Task.FromResult(true);
         }
-
-        public bool IsVisible { get; set; } = true;
-
-        private Brush Brush => _brush ?? (_brush = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 210, 210, 210)));
-        private Brush Brush2 => _brush2 ?? (_brush2 = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 255, 0, 0)));
-        private Pen Pen => _pen ?? (_pen = Svg.Engine.Factory.CreatePen(Brush, 1));
-        private Pen Pen2 => _pen2 ?? (_pen2 = Svg.Engine.Factory.CreatePen(Brush2, 2));
-
+        
         public override Task OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
             if (!IsVisible)
@@ -446,6 +443,26 @@ namespace Svg.Core.Tools
         private static double RadianToDegree(double angle)
         {
             return angle * (180.0 / Math.PI);
+        }
+
+        private class ToggleGridCommand : ToolCommand
+        {
+            private readonly SvgDrawingCanvas _canvas;
+
+            public ToggleGridCommand(SvgDrawingCanvas canvas, GridTool tool, string name)
+                : base(tool, name, (o) => { }, iconName: tool.IconGridOFf, sortFunc:(tc) => 2000)
+            {
+                _canvas = canvas;
+            }
+
+            public override void Execute(object parameter)
+            {
+                var t = (GridTool)Tool;
+                t.IsVisible = !t.IsVisible;
+                IconName = t.IsVisible ? t.IconGridOFf : t.IconGridOn;
+                _canvas.FireInvalidateCanvas();
+                _canvas.FireToolCommandsChanged();
+            }
         }
     }
 }

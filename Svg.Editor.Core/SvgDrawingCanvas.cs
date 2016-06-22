@@ -37,8 +37,8 @@ namespace Svg.Core
                     new MoveTool(), // must be before pantool as it decides whether or not it is active based on selection
                     new PanTool(),
                     new ZoomTool(),
-                    new TextTool(),
                     new SelectionTool(),
+                    new TextTool(),
             };
             _tools.CollectionChanged += OnToolsChanged;
         }
