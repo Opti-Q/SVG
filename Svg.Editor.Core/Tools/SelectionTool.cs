@@ -19,9 +19,12 @@ namespace Svg.Core.Tools
         private Brush _brush;
         private Pen _pen;
 
+        public string DeleteIconName { get; set; } = "ic_delete_white_48dp.png";
+        public string SelectIconName { get; set; } = "ic_select_tool_white_48dp.png";
+
         public SelectionTool() : base("Select")
         {
-            this.IconName = "ic_select_tool_white_48dp.png";
+            this.IconName = SelectIconName;
             this.ToolUsage = ToolUsage.Explicit;
         }
 
@@ -30,13 +33,21 @@ namespace Svg.Core.Tools
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
-            //Commands = new List<IToolCommand>
-            //{
-            //    new ToggleSelectionToolCommand(this, ws)
-            //};
-
-            //// make sure selection is inactive in case that panning is active at start
-            //this.IsActive = !ws.Tools.OfType<PanTool>().FirstOrDefault()?.IsActive ?? true;
+            Commands = new List<IToolCommand>
+            {
+                new ToolCommand(this, "Delete", (o) =>
+                {
+                    foreach (var element in ws.SelectedElements)
+                    {
+                        element.Parent.Children.Remove(element);
+                    }
+                    ws.SelectedElements.Clear();
+                    ws.FireToolCommandsChanged();
+                    ws.FireInvalidateCanvas();
+                }, 
+                (o) => ws.SelectedElements.Any(), iconName:DeleteIconName, 
+                sortFunc: (t) => ws.SelectedElements.Any() ? 0 : 500)
+            };
 
             return Task.FromResult(true);
         }
@@ -154,40 +165,6 @@ namespace Svg.Core.Tools
             }
 
             return Task.FromResult(true);
-        }
-
-        private class ToggleSelectionToolCommand : ToolCommand
-        {
-            private readonly SvgDrawingCanvas _canvas;
-
-            public ToggleSelectionToolCommand(SelectionTool tool, SvgDrawingCanvas canvas) : base(tool, "Select", (obj)=> {}, sortFunc: (x) => 100)
-            {
-                _canvas = canvas;
-            }
-
-            public override void Execute(object parameter)
-            {
-                var selectionTool = (SelectionTool)this.Tool;
-                selectionTool.IsActive = !selectionTool.IsActive;
-
-                var panTool = _canvas.Tools.OfType<PanTool>().FirstOrDefault();
-                if (panTool != null)
-                    panTool.IsActive = !selectionTool.IsActive;
-
-                Name = selectionTool.IsActive ? "Select" : "Pan";
-                IconName = selectionTool.IsActive ? "selectionTool.png" : "panTool.png";
-
-                // also reset selection triangle
-                if (!selectionTool.IsActive)
-                    selectionTool._selectionRectangle = null;
-
-                _canvas.FireToolCommandsChanged();
-            }
-
-            public override bool CanExecute(object parameter)
-            {
-                return true;
-            }
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Svg.Core
 {
     public class SvgDrawingCanvas : IDisposable, ICanInvalidateCanvas
     {
-        private readonly ObservableCollection<SvgVisualElement> _selectedElements = new ObservableCollection<SvgVisualElement>();
+        private readonly ObservableCollection<SvgVisualElement> _selectedElements;
         private readonly ObservableCollection<ITool> _tools;
         private List<IToolCommand> _toolSelectors = null;
         private SvgDocument _document;
@@ -30,6 +30,9 @@ namespace Svg.Core
         {
             Translate = Svg.Engine.Factory.CreatePointF(0f, 0f);
             ZoomFactor = 1f;
+
+            _selectedElements = new ObservableCollection<SvgVisualElement>();
+            _selectedElements.CollectionChanged += OnSelectionChanged;
 
             _tools = new ObservableCollection<ITool>
             {
@@ -331,6 +334,11 @@ namespace Svg.Core
         public void FireToolCommandsChanged()
         {
             ToolCommandsChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnSelectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            FireToolCommandsChanged();
         }
 
         private void OnToolsChanged(object sender, NotifyCollectionChangedEventArgs e)
