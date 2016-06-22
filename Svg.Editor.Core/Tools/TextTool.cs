@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Events;
@@ -20,19 +21,20 @@ namespace Svg.Core.Tools
         public TextTool() : base("Text")
         {
             IconName = "ic_text_fields_white_48dp.png";
+            ToolUsage = ToolUsage.Explicit;
         }
 
         private ITextInputService TextInputService => Engine.Resolve<ITextInputService>();
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
-            Commands = new List<IToolCommand>
-            {
-                new ToolCommand(this, "Text", (obj) =>
-                {
-                    this.IsActive = !this.IsActive;
-                })
-            };
+            //Commands = new List<IToolCommand>
+            //{
+            //    new ToolCommand(this, "Text", (obj) =>
+            //    {
+            //        this.IsActive = !this.IsActive;
+            //    })
+            //};
 
             this.IsActive = false;
 
@@ -48,7 +50,10 @@ namespace Svg.Core.Tools
             var me = @event as MoveEvent;
             if (me != null)
             {
-                _moveEventWasRegistered = true;
+                // if user moves with thumb we do not want to add text on pointer-up
+                var isMove = Math.Sqrt(Math.Pow(me.AbsoluteDelta.X, 2) + Math.Pow(me.AbsoluteDelta.Y, 2)) > 20d;
+                if(isMove)
+                    _moveEventWasRegistered = true;
             }
 
             var pe = @event as PointerEvent;

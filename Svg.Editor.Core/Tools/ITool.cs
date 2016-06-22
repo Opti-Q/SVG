@@ -35,6 +35,8 @@ namespace Svg.Core.Tools
         ITool Tool { get; }
         string IconName { get; }
         int Sort { get; }
+        string GroupName { get; }
+        string GroupIconName { get; }
     }
 
     public class ToolCommand : IToolCommand
@@ -42,12 +44,14 @@ namespace Svg.Core.Tools
         private readonly Action<object> _execute;
         private readonly Func<object, bool> _canExecute;
         private readonly Func<IToolCommand, int> _sortFunc;
-        public string Name { get; set; }
-        public string Description { get; set; }
+        private string _groupName;
+        private string _groupIcon;
+        public virtual string Name { get; set; }
+        public virtual string Description { get; set; }
         public ITool Tool { get; }
-        public string IconName { get; set; }
+        public virtual string IconName { get; set; }
 
-        public int Sort
+        public virtual int Sort
         {
             get
             {
@@ -57,7 +61,19 @@ namespace Svg.Core.Tools
                 return 100;
             }
         }
-        
+
+        public virtual string GroupName
+        {
+            get { return _groupName ?? Tool.Name; }
+            set { _groupName = value; }
+        }
+
+        public virtual string GroupIconName
+        {
+            get { return _groupIcon ?? Tool.IconName; }
+            set { _groupIcon = value; }
+        }
+
         public ToolCommand(ITool tool, string name, Action<object> execute, Func<object, bool> canExecute = null, string description = null, string iconName = null, Func<IToolCommand, int> sortFunc = null)
         {
             if (name == null) throw new ArgumentNullException(nameof(name));

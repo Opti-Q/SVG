@@ -20,6 +20,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
         {
             _autoLoad = autoLoad;
             _fileName = fileName ?? (() => "svg_image.svg");
+            IconName = "ic_save_white_48dp.png";
         }
 
         public override Task Initialize(SvgDrawingCanvas ws)

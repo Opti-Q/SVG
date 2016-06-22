@@ -87,19 +87,49 @@ namespace Svg.Droid.SampleEditor
 		{
 			
 			// aapt resource value: 0x7f020000
-			public const int ic_delete_black_24dp = 2130837504;
+			public const int ic_add_circle_outline_white_48dp = 2130837504;
 			
 			// aapt resource value: 0x7f020001
-			public const int ic_text_fields_black_24dp = 2130837505;
+			public const int ic_grid_off_white_48dp = 2130837505;
 			
 			// aapt resource value: 0x7f020002
-			public const int ic_view_comfy_black_24dp = 2130837506;
+			public const int ic_grid_on_white_48dp = 2130837506;
 			
 			// aapt resource value: 0x7f020003
-			public const int Icon = 2130837507;
+			public const int ic_pan_tool_white_48dp = 2130837507;
 			
 			// aapt resource value: 0x7f020004
-			public const int splash = 2130837508;
+			public const int ic_save_white_48dp = 2130837508;
+			
+			// aapt resource value: 0x7f020005
+			public const int ic_search_black_48dp = 2130837509;
+			
+			// aapt resource value: 0x7f020006
+			public const int ic_select_tool_white_48dp = 2130837510;
+			
+			// aapt resource value: 0x7f020007
+			public const int ic_text_fields_white_48dp = 2130837511;
+			
+			// aapt resource value: 0x7f020008
+			public const int ic_zoom_100_white_48dp = 2130837512;
+			
+			// aapt resource value: 0x7f020009
+			public const int ic_zoom_200_white_48dp = 2130837513;
+			
+			// aapt resource value: 0x7f02000a
+			public const int ic_zoom_in_white_48dp = 2130837514;
+			
+			// aapt resource value: 0x7f02000b
+			public const int ic_zoom_out_white_48dp = 2130837515;
+			
+			// aapt resource value: 0x7f02000c
+			public const int ic_zoom_white_48dp = 2130837516;
+			
+			// aapt resource value: 0x7f02000d
+			public const int Icon = 2130837517;
+			
+			// aapt resource value: 0x7f02000e
+			public const int splash = 2130837518;
 			
 			static Drawable()
 			{

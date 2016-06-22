@@ -314,13 +314,11 @@ namespace Svg.Core
         {
             if (_toolSelectors == null)
             {
-                _toolSelectors = Tools.Where(t => t.ToolUsage == ToolUsage.Explicit).Select(t =>
-                        new ToolCommand(t, t.Name, (obj) =>
-                        {
-                            ActiveTool = t;
-                            FireToolCommandsChanged();
-                        }, iconName: t.IconName, sortFunc: (tcmd) => ActiveTool == tcmd.Tool ? 0 : 100))
-                        .Cast<IToolCommand>().OrderBy(c => c.Sort).ToList();
+                _toolSelectors = Tools.Where(t => t.ToolUsage == ToolUsage.Explicit)
+                        .Select(t => new SelectToolCommand(this, t, t.Name, t.IconName))
+                        .OrderBy(c => c.Sort)
+                        .Cast<IToolCommand>()
+                        .ToList();
             }
             return _toolSelectors;
         }
@@ -339,6 +337,41 @@ namespace Svg.Core
         {
             _toolSelectors = null;
             FireToolCommandsChanged();
+        }
+
+        private class SelectToolCommand : ToolCommand
+        {
+            private readonly SvgDrawingCanvas _canvas;
+
+            public SelectToolCommand(SvgDrawingCanvas canvas, ITool tool, string name, string iconName)
+                : base(tool, name, (o) => { }, iconName: iconName)
+            {
+                if (canvas == null) throw new ArgumentNullException(nameof(canvas));
+                _canvas = canvas;
+            }
+
+            public override void Execute(object parameter)
+            {
+                _canvas.ActiveTool = Tool;
+                _canvas.FireToolCommandsChanged();
+            }
+
+            public override bool CanExecute(object parameter)
+            {
+                return _canvas.ActiveTool != Tool;
+            }
+
+            public override string GroupIconName
+            {
+                get { return _canvas.ActiveTool?.IconName; }
+                set { }
+            }
+
+            public override string GroupName
+            {
+                get { return _canvas.ActiveTool?.Name; }
+                set { }
+            }
         }
     }
 }
