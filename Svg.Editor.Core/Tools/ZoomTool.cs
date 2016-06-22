@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Svg.Core.Events;
-using Svg.Core.Interfaces;
 
 namespace Svg.Core.Tools
 {
@@ -16,6 +13,7 @@ namespace Svg.Core.Tools
         {
             MinScale = minScale;
             MaxScale = maxScale;
+            IconName = "ic_zoom_white_48dp.png";
         }
 
         public float MinScale { get; set; }
@@ -26,30 +24,30 @@ namespace Svg.Core.Tools
         {
             _owner = ws;
 
-            Commands = new List<IToolCommand>()
+            Commands = new []
             {
                 new ToolCommand(this, "Zoom in +", (x) =>
                 {
                     var f =_owner.ZoomFactor + 0.25f;
                     _owner.ZoomFactor = ws.ZoomFactor = Math.Max(MinScale, Math.Min(f, MaxScale));
                     _owner.FireInvalidateCanvas();
-                }, iconName:"zoomIn.png", sort:1500),
+                }, iconName:"ic_zoom_in_white_48dp.png", sortFunc:(x) => 1500),
                 new ToolCommand(this, "Zoom out -", (x) =>
                 {
                     var f =_owner.ZoomFactor - 0.25f;
                     _owner.ZoomFactor = ws.ZoomFactor = Math.Max(MinScale, Math.Min(f, MaxScale));
                     _owner.FireInvalidateCanvas();
-                }, iconName:"zoomOut.png", sort:1550),
+                }, iconName:"ic_zoom_out_white_48dp.png", sortFunc:(x) => 1550),
                 new ToolCommand(this, "100 %", (x) =>
                 {
                     _owner.ZoomFactor = ws.ZoomFactor = Math.Max(MinScale, Math.Min(1, MaxScale));
                     _owner.FireInvalidateCanvas();
-                }, iconName:"zoom100.png", sort:1600),
+                }, iconName:"ic_zoom_100_white_48dp.png", sortFunc:(x) => 1600),
                 new ToolCommand(this, "200 %", (x) =>
                 {
                     _owner.ZoomFactor = ws.ZoomFactor = Math.Max(MinScale, Math.Min(2, MaxScale));
                     _owner.FireInvalidateCanvas();
-                }, iconName:"zoom200.png", sort:1650),
+                }, iconName:"ic_zoom_200_white_48dp.png", sortFunc:(x) => 1650),
             };
 
             return Task.FromResult(true);

@@ -1,4 +1,3 @@
-using System;
 using Android.App;
 using Android.OS;
 using Android.Views;
@@ -6,9 +5,7 @@ using System.Linq;
 using Android.Content.Res;
 using MvvmCross.Droid.Views;
 using Svg.Droid.Editor;
-using Svg.Droid.Editor.Services;
 using Svg.Droid.SampleEditor.Core;
-using Svg.Droid.SampleEditor.Core.Tools;
 using Svg.Droid.SampleEditor.Core.ViewModels;
 using Svg.Interfaces;
 using Svg.Platform;
@@ -23,7 +20,7 @@ namespace Svg.Droid.SampleEditor.Views
         protected override void OnCreate(Bundle bundle)
         {
             // register first
-            SvgPlatformSetup.Init(new SvgAndroidPlatformOptions(this) {EnableFastTextRendering = true});
+            SvgPlatformSetup.Init(new SvgAndroidPlatformOptions() {EnableFastTextRendering = true});
             Engine.Register<ISvgSourceFactory, SvgSourceFactory>(() => new SvgSourceFactory(Assets));
 
             base.OnCreate(bundle);

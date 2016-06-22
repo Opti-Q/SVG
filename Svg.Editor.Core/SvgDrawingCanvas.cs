@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 using Svg.Core.Tools;
 using Svg.Interfaces;
+using Svg.Transforms;
 
 namespace Svg.Core
 {
@@ -14,22 +17,14 @@ namespace Svg.Core
     {
         private readonly ObservableCollection<SvgVisualElement> _selectedElements = new ObservableCollection<SvgVisualElement>();
         private readonly ObservableCollection<ITool> _tools;
+        private List<IToolCommand> _toolSelectors = null;
         private SvgDocument _document;
         private Bitmap _rawImage;
         private bool _initialized = false;
+        private ITool _activeTool;
 
         public event EventHandler CanvasInvalidated;
         public event EventHandler ToolCommandsChanged;
-
-        public void FireInvalidateCanvas()
-        {
-            CanvasInvalidated?.Invoke(this, EventArgs.Empty);
-        }
-
-        public void FireToolCommandsChanged()
-        {
-            ToolCommandsChanged?.Invoke(this, EventArgs.Empty);
-        }
 
         public SvgDrawingCanvas()
         {
@@ -45,6 +40,7 @@ namespace Svg.Core
                     new TextTool(),
                     new SelectionTool(),
             };
+            _tools.CollectionChanged += OnToolsChanged;
         }
 
         public SvgDocument Document
@@ -95,9 +91,23 @@ namespace Svg.Core
         public ObservableCollection<ITool> Tools => _tools;
 
         public IEnumerable<IEnumerable<IToolCommand>> ToolCommands
-            =>
-                Tools.Select(t => t.Commands.OrderBy(tc => tc.Sort))
-                    .OrderBy(t => t.FirstOrDefault()?.Sort ?? int.MaxValue);
+        {
+            get
+            {
+                // prepare tool commands
+                var commands = Tools.Select(t => t.Commands.OrderBy(tc => tc.Sort))
+                    .OrderBy(t => t.FirstOrDefault()?.Sort ?? int.MaxValue)
+                    .Cast<IEnumerable<IToolCommand>>()
+                    .ToList();
+
+                // prepare tool selectors
+                var toolSelectors = EnsureToolSelectors().OrderBy(s => s.Sort);
+
+                commands.Insert(0, toolSelectors);
+
+                return commands;
+            }
+        }
 
         public PointF RelativeTranslate => Engine.Factory.CreatePointF(Translate.X/ZoomFactor, Translate.Y/ZoomFactor);
 
@@ -108,6 +118,23 @@ namespace Svg.Core
         public int ScreenWidth { get; private set; }
 
         public int ScreenHeight { get; private set; }
+
+        public ITool ActiveTool
+        {
+            get { return _activeTool; }
+            private set
+            {
+                _activeTool = value;
+                if (_activeTool != null)
+                {
+                    _activeTool.IsActive = true;
+                }
+                foreach (var otherTool in Tools.Where(t => t != _activeTool && t.ToolUsage == ToolUsage.Explicit))
+                {
+                    otherTool.IsActive = false;
+                }
+            }
+        }
 
         /// <summary>
         /// Called by the platform specific input event detector whenever the user interacts with the model
@@ -168,6 +195,8 @@ namespace Svg.Core
                 foreach (var tool in Tools)
                     await tool.Initialize(this);
 
+                ActiveTool = Tools.FirstOrDefault(t => t.ToolUsage == ToolUsage.Explicit);
+
                 _initialized = true;
                 
                 FireToolCommandsChanged();
@@ -209,12 +238,13 @@ namespace Svg.Core
         /// <param name="selectionRectangle"></param>
         /// <param name="selectionType"></param>
         /// <returns></returns>
-        public IList<SvgVisualElement> GetElementsUnder(RectangleF selectionRectangle, SelectionType selectionType)
+        public IList<SvgVisualElement> GetElementsUnder(RectangleF selectionRectangle, SelectionType selectionType, int maxItems = int.MaxValue)
         {
             var selected = new List<SvgVisualElement>();
             // to speed up selection, this only takes first-level children into account!
             var children = Document?.Children.OfType<SvgVisualElement>() ?? Enumerable.Empty<SvgVisualElement>();
-            foreach (var child in children)
+            // go through children in reverse order so we follow the z-index
+            foreach (var child in children.Reverse())
             {
                 // get its transformed boundingbox (renderbounds)
                 var renderBounds = child.RenderBounds;
@@ -229,6 +259,9 @@ namespace Svg.Core
                 {
                     selected.Add(child);
                 }
+
+                if (selected.Count >= maxItems)
+                    break;
             }
             return selected;
         }
@@ -258,6 +291,54 @@ namespace Svg.Core
             }
             
             return documentSize;
+        }
+
+        public void AddItemInScreenCenter(SvgVisualElement element)
+        {
+            var z = ZoomFactor;
+            var halfRelWidth = ScreenWidth / z / 2;
+            var halfRelHeight = ScreenHeight / z / 2;
+            var childBounds = element.Bounds;
+            var halfRelChildWidth = childBounds.Width / 2;
+            var halfRelChildHeight = childBounds.Height / 2;
+
+            SvgTranslate tl = new SvgTranslate(-RelativeTranslate.X + halfRelWidth - halfRelChildWidth, -RelativeTranslate.Y + halfRelHeight - halfRelChildHeight);
+            element.Transforms.Add(tl);
+
+            Document.Children.Add(element);
+
+            FireInvalidateCanvas();
+        }
+        
+        private IList<IToolCommand> EnsureToolSelectors()
+        {
+            if (_toolSelectors == null)
+            {
+                _toolSelectors = Tools.Where(t => t.ToolUsage == ToolUsage.Explicit).Select(t =>
+                        new ToolCommand(t, t.Name, (obj) =>
+                        {
+                            ActiveTool = t;
+                            FireToolCommandsChanged();
+                        }, iconName: t.IconName, sortFunc: (tcmd) => ActiveTool == tcmd.Tool ? 0 : 100))
+                        .Cast<IToolCommand>().OrderBy(c => c.Sort).ToList();
+            }
+            return _toolSelectors;
+        }
+
+        public void FireInvalidateCanvas()
+        {
+            CanvasInvalidated?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void FireToolCommandsChanged()
+        {
+            ToolCommandsChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnToolsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            _toolSelectors = null;
+            FireToolCommandsChanged();
         }
     }
 }

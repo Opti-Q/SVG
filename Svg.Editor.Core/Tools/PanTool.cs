@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Svg.Core.Events;
-using Svg.Core.Interfaces;
 
 namespace Svg.Core.Tools
 {
@@ -12,6 +10,8 @@ namespace Svg.Core.Tools
         public PanTool() 
             : base("Pan")
         {
+            IconName = "ic_pan_tool_white_48dp.png";
+            ToolUsage = ToolUsage.Explicit;
         }
 
         public override Task Initialize(SvgDrawingCanvas ws)

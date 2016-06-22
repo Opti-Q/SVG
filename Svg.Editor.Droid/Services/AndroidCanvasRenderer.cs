@@ -1,5 +1,3 @@
-
-using System;
 using Android.Graphics;
 using Svg.Core.Interfaces;
 using Svg.Interfaces;

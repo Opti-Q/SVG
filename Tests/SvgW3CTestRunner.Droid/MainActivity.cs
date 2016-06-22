@@ -41,7 +41,7 @@ namespace SvgW3CTestRunner.Droid
 
         protected override void OnCreate(Bundle bundle)
         {
-            SvgPlatformSetup.Init(new SvgAndroidPlatformOptions(this) { EnableFastTextRendering = true });
+            SvgPlatformSetup.Init(new SvgAndroidPlatformOptions() { EnableFastTextRendering = true });
 
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Main);

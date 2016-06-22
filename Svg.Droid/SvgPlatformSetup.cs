@@ -6,13 +6,6 @@ namespace Svg
 {
     public class SvgAndroidPlatformOptions : SvgPlatformOptions
     {
-        public Context Context { get; set; }
-
-        public SvgAndroidPlatformOptions(Context context)
-        {
-            Context = context;
-        }
-
         public bool EnableFastTextRendering { get; set; } = true;
     }
 

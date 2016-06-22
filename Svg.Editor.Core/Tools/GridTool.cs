@@ -74,8 +74,10 @@ namespace Svg.Core.Tools
                 new ToolCommand(this, "Toggle Grid", (obj) =>
                 {
                     IsVisible = !IsVisible;
+                    this.IconName = IsVisible ? "ic_grid_off_white_48dp.png" : "ic_grid_on_white_48dp.png";
                     _canvas.FireInvalidateCanvas();
-                }, (obj) => true, iconName:"toggleGrid.png", sort:2000)
+                    _canvas.FireToolCommandsChanged();
+                }, (obj) => true, iconName:"toggleGrid.png", sortFunc:(x) => 2000)
             };
 
             // initialize with callbacks

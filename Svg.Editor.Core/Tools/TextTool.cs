@@ -19,6 +19,7 @@ namespace Svg.Core.Tools
 
         public TextTool() : base("Text")
         {
+            IconName = "ic_text_fields_white_48dp.png";
         }
 
         private ITextInputService TextInputService => Engine.Resolve<ITextInputService>();

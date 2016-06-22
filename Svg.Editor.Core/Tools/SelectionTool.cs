@@ -21,6 +21,8 @@ namespace Svg.Core.Tools
 
         public SelectionTool() : base("Select")
         {
+            this.IconName = "ic_select_tool_white_48dp.png";
+            this.ToolUsage = ToolUsage.Explicit;
         }
 
         private Brush Brush => _brush ?? (_brush = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
@@ -28,13 +30,13 @@ namespace Svg.Core.Tools
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
-            Commands = new List<IToolCommand>
-            {
-                new ToggleSelectionToolCommand(this, ws)
-            };
+            //Commands = new List<IToolCommand>
+            //{
+            //    new ToggleSelectionToolCommand(this, ws)
+            //};
 
-            // make sure selection is inactive in case that panning is active at start
-            this.IsActive = !ws.Tools.OfType<PanTool>().FirstOrDefault()?.IsActive ?? true;
+            //// make sure selection is inactive in case that panning is active at start
+            //this.IsActive = !ws.Tools.OfType<PanTool>().FirstOrDefault()?.IsActive ?? true;
 
             return Task.FromResult(true);
         }
@@ -161,7 +163,7 @@ namespace Svg.Core.Tools
         {
             private readonly SvgDrawingCanvas _canvas;
 
-            public ToggleSelectionToolCommand(SelectionTool tool, SvgDrawingCanvas canvas) : base(tool, "Select", (obj)=> {}, sort:100)
+            public ToggleSelectionToolCommand(SelectionTool tool, SvgDrawingCanvas canvas) : base(tool, "Select", (obj)=> {}, sortFunc: (x) => 100)
             {
                 _canvas = canvas;
             }
