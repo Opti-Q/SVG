@@ -369,7 +369,17 @@ namespace Svg.Core.Tools
                         if (diffY > StepSizeY/2)
                             deltaY = StepSizeY/2;
                         else
-                            deltaY = StepSizeY/2;
+                            deltaY = -StepSizeY/2;
+
+                    }
+                    else if (diffX < -(StepSizeX/2))
+                    {
+                        deltaX = -(StepSizeX/2);
+
+                        if (diffY > StepSizeY / 2)
+                            deltaY = StepSizeY / 2;
+                        else
+                            deltaY = -StepSizeY / 2;
                     }
 
                     if (_generalTranslation == null)
