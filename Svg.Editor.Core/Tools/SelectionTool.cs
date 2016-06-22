@@ -137,23 +137,20 @@ namespace Svg.Core.Tools
                 renderer.Graphics.Concat(m);
                 renderer.DrawRectangle(_selectionRectangle, Pen);
                 
-                renderer.Graphics.Save();
+                renderer.Graphics.Restore();
             }
 
             // we draw the selection boundingboxes of all selected elements
             foreach (var element in ws.SelectedElements)
             {
                 renderer.Graphics.Save();
-                var m = renderer.Matrix.Clone();
-                m.Invert();
-                renderer.Graphics.Concat(m);
                 
                 // we draw a selection adorner around all elements
                 // as the canvas is already translated, we do not need to use the renderbounds, but the bounds themselves
+                var b = element.Transforms.GetMatrix().TransformRectangle(element.Bounds);
+                renderer.DrawRectangle(b, Pen);
 
-                renderer.DrawRectangle(element.RenderBounds, Pen);
-
-                renderer.Graphics.Save();
+                renderer.Graphics.Restore();
             }
 
             return Task.FromResult(true);
