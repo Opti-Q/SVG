@@ -63,8 +63,7 @@ namespace Svg
         {
             get
             {
-                var b = Engine.Factory.CreateRectangleF();
-                return this.Transforms != null ? this.Transforms.GetMatrix().TransformRectangle(b) : b;
+                return Engine.Factory.CreateRectangleF();
             }
         }
 

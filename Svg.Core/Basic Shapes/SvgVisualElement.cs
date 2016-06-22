@@ -42,6 +42,15 @@ namespace Svg
         /// <value>The bounds.</value>
         public abstract RectangleF Bounds { get; }
 
+        public RectangleF TransformedBounds
+        {
+            get
+            {
+                var b = Bounds;
+                return this.Transforms != null ? this.Transforms.GetMatrix().TransformRectangle(b) : b;
+            }
+        }
+
         /// <summary>
         /// Returns the bounding rectangle transformed by the render matrix
         /// or: return the bounds that this item had when it was last rendered
@@ -59,7 +68,7 @@ namespace Svg
                     return this.Bounds;
 
                 var b = this.Bounds;
-
+                
                 _renderBounds = RenderTransform.TransformRectangle(b);
 
                 return _renderBounds;

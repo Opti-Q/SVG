@@ -18,6 +18,10 @@ namespace Svg.Core.Tools
         private RectangleF _selectionRectangle = null;
         private Brush _brush;
         private Pen _pen;
+        private Brush _brush2;
+        private Pen _pen2;
+        private Brush _brush3;
+        private Pen _pen3;
 
         public string DeleteIconName { get; set; } = "ic_delete_white_48dp.png";
         public string SelectIconName { get; set; } = "ic_select_tool_white_48dp.png";
@@ -30,6 +34,13 @@ namespace Svg.Core.Tools
 
         private Brush Brush => _brush ?? (_brush = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
         private Pen Pen => _pen ?? (_pen = Svg.Engine.Factory.CreatePen(Brush, 5));
+
+
+        private Brush Brush2 => _brush2 ?? (_brush2 = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 255, 150, 150)));
+        private Pen Pen2 => _pen2 ?? (_pen2 = Svg.Engine.Factory.CreatePen(Brush2, 5));
+
+        private Brush Brush3 => _brush3 ?? (_brush3 = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 155, 255, 150)));
+        private Pen Pen3 => _pen3 ?? (_pen3 = Svg.Engine.Factory.CreatePen(Brush3, 5));
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
@@ -147,9 +158,32 @@ namespace Svg.Core.Tools
                 m.Invert();
                 renderer.Graphics.Concat(m);
                 renderer.DrawRectangle(_selectionRectangle, Pen);
-                
+
+                foreach (var element in ws.Document.Children.OfType<SvgVisualElement>())
+                {
+                    renderer.Graphics.Save();
+                    renderer.DrawRectangle(element.RenderBounds, Pen3);
+                    renderer.Graphics.Restore();
+                }
+
+
                 renderer.Graphics.Restore();
             }
+
+            //foreach (var element in ws.Document.Children.OfType<SvgVisualElement>())
+            //{
+            //    renderer.Graphics.Save();
+            //    var m = renderer.Matrix.Clone();
+            //    m.Invert();
+            //    renderer.Graphics.Concat(m);
+            //    renderer.DrawRectangle(element.RenderBounds, Pen3);
+            //    renderer.Graphics.Restore();
+
+
+            //    renderer.Graphics.Save();
+            //    renderer.DrawRectangle(element.Bounds, Pen2);
+            //    renderer.Graphics.Restore();
+            //}
 
             // we draw the selection boundingboxes of all selected elements
             foreach (var element in ws.SelectedElements)
@@ -158,9 +192,9 @@ namespace Svg.Core.Tools
                 
                 // we draw a selection adorner around all elements
                 // as the canvas is already translated, we do not need to use the renderbounds, but the bounds themselves
-                //var b = element.Transforms.GetMatrix().TransformRectangle(element.Bounds);
-                //renderer.DrawRectangle(b, Pen);
-                renderer.DrawRectangle(element.Bounds, Pen);
+                var b = element.Transforms.GetMatrix().TransformRectangle(element.Bounds);
+                renderer.DrawRectangle(b, Pen);
+                //renderer.DrawRectangle(element.Bounds, Pen);
                 
 
                 renderer.Graphics.Restore();

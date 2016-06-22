@@ -9,12 +9,12 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="150"
-   height="150"
+   width="77.342133"
+   height="40.206524"
    id="svg4560"
    version="1.1"
-   inkscape:version="0.48.5 r10040"
-   sodipodi:docname="reducer1.svg">
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="reducer2.svg">
   <defs
      id="defs4562">
     <clipPath
@@ -111,8 +111,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path3802"
-         clip-rule="evenodd"
-         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z" />
+         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath3810"
@@ -120,8 +120,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path3812"
-         clip-rule="evenodd"
-         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z" />
+         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath3820"
@@ -129,8 +129,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path3822"
-         clip-rule="evenodd"
-         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z" />
+         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath3830"
@@ -138,8 +138,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path3832"
-         clip-rule="evenodd"
-         d="m 379.92,769.92 0,-99.84 -325.92,0 0,99.84 325.92,0 z" />
+         d="m 379.92,769.92 0,-99.84 -325.92,0 0,99.84 325.92,0 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath3840"
@@ -147,8 +147,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path3842"
-         clip-rule="evenodd"
-         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z" />
+         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath3850"
@@ -156,8 +156,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path3852"
-         clip-rule="evenodd"
-         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z" />
+         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath3860"
@@ -165,8 +165,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path3862"
-         clip-rule="evenodd"
-         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z" />
+         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath3870"
@@ -174,8 +174,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path3872"
-         clip-rule="evenodd"
-         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z" />
+         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath4553"
@@ -183,8 +183,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path4555"
-         clip-rule="evenodd"
-         d="m 461.16,769.92 0,-160.2 -407.16,0 0,160.2 407.16,0 z" />
+         d="m 461.16,769.92 0,-160.2 -407.16,0 0,160.2 407.16,0 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath4597"
@@ -192,8 +192,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path4599"
-         clip-rule="evenodd"
-         d="m 461.16,769.92 0,-160.2 -407.16,0 0,160.2 407.16,0 z" />
+         d="m 461.16,769.92 0,-160.2 -407.16,0 0,160.2 407.16,0 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath4633"
@@ -201,8 +201,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path4635"
-         clip-rule="evenodd"
-         d="m 54,769.92 407.16,0 0,-160.2 -407.16,0 0,160.2 z" />
+         d="m 54,769.92 407.16,0 0,-160.2 -407.16,0 0,160.2 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath4615"
@@ -210,8 +210,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path4617"
-         clip-rule="evenodd"
-         d="m 54,769.92 407.16,0 0,-160.2 -407.16,0 0,160.2 z" />
+         d="m 54,769.92 407.16,0 0,-160.2 -407.16,0 0,160.2 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath4567"
@@ -219,8 +219,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path4569"
-         clip-rule="evenodd"
-         d="m 54,769.92 407.16,0 0,-160.2 -407.16,0 0,160.2 z" />
+         d="m 54,769.92 407.16,0 0,-160.2 -407.16,0 0,160.2 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath4577"
@@ -228,8 +228,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path4579"
-         clip-rule="evenodd"
-         d="m 461.16,769.92 0,-160.2 -407.16,0 0,160.2 407.16,0 z" />
+         d="m 461.16,769.92 0,-160.2 -407.16,0 0,160.2 407.16,0 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath4746"
@@ -237,8 +237,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path4748"
-         clip-rule="evenodd"
-         d="m 54,769.92 82.2,0 0,-160.2 -82.2,0 0,160.2 z" />
+         d="m 54,769.92 82.2,0 0,-160.2 -82.2,0 0,160.2 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath4756"
@@ -246,8 +246,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path4758"
-         clip-rule="evenodd"
-         d="m 136.2,769.92 0,-160.2 -82.2,0 0,160.2 82.2,0 z" />
+         d="m 136.2,769.92 0,-160.2 -82.2,0 0,160.2 82.2,0 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath4647"
@@ -255,8 +255,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path4649"
-         clip-rule="evenodd"
-         d="m 461.16,769.92 0,-160.2 -407.16,0 0,160.2 407.16,0 z" />
+         d="m 461.16,769.92 0,-160.2 -407.16,0 0,160.2 407.16,0 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath4657"
@@ -264,8 +264,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path4659"
-         clip-rule="evenodd"
-         d="m 54,769.92 407.16,0 0,-160.2 -407.16,0 0,160.2 z" />
+         d="m 54,769.92 407.16,0 0,-160.2 -407.16,0 0,160.2 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath4772"
@@ -273,8 +273,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path4774"
-         clip-rule="evenodd"
-         d="m 136.2,769.92 0,-160.2 -82.2,0 0,160.2 82.2,0 z" />
+         d="m 136.2,769.92 0,-160.2 -82.2,0 0,160.2 82.2,0 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath5155"
@@ -282,8 +282,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path5157"
-         clip-rule="evenodd"
-         d="m 54,769.92 407.16,0 0,-98.4 -407.16,0 0,98.4 z" />
+         d="m 54,769.92 407.16,0 0,-98.4 -407.16,0 0,98.4 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath5165"
@@ -291,8 +291,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path5167"
-         clip-rule="evenodd"
-         d="m 54,769.92 407.16,0 0,-98.4 -407.16,0 0,98.4 z" />
+         d="m 54,769.92 407.16,0 0,-98.4 -407.16,0 0,98.4 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath5135"
@@ -300,8 +300,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path5137"
-         clip-rule="evenodd"
-         d="m 54,769.92 407.16,0 0,-98.4 -407.16,0 0,98.4 z" />
+         d="m 54,769.92 407.16,0 0,-98.4 -407.16,0 0,98.4 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath5145"
@@ -309,8 +309,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path5147"
-         clip-rule="evenodd"
-         d="m 54,769.92 407.16,0 0,-98.4 -407.16,0 0,98.4 z" />
+         d="m 54,769.92 407.16,0 0,-98.4 -407.16,0 0,98.4 z"
+         style="clip-rule:evenodd" />
     </clipPath>
   </defs>
   <sodipodi:namedview
@@ -320,18 +320,33 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.4404802"
-     inkscape:cx="8.384138"
-     inkscape:cy="50.469508"
+     inkscape:zoom="13.761921"
+     inkscape:cx="39.95058"
+     inkscape:cy="15.11225"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
-     showgrid="false"
+     inkscape:current-layer="g5971"
+     showgrid="true"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     showborder="true" />
+     showborder="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0">
+    <inkscape:grid
+       type="axonomgrid"
+       id="grid3404"
+       units="px"
+       empspacing="5"
+       gridanglex="27.3"
+       gridanglez="27.3"
+       spacingy="20"
+       originx="-38.803255"
+       originy="-59.950435" />
+  </sodipodi:namedview>
   <metadata
      id="metadata4565">
     <rdf:RDF>
@@ -340,54 +355,53 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(0,-902.3622)">
+     id="layer1">
     <g
-       transform="translate(-101.21892,415.31945)"
+       transform="scale(1.503368,1.5033513)"
        id="g5971">
       <path
          id="path5656"
-         style="fill:none;stroke:#000000;stroke-width:0.9375;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1;stroke-dasharray:none"
-         d="m 183.11892,549.074 -13.8,11.7875"
+         style="fill:none;stroke:#000000;stroke-width:0.9375;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         d="m 32.614864,0.4205252 -13.8,11.7874998"
          inkscape:connector-curvature="0" />
       <path
          id="path5658"
-         style="fill:none;stroke:#000000;stroke-width:0.9375;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1;stroke-dasharray:none"
-         d="m 183.11892,565.399 -13.8,3.625"
+         style="fill:none;stroke:#000000;stroke-width:0.9375;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         d="m 32.614864,16.745525 -13.8,3.625"
          inkscape:connector-curvature="0" />
       <path
          id="path5660"
-         style="fill:none;stroke:#000000;stroke-width:0.9375;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1;stroke-dasharray:none"
-         d="m 183.11892,549.074 0,16.325"
+         style="fill:none;stroke:#000000;stroke-width:0.9375;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         d="m 32.614864,0.4205252 0,16.3249998"
          inkscape:connector-curvature="0" />
       <path
          id="path5662"
-         style="fill:none;stroke:#000000;stroke-width:0.9375;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1;stroke-dasharray:none"
-         d="m 169.31892,569.024 0,-8.1625"
+         style="fill:none;stroke:#000000;stroke-width:0.9375;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         d="m 18.814864,20.370525 0,-8.1625"
          inkscape:connector-curvature="0" />
       <g
-         transform="matrix(1.25,0,0,-1.25,-36.181082,1437.824)"
+         transform="matrix(1.25,0,0,-1.25,-186.68514,889.17048)"
          id="g5664">
         <path
            id="path5666"
-           style="fill:none;stroke:#969696;stroke-width:0.25;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1;stroke-dasharray:2, 0.75;stroke-dashoffset:0"
-           d="M 164.4,697.92 149.4,690"
+           style="fill:none;stroke:#969696;stroke-width:0.93372989;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:1.86745976, 0.70029741;stroke-dashoffset:0;stroke-opacity:1"
+           d="m 163.72028,697.60235 -14.14323,-7.32337"
            inkscape:connector-curvature="0" />
       </g>
       <g
-         transform="matrix(1.25,0,0,-1.25,-36.181082,1437.824)"
+         transform="matrix(1.25,0,0,-1.25,-186.68514,889.17048)"
          id="g5748">
         <path
            id="path5750"
-           style="fill:none;stroke:#969696;stroke-width:0.25;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1;stroke-dasharray:2, 0.75;stroke-dashoffset:0"
-           d="m 190.44,711 -15,-7.92"
+           style="fill:none;stroke:#969696;stroke-width:0.93146747;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:1.862935, 0.69860063;stroke-dashoffset:0;stroke-opacity:1"
+           d="m 190.18627,711.03163 -14.14453,-7.28724"
            inkscape:connector-curvature="0" />
       </g>
     </g>

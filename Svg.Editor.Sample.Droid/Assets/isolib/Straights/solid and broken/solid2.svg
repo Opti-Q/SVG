@@ -9,8 +9,8 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="77.178474"
-   height="41.719913"
+   width="77.939499"
+   height="41.028034"
    id="svg4560"
    version="1.1"
    inkscape:version="0.91 r13725"
@@ -113,15 +113,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.4404802"
-     inkscape:cx="-30.787863"
-     inkscape:cy="-9.7743303"
+     inkscape:zoom="9.7311475"
+     inkscape:cx="35.614846"
+     inkscape:cy="11.830713"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
-     inkscape:window-width="1536"
-     inkscape:window-height="801"
-     inkscape:window-x="1912"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      showborder="true"
@@ -135,10 +135,11 @@
        units="px"
        empspacing="5"
        gridanglex="27.3"
-       gridanglez="27.3"
        spacingy="20"
-       originx="-39.172001"
-       originy="-60.243838" />
+       gridanglez="27.3"
+       snapvisiblegridlinesonly="true"
+       originx="-38.864154"
+       originy="-59.281818" />
   </sodipodi:namedview>
   <metadata
      id="metadata4565">
@@ -148,18 +149,17 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(-39.172001,-950.39845)">
+     id="layer1">
     <path
        inkscape:connector-curvature="0"
-       d="m 39.603517,951.22016 76.315443,40.07649"
+       d="M 0.44196535,0.78153773 77.53716,40.156447"
        style="fill:none;stroke:#000000;stroke-width:1.85625005;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
        id="path3178"
        sodipodi:nodetypes="cc" />

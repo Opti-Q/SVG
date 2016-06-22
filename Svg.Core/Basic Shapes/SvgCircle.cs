@@ -80,11 +80,7 @@ namespace Svg
         /// <value>The rectangular bounds of the circle.</value>
         public override RectangleF Bounds
         {
-            get
-            {
-                var b = this.Path(null).GetBounds();
-                return this.Transforms != null ? this.Transforms.GetMatrix().TransformRectangle(b) : b;
-            }
+            get { return this.Path(null).GetBounds();}
         }
 
         /// <summary>

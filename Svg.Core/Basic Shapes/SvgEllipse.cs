@@ -92,8 +92,7 @@ namespace Svg
         {
             get
             {
-                var b = this.Path(null).GetBounds();
-                return this.Transforms != null ? this.Transforms.GetMatrix().TransformRectangle(b) : b;
+                return this.Path(null).GetBounds();
             }
         }
 

@@ -9,12 +9,12 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="150"
-   height="150"
+   width="38.422657"
+   height="79.558113"
    id="svg4560"
    version="1.1"
-   inkscape:version="0.48.5 r10040"
-   sodipodi:docname="valve2.svg">
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="valve3.svg">
   <defs
      id="defs4562">
     <clipPath
@@ -111,8 +111,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path3802"
-         clip-rule="evenodd"
-         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z" />
+         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath3810"
@@ -120,8 +120,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path3812"
-         clip-rule="evenodd"
-         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z" />
+         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath3820"
@@ -129,8 +129,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path3822"
-         clip-rule="evenodd"
-         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z" />
+         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath3830"
@@ -138,8 +138,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path3832"
-         clip-rule="evenodd"
-         d="m 379.92,769.92 0,-99.84 -325.92,0 0,99.84 325.92,0 z" />
+         d="m 379.92,769.92 0,-99.84 -325.92,0 0,99.84 325.92,0 z"
+         style="clip-rule:evenodd" />
     </clipPath>
   </defs>
   <sodipodi:namedview
@@ -149,18 +149,33 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.4404802"
-     inkscape:cx="8.384138"
-     inkscape:cy="50.469508"
+     inkscape:zoom="6.8809605"
+     inkscape:cx="-3.7068434"
+     inkscape:cy="48.763967"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
-     showgrid="false"
+     inkscape:current-layer="g4041"
+     showgrid="true"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     showborder="true" />
+     showborder="true"
+     fit-margin-left="7"
+     fit-margin-right="5.2"
+     fit-margin-top="0"
+     fit-margin-bottom="0">
+    <inkscape:grid
+       type="axonomgrid"
+       id="grid3374"
+       units="px"
+       empspacing="5"
+       spacingy="20"
+       gridanglex="27.3"
+       gridanglez="27.3"
+       originx="-58.376603"
+       originy="-40.307455" />
+  </sodipodi:namedview>
   <metadata
      id="metadata4565">
     <rdf:RDF>
@@ -169,85 +184,84 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(0,-902.3622)">
+     id="layer1">
     <g
-       transform="translate(-293.91527,431.5364)"
+       transform="scale(1.5496533,1.2688694)"
        id="g4041">
       <g
-         transform="matrix(1.25,0,0,-1.25,45.590274,1426.0258)"
+         transform="matrix(1.25,0,0,-1.25,-310.41705,911.76863)"
          id="g3796">
         <g
            clip-path="url(#clipPath3800)"
            id="g3798">
           <path
              id="path3804"
-             style="fill:none;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1;stroke-dasharray:none"
+             style="fill:none;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
              d="m 263.23,711.88 -11,6.1"
              inkscape:connector-curvature="0" />
         </g>
       </g>
       <g
-         transform="matrix(1.25,0,0,-1.25,45.590274,1426.0258)"
+         transform="matrix(1.25,0,0,-1.25,-310.41705,911.76863)"
          id="g3806">
         <g
            clip-path="url(#clipPath3810)"
            id="g3808">
           <path
              id="path3814"
-             style="fill:none;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1;stroke-dasharray:none"
+             style="fill:none;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
              d="m 265.09,690.94 -11,6.1"
              inkscape:connector-curvature="0" />
         </g>
       </g>
       <g
-         transform="matrix(1.25,0,0,-1.25,45.590274,1426.0258)"
+         transform="matrix(1.25,0,0,-1.25,-310.41705,911.76863)"
          id="g3816">
         <g
            clip-path="url(#clipPath3820)"
            id="g3818">
           <path
              id="path3824"
-             style="fill:none;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1;stroke-dasharray:none"
+             style="fill:none;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
              d="m 265.09,690.94 -12.86,27.04"
              inkscape:connector-curvature="0" />
         </g>
       </g>
       <g
-         transform="matrix(1.25,0,0,-1.25,45.590274,1426.0258)"
+         transform="matrix(1.25,0,0,-1.25,-310.41705,911.76863)"
          id="g3826">
         <g
            clip-path="url(#clipPath3830)"
            id="g3828">
           <path
              id="path3834"
-             style="fill:none;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1;stroke-dasharray:none"
+             style="fill:none;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
              d="m 253.41,697.43 10.5,14.06"
              inkscape:connector-curvature="0" />
         </g>
       </g>
       <g
-         transform="matrix(1.25,0,0,-1.25,45.590274,1426.0258)"
+         transform="matrix(1.25,0,0,-1.25,-310.41705,911.76863)"
          id="g3892">
         <path
            id="path3894"
-           style="fill:none;stroke:#969696;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1;stroke-dasharray:4, 1.5;stroke-dashoffset:0"
+           style="fill:none;stroke:#969696;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:4, 1.5;stroke-dashoffset:0;stroke-opacity:1"
            d="m 258.24,692.88 0,-13.8"
            inkscape:connector-curvature="0" />
       </g>
       <g
-         transform="matrix(1.25,0,0,-1.25,45.590274,1426.0258)"
+         transform="matrix(1.25,0,0,-1.25,-310.41705,911.76863)"
          id="g3896">
         <path
            id="path3898"
-           style="fill:none;stroke:#969696;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1;stroke-dasharray:4, 1.5;stroke-dashoffset:0"
+           style="fill:none;stroke:#969696;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:4, 1.5;stroke-dashoffset:0;stroke-opacity:1"
            d="m 258.24,729.24 0,-10.92"
            inkscape:connector-curvature="0" />
       </g>

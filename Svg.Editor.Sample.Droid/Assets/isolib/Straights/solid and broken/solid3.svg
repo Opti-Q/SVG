@@ -9,8 +9,8 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="1.7564837"
-   height="59.711781"
+   width="38.266094"
+   height="99.386482"
    id="svg4560"
    version="1.1"
    inkscape:version="0.91 r13725"
@@ -113,39 +113,32 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.4404802"
-     inkscape:cx="-68.644191"
-     inkscape:cy="-10.079402"
+     inkscape:zoom="4.8655738"
+     inkscape:cx="-43.259592"
+     inkscape:cy="38.227297"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
-     inkscape:window-width="1536"
-     inkscape:window-height="801"
-     inkscape:window-x="1912"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      showborder="true"
+     fit-margin-left="18"
+     fit-margin-right="18"
      fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
      fit-margin-bottom="0">
     <inkscape:grid
-       type="xygrid"
-       id="grid3350"
-       enabled="false"
-       originx="-77.028329"
-       originy="-60.54891" />
-    <inkscape:grid
        type="axonomgrid"
-       id="grid3352"
+       id="grid3350"
        units="px"
        empspacing="5"
-       enabled="true"
        spacingy="20"
        gridanglex="27.3"
        gridanglez="27.3"
-       originx="-77.028329"
-       originy="-60.54891" />
+       originx="-58.337539"
+       originy="-40.202902" />
   </sodipodi:namedview>
   <metadata
      id="metadata4565">
@@ -155,19 +148,18 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(-77.028329,-932.10151)">
+     id="layer1">
     <path
        inkscape:connector-curvature="0"
-       d="m 77.906571,932.10151 0,59.71178"
-       style="fill:none;stroke:#000000;stroke-width:1.75648367;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+       d="m 19.339166,0.00667362 0,99.38647638"
+       style="fill:none;stroke:#000000;stroke-width:2.26609302;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
        id="path3180" />
   </g>
 </svg>

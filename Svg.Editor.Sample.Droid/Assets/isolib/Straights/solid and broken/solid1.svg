@@ -201,15 +201,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="6.8809604"
-     inkscape:cx="24.184666"
-     inkscape:cy="29.938895"
+     inkscape:zoom="4.8655738"
+     inkscape:cx="108.42131"
+     inkscape:cy="-6.5728616"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
-     inkscape:window-width="1536"
-     inkscape:window-height="801"
-     inkscape:window-x="1912"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      showborder="true"
@@ -228,7 +228,7 @@
        gridanglex="27.3"
        gridanglez="27.3"
        spacingy="20px"
-       originy="-9.1839262"
+       originy="-9.1839304"
        originx="-18.953435" />
   </sodipodi:namedview>
   <metadata
@@ -239,22 +239,19 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
-
-    <g
+  <g
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(-18.953435,-981.54613)">
+     id="layer1">
     <path
        inkscape:connector-curvature="0"
-       d="m 135.62252,982.3622 -116.24788,60"
+       d="M 116.91969,1.1829544 0.67180978,61.182954"
        style="fill:none;stroke:#000000;stroke-width:1.83671784;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
        id="path3176"
        sodipodi:nodetypes="cc" />
-    </g>
-  <ellipse id="ellipse-object" fill="blue" cx="0" cy="0" rx="5" ry="5"/>
+  </g>
 </svg>

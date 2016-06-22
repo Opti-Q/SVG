@@ -38,11 +38,11 @@ namespace Svg
                         // This is because when the Rectangle is Empty, the Union method adds as if the first values where X=0, Y=0
                         if (r.IsEmpty)
                         {
-                            r = ((SvgVisualElement)c).Bounds;
+                            r = ((SvgVisualElement)c).TransformedBounds;
                         }
                         else
                         {
-                            var childBounds = ((SvgVisualElement)c).Bounds;
+                            var childBounds = ((SvgVisualElement)c).TransformedBounds;
                             if (!childBounds.IsEmpty)
                             {
                                 r = r.UnionAndCopy(childBounds);

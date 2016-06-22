@@ -252,8 +252,7 @@ namespace Svg
                     }
                     b = path.GetBounds();
                 }
-
-                return this.Transforms != null ? this.Transforms.GetMatrix().TransformRectangle(b) : b;
+                return b;
             }
         }
 
