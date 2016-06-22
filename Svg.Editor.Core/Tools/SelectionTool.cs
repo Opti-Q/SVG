@@ -95,7 +95,7 @@ namespace Svg.Core.Tools
                 if (p.EventType == EventType.PointerUp && _selectionRectangle == null)
                 {
                     // select elements under pointer
-                    SelectElementsUnder(ws.GetPointerRectangle(p.Pointer1Position), ws, SelectionType.Intersect);
+                    SelectElementsUnder(ws.GetPointerRectangle(p.Pointer1Position), ws, SelectionType.Intersect, 1);
                     _selectionRectangle = null;
 
                     ws.FireInvalidateCanvas();
@@ -120,13 +120,13 @@ namespace Svg.Core.Tools
 
         }
 
-        private void SelectElementsUnder(RectangleF selectionRectangle, SvgDrawingCanvas ws, SelectionType selectionType)
+        private void SelectElementsUnder(RectangleF selectionRectangle, SvgDrawingCanvas ws, SelectionType selectionType, int maxItems = int.MaxValue)
         {
             ws.SelectedElements.Clear();
 
             // the canvas has not been scaled and translated yet
             // we need to compare our rectangle to the translated boundingboxes of the svg elements
-            var selected = ws.GetElementsUnder(selectionRectangle, selectionType);
+            var selected = ws.GetElementsUnder(selectionRectangle, selectionType, maxItems);
 
             foreach (var element in selected)
                 ws.SelectedElements.Add(element);
@@ -160,6 +160,7 @@ namespace Svg.Core.Tools
                 // as the canvas is already translated, we do not need to use the renderbounds, but the bounds themselves
                 var b = element.Transforms.GetMatrix().TransformRectangle(element.Bounds);
                 renderer.DrawRectangle(b, Pen);
+                
 
                 renderer.Graphics.Restore();
             }

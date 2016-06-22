@@ -9,12 +9,12 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="150"
-   height="150"
+   width="38.475594"
+   height="20.217403"
    id="svg4560"
    version="1.1"
-   inkscape:version="0.48.5 r10040"
-   sodipodi:docname="penetration4.svg">
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="weld1.svg">
   <defs
      id="defs4562">
     <clipPath
@@ -111,8 +111,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path3802"
-         clip-rule="evenodd"
-         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z" />
+         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath3810"
@@ -120,8 +120,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path3812"
-         clip-rule="evenodd"
-         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z" />
+         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath3820"
@@ -129,8 +129,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path3822"
-         clip-rule="evenodd"
-         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z" />
+         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath3830"
@@ -138,8 +138,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path3832"
-         clip-rule="evenodd"
-         d="m 379.92,769.92 0,-99.84 -325.92,0 0,99.84 325.92,0 z" />
+         d="m 379.92,769.92 0,-99.84 -325.92,0 0,99.84 325.92,0 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath3840"
@@ -147,8 +147,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path3842"
-         clip-rule="evenodd"
-         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z" />
+         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath3850"
@@ -156,8 +156,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path3852"
-         clip-rule="evenodd"
-         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z" />
+         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath3860"
@@ -165,8 +165,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path3862"
-         clip-rule="evenodd"
-         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z" />
+         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z"
+         style="clip-rule:evenodd" />
     </clipPath>
     <clipPath
        id="clipPath3870"
@@ -174,8 +174,8 @@
       <path
          inkscape:connector-curvature="0"
          id="path3872"
-         clip-rule="evenodd"
-         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z" />
+         d="m 54,769.92 325.92,0 0,-99.84 -325.92,0 0,99.84 z"
+         style="clip-rule:evenodd" />
     </clipPath>
   </defs>
   <sodipodi:namedview
@@ -185,18 +185,35 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.4404802"
-     inkscape:cx="8.384138"
-     inkscape:cy="50.469508"
+     inkscape:zoom="14.481547"
+     inkscape:cx="21.305291"
+     inkscape:cy="2.7049261"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
-     showgrid="false"
+     showgrid="true"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     showborder="true" />
+     showborder="true"
+     fit-margin-left="15"
+     fit-margin-right="15"
+     fit-margin-top="6"
+     fit-margin-bottom="5.5"
+     borderlayer="false"
+     inkscape:showpageshadow="false">
+    <inkscape:grid
+       type="axonomgrid"
+       id="grid3368"
+       units="px"
+       empspacing="5"
+       gridanglex="27.3"
+       gridanglez="27.3"
+       spacingy="20"
+       originx="-0.1317353"
+       originy="-19.757707" />
+  </sodipodi:namedview>
   <metadata
      id="metadata4565">
     <rdf:RDF>
@@ -213,21 +230,28 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-902.3622)">
+     transform="translate(-0.13173532,-0.062394)">
     <g
-       transform="matrix(1.25,0,0,-1.25,-35.85,1859.8122)"
+       transform="matrix(2.1900758,0,0,-2.4014884,-14.738161,-28.173825)"
        inkscape:label="welds"
        id="g4513">
       <path
          id="path4515"
          style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none"
-         d="m 87.12,705.96 c 0,0.8 0.698,1.44 1.56,1.44 0.862,0 1.56,-0.64 1.56,-1.44 0,-0.8 -0.698,-1.44 -1.56,-1.44 -0.862,0 -1.56,0.64 -1.56,1.44 z"
+         d="m 13.921348,-16.177466 c 0,0.8 0.698,1.44 1.56,1.44 0.862,0 1.56,-0.64 1.56,-1.44 0,-0.8 -0.698,-1.44 -1.56,-1.44 -0.862,0 -1.56,0.64 -1.56,1.44 z"
          inkscape:connector-curvature="0" />
       <path
          id="path4517"
-         style="fill:none;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1;stroke-dasharray:none"
-         d="m 87.12,705.96 c 0,0.8 0.698,1.44 1.56,1.44 0.862,0 1.56,-0.64 1.56,-1.44 0,-0.8 -0.698,-1.44 -1.56,-1.44 -0.862,0 -1.56,0.64 -1.56,1.44 z"
+         style="fill:none;stroke:#000000;stroke-width:0.75;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         d="m 14.01375,-16.07125 c 0,0.8 0.698,1.44 1.56,1.44 0.862,0 1.56,-0.64 1.56,-1.44 0,-0.8 -0.698,-1.44 -1.56,-1.44 -0.862,0 -1.56,0.64 -1.56,1.44 z"
          inkscape:connector-curvature="0" />
     </g>
+    <rect
+       id="rect3369"
+       width="38.54213"
+       height="20.138107"
+       x="0.04283981"
+       y="0.12447512"
+       style="fill:#000000;fill-opacity:0" />
   </g>
 </svg>
