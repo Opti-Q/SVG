@@ -9,8 +9,8 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="37.735035"
-   height="59.858356"
+   width="38.603958"
+   height="59.794476"
    id="svg4560"
    version="1.1"
    inkscape:version="0.91 r13725"
@@ -356,11 +356,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="9.7311476"
-     inkscape:cx="5.5752748"
-     inkscape:cy="25.34528"
+     inkscape:zoom="13.761921"
+     inkscape:cx="-5.399925"
+     inkscape:cy="25.952933"
      inkscape:document-units="px"
-     inkscape:current-layer="g6001"
+     inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
@@ -368,8 +368,8 @@
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      showborder="true"
-     fit-margin-left="11"
-     fit-margin-right="7"
+     fit-margin-left="0"
+     fit-margin-right="0"
      fit-margin-top="0"
      fit-margin-bottom="0">
     <inkscape:grid
@@ -380,8 +380,8 @@
        spacingy="20"
        gridanglex="27.3"
        gridanglez="27.3"
-       originx="-58.444456"
-       originy="-39.932699" />
+       originx="-58.196599"
+       originy="-39.96799" />
   </sodipodi:namedview>
   <metadata
      id="metadata4565">
@@ -391,14 +391,22 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(0.24785654,-0.02858943)">
+    <rect
+       style="fill:#000000;fill-opacity:0"
+       id="rect4221"
+       width="38.603958"
+       height="59.794476"
+       x="-0.24785654"
+       y="0.028589431" />
     <g
        transform="scale(1.1999443,1.4617425)"
        id="g6001">

@@ -9,8 +9,8 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="38.800922"
-   height="59.524532"
+   width="38.824665"
+   height="59.57481"
    id="svg4560"
    version="1.1"
    inkscape:version="0.91 r13725"
@@ -465,19 +465,19 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="6.8809604"
-     inkscape:cx="-15.381351"
-     inkscape:cy="27.617605"
+     inkscape:cx="10.659756"
+     inkscape:cy="32.376194"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
-     inkscape:window-width="1536"
-     inkscape:window-height="801"
-     inkscape:window-x="1912"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      showborder="true"
-     fit-margin-left="9.3"
-     fit-margin-right="7"
+     fit-margin-left="0"
+     fit-margin-right="0"
      fit-margin-top="0"
      fit-margin-bottom="0">
     <inkscape:grid
@@ -488,8 +488,8 @@
        spacingy="20"
        gridanglex="27.3"
        gridanglez="27.3"
-       originx="-58.084563"
-       originy="-40.425507" />
+       originx="-58.086151"
+       originy="-40.417709" />
   </sodipodi:namedview>
   <metadata
      id="metadata4565">
@@ -507,7 +507,14 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-58.084563,-952.41217)">
+     transform="translate(-58.086151,-952.36969)">
+    <rect
+       style="fill:#000000;fill-opacity:0;stroke-width:1;stroke-miterlimit:10;stroke-dasharray:8, 3;stroke-dashoffset:0"
+       id="rect4245"
+       width="38.824665"
+       height="59.57481"
+       x="58.086151"
+       y="952.36969" />
     <g
        transform="matrix(1.3774539,0,0,1.5623237,-699.35881,-26.883107)"
        id="g6242">
@@ -516,7 +523,7 @@
          id="g6095">
         <path
            id="path6097"
-           style="fill:none;stroke:#969696;stroke-width:0.25;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:2, 0.75;stroke-dashoffset:0;stroke-opacity:1"
+           style="fill:none;stroke:#969696;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:2, 0.75;stroke-dashoffset:0;stroke-opacity:1"
            d="m 92.64,629.64 0,-8.76"
            inkscape:connector-curvature="0" />
       </g>
@@ -577,7 +584,7 @@
          id="g6139">
         <path
            id="path6141"
-           style="fill:none;stroke:#969696;stroke-width:0.25;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:2, 0.75;stroke-dashoffset:0;stroke-opacity:1"
+           style="fill:none;stroke:#969696;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:2, 0.75;stroke-dashoffset:0;stroke-opacity:1"
            d="m 92.64,651.36 0,-8.64"
            inkscape:connector-curvature="0" />
       </g>

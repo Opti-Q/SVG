@@ -320,15 +320,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="6.8809604"
-     inkscape:cx="52.487873"
-     inkscape:cy="13.917737"
+     inkscape:zoom="9.7311475"
+     inkscape:cx="27.083553"
+     inkscape:cy="14.03211"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g5991"
      showgrid="true"
-     inkscape:window-width="1536"
-     inkscape:window-height="801"
-     inkscape:window-x="1912"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      showborder="true"
@@ -355,7 +355,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -364,6 +364,13 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(-19.652056,-962.35726)">
+    <rect
+       style="fill:#000000;fill-opacity:0"
+       id="rect4205"
+       width="77.704109"
+       height="40"
+       x="19.430834"
+       y="962.53229" />
     <g
        transform="matrix(1.3041779,0,0,1.2889808,-436.4123,260.78175)"
        id="g5991">
@@ -392,7 +399,7 @@
          id="g5680">
         <path
            id="path5682"
-           style="fill:none;stroke:#969696;stroke-width:0.25;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:2, 0.75;stroke-dashoffset:0;stroke-opacity:1"
+           style="fill:none;stroke:#969696;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:2, 0.75;stroke-dashoffset:0;stroke-opacity:1"
            d="M 326.16,699.36 308.76,690"
            inkscape:connector-curvature="0" />
       </g>
@@ -401,7 +408,7 @@
          id="g5756">
         <path
            id="path5758"
-           style="fill:none;stroke:#969696;stroke-width:0.25;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:2, 0.75;stroke-dashoffset:0;stroke-opacity:1"
+           style="fill:none;stroke:#969696;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:2, 0.75;stroke-dashoffset:0;stroke-opacity:1"
            d="m 356.04,714.72 -17.28,-9.48"
            inkscape:connector-curvature="0" />
       </g>

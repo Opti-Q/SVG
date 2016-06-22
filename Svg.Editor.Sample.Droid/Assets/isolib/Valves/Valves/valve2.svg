@@ -9,8 +9,8 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="76.83847"
-   height="39.862007"
+   width="77.152962"
+   height="39.84346"
    id="svg4560"
    version="1.1"
    inkscape:version="0.91 r13725"
@@ -113,11 +113,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="6.8809604"
-     inkscape:cx="9.1692918"
-     inkscape:cy="-7.115312"
+     inkscape:zoom="13.761921"
+     inkscape:cx="31.959309"
+     inkscape:cy="16.543073"
      inkscape:document-units="px"
-     inkscape:current-layer="g4031"
+     inkscape:current-layer="svg4560"
      showgrid="true"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
@@ -137,8 +137,8 @@
        spacingy="20"
        gridanglex="27.3"
        gridanglez="27.3"
-       originx="-19.867218"
-       originy="-50.128221" />
+       originx="-19.411973"
+       originy="-50.154547" />
   </sodipodi:namedview>
   <metadata
      id="metadata4565">
@@ -148,14 +148,15 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(0.45524454,0.00777908)">
     <g
        transform="scale(1.2875021,1.2561717)"
        id="g4031">
@@ -199,4 +200,11 @@
       </g>
     </g>
   </g>
+  <rect
+     style="fill:#000000;fill-opacity:0"
+     id="rect4159"
+     width="77.152962"
+     height="39.84346"
+     x="0"
+     y="0" />
 </svg>

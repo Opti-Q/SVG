@@ -320,15 +320,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="4.8655738"
-     inkscape:cx="-6.0820485"
-     inkscape:cy="5.2421065"
+     inkscape:zoom="9.7311476"
+     inkscape:cx="16.176591"
+     inkscape:cy="32.394191"
      inkscape:document-units="px"
-     inkscape:current-layer="g5752"
+     inkscape:current-layer="g3412"
      showgrid="true"
-     inkscape:window-width="1536"
-     inkscape:window-height="801"
-     inkscape:window-x="1912"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      showborder="true"
@@ -355,7 +355,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -364,6 +364,14 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(-38.836173,-952.27249)">
+    <rect
+       style="fill:#000000;fill-opacity:0"
+       id="rect4206"
+       width="77.197388"
+       height="40.001484"
+       x="38.867516"
+       y="-992.26495"
+       transform="scale(1,-1)" />
     <g
        transform="matrix(1.5951602,0,0,1.524509,-377.33171,118.15751)"
        id="g5981">
@@ -378,7 +386,7 @@
             <path
                inkscape:connector-curvature="0"
                d="m 237.72,712.44 11.88,-6.48"
-               style="fill:none;stroke:#969696;stroke-width:0.25;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:2, 0.75;stroke-dashoffset:0;stroke-opacity:1"
+               style="fill:none;stroke:#969696;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:2, 0.75;stroke-dashoffset:0;stroke-opacity:1"
                id="path5670" />
           </g>
           <path
@@ -408,7 +416,7 @@
           <path
              inkscape:connector-curvature="0"
              d="m 262.21083,699.34008 14.12598,-7.62653"
-             style="fill:none;stroke:#969696;stroke-width:0.29574469;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:2.36595761, 0.8872341;stroke-dashoffset:0;stroke-opacity:1"
+             style="fill:none;stroke:#969696;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:2.36595761, 0.8872341;stroke-dashoffset:0;stroke-opacity:1"
              id="path5754" />
         </g>
       </g>

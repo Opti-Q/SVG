@@ -321,7 +321,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="13.761921"
-     inkscape:cx="42.094537"
+     inkscape:cx="29.705278"
      inkscape:cy="14.516308"
      inkscape:document-units="px"
      inkscape:current-layer="g5961"
@@ -366,6 +366,13 @@
     <g
        transform="scale(1.6332606,1.5738353)"
        id="g5961">
+      <rect
+         style="fill:#000000;fill-opacity:0"
+         id="rect4205"
+         width="47.450222"
+         height="25.831152"
+         x="-0.0080506885"
+         y="-0.046781003" />
       <path
          id="path5736"
          style="fill:none;stroke:#000000;stroke-width:0.9375;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"

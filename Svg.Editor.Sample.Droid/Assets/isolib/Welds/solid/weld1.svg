@@ -186,8 +186,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="10.24"
-     inkscape:cx="-21.276156"
-     inkscape:cy="24.790657"
+     inkscape:cx="6.9935444"
+     inkscape:cy="12.168197"
      inkscape:document-units="px"
      inkscape:current-layer="g4513"
      showgrid="true"
@@ -240,16 +240,13 @@
          x="0.04283981"
          y="0.12447512"
          style="fill:#000000;fill-opacity:0" />
-      <path
-         id="path4515"
-         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none"
-         d="m 16.741663,9.528087 c 0,1.370135 1.094838,2.466242 2.446916,2.466242 1.352078,0 2.446916,-1.096107 2.446916,-2.466242 0,-1.3701339 -1.094838,-2.466241 -2.446916,-2.466241 -1.352078,0 -2.446916,1.0961071 -2.446916,2.466241 z"
-         inkscape:connector-curvature="0" />
-      <path
-         id="path4517"
-         style="fill:none;stroke:#000000;stroke-width:1.22926354;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
-         d="m 16.886599,9.71 c 0,1.370134 1.094838,2.466241 2.446916,2.466241 1.352078,0 2.446916,-1.096107 2.446916,-2.466241 0,-1.3701343 -1.094838,-2.4662414 -2.446916,-2.4662414 -1.352078,0 -2.446916,1.0961071 -2.446916,2.4662414 z"
-         inkscape:connector-curvature="0" />
+      <ellipse
+         style="fill:#000000;fill-opacity:1"
+         id="path4188"
+         cx="19.614182"
+         cy="10.053236"
+         rx="4.6091976"
+         ry="4.4140625" />
     </g>
   </g>
 </svg>

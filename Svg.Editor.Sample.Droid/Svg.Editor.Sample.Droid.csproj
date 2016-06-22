@@ -267,9 +267,6 @@
     <AndroidAsset Include="Assets\isolib\Valves\Valves\valve3.svg" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\isolib\Valves\Valves\valve4.svg" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="Assets\isolib\Welds\solid\weld1.svg" />
   </ItemGroup>
   <ItemGroup>

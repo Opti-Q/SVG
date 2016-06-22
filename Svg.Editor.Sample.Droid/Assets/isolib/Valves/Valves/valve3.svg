@@ -150,10 +150,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="6.8809605"
-     inkscape:cx="-3.7068434"
-     inkscape:cy="48.763967"
+     inkscape:cx="33.406146"
+     inkscape:cy="36.007649"
      inkscape:document-units="px"
-     inkscape:current-layer="g4041"
+     inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
@@ -265,6 +265,13 @@
            d="m 258.24,729.24 0,-10.92"
            inkscape:connector-curvature="0" />
       </g>
+      <rect
+         style="fill:#000000;fill-opacity:0"
+         id="rect4175"
+         width="24.958244"
+         height="62.748264"
+         x="-0.1161573"
+         y="0.10131482" />
     </g>
   </g>
 </svg>

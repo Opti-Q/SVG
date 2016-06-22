@@ -320,9 +320,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="13.761921"
-     inkscape:cx="39.95058"
-     inkscape:cy="15.11225"
+     inkscape:zoom="19.462295"
+     inkscape:cx="31.210578"
+     inkscape:cy="26.225851"
      inkscape:document-units="px"
      inkscape:current-layer="g5971"
      showgrid="true"
@@ -404,6 +404,13 @@
            d="m 190.18627,711.03163 -14.14453,-7.28724"
            inkscape:connector-curvature="0" />
       </g>
+      <rect
+         style="fill:#000000;fill-opacity:0"
+         id="rect4205"
+         width="51.372498"
+         height="26.907825"
+         x="0.087017827"
+         y="-0.045896776" />
     </g>
   </g>
 </svg>
