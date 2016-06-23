@@ -5,7 +5,6 @@ namespace Svg.Platform
     public class AndroidPen : Pen
     {
         private readonly Brush _brush;
-        private readonly System.Drawing.Color _color;
         private Paint _paint;
         private DashPathEffect _dashes;
         private float[] _dashPattern;
@@ -13,14 +12,6 @@ namespace Svg.Platform
         private float _miterLimit;
         private LineCap _cap;
         private LineCap _endCap;
-
-        public AndroidPen(System.Drawing.Color color, float strokeWidth)
-        {
-            _color = color;
-            _paint = new Paint();
-            _paint.StrokeWidth = strokeWidth;
-            _paint.Color = color.ToColor();
-        }
 
         public AndroidPen(Brush brush, float strokeWidth)
         {

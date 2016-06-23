@@ -159,14 +159,6 @@ namespace Svg.Core.Tools
                 renderer.Graphics.Concat(m);
                 renderer.DrawRectangle(_selectionRectangle, Pen);
 
-                foreach (var element in ws.Document.Children.OfType<SvgVisualElement>())
-                {
-                    renderer.Graphics.Save();
-                    renderer.DrawRectangle(element.RenderBounds, Pen3);
-                    renderer.Graphics.Restore();
-                }
-
-
                 renderer.Graphics.Restore();
             }
 

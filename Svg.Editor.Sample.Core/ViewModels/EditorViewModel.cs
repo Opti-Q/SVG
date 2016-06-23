@@ -24,8 +24,8 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
             // this surely creates a memory leak!!
             tool.SourceProvider = GetSource;
             
-            Canvas.Tools.Add(new SaveTool(true));
-            //Canvas.Document = SvgDocument.Open<SvgDocument>(GetSource("svg/ellipse.svg"));
+            Canvas.Tools.Add(new SaveTool(false));
+            Canvas.Document = SvgDocument.Open<SvgDocument>(GetSource("svg/large_svg_01.svg"));
             
         }
 
