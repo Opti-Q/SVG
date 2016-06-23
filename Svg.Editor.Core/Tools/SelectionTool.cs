@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Events;
@@ -94,9 +95,15 @@ namespace Svg.Core.Tools
                     startY = endY;
                     endY = t;
                 }
-                _selectionRectangle = Engine.Factory.CreateRectangleF(startX, startY, endX - startX, endY - startY);
+                var rect = Engine.Factory.CreateRectangleF(startX, startY, endX - startX, endY - startY);
                 
-                ws.FireInvalidateCanvas();
+                // selection onyl counts if width and height are not too small
+                var dist = Math.Sqrt(Math.Pow(_selectionRectangle.Width, 2) + Math.Pow(_selectionRectangle.Height, 2));
+                if (dist > 30)
+                {
+                    _selectionRectangle = rect;
+                    ws.FireInvalidateCanvas();
+                }
             }
 
             var p = @event as PointerEvent;
