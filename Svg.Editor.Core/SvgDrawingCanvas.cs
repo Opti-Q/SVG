@@ -78,6 +78,8 @@ namespace Svg.Core
             foreach (var tool in Tools)
                 tool.OnDocumentChanged(oldDocument, newDocument);
 
+            oldDocument?.Dispose();
+
             // selection is not valid anymore
             SelectedElements.Clear();
 
@@ -204,12 +206,6 @@ namespace Svg.Core
                 
                 FireToolCommandsChanged();
             }
-        }
-        
-        public void Dispose()
-        {
-            foreach(var tool in Tools)
-                tool.Dispose();
         }
 
         private ISvgRenderer GetOrCreateRenderer(Graphics graphics)
@@ -360,6 +356,14 @@ namespace Svg.Core
         {
             _toolSelectors = null;
             FireToolCommandsChanged();
+        }
+
+        public void Dispose()
+        {
+            foreach (var tool in Tools)
+                tool.Dispose();
+
+            _document?.Dispose();
         }
 
         private class SelectToolCommand : ToolCommand

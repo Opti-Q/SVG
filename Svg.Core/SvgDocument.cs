@@ -652,5 +652,12 @@ namespace Svg
             this.X += new SvgUnit(SvgUnitType.Pixel, x);
             this.Y += new SvgUnit(SvgUnitType.Pixel, y);
         }
+
+        public override void Dispose()
+        {
+            foreach(var c in Descendants())
+                c.Dispose();
+            base.Dispose();
+        }
     }
 }

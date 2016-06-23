@@ -14,6 +14,8 @@ namespace Svg
         private bool _requiresSmoothRendering;
         private Region _previousClip;
         private RectangleF _renderBounds;
+        private Pen _strokePen;
+        private Brush _strokeBrush;
 
         /// <summary>
         /// Gets the <see cref="GraphicsPath"/> for this element.
@@ -237,7 +239,7 @@ namespace Svg
             if (this.Stroke != null && this.Stroke != SvgColourServer.None)
             {
                 float strokeWidth = this.StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, this);
-                using (var brush = this.Stroke.GetBrush(this, renderer, Math.Min(Math.Max(this.StrokeOpacity * this.Opacity, 0), 1), true))
+                using (var brush = GetStrokeBrush(renderer))
                 {
                     if (brush != null)
                     {
@@ -266,7 +268,8 @@ namespace Svg
                         }
                         else
                         {
-                            using (var pen = Engine.Factory.CreatePen(brush, strokeWidth))
+                            /*using (*/
+                            var pen = CreateStrokePen(brush, strokeWidth);/*)*/
                             {
                                 if (this.StrokeDashArray != null && this.StrokeDashArray.Count > 0)
                                 {
@@ -309,6 +312,16 @@ namespace Svg
             }
 
             return false;
+        }
+
+        private Pen CreateStrokePen(Brush brush, float strokeWidth)
+        {
+            return _strokePen ?? (_strokePen = Engine.Factory.CreatePen(brush, strokeWidth));
+        }
+
+        private Brush GetStrokeBrush(ISvgRenderer renderer)
+        {
+            return _strokeBrush ?? (_strokeBrush = this.Stroke.GetBrush(this, renderer, Math.Min(Math.Max(this.StrokeOpacity * this.Opacity, 0), 1), true));
         }
 
         /// <summary>
@@ -399,5 +412,11 @@ namespace Svg
             return newObj;
         }
 
+        public override void Dispose()
+        {
+            _strokePen.Dispose();
+            _strokeBrush.Dispose();
+            base.Dispose();
+        }
     }
 }

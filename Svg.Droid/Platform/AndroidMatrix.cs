@@ -70,7 +70,6 @@ namespace Svg.Platform
 
         public override void Scale(float width, float height)
         {
-            //_m.SetScale(width, height);
             _m.PreScale(width, height);
         }
 

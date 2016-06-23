@@ -13,7 +13,7 @@ namespace Svg
     /// <summary>
     /// The base class of which all SVG elements are derived from.
     /// </summary>
-    public abstract partial class SvgElement : ISvgElement, ISvgTransformable, ICloneable, ISvgNode
+    public abstract partial class SvgElement : ISvgElement, ISvgTransformable, ICloneable, ISvgNode, IDisposable
     {
         public const int StyleSpecificity_PresAttribute = 0;
         public const int StyleSpecificity_InlineStyle = 1 << 16;
@@ -1083,6 +1083,10 @@ namespace Svg
         }
         
         #endregion graphical EVENTS
+
+        public virtual void Dispose()
+        {
+        }
     }
     
     public class SVGArg : EventArgs

@@ -13,8 +13,7 @@ namespace Svg.Platform
         private readonly List<PointF> _points = new List<PointF>();
         private readonly List<byte> _pathTypes = new List<byte>();
         private Android.Graphics.Path _path;
-        private Paint _paint = new Paint() {Color = Android.Graphics.Color.Black};
-        private readonly List<TextInfo> _texts = new List<TextInfo>();
+        private List<TextInfo> _texts;
 
         public AndroidGraphicsPath()
         {
@@ -39,11 +38,6 @@ namespace Svg.Platform
             {
                 _path.Dispose();
                 _path = null;
-            }
-            if (_paint != null)
-            {
-                _paint.Dispose();
-                _paint = null;
             }
         }
 
@@ -115,7 +109,7 @@ namespace Svg.Platform
 
         internal List<TextInfo> Texts
         {
-            get { return _texts; }
+            get { return _texts ?? (_texts = new List<TextInfo>()); }
         }
 
         public void AddEllipse(float x, float y, float width, float height)
