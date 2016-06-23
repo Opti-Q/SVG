@@ -73,9 +73,9 @@ namespace Svg.Platform
             return new AndroidColor(other.A, other.R, other.G, other.B);
         }
 
-        public static implicit operator Android.Graphics.Color(AndroidColor other)
+        public static implicit operator Android.Graphics.Color(AndroidColor color)
         {
-            return other._inner.ToColor();
+            return new Android.Graphics.Color(color.R, color.G, color.B, color.A);
         }
     }
 }

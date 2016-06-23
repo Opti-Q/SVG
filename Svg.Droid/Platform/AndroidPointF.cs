@@ -43,7 +43,7 @@ namespace Svg.Platform
         }
         public static implicit operator Android.Graphics.PointF(AndroidPointF other)
         {
-            return other._inner.ToPointF();
+            return new Android.Graphics.PointF(other.X, other.Y);
         }
     }
 }
