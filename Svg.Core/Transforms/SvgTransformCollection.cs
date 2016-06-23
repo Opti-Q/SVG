@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Svg.Interfaces;
 
 namespace Svg.Transforms
@@ -9,6 +10,8 @@ namespace Svg.Transforms
     //[TypeConverter(typeof(SvgTransformConverter))]
     public class SvgTransformCollection : List<SvgTransform>, ICloneable
     {
+        private Matrix transformMatrix;
+
     	private void AddItem(SvgTransform item)
     	{
     		base.Add(item);
@@ -44,7 +47,10 @@ namespace Svg.Transforms
     	/// <returns>The result of all transforms</returns>
     	public Matrix GetMatrix()
     	{
-            var transformMatrix = Engine.Factory.CreateMatrix();
+    	    if (transformMatrix != null)
+    	        return transformMatrix;
+
+            transformMatrix = Engine.Factory.CreateMatrix();
     		
     		// Return if there are no transforms
             if (this.Count == 0)
@@ -91,6 +97,7 @@ namespace Svg.Transforms
         
         protected void OnTransformChanged()
         {
+            transformMatrix = null;
             //make a copy of the current value to avoid collection changed exceptions
             TransformChanged?.Invoke(this, new AttributeEventArgs { Attribute = "transform", Value = this.Clone() });
         }	

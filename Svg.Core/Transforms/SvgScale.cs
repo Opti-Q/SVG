@@ -6,24 +6,31 @@ namespace Svg.Transforms
     {
         private float scaleFactorX;
         private float scaleFactorY;
+        private Matrix matrix;
 
         public float X
         {
             get { return this.scaleFactorX; }
-            set { this.scaleFactorX = value; }
+            set { this.scaleFactorX = value;
+                matrix = null;
+            }
         }
 
         public float Y
         {
             get { return this.scaleFactorY; }
-            set { this.scaleFactorY = value; }
+            set { this.scaleFactorY = value;
+                matrix = null;
+            }
         }
 
         public override Matrix Matrix
         {
             get
             {
-                var matrix = Engine.Factory.CreateMatrix();
+                if (matrix != null)
+                    return matrix;
+                matrix = Engine.Factory.CreateMatrix();
                 matrix.Scale(this.X, this.Y);
                 return matrix;
             }

@@ -8,15 +8,34 @@ namespace Svg.Transforms
     /// </summary>
     public sealed class SvgSkew : SvgTransform
     {
-        public float AngleX { get; set; }
+        private Matrix matrix;
+        private float _angleX;
+        private float _angleY;
 
-        public float AngleY { get; set; }
+        public float AngleX
+        {
+            get { return _angleX; }
+            set { _angleX = value;
+                matrix = null;
+            }
+        }
+
+        public float AngleY
+        {
+            get { return _angleY; }
+            set { _angleY = value;
+                matrix = null;
+            }
+        }
 
         public override Matrix Matrix
         {
             get
             {
-                var matrix = Engine.Factory.CreateMatrix();
+                if (matrix != null)
+                    return matrix;
+
+                matrix = Engine.Factory.CreateMatrix();
                 matrix.Shear(
                     (float)Math.Tan(AngleX/180*Math.PI),
                     (float)Math.Tan(AngleY/180*Math.PI));

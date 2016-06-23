@@ -9,11 +9,15 @@ namespace Svg.Transforms
     public sealed class SvgMatrix : SvgTransform
     {
     	private List<float> points;
-
+	    private Matrix matrix;
         public List<float> Points
         {
             get { return this.points; }
-            set { this.points = value; }
+            set
+            {
+                this.points = value;
+                matrix = null;
+            }
         }
 
 	    private const int ScaleX = 0;
@@ -27,6 +31,9 @@ namespace Svg.Transforms
         {
             get
             {
+                if (matrix != null)
+                    return matrix;
+
                 /* according to http://tutorials.jenkov.com/svg/svg-transformation.html
                  * a matrix like
                  *      sx  rx  tx
@@ -38,7 +45,7 @@ namespace Svg.Transforms
                  * rx, ry is rotation/skew
                  * tx, ty is translation
                  */
-                Matrix matrix = Engine.Factory.CreateMatrix(
+                matrix = Engine.Factory.CreateMatrix(
                     this.points[ScaleX],
                     this.points[RotateX],
                     this.points[RotateY],

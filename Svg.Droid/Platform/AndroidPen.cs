@@ -27,7 +27,7 @@ namespace Svg.Platform
         public void Dispose()
         {
             _paint.Dispose();
-            if(_dashes != null)
+            if (_dashes != null)
                 _dashes.Dispose();
         }
 

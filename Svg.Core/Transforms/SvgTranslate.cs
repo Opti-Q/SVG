@@ -6,24 +6,30 @@ namespace Svg.Transforms
     {
         private float x;
         private float y;
-
+        private Matrix matrix;
         public float X
         {
             get { return x; }
-            set { this.x = value; }
+            set { this.x = value;
+                matrix = null;
+            }
         }
 
         public float Y
         {
             get { return y; }
-            set { this.y = value; }
+            set { this.y = value;
+                matrix = null;
+            }
         }
 
         public override Matrix Matrix
         {
             get
             {
-                Matrix matrix = Engine.Factory.CreateMatrix();
+                if (matrix != null) return matrix;
+
+                matrix = Engine.Factory.CreateMatrix();
                 matrix.Translate(this.X, this.Y);
                 return matrix;
             }

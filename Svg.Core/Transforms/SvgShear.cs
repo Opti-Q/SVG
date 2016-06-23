@@ -9,24 +9,31 @@ namespace Svg.Transforms
     {
         private float shearFactorX;
         private float shearFactorY;
+        private Matrix matrix;
 
         public float X
         {
             get { return this.shearFactorX; }
-            set { this.shearFactorX = value; }
+            set { this.shearFactorX = value;
+                matrix = null;
+            }
         }
 
         public float Y
         {
             get { return this.shearFactorY; }
-            set { this.shearFactorY = value; }
+            set { this.shearFactorY = value;
+                matrix = null;
+            }
         }
 
         public override Matrix Matrix
         {
             get
             {
-                Matrix matrix = Engine.Factory.CreateMatrix();
+                if (matrix != null)
+                    return matrix;
+                matrix = Engine.Factory.CreateMatrix();
                 matrix.Shear(this.X, this.Y);
                 return matrix;
             }

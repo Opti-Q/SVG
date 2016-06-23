@@ -15,7 +15,7 @@ namespace Svg.Platform
             if(txt.Fill != null)
             {
                 var brush = txt.Fill.GetBrush(txt, renderer, 1f);
-                using (var pen = new AndroidPen(brush, 0f))
+                using (var pen = (AndroidPen)Engine.Factory.CreatePen(brush, 0f))
                 {
                     pen.TextSize = txt.FontSize.Value;
                     pen.TextAlign = FromAnchor(txt.TextAnchor);
@@ -34,7 +34,7 @@ namespace Svg.Platform
             if (txt.Stroke != null)
             {
                 var brush = txt.Stroke.GetBrush(txt, renderer, 1f);
-                using (var pen = new AndroidPen(brush, txt.StrokeWidth.Value))
+                using (var pen = (AndroidPen)Engine.Factory.CreatePen(brush, txt.StrokeWidth.Value))
                 {
                     pen.TextSize = txt.FontSize.Value;
                     pen.TextAlign = FromAnchor(txt.TextAnchor);
@@ -67,7 +67,7 @@ namespace Svg.Platform
                 return Engine.Factory.CreateRectangleF(0f, 0f, 0f, 0f);
 
             var brush = txt.Fill.GetBrush(txt, renderer, 1f);
-            using (var pen = new AndroidPen(brush, txt.StrokeWidth.Value))
+            using (var pen = (AndroidPen)Engine.Factory.CreatePen(brush, txt.StrokeWidth.Value))
             {
                 pen.TextSize = txt.FontSize.Value;
                 pen.TextAlign = FromAnchor(txt.TextAnchor);

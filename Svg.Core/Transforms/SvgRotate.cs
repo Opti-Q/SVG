@@ -5,29 +5,45 @@ namespace Svg.Transforms
 {
     public sealed class SvgRotate : SvgTransform
     {
+        private Matrix matrix;
+        private float _angle;
+        private float _centerX;
+        private float _centerY;
+
         public float Angle
         {
-            get;
-            set;
+            get { return _angle; }
+            set
+            {
+                _angle = value;
+                matrix = null;
+            }
         }
 
         public float CenterX
         {
-            get;
-            set;
+            get { return _centerX; }
+            set { _centerX = value;
+                matrix = null;
+            }
         }
 
         public float CenterY
         {
-            get;
-            set;
+            get { return _centerY; }
+            set { _centerY = value;
+                matrix = null;
+            }
         }
 
         public override Matrix Matrix
         {
             get
             {
-                Matrix matrix = Engine.Factory.CreateMatrix();
+                if (matrix != null)
+                    return matrix;
+
+                matrix = Engine.Factory.CreateMatrix();
                 matrix.Translate(this.CenterX, this.CenterY);
                 matrix.Rotate(this.Angle);
                 matrix.Translate(-this.CenterX, -this.CenterY);

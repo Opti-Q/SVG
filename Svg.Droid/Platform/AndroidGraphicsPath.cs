@@ -12,12 +12,19 @@ namespace Svg.Platform
         private FillMode _fillmode;
         private readonly List<PointF> _points = new List<PointF>();
         private readonly List<byte> _pathTypes = new List<byte>();
-        private Android.Graphics.Path _path = new Android.Graphics.Path();
+        private Android.Graphics.Path _path;
         private Paint _paint = new Paint() {Color = Android.Graphics.Color.Black};
         private readonly List<TextInfo> _texts = new List<TextInfo>();
 
         public AndroidGraphicsPath()
         {
+            _path = new Android.Graphics.Path();
+        }
+
+
+        public AndroidGraphicsPath(Android.Graphics.Path path)
+        {
+            _path = path;
         }
 
         public AndroidGraphicsPath(FillMode fillmode)
@@ -179,8 +186,7 @@ namespace Svg.Platform
 
         public GraphicsPath Clone()
         {
-            var cl = new AndroidGraphicsPath();
-            cl._path = new Path(this.Path);
+            var cl = new AndroidGraphicsPath(new Path(this.Path));
             cl._points.AddRange(this._points);
             cl._pathTypes.AddRange(this._pathTypes);
             return cl;

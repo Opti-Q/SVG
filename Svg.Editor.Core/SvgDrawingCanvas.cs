@@ -228,7 +228,7 @@ namespace Svg.Core
         /// <returns></returns>
         public RectangleF GetPointerRectangle(PointF p)
         {
-            float halfFingerThickness = 10 / ZoomFactor;
+            float halfFingerThickness = 20 / ZoomFactor;
             return Engine.Factory.CreateRectangleF(p.X - halfFingerThickness, p.Y - halfFingerThickness, halfFingerThickness * 2, halfFingerThickness * 2); // "10 pixel fat finger"
         }
 
