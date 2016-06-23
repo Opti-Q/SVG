@@ -161,7 +161,7 @@ namespace Svg
 
         public RectangleF CreateRectangleF()
         {
-            return new AndroidRectangleF();
+            return new AndroidRectangleF(0, 0, 0, 0);
         }
 
         public Colors Colors => _colors;

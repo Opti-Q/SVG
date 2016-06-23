@@ -1,44 +1,308 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
 namespace Svg.Interfaces
 {
-    public abstract class SizeF
+    //public abstract class SizeF
+    //{
+    //    public abstract bool IsEmpty { get; }
+    //    public abstract float Width { get; set; }
+    //    public abstract float Height { get; set; }
+
+    //    public static SizeF operator +(SizeF c1, SizeF c2)
+    //    {
+    //        return Engine.Factory.CreateSizeF(c1.Width + c2.Width, c1.Height + c2.Height);
+    //    }
+
+    //    public static SizeF operator -(SizeF c1, SizeF c2)
+    //    {
+    //        return Engine.Factory.CreateSizeF(c1.Width - c2.Width, c1.Height - c2.Height);
+    //    }
+
+    //    public static SizeF operator *(SizeF c1, SizeF c2)
+    //    {
+    //        return Engine.Factory.CreateSizeF(c1.Width / c2.Width, c1.Height / c2.Height);
+    //    }
+
+    //    public static SizeF operator /(SizeF c1, SizeF c2)
+    //    {
+    //        return Engine.Factory.CreateSizeF(c1.Width / c2.Width, c1.Height / c2.Height);
+    //    }
+
+    //    public static bool operator ==(SizeF c1, SizeF c2)
+    //    {
+    //        return c1?.Width == c2?.Width && c1?.Height == c2?.Height;
+    //    }
+
+    //    public static bool operator !=(SizeF c1, SizeF c2)
+    //    {
+    //        return c1?.Width != c2?.Width || c1?.Height != c2?.Height;
+    //    }
+    //}
+    public class SizeF
+        : IEquatable<SizeF>
     {
-        public abstract bool IsEmpty { get; }
-        public abstract float Width { get; set; }
-        public abstract float Height { get; set; }
+        // Private height and width fields.
+        private float width, height;
 
-        public static SizeF operator +(SizeF c1, SizeF c2)
+        // -----------------------
+        // Public Shared Members
+        // -----------------------
+
+        /// <summary>
+        ///	Empty Shared Field
+        /// </summary>
+        ///
+        /// <remarks>
+        ///	An uninitialized SizeF Structure.
+        /// </remarks>
+
+        public static readonly SizeF Empty;
+
+        /// <summary>
+        ///	Addition Operator
+        /// </summary>
+        ///
+        /// <remarks>
+        ///	Addition of two SizeF structures.
+        /// </remarks>
+
+        public static SizeF operator +(SizeF sz1, SizeF sz2)
         {
-            return Engine.Factory.CreateSizeF(c1.Width + c2.Width, c1.Height + c2.Height);
+            return Engine.Factory.CreateSizeF(sz1.Width + sz2.Width,
+                      sz1.Height + sz2.Height);
         }
 
-        public static SizeF operator -(SizeF c1, SizeF c2)
+        /// <summary>
+        ///	Equality Operator
+        /// </summary>
+        ///
+        /// <remarks>
+        ///	Compares two SizeF objects. The return value is
+        ///	based on the equivalence of the Width and Height 
+        ///	properties of the two Sizes.
+        /// </remarks>
+
+        public static bool operator ==(SizeF sz1, SizeF sz2)
         {
-            return Engine.Factory.CreateSizeF(c1.Width - c2.Width, c1.Height - c2.Height);
+            return ((sz1?.Width == sz2?.Width) &&
+                (sz1?.Height == sz2?.Height));
         }
 
-        public static SizeF operator *(SizeF c1, SizeF c2)
+        /// <summary>
+        ///	Inequality Operator
+        /// </summary>
+        ///
+        /// <remarks>
+        ///	Compares two SizeF objects. The return value is
+        ///	based on the equivalence of the Width and Height 
+        ///	properties of the two Sizes.
+        /// </remarks>
+
+        public static bool operator !=(SizeF sz1, SizeF sz2)
         {
-            return Engine.Factory.CreateSizeF(c1.Width / c2.Width, c1.Height / c2.Height);
+            return ((sz1?.Width != sz2?.Width) ||
+                (sz1?.Height != sz2?.Height));
         }
 
-        public static SizeF operator /(SizeF c1, SizeF c2)
+        /// <summary>
+        ///	Subtraction Operator
+        /// </summary>
+        ///
+        /// <remarks>
+        ///	Subtracts two SizeF structures.
+        /// </remarks>
+
+        public static SizeF operator -(SizeF sz1, SizeF sz2)
         {
-            return Engine.Factory.CreateSizeF(c1.Width / c2.Width, c1.Height / c2.Height);
+            return Engine.Factory.CreateSizeF(sz1.Width - sz2.Width,
+                      sz1.Height - sz2.Height);
         }
 
-        public static bool operator ==(SizeF c1, SizeF c2)
+        /// <summary>
+        ///	SizeF to PointF Conversion
+        /// </summary>
+        ///
+        /// <remarks>
+        ///	Returns a PointF based on the dimensions of a given 
+        ///	SizeF. Requires explicit cast.
+        /// </remarks>
+
+        public static explicit operator PointF(SizeF size)
         {
-            return c1?.Width == c2?.Width && c1?.Height == c2?.Height;
+            return Engine.Factory.CreatePointF(size.Width, size.Height);
         }
 
-        public static bool operator !=(SizeF c1, SizeF c2)
+
+        // -----------------------
+        // Public Constructors
+        // -----------------------
+
+        /// <summary>
+        ///	SizeF Constructor
+        /// </summary>
+        ///
+        /// <remarks>
+        ///	Creates a SizeF from a PointF value.
+        /// </remarks>
+
+        public SizeF(PointF pt)
         {
-            return c1?.Width != c2?.Width || c1?.Height != c2?.Height;
+            width = pt.X;
+            height = pt.Y;
+        }
+
+        /// <summary>
+        ///	SizeF Constructor
+        /// </summary>
+        ///
+        /// <remarks>
+        ///	Creates a SizeF from an existing SizeF value.
+        /// </remarks>
+
+        public SizeF(SizeF size)
+        {
+            width = size.Width;
+            height = size.Height;
+        }
+
+        /// <summary>
+        ///	SizeF Constructor
+        /// </summary>
+        ///
+        /// <remarks>
+        ///	Creates a SizeF from specified dimensions.
+        /// </remarks>
+
+        public SizeF(float width, float height)
+        {
+            this.width = width;
+            this.height = height;
+        }
+
+        // -----------------------
+        // Public Instance Members
+        // -----------------------
+
+        /// <summary>
+        ///	IsEmpty Property
+        /// </summary>
+        ///
+        /// <remarks>
+        ///	Indicates if both Width and Height are zero.
+        /// </remarks>
+
+        public bool IsEmpty
+        {
+            get
+            {
+                return ((width == 0.0) && (height == 0.0));
+            }
+        }
+
+        /// <summary>
+        ///	Width Property
+        /// </summary>
+        ///
+        /// <remarks>
+        ///	The Width coordinate of the SizeF.
+        /// </remarks>
+
+        public float Width
+        {
+            get
+            {
+                return width;
+            }
+            set
+            {
+                width = value;
+            }
+        }
+
+        /// <summary>
+        ///	Height Property
+        /// </summary>
+        ///
+        /// <remarks>
+        ///	The Height coordinate of the SizeF.
+        /// </remarks>
+
+        public float Height
+        {
+            get
+            {
+                return height;
+            }
+            set
+            {
+                height = value;
+            }
+        }
+
+        /// <summary>
+        ///	Equals Method
+        /// </summary>
+        ///
+        /// <remarks>
+        ///	Checks equivalence of this SizeF and another SizeF.
+        /// </remarks>
+
+        public bool Equals(SizeF other)
+        {
+            return ((this.Width == other.Width) &&
+                (this.Height == other.Height));
+        }
+
+        /// <summary>
+        ///	Equals Method
+        /// </summary>
+        ///
+        /// <remarks>
+        ///	Checks equivalence of this SizeF and another object.
+        /// </remarks>
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is SizeF))
+                return false;
+
+            return this.Equals((SizeF)obj);
+        }
+
+        /// <summary>
+        ///	GetHashCode Method
+        /// </summary>
+        ///
+        /// <remarks>
+        ///	Calculates a hashing value.
+        /// </remarks>
+
+        public override int GetHashCode()
+        {
+            return (int)width ^ (int)height;
+        }
+
+        public PointF ToPointF()
+        {
+            return Engine.Factory.CreatePointF(width, height);
+        }
+
+        /// <summary>
+        ///	ToString Method
+        /// </summary>
+        ///
+        /// <remarks>
+        ///	Formats the SizeF as a string in coordinate notation.
+        /// </remarks>
+
+        public override string ToString()
+        {
+            return string.Format("{{Width={0}, Height={1}}}", width.ToString(CultureInfo.CurrentCulture),
+                height.ToString(CultureInfo.CurrentCulture));
         }
     }
 }
