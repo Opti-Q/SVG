@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -9,9 +10,20 @@ namespace Svg
 {
     public class SvgElementAttributeProvider : ISvgElementAttributeProvider
     {
+        private static readonly ConcurrentDictionary<Type,IEnumerable<SvgElement.PropertyAttributeTuple>> PropertyCache = new ConcurrentDictionary<Type, IEnumerable<SvgElement.PropertyAttributeTuple>>();
+        private static readonly ConcurrentDictionary<Type, IEnumerable<SvgElement.EventAttributeTuple>> EventCache = new ConcurrentDictionary<Type, IEnumerable<SvgElement.EventAttributeTuple>>();
+
         public IEnumerable<SvgElement.PropertyAttributeTuple> GetPropertyAttributes(object instance)
         {
-            var attrs  = (from PropertyDescriptor a in TypeDescriptor.GetProperties(instance)
+            if (instance == null) throw new ArgumentNullException(nameof(instance));
+
+            IEnumerable<SvgElement.PropertyAttributeTuple> attrs;
+            if (PropertyCache.TryGetValue(instance.GetType(), out attrs))
+            {
+                return attrs;
+            }
+
+            attrs  = (from PropertyDescriptor a in TypeDescriptor.GetProperties(instance)
             let attribute = a.Attributes[typeof(SvgAttributeAttribute)] as SvgAttributeAttribute//a.Attributes[typeof(SvgAttributeAttribute)] as SvgAttributeAttribute
             where attribute != null
             select new SvgElement.PropertyAttributeTuple { Property = new SvgPropertyDescriptor(a), Attribute = attribute }).ToArray();
@@ -20,15 +32,28 @@ namespace Svg
             if(visibilityAttribute != null)
                 ((SvgPropertyDescriptor)visibilityAttribute.Property).Converter = new SvgTypeConverter(new SvgBoolConverter());
 
+            PropertyCache.AddOrUpdate(instance.GetType(), attrs, (key, oldValue) => attrs);
+
             return attrs;
         }
 
         public IEnumerable<SvgElement.EventAttributeTuple> GetEventAttributes(object instance)
         {
-            return from EventDescriptor a in TypeDescriptor.GetEvents(instance)
+            if (instance == null) throw new ArgumentNullException(nameof(instance));
+
+            IEnumerable<SvgElement.EventAttributeTuple> attrs;
+            if (EventCache.TryGetValue(instance.GetType(), out attrs))
+            {
+                return attrs;
+            }
+            attrs = from EventDescriptor a in TypeDescriptor.GetEvents(instance)
                    let attribute = a.Attributes[typeof(SvgAttributeAttribute)] as SvgAttributeAttribute
                    where attribute != null
                    select new SvgElement.EventAttributeTuple { Event = a.ComponentType.GetField(a.Name, BindingFlags.Instance | BindingFlags.NonPublic), Attribute = attribute };
+
+            EventCache.AddOrUpdate(instance.GetType(), attrs, (key, oldValue) => attrs);
+
+            return attrs;
         }
     }
 
