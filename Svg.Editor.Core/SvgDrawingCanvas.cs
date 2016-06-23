@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Dynamic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Events;
@@ -291,6 +292,40 @@ namespace Svg.Core
             Document.Children.Add(element);
 
             FireInvalidateCanvas();
+        }
+
+        /// <summary>
+        /// Stores the document with a viewbox that surrounds all contained visual elements
+        /// then resets the viewbox
+        /// </summary>
+        /// <param name="stream"></param>
+        public void SaveDocument(Stream stream)
+        {
+            
+            var oldX = Document.X;
+            var oldY = Document.Y;
+            var oldWidth = Document.Width;
+            var oldHeight = Document.Height;
+            var oldViewBox = Document.ViewBox;
+
+            try
+            {
+                var documentSize = Document.CalculateDocumentBounds();
+                Document.Width = new SvgUnit(SvgUnitType.Pixel, documentSize.Width);
+                Document.Height = new SvgUnit(SvgUnitType.Pixel, documentSize.Height);
+                Document.ViewBox = new SvgViewBox(documentSize.X, documentSize.Y, documentSize.Width, documentSize.Height);
+                Document.Write(stream);
+
+                FireToolCommandsChanged();
+            }
+            finally
+            {
+                Document.ViewBox = oldViewBox;
+                Document.Width = oldWidth;
+                Document.Height = oldHeight;
+                Document.X = oldX;
+                Document.Y = oldY;
+            }
         }
         
         private IList<IToolCommand> EnsureToolSelectors()

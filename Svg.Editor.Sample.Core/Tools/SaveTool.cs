@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using MvvmCross.Platform;
@@ -37,14 +38,11 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     {
                         fs.DeleteFile(storagePath);
                     }
-                    
-                    var documentSize = ws.Document.CalculateDocumentBounds();
-                    ws.Document.Width = new SvgUnit(SvgUnitType.Pixel, documentSize.Width);
-                    ws.Document.Height = new SvgUnit(SvgUnitType.Pixel, documentSize.Height);
 
-                    ws.Document.Write(storagePath);
-
-                    ws.FireToolCommandsChanged();
+                    using (var stream = fs.OpenWrite(storagePath))
+                    {
+                        ws.SaveDocument(stream);
+                    }
 
                 }, 
                 (obj) => ws.Document != null),

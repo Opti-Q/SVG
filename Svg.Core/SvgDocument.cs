@@ -524,6 +524,21 @@ namespace Svg
             }
         }
 
+        /// <summary>
+        /// Canculates the bounds of all visual children and then 
+        /// adapts the X, Y, Width and Height properties of the document
+        /// to contain those bounds
+        /// </summary>
+        public void AdaptCanvasSizeToElementBounds()
+        {
+            var bounds = CalculateDocumentBounds().InflateAndCopy(10, 10);
+            X = new SvgUnit(SvgUnitType.Pixel, bounds.X);
+            Y = new SvgUnit(SvgUnitType.Pixel, bounds.Y);
+            Width = new SvgUnit(SvgUnitType.Pixel, bounds.Width);
+            Height = new SvgUnit(SvgUnitType.Pixel, bounds.Height);
+
+        }
+
         public void DrawAllContents(Bitmap bitmap, Color backgroundColor = null)
         {
             // draw document
@@ -609,7 +624,7 @@ namespace Svg
                 this.Write(fs);
             }
         }
-
+        
         private class OpenResult<T>
             where T : SvgDocument, new()
         {
