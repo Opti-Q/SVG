@@ -80,16 +80,13 @@ namespace Svg.Platform
         {
             var p = (AndroidGraphicsPath)path;
 
-            var shader = (IAndroidShader) brush;
-
-            using (var paint = new Paint())
-            {
-                paint.SetStyle(Paint.Style.Fill);
-                shader.ApplyTo(paint);
-                SetSmoothingMode(paint);
+            var b = (AndroidBrushBase) brush;
+            
+            //paint.SetStyle(Paint.Style.Fill);
+            SetSmoothingMode(b.Paint);
                 
-                _canvas.DrawPath(p.Path, paint);
-            }
+            _canvas.DrawPath(p.Path, b.Paint);
+            
         }
         public void DrawText(string text, float x, float y, Pen pen)
         {

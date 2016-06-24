@@ -34,13 +34,10 @@ namespace Svg
         {
             return new Region(rect);
         }
-
-        //private static readonly Pen BlackPen = new AndroidPen(new AndroidSolidBrush(new AndroidColor(255, 0,0, 0)), 2f);
-
+        
         public Pen CreatePen(Brush brush, float strokeWidth)
         {
             return new AndroidPen(brush, strokeWidth);
-            //return BlackPen;
         }
 
         public Matrix CreateMatrix()

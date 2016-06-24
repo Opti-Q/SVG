@@ -46,6 +46,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MathNet.Numerics">
+      <HintPath>..\packages\MathNet.Numerics.3.11.1\lib\portable-net45+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\MathNet.Numerics.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="Mono.Android.Export" />
     <Reference Include="mscorlib" />
@@ -135,6 +138,7 @@
       <Link>WebRequestSvc.cs</Link>
     </Compile>
     <Compile Include="Platform\AndroidBitmap.cs" />
+    <Compile Include="Platform\AndroidBrushBase.cs" />
     <Compile Include="Platform\AndroidColor.cs" />
     <Compile Include="Platform\AndroidColorMatrix.cs" />
     <Compile Include="Platform\AndroidColors.cs" />
@@ -156,7 +160,6 @@
     <Compile Include="Platform\AndroidTextRenderer.cs" />
     <Compile Include="Platform\AndroidTextureBrush.cs" />
     <Compile Include="Platform\Extensions.cs" />
-    <Compile Include="Platform\IAndroidShader.cs" />
     <Compile Include="Platform\SelectableAndroidBitmap.cs" />
     <Compile Include="Factory.cs" />
     <Compile Include="Platform\SvgAssetSource.cs" />

@@ -206,15 +206,44 @@ namespace Svg
             }
         }
 
-        /// <summary>
-        /// Gets the bounds of the svg element.
-        /// </summary>
-        /// <value>The bounds.</value>
+        ///// <summary>
+        ///// Gets the bounds of the svg element.
+        ///// </summary>
+        ///// <value>The bounds.</value>
+        //public RectangleF Bounds
+        //{
+        //    get
+        //    {
+        //        return this.Path.GetBounds();
+        //    }
+        //}
         public RectangleF Bounds
         {
             get
             {
-                return this.Path.GetBounds();
+                var r = Engine.Factory.CreateRectangleF();
+                foreach (var c in this.Children)
+                {
+                    if (c is SvgVisualElement)
+                    {
+                        // First it should check if rectangle is empty or it will return the wrong Bounds.
+                        // This is because when the Rectangle is Empty, the Union method adds as if the first values where X=0, Y=0
+                        if (r.IsEmpty)
+                        {
+                            r = ((SvgVisualElement)c).TransformedBounds;
+                        }
+                        else
+                        {
+                            var childBounds = ((SvgVisualElement)c).TransformedBounds;
+                            if (!childBounds.IsEmpty)
+                            {
+                                r = r.UnionAndCopy(childBounds);
+                            }
+                        }
+                    }
+                }
+
+                return r;
             }
         }
 

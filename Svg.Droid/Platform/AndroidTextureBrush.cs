@@ -1,8 +1,9 @@
+using System;
 using Android.Graphics;
 
 namespace Svg.Platform
 {
-    public class AndroidTextureBrush : TextureBrush, IAndroidShader
+    public class AndroidTextureBrush : AndroidBrushBase, TextureBrush, IDisposable
     {
         private AndroidBitmap _image;
         private BitmapShader _shader;
@@ -12,23 +13,20 @@ namespace Svg.Platform
             _image = image;
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
-            if (_image != null)
-            {
-                _image.Dispose();
-                _image = null;
-            }
-            if (_shader != null)
-            {
-                _shader.Dispose();
-                _shader = null;
-            }
+            base.Dispose();
+            _image?.Dispose();
+            _image = null;
+            _shader?.Dispose();
+            _shader = null;
         }
         // TODO LX what about Transform?
         public Matrix Transform { get; set; }
-        public void ApplyTo(Paint paint)
+
+        protected override Paint CreatePaint()
         {
+            var paint = new Paint();
             if (_shader != null)
             {
                 _shader.Dispose();
@@ -38,6 +36,7 @@ namespace Svg.Platform
             _shader = new BitmapShader(_image.Image, Shader.TileMode.Clamp, Shader.TileMode.Clamp);
 
             paint.SetShader(_shader);
+            return paint;
         }
     }
 }

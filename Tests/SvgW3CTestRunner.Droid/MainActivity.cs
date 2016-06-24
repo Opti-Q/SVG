@@ -147,7 +147,8 @@ namespace SvgW3CTestRunner.Droid
                     try
                     {
                         var ll = new LinearLayout(this);
-                        ll.LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.WrapContent);
+                        ll.LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WrapContent,
+                            ViewGroup.LayoutParams.WrapContent);
                         ll.Background = new ColorDrawable(Color.White);
                         ll.Orientation = Orientation.Horizontal;
 
@@ -189,10 +190,11 @@ namespace SvgW3CTestRunner.Droid
 
                         var svgBitmap = new AndroidBitmap(480, 360);
                         var src = new SvgAssetSource($"svg/{svg}", Assets);
-                        SvgDocument doc = SvgDocument.Open<SvgDocument>(src);
-
-                        doc.Draw(svgBitmap);
-                        ivSvg.SetImageBitmap(svgBitmap.Image);
+                        using (SvgDocument doc = SvgDocument.Open<SvgDocument>(src))
+                        {
+                            doc.Draw(svgBitmap);
+                            ivSvg.SetImageBitmap(svgBitmap.Image);
+                        }
 
                         watch.Stop();
                         double svgTime = 0;

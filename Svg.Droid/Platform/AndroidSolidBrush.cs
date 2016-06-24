@@ -1,8 +1,9 @@
+using System;
 using Android.Graphics;
 
 namespace Svg.Platform
 {
-    public class AndroidSolidBrush : SolidBrush, IAndroidShader
+    public class AndroidSolidBrush : AndroidBrushBase, SolidBrush
     {
         private readonly Color _color;
 
@@ -11,14 +12,12 @@ namespace Svg.Platform
             _color = color;
         }
 
-        public void Dispose()
+        
+        protected override Paint CreatePaint()
         {
-            
-        }
-
-        public void ApplyTo(Paint paint)
-        {
+            var paint = new Paint();
             paint.Color = _color;
+            return paint;
         }
     }
 }

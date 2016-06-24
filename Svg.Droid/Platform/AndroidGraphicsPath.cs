@@ -14,6 +14,7 @@ namespace Svg.Platform
         private readonly List<byte> _pathTypes = new List<byte>();
         private Android.Graphics.Path _path;
         private List<TextInfo> _texts;
+        private RectangleF _bounds;
 
         public AndroidGraphicsPath()
         {
@@ -43,17 +44,23 @@ namespace Svg.Platform
 
         public RectangleF GetBounds()
         {
-            var r = new RectF();
-            _path.ComputeBounds(r, true);
-            return Engine.Factory.CreateRectangleF(r.Left, r.Top, r.Width(), r.Height());
+            if (_bounds == null)
+            {
+                var r = new RectF();
+                _path.ComputeBounds(r, true);
+                return Engine.Factory.CreateRectangleF(r.Left, r.Top, r.Width(), r.Height());
+            }
+
+            return _bounds;
         }
 
         public void StartFigure()
         {
-            
+            _bounds = null;
         }
         public void CloseFigure()
         {
+            _bounds = null;
             Path.Close();
         }
 
@@ -114,6 +121,7 @@ namespace Svg.Platform
 
         public void AddEllipse(float x, float y, float width, float height)
         {
+            _bounds = null;
             // TODO LX: Which direction is correct?
             Path.AddOval(new RectF(x, y, x + width, y + height), Path.Direction.Cw);
 
@@ -125,6 +133,7 @@ namespace Svg.Platform
 
         public void MoveTo(PointF start)
         {
+            _bounds = null;
             Path.MoveTo(start.X, start.Y);
             _points.Add(start);
             _pathTypes.Add(1); // end point of line
@@ -133,6 +142,7 @@ namespace Svg.Platform
 
         public void AddLine(PointF start, PointF end)
         {
+            _bounds = null;
             var lp = GetLastPoint();
             if(lp == null || lp != start)
             { 
@@ -153,6 +163,7 @@ namespace Svg.Platform
 
         public void AddRectangle(RectangleF rectangle)
         {
+            _bounds = null;
             Path.AddRect((AndroidRectangleF)rectangle, Path.Direction.Cw);
             _points.Add(Engine.Factory.CreatePointF(rectangle.Location.X, rectangle.Location.Y));
             _pathTypes.Add(0); // start of a figure
@@ -166,6 +177,7 @@ namespace Svg.Platform
 
         public void AddArc(RectangleF rectangle, float startAngle, float sweepAngle)
         {
+            _bounds = null;
             Path.AddArc((AndroidRectangleF)rectangle, startAngle, sweepAngle);
 
             _points.Add(Engine.Factory.CreatePointF(rectangle.Location.X, rectangle.Location.Y));
@@ -188,6 +200,7 @@ namespace Svg.Platform
 
         public void Transform(Matrix transform)
         {
+            _bounds = null;
             var m = new Android.Graphics.Matrix();
             m.SetValues(transform.Elements);
             Path.Transform(m);
@@ -195,6 +208,7 @@ namespace Svg.Platform
 
         public void AddPath(GraphicsPath childPath, bool connect)
         {
+            _bounds = null;
             var ap = (AndroidGraphicsPath) childPath;
             // TODO LX: How to connect? And is 0, 0 correct?
             Path.AddPath(ap.Path, 0, 0);
@@ -206,12 +220,14 @@ namespace Svg.Platform
         public void AddString(string text, FontFamily fontFamily, int style, float size, PointF location,
             StringFormat createStringFormatGenericTypographic)
         {
+            _bounds = null;
             // little hack as android path does not support text!
             _texts.Add(new TextInfo(text, fontFamily, style, size, location, createStringFormatGenericTypographic));
         }
 
         public void AddBezier(PointF start, PointF point1, PointF point2, PointF point3)
         {
+            _bounds = null;
             Path.MoveTo(start.X, start.Y);
             Path.CubicTo(point1.X, point1.Y, point2.X, point2.Y, point3.X, point3.Y);
 
@@ -224,6 +240,7 @@ namespace Svg.Platform
 
         public void AddBezier(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
         {
+            _bounds = null;
             Path.MoveTo(x1, y2);
             Path.CubicTo(x2, y2, x3, y3, x4, y4);
 
@@ -250,6 +267,7 @@ namespace Svg.Platform
 
         public void AddPolygon(PointF[] polygon)
         {
+            _bounds = null;
             for (int i = 0; i < polygon.Length; i++)
             {
                 if (i == 0)
@@ -275,6 +293,7 @@ namespace Svg.Platform
 
         public void Reset()
         {
+            _bounds = null;
             Path.Reset();
         }
 

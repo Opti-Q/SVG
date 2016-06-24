@@ -16,6 +16,7 @@ namespace Svg
         private RectangleF _renderBounds;
         private Pen _strokePen;
         private Brush _strokeBrush;
+        private Brush _fillBrush;
 
         /// <summary>
         /// Gets the <see cref="GraphicsPath"/> for this element.
@@ -219,7 +220,8 @@ namespace Svg
         {
             if (this.Fill != null)
             {
-                using (var brush = this.Fill.GetBrush(this, renderer, Math.Min(Math.Max(this.FillOpacity * this.Opacity, 0), 1)))
+                /*using (*/
+                var brush = GetFillBrush(renderer);/*)*/
                 {
                     if (brush != null)
                     {
@@ -313,17 +315,7 @@ namespace Svg
 
             return false;
         }
-
-        private Pen CreateStrokePen(Brush brush, float strokeWidth)
-        {
-            return _strokePen ?? (_strokePen = Engine.Factory.CreatePen(brush, strokeWidth));
-        }
-
-        private Brush GetStrokeBrush(ISvgRenderer renderer)
-        {
-            return _strokeBrush ?? (_strokeBrush = this.Stroke.GetBrush(this, renderer, Math.Min(Math.Max(this.StrokeOpacity * this.Opacity, 0), 1), true));
-        }
-
+        
         /// <summary>
         /// Sets the clipping region of the specified <see cref="ISvgRenderer"/>.
         /// </summary>
@@ -411,11 +403,27 @@ namespace Svg
 
             return newObj;
         }
+        
+        private Pen CreateStrokePen(Brush brush, float strokeWidth)
+        {
+            return _strokePen ?? (_strokePen = Engine.Factory.CreatePen(brush, strokeWidth));
+        }
+
+        private Brush GetStrokeBrush(ISvgRenderer renderer)
+        {
+            return _strokeBrush ?? (_strokeBrush = this.Stroke.GetBrush(this, renderer, Math.Min(Math.Max(this.StrokeOpacity * this.Opacity, 0), 1), true));
+        }
+
+        private Brush GetFillBrush(ISvgRenderer renderer)
+        {
+            return _fillBrush ?? (_fillBrush = this.Fill.GetBrush(this, renderer, Math.Min(Math.Max(this.FillOpacity * this.Opacity, 0), 1)));
+        }
 
         public override void Dispose()
         {
-            _strokePen.Dispose();
-            _strokeBrush.Dispose();
+            _strokePen?.Dispose();
+            _strokeBrush?.Dispose();
+            _fillBrush?.Dispose();
             base.Dispose();
         }
     }

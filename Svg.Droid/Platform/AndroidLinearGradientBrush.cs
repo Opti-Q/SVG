@@ -1,10 +1,11 @@
+using System;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using Android.Graphics;
 
 namespace Svg.Platform
 {
-    public class AndroidLinearGradientBrush : LinearGradientBrush, IAndroidShader
+    public class AndroidLinearGradientBrush : AndroidBrushBase, LinearGradientBrush, IDisposable
     {
         private readonly PointF _start;
         private readonly PointF _end;
@@ -23,9 +24,10 @@ namespace Svg.Platform
         public ColorBlend InterpolationColors { get; set; }
 
         public WrapMode WrapMode { get; set; }
-
-        public void ApplyTo(Paint paint)
+        
+        protected override Paint CreatePaint()
         {
+            var paint = new Paint();
             Shader.TileMode tileMode = Shader.TileMode.Clamp;
             switch (WrapMode)
             {
@@ -52,16 +54,14 @@ namespace Svg.Platform
             }
 
             paint.SetShader(_shader);
+            return paint;
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
-            if (_shader != null)
-            {
-                _shader.Dispose();
-                _shader = null;
-            }
-            
+            base.Dispose();
+            _shader?.Dispose();
+            _shader = null;
         }
     }
 }

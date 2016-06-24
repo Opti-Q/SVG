@@ -4,8 +4,7 @@ namespace Svg.Platform
 {
     public class AndroidPen : Pen
     {
-        private readonly Brush _brush;
-        private Paint _paint;
+        private readonly AndroidBrushBase _brush;
         private DashPathEffect _dashes;
         private float[] _dashPattern;
         private LineJoin _lineJoin;
@@ -15,20 +14,16 @@ namespace Svg.Platform
 
         public AndroidPen(Brush brush, float strokeWidth)
         {
-            _brush = brush;
-            _paint = new Paint();
-            _paint.StrokeWidth = strokeWidth;
-            _paint.SetStyle(Paint.Style.Stroke);
-            
-            var shader = (IAndroidShader) brush;
-            shader.ApplyTo(this.Paint);
+            _brush = (AndroidBrushBase)brush;
+
+            _brush.Paint.StrokeWidth = strokeWidth;
+            _brush.Paint.SetStyle(Paint.Style.Stroke);
         }
 
         public void Dispose()
         {
-            _paint.Dispose();
-            if (_dashes != null)
-                _dashes.Dispose();
+            _brush?.Dispose();
+            _dashes?.Dispose();
         }
 
         public float[] DashPattern
@@ -49,7 +44,7 @@ namespace Svg.Platform
                         _dashes.Dispose();
                     
                     _dashes = new DashPathEffect(_dashPattern, 0f);
-                    _paint.SetPathEffect(_dashes);
+                    _brush.Paint.SetPathEffect(_dashes);
                 }
             }
         }
@@ -64,16 +59,16 @@ namespace Svg.Platform
                 switch (value)
                 {
                     case LineJoin.Bevel:
-                        _paint.StrokeJoin = Paint.Join.Bevel;
+                        _brush.Paint.StrokeJoin = Paint.Join.Bevel;
                         break;
                     case LineJoin.Miter:
-                        _paint.StrokeJoin = Paint.Join.Miter;
+                        _brush.Paint.StrokeJoin = Paint.Join.Miter;
                         break;
                     case LineJoin.MiterClipped:
-                        _paint.StrokeJoin = Paint.Join.Miter;
+                        _brush.Paint.StrokeJoin = Paint.Join.Miter;
                         break;
                     case LineJoin.Round:
-                        _paint.StrokeJoin = Paint.Join.Round;
+                        _brush.Paint.StrokeJoin = Paint.Join.Round;
                         break;
                 }
             }
@@ -85,7 +80,7 @@ namespace Svg.Platform
             set
             {
                 _miterLimit = value;
-                _paint.StrokeMiter = MiterLimit;
+                _brush.Paint.StrokeMiter = MiterLimit;
             }
         }
 
@@ -118,7 +113,7 @@ namespace Svg.Platform
                         break;
                         
                 }
-                _paint.StrokeCap = cap;
+                _brush.Paint.StrokeCap = cap;
             }
         }
 
@@ -130,25 +125,25 @@ namespace Svg.Platform
 
         public Paint Paint
         {
-            get { return _paint; }
+            get { return _brush.Paint; }
         }
 
         public float TextSize
         {
-            get { return _paint.TextSize; }
-            set { _paint.TextSize = value; }
+            get { return _brush.Paint.TextSize; }
+            set { _brush.Paint.TextSize = value; }
         }
 
         public Paint.Align TextAlign
         {
-            get { return _paint.TextAlign; }
-            set { _paint.TextAlign = value; }
+            get { return _brush.Paint.TextAlign; }
+            set { _brush.Paint.TextAlign = value; }
         }
 
         public Paint.Style Style
         {
-            get { return _paint.GetStyle(); }
-            set { _paint.SetStyle(value);}
+            get { return _brush.Paint.GetStyle(); }
+            set { _brush.Paint.SetStyle(value);}
         }
     }
 }
