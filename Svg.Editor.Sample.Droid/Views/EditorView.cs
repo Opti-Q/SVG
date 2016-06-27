@@ -1,20 +1,22 @@
 using System.Collections.Generic;
-using System.IO;
 using Android.App;
 using Android.OS;
 using Android.Views;
 using System.Linq;
+using Android.Content;
 using Android.Content.Res;
+using Android.Graphics;
 using MvvmCross.Droid.Views;
 using Svg.Droid.Editor;
 using Svg.Droid.SampleEditor.Core;
 using Svg.Droid.SampleEditor.Core.ViewModels;
 using Svg.Interfaces;
 using Svg.Platform;
+using Path = System.IO.Path;
 
 namespace Svg.Droid.SampleEditor.Views
 {
-    [Activity(Label = "Edit SVG")]
+    [Activity(Label = "Edit SVG", Exported=true)]
     public class EditorView : MvxActivity
     {
         private SvgDrawingCanvasView _padView;
@@ -33,6 +35,10 @@ namespace Svg.Droid.SampleEditor.Views
             _padView = FindViewById<SvgDrawingCanvasView>(Resource.Id.pad);
 
             _padView.DrawingCanvas = this.ViewModel.Canvas;
+
+
+            RemoveShortcut();
+            AddShortcut();
         }
 
         private void SetupIconCache()
@@ -127,6 +133,42 @@ namespace Svg.Droid.SampleEditor.Views
                 return true;
             }
             return base.OnOptionsItemSelected(item);
+        }
+
+        private void RemoveShortcut()
+        {
+            var shortcutIntent = new Intent(this, typeof(EditorView));
+            shortcutIntent.SetAction(Intent.ActionMain);
+
+            var intent = new Intent();
+            intent.PutExtra(Intent.ExtraShortcutIntent, shortcutIntent);
+            intent.PutExtra(Intent.ExtraShortcutName, "My Awesome App!");
+            intent.SetAction("com.android.launcher.action.UNINSTALL_SHORTCUT");
+            SendBroadcast(intent);
+        }
+
+        private void AddShortcut()
+        {
+            var shortcutIntent = new Intent(this, typeof(EditorView));
+            shortcutIntent.SetAction(Intent.ActionMain);
+
+            //var iconResource = Intent.ShortcutIconResource.FromContext(
+            //    this, Resource.Drawable.Icon);
+
+            var folder = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)
+                            .AbsolutePath;
+            var filename = "shortcut.png";
+
+            var theBitmap = BitmapFactory.DecodeFile(Path.Combine(folder, filename));
+            var scaledBitmap = Android.Graphics.Bitmap.CreateScaledBitmap(theBitmap, 128, 128, true);
+
+            var intent = new Intent();
+            intent.PutExtra(Intent.ExtraShortcutIntent, shortcutIntent);
+            intent.PutExtra(Intent.ExtraShortcutName, "SVG Editor");
+            //intent.PutExtra(Intent.ExtraShortcutIconResource, iconResource);
+            intent.PutExtra(Intent.ExtraShortcutIcon, scaledBitmap);
+            intent.SetAction("com.android.launcher.action.INSTALL_SHORTCUT");
+            SendBroadcast(intent);
         }
     }
 

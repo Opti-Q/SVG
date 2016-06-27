@@ -1,4 +1,6 @@
+using System;
 using Android.Content;
+using Javax.Crypto;
 using Svg.Interfaces;
 using Svg.Platform;
 
@@ -15,16 +17,24 @@ namespace Svg
 
         protected override void Initialize(SvgPlatformOptions options)
         {
-
             base.Initialize(options);
-            
-            Engine.Register<IFactory, Factory>(() => new Factory());
+
+#if !SKIA
+            Engine.Register<IFactory, IFactory>(() => new Factory());
 
             var ops = (SvgAndroidPlatformOptions)options;
             if (ops.EnableFastTextRendering)
             {
                 Engine.Register<IAlternativeSvgTextRenderer, AndroidTextRenderer>(() => new AndroidTextRenderer());
             }
+#else 
+            Engine.Register<IFactory, IFactory>(() => new SKFactory());
+            var ops = (SvgAndroidPlatformOptions)options;
+            if (ops.EnableFastTextRendering)
+            {
+                Engine.Register<IAlternativeSvgTextRenderer, SkiaTextRenderer>(() => new SkiaTextRenderer());
+            }
+#endif
 
         }
 

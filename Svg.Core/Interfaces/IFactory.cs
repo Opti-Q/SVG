@@ -15,7 +15,7 @@ namespace Svg
         Region CreateRegion(RectangleF rect);
         Pen CreatePen(Brush brush, float strokeWidth);
         Matrix CreateMatrix();
-        Matrix CreateIdentityMatrix();
+        Matrix CreateMatrix(float scaleX, float rotateX, float rotateY, float scaleY, float transX, float transY);
         Bitmap CreateBitmap(Image inputImage);
         Bitmap CreateBitmap(int width, int height);
         Graphics CreateGraphicsFromImage(Bitmap input);
@@ -27,7 +27,6 @@ namespace Svg
         TextureBrush CreateTextureBrush(Bitmap image);
         LinearGradientBrush CreateLinearGradientBrush(PointF start, PointF end, Color startColor, Color endColor);
         PathGradientBrush CreatePathGradientBrush(GraphicsPath path);
-        Matrix CreateMatrix(float scaleX, float rotateX, float rotateY, float scaleY, float transX, float transY);
         StringFormat CreateStringFormatGenericTypographic();
         Font CreateFont(FontFamily fontFamily, float fontSize, FontStyle fontStyle, GraphicsUnit graphicsUnit);
         FontFamilyProvider GetFontFamilyProvider();

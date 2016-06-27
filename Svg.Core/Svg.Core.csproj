@@ -40,6 +40,7 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
     <None Include="Basic Shapes\DOM.cd" />
     <EmbeddedResource Include="Resources\svg11.dtd" />
+    <None Include="packages.config" />
     <None Include="svgkey.snk" />
   </ItemGroup>
   <ItemGroup>
@@ -280,11 +281,32 @@
     <Compile Include="Paths\SvgPathSegment.cs" />
     <Compile Include="Paths\SvgPathSegmentList.cs" />
     <Compile Include="Paths\SvgQuadraticCurveSegment.cs" />
+    <Compile Include="Platform\SkiaBitmap.cs" />
+    <Compile Include="Platform\SkiaBrushBase.cs" />
+    <Compile Include="Platform\SkiaColor.cs" />
+    <Compile Include="Platform\SkiaColorMatrix.cs" />
+    <Compile Include="Platform\SkiaColors.cs" />
+    <Compile Include="Platform\SkiaFont.cs" />
+    <Compile Include="Platform\SkiaFontFamily.cs" />
+    <Compile Include="Platform\SkiaFontFamilyProvider.cs" />
+    <Compile Include="Platform\SkiaGraphics.cs" />
+    <Compile Include="Platform\SkiaGraphicsPath.cs" />
+    <Compile Include="Platform\SkiaLinearGradientBrush.cs" />
+    <Compile Include="Platform\SkiaMatrix.cs" />
+    <Compile Include="Platform\SkiaPen.cs" />
+    <Compile Include="Platform\SkiaPointF.cs" />
+    <Compile Include="Platform\SkiaRectangleF.cs" />
+    <Compile Include="Platform\SkiaSizeF.cs" />
+    <Compile Include="Platform\SkiaSolidBrush.cs" />
+    <Compile Include="Platform\SkiaStringFormat.cs" />
+    <Compile Include="Platform\SkiaTextRenderer.cs" />
+    <Compile Include="Platform\SkiaTextureBrush.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering\IGraphicsProvider.cs" />
     <Compile Include="Rendering\ISvgRenderer.cs" />
     <Compile Include="Rendering\SvgRenderer.cs" />
     <Compile Include="Engine.cs" />
+    <Compile Include="SKFactory.cs" />
     <Compile Include="SvgAttributeAttribute.cs" />
     <Compile Include="SvgAttributeCollection.cs" />
     <Compile Include="SvgContentNode.cs" />
@@ -324,6 +346,12 @@
     <Compile Include="Transforms\SvgTransform.cs" />
     <Compile Include="Transforms\SvgTransformCollection.cs" />
     <Compile Include="Transforms\SvgTranslate.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="SkiaSharp, Version=1.49.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SkiaSharp.1.49.4-beta\lib\portable-net45+xamarinmac+xamarinios+monotouch+monoandroid+win8+wpa81+wp8+xamarin.watchos+xamarin.tvos\SkiaSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

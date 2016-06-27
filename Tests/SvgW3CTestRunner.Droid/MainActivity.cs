@@ -9,6 +9,7 @@ using Android.Widget;
 using Android.OS;
 using Android.Util;
 using Android.Views;
+using SkiaSharp;
 using Svg;
 using Svg.Platform;
 using Exception = Java.Lang.Exception;
@@ -125,16 +126,16 @@ namespace SvgW3CTestRunner.Droid
                 var assetManager = Assets;
                 var svgs = assetManager.List("svg")
                     //.Where(@s => s.StartsWith("painting-"))
-                    //.Where(@s => s.StartsWith("text-"))
+                    .Where(@s => s.StartsWith("text-"))
                     //.Where(@s => s.StartsWith("coords-trans-09-t"))
-                    .Where(@s => s.StartsWith("coords-"))
+                    //.Where(@s => s.StartsWith("coords-"))
                     //.Where(@s => s.StartsWith("coords-transformattr-05-f"))
                     .OrderBy(@s => s).ToList();
 
                 var pngs = assetManager.List("png")
                     //.Where(@s => s.StartsWith("painting-"))
-                    //.Where(@s => s.StartsWith("text-"))
-                    .Where(@s => s.StartsWith("coords-"))
+                    .Where(@s => s.StartsWith("text-"))
+                    //.Where(@s => s.StartsWith("coords-"))
                     //.Where(@s => s.StartsWith("coords-transformattr-05-f"))
                     .OrderBy(@s => s).ToList();
 
@@ -188,6 +189,7 @@ namespace SvgW3CTestRunner.Droid
                         // --------------------------------------------------------
                         watch.Start();
 
+#if !SKIA
                         var svgBitmap = new AndroidBitmap(480, 360);
                         var src = new SvgAssetSource($"svg/{svg}", Assets);
                         using (SvgDocument doc = SvgDocument.Open<SvgDocument>(src))
@@ -195,6 +197,32 @@ namespace SvgW3CTestRunner.Droid
                             doc.Draw(svgBitmap);
                             ivSvg.SetImageBitmap(svgBitmap.Image);
                         }
+#else
+
+                        var width = 480;
+                        var height = 360;
+
+                        var src = new SvgAssetSource($"svg/{svg}", Assets);
+
+                        using (SvgDocument doc = SvgDocument.Open<SvgDocument>(src))
+                        using (var bitmap = Android.Graphics.Bitmap.CreateBitmap(width, height, Android.Graphics.Bitmap.Config.Argb8888))
+                        {
+                            var canvas = new Canvas();
+                            try
+                            {
+                                using (var surface = SKSurface.Create(width, height, SKColorType.Rgba_8888, SKAlphaType.Premul, bitmap.LockPixels(), width * 4))
+                                {
+                                    doc.Draw(SvgRenderer.FromGraphics(new SkiaGraphics(surface)));
+                                }
+                            }
+                            finally
+                            {
+                                bitmap.UnlockPixels();
+                            }
+                            canvas.DrawBitmap(bitmap, 0, 0, null);
+                            ivSvg.SetImageBitmap(bitmap);
+                        }
+#endif
 
                         watch.Stop();
                         double svgTime = 0;

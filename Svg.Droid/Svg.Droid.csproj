@@ -23,7 +23,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SKIA</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -52,6 +52,10 @@
     <Reference Include="Mono.Android" />
     <Reference Include="Mono.Android.Export" />
     <Reference Include="mscorlib" />
+    <Reference Include="SkiaSharp, Version=1.49.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SkiaSharp.1.49.4-beta\lib\MonoAndroid\SkiaSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
@@ -160,13 +164,14 @@
     <Compile Include="Platform\AndroidTextRenderer.cs" />
     <Compile Include="Platform\AndroidTextureBrush.cs" />
     <Compile Include="Platform\Extensions.cs" />
-    <Compile Include="Platform\SelectableAndroidBitmap.cs" />
     <Compile Include="Factory.cs" />
     <Compile Include="Platform\SvgAssetSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SKFactory.cs" />
     <Compile Include="SvgPlatformSetup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="svgkey.snk" />
   </ItemGroup>
   <ItemGroup>
