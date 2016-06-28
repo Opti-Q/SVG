@@ -202,9 +202,6 @@ namespace Svg.Platform
         public override void Rotate(float angle, MatrixOrder order)
         {
             var m = SKMatrix.MakeRotation((float)DegreeToRadian(angle));
-            //var m = SKMatrix.MakeRotation(angle);
-            //m.ScaleX = 0;
-            //m.ScaleY = 0;
 
             if (order == MatrixOrder.Append)
                 _m = CreateMatrix(Multiply(GetElements(_m), GetElements(m)));
