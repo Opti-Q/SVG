@@ -10,11 +10,11 @@ namespace Svg.Droid.Editor.Services
         public void SaveAsPng(Bitmap image, Stream stream)
         {
 #if !SKIA
-            var bitmap = (AndroidBitmap) image;
+            var bitmap = (Svg.Platform.AndroidBitmap) image;
 
             bitmap.Image.Compress(Android.Graphics.Bitmap.CompressFormat.Png, 100, stream);
 #else
-            throw new NotSupportedException("Not supported by SKIA at the moment");
+            //throw new NotSupportedException("Not supported by SKIA at the moment");
 #endif
         }
     }

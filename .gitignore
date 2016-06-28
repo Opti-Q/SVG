@@ -23,3 +23,5 @@ obj/
 *.mdb
 *.suo
 packages/
+Tests/SvgW3CTestSuite.Droid/Assets
+Tests/SvgW3CTestRunner.Droid/Assets
