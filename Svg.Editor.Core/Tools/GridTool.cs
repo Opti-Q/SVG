@@ -337,7 +337,7 @@ namespace Svg.Core.Tools
 
                  * 
                  * */
-                float deltaX, deltaY;
+                float absoluteDeltaX, absoluteDeltaY;
 
                 var diffX = b.X % StepSizeX;
                 var diffY = b.Y % StepSizeY;
@@ -346,16 +346,16 @@ namespace Svg.Core.Tools
                 // so if multiple elements are moved, their position relative to each other stays the same
                 if (_areElementsMoved && _generalTranslation != null)
                 {
-                    deltaX = _generalTranslation.X;
-                    deltaY = _generalTranslation.Y;
+                    absoluteDeltaX = _generalTranslation.X;
+                    absoluteDeltaY = _generalTranslation.Y;
                 }
                 else
                 {
-                    deltaX = 0f;
+                    var deltaX = 0f;
                     if (diffX > StepSizeX/2)
                         deltaX = StepSizeX;
 
-                    deltaY = 0f;
+                    var deltaY = 0f;
                     if (diffY > StepSizeY/2)
                         deltaY = StepSizeY;
 
@@ -382,14 +382,14 @@ namespace Svg.Core.Tools
                             deltaY = -StepSizeY / 2;
                     }
 
+                    absoluteDeltaX = 0 - diffX + deltaX;
+                    absoluteDeltaY = 0 - diffY + deltaY;
                     if (_generalTranslation == null)
-                        _generalTranslation = Engine.Factory.CreatePointF(deltaX, deltaY);
-
+                    {
+                        _generalTranslation = Engine.Factory.CreatePointF(absoluteDeltaX, absoluteDeltaY);
+                    }
                 }
-
-                var absoluteDeltaX = 0 - diffX + deltaX;
-                var absoluteDeltaY = 0 - diffY + deltaY;
-
+                
                 // and translate element to that next intersection
                 AddTranslate(ve, absoluteDeltaX, absoluteDeltaY);
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Events;
@@ -99,7 +98,7 @@ namespace Svg.Core.Tools
                 
                 // selection onyl counts if width and height are not too small
                 var dist = Math.Sqrt(Math.Pow(rect.Width, 2) + Math.Pow(rect.Height, 2));
-                Debug.WriteLine($"selection dist: {dist}");
+
                 if (dist > 30)
                 {
                     _selectionRectangle = rect;

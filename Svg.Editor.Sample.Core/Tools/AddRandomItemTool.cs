@@ -43,6 +43,9 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     SvgTranslate tl = new SvgTranslate(-canvas.RelativeTranslate.X + halfRelWidth - halfRelChildWidth, -canvas.RelativeTranslate.Y + halfRelHeight - halfRelChildHeight);
                     child.Transforms.Add(tl);
 
+                    child.CustomAttributes["ishelpline"] = "true";
+                    child.ID = $"{child.ElementName}_{_canvas.Document.Descendants().Count(d => d.ElementName == child.ElementName)+1}";
+
                     _canvas.Document.Children.Add(child);
 
                     _canvas.FireInvalidateCanvas();

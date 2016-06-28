@@ -1087,6 +1087,15 @@ namespace Svg
         public virtual void Dispose()
         {
         }
+
+        public override string ToString()
+        {
+            if (string.IsNullOrEmpty(this.ElementName))
+            {
+                return base.ToString();
+            }
+            return $"{this.ElementName} '{this.ID}'";
+        }
     }
     
     public class SVGArg : EventArgs
