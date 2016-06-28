@@ -51,7 +51,6 @@
     <Compile Include="Events\PointerEvent.cs" />
     <Compile Include="Interfaces\ICanInvalidateCanvas.cs" />
     <Compile Include="Interfaces\IImageStorer.cs" />
-    <Compile Include="Interfaces\IRendererFactory.cs" />
     <Compile Include="SvgDrawingCanvas.cs" />
     <Compile Include="Events\UserInputEvent.cs" />
     <Compile Include="Interfaces\IRenderer.cs" />

@@ -14,7 +14,6 @@ namespace Svg.Core.Interfaces
         void DrawRectangle(RectangleF rectangleF, Pen pen);
         void DrawPath(GraphicsPath path, Pen pen);
         void FillEntireCanvasWithColor(Svg.Interfaces.Color color);
-        Matrix Matrix { get; set; }
 
         Graphics Graphics { get; }
     }

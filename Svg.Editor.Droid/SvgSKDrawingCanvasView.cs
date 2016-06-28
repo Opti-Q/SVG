@@ -16,6 +16,7 @@ namespace Svg.Droid.Editor
 {
     public class SvgSKDrawingCanvasView : View
     {
+        private Android.Graphics.Bitmap _bitmap;
         private readonly GestureDetector _detector;
         private SvgDrawingCanvas _drawingCanvas;
 
@@ -29,7 +30,6 @@ namespace Svg.Droid.Editor
         {
             // Initialize SVG Platform and tie together PCL and platform specific modules
             SvgPlatformSetup.Init(new SvgAndroidPlatformOptions() {EnableFastTextRendering = true});
-            Engine.Register<IRendererFactory, AndroidCanvasRendererFactory>(() => new AndroidCanvasRendererFactory());
             Engine.Register<IImageStorer, IImageStorer>(() => new ImageStorer());
 
             _drawingCanvas = new SvgDrawingCanvas();
@@ -46,43 +46,30 @@ namespace Svg.Droid.Editor
             return true;
         }
 
-        protected override void OnDraw(Canvas canvas)
+        protected override async void OnDraw(Canvas canvas)
         {
-            ////// this is intentionally not awaited
-            ////DrawingCanvas.OnDraw(new AndroidCanvasRenderer(canvas))
-            ////    .ContinueWith(t => base.OnDraw(canvas));
-            //var width = (float)skiaView.Width;
-            //var height = (float)skiaView.Height;
 
-            ///*using (*/
-            //var bitmap = Android.Graphics.Bitmap.CreateBitmap(canvas.Width, canvas.Height,
-            //    Android.Graphics.Bitmap.Config.Argb8888);/*)*/
-            //{
-            //    //try
-            //    //{
-            //        /*using (*/var surface = SKSurface.Create(canvas.Width, canvas.Height, SKColorType.Rgba_8888, SKAlphaType.Premul, bitmap.LockPixels(), canvas.Width * 4);/*)*/
-            //        {
-            //            var skcanvas = surface.Canvas;
-            //            skcanvas.Scale(((float)canvas.Width) / width, ((float)canvas.Height) / height);
+            if (_bitmap == null || _bitmap.Width != canvas.Width || _bitmap.Height != canvas.Height)
+            {
+                _bitmap?.Dispose();
 
-            //            DrawingCanvas.OnDraw(new SKCanvasRenderer(surface))
-            //                .ContinueWith(t =>
-            //                {
-            //                    using (surface)
-            //                    using (bitmap)
-            //                    {
-            //                        bitmap.UnlockPixels();
-            //                        canvas.DrawBitmap(bitmap, 0, 0, null);
-            //                    }
-            //                });
-            //        }
-            //    //}
-            //    //finally
-            //    //{
-            //    //    bitmap.UnlockPixels();
-            //    //}
-            //    //canvas.DrawBitmap(bitmap, 0, 0, null);
-            //}
+                _bitmap = Android.Graphics.Bitmap.CreateBitmap(canvas.Width, canvas.Height, Android.Graphics.Bitmap.Config.Argb8888);
+            }
+
+            try
+            {
+                using (var surface = SKSurface.Create(canvas.Width, canvas.Height, SKColorType.Rgba_8888, SKAlphaType.Premul, _bitmap.LockPixels(), canvas.Width * 4))
+                {
+                    await DrawingCanvas.OnDraw(new SKCanvasRenderer(surface, canvas.Width, canvas.Height));
+                }
+            }
+            finally
+            {
+                _bitmap.UnlockPixels();
+            }
+
+            canvas.DrawBitmap(_bitmap, 0, 0, null);
+
         }
 
         protected override void OnAttachedToWindow()

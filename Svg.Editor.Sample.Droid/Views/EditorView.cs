@@ -4,22 +4,23 @@ using Android.OS;
 using Android.Views;
 using System.Linq;
 using Android.Content;
-using Android.Content.Res;
 using Android.Graphics;
 using MvvmCross.Droid.Views;
 using Svg.Droid.Editor;
 using Svg.Droid.SampleEditor.Core;
 using Svg.Droid.SampleEditor.Core.ViewModels;
-using Svg.Interfaces;
-using Svg.Platform;
 using Path = System.IO.Path;
 
 namespace Svg.Droid.SampleEditor.Views
 {
-    [Activity(Label = "Edit SVG", Exported=true)]
+    [Activity(Label = "Edit SVG", Exported = true)]
     public class EditorView : MvxActivity
     {
+#if !SKIA
         private SvgDrawingCanvasView _padView;
+#else
+        private SvgSKDrawingCanvasView _padView;
+#endif
         private Dictionary<string, int> _iconCache = new Dictionary<string, int>();
 
         protected override void OnCreate(Bundle bundle)
@@ -31,14 +32,16 @@ namespace Svg.Droid.SampleEditor.Views
             SetupIconCache();
 
             base.OnCreate(bundle);
-            SetContentView(Resource.Layout.EditorVIew);
+#if !SKIA
+            SetContentView(Resource.Layout.EditorView);
             _padView = FindViewById<SvgDrawingCanvasView>(Resource.Id.pad);
+#else
+            SetContentView(Resource.Layout.EditorViewSkia);
+            _padView = FindViewById<SvgSKDrawingCanvasView>(Resource.Id.pad);
 
+#endif
             _padView.DrawingCanvas = this.ViewModel.Canvas;
 
-
-            RemoveShortcut();
-            AddShortcut();
         }
 
         private void SetupIconCache()
@@ -50,7 +53,7 @@ namespace Svg.Droid.SampleEditor.Views
                 if (!(rawValue is int))
                     continue;
 
-                _iconCache.Add(constant.Name, (int)rawValue);
+                _iconCache.Add(constant.Name, (int) rawValue);
             }
         }
 
@@ -120,70 +123,20 @@ namespace Svg.Droid.SampleEditor.Views
 
         public new EditorViewModel ViewModel
         {
-            get { return (EditorViewModel)base.ViewModel; }
+            get { return (EditorViewModel) base.ViewModel; }
             set { base.ViewModel = value; }
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            var cmd = ViewModel.Canvas.ToolCommands.SelectMany(c => c).FirstOrDefault(c => c.GetHashCode() == item.ItemId);
+            var cmd =
+                ViewModel.Canvas.ToolCommands.SelectMany(c => c).FirstOrDefault(c => c.GetHashCode() == item.ItemId);
             if (cmd != null)
             {
                 cmd.Execute(_padView);
                 return true;
             }
             return base.OnOptionsItemSelected(item);
-        }
-
-        private void RemoveShortcut()
-        {
-            var shortcutIntent = new Intent(this, typeof(EditorView));
-            shortcutIntent.SetAction(Intent.ActionMain);
-
-            var intent = new Intent();
-            intent.PutExtra(Intent.ExtraShortcutIntent, shortcutIntent);
-            intent.PutExtra(Intent.ExtraShortcutName, "My Awesome App!");
-            intent.SetAction("com.android.launcher.action.UNINSTALL_SHORTCUT");
-            SendBroadcast(intent);
-        }
-
-        private void AddShortcut()
-        {
-            var shortcutIntent = new Intent(this, typeof(EditorView));
-            shortcutIntent.SetAction(Intent.ActionMain);
-
-            //var iconResource = Intent.ShortcutIconResource.FromContext(
-            //    this, Resource.Drawable.Icon);
-
-            var folder = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)
-                            .AbsolutePath;
-            var filename = "shortcut.png";
-
-            var theBitmap = BitmapFactory.DecodeFile(Path.Combine(folder, filename));
-            var scaledBitmap = Android.Graphics.Bitmap.CreateScaledBitmap(theBitmap, 128, 128, true);
-
-            var intent = new Intent();
-            intent.PutExtra(Intent.ExtraShortcutIntent, shortcutIntent);
-            intent.PutExtra(Intent.ExtraShortcutName, "SVG Editor");
-            //intent.PutExtra(Intent.ExtraShortcutIconResource, iconResource);
-            intent.PutExtra(Intent.ExtraShortcutIcon, scaledBitmap);
-            intent.SetAction("com.android.launcher.action.INSTALL_SHORTCUT");
-            SendBroadcast(intent);
-        }
-    }
-
-    public class SvgSourceFactory : ISvgSourceFactory
-    {
-        private readonly AssetManager _assets;
-
-        public SvgSourceFactory(AssetManager assets)
-        {
-            _assets = assets;
-        }
-
-        public ISvgSource Create(string path)
-        {
-            return new SvgAssetSource(path, _assets);
         }
     }
 }

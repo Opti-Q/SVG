@@ -28,7 +28,6 @@ namespace Svg.Droid.Editor
         {
             // Initialize SVG Platform and tie together PCL and platform specific modules
             SvgPlatformSetup.Init(new SvgAndroidPlatformOptions() {EnableFastTextRendering = true});
-            Engine.Register<IRendererFactory, AndroidCanvasRendererFactory>(() => new AndroidCanvasRendererFactory());
             Engine.Register<IImageStorer, IImageStorer>(() => new ImageStorer());
 
             _drawingCanvas = new SvgDrawingCanvas();

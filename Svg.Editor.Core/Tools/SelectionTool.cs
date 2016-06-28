@@ -163,7 +163,7 @@ namespace Svg.Core.Tools
                 // the canvas in order to properly render the svg elements zoomed and panned
                 // we need to undo that translation, as our selection rectangle must be drawn
                 // in absolute screen coordinates (below the finger of the user - not translated and scaled)
-                var m = renderer.Matrix.Clone();
+                var m = renderer.Graphics.Transform.Clone();
                 m.Invert();
                 renderer.Graphics.Concat(m);
                 renderer.DrawRectangle(_selectionRectangle, Pen);

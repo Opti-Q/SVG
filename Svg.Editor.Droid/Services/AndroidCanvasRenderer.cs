@@ -55,12 +55,6 @@ namespace Svg.Droid.Editor.Services
             _canvas.DrawColor(c);
         }
 
-        public Matrix Matrix
-        {
-            get { return (AndroidMatrix)_canvas.Matrix; }
-            set { _canvas.Matrix = ((AndroidMatrix) value); }
-        }
-
         public Graphics Graphics { get; }
     }
 }
