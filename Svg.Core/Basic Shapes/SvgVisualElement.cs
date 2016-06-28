@@ -221,7 +221,8 @@ namespace Svg
             if (this.Fill != null)
             {
                 /*using (*/
-                var brush = GetFillBrush(renderer);/*)*/
+                //var brush = GetFillBrush(renderer);/*)*/
+                using(var brush = this.Fill.GetBrush(this, renderer, Math.Min(Math.Max(this.FillOpacity * this.Opacity, 0), 1)))
                 {
                     if (brush != null)
                     {
@@ -241,7 +242,8 @@ namespace Svg
             if (this.Stroke != null && this.Stroke != SvgColourServer.None)
             {
                 float strokeWidth = this.StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, this);
-                using (var brush = GetStrokeBrush(renderer))
+                //using (var brush = GetStrokeBrush(renderer))
+                using(var brush = this.Stroke.GetBrush(this, renderer, Math.Min(Math.Max(this.StrokeOpacity * this.Opacity, 0), 1), true))
                 {
                     if (brush != null)
                     {
@@ -271,7 +273,8 @@ namespace Svg
                         else
                         {
                             /*using (*/
-                            var pen = CreateStrokePen(brush, strokeWidth);/*)*/
+                            //var pen = CreateStrokePen(brush, strokeWidth);/*)*/
+                            using (var pen = Engine.Factory.CreatePen(brush, strokeWidth))
                             {
                                 if (this.StrokeDashArray != null && this.StrokeDashArray.Count > 0)
                                 {

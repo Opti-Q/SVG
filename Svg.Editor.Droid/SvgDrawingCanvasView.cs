@@ -15,6 +15,9 @@ namespace Svg.Droid.Editor
 {
     public class SvgDrawingCanvasView : ImageView
     {
+#if SKIA
+        private Android.Graphics.Bitmap _bitmap;
+#endif
         private readonly GestureDetector _detector;
         private SvgDrawingCanvas _drawingCanvas;
 
@@ -44,6 +47,7 @@ namespace Svg.Droid.Editor
             return true;
         }
 
+#if !SKIA
         protected override void OnDraw(Canvas canvas)
         {
             // this is intentionally not awaited
@@ -51,6 +55,33 @@ namespace Svg.Droid.Editor
                 .ContinueWith(t => base.OnDraw(canvas));
         }
 
+#else
+        protected override async void OnDraw(Canvas canvas)
+        {
+
+            if (_bitmap == null || _bitmap.Width != canvas.Width || _bitmap.Height != canvas.Height)
+            {
+                _bitmap?.Dispose();
+
+                _bitmap = Android.Graphics.Bitmap.CreateBitmap(canvas.Width, canvas.Height, Android.Graphics.Bitmap.Config.Argb8888);
+            }
+
+            try
+            {
+                using (var surface = SkiaSharp.SKSurface.Create(canvas.Width, canvas.Height, SkiaSharp.SKColorType.Rgba_8888, SkiaSharp.SKAlphaType.Premul, _bitmap.LockPixels(), canvas.Width * 4))
+                {
+                    await DrawingCanvas.OnDraw(new SKCanvasRenderer(surface, canvas.Width, canvas.Height));
+                }
+            }
+            finally
+            {
+                _bitmap.UnlockPixels();
+            }
+
+            canvas.DrawBitmap(_bitmap, 0, 0, null);
+
+        }
+#endif
         protected override void OnAttachedToWindow()
         {
             base.OnAttachedToWindow();

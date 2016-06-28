@@ -3,8 +3,6 @@ using Android.App;
 using Android.OS;
 using Android.Views;
 using System.Linq;
-using Android.Content;
-using Android.Graphics;
 using MvvmCross.Droid.Views;
 using Svg.Droid.Editor;
 using Svg.Droid.SampleEditor.Core;
@@ -16,11 +14,7 @@ namespace Svg.Droid.SampleEditor.Views
     [Activity(Label = "Edit SVG", Exported = true)]
     public class EditorView : MvxActivity
     {
-#if !SKIA
         private SvgDrawingCanvasView _padView;
-#else
-        private SvgSKDrawingCanvasView _padView;
-#endif
         private Dictionary<string, int> _iconCache = new Dictionary<string, int>();
 
         protected override void OnCreate(Bundle bundle)
@@ -32,14 +26,10 @@ namespace Svg.Droid.SampleEditor.Views
             SetupIconCache();
 
             base.OnCreate(bundle);
-#if !SKIA
+
             SetContentView(Resource.Layout.EditorView);
             _padView = FindViewById<SvgDrawingCanvasView>(Resource.Id.pad);
-#else
-            SetContentView(Resource.Layout.EditorViewSkia);
-            _padView = FindViewById<SvgSKDrawingCanvasView>(Resource.Id.pad);
 
-#endif
             _padView.DrawingCanvas = this.ViewModel.Canvas;
 
         }

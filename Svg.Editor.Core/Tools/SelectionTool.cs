@@ -34,15 +34,14 @@ namespace Svg.Core.Tools
             this.ToolUsage = ToolUsage.Explicit;
         }
 
-        private Brush Brush => _brush ?? (_brush = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
-        private Pen Pen => _pen ?? (_pen = Svg.Engine.Factory.CreatePen(Brush, 5));
+        private Brush BlueBrush => _brush ?? (_brush = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
+        private Pen BluePen => _pen ?? (_pen = Svg.Engine.Factory.CreatePen(BlueBrush, 5));
 
+        private Brush RedBrush => _brush2 ?? (_brush2 = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 255, 150, 150)));
+        private Pen RedPen => _pen2 ?? (_pen2 = Svg.Engine.Factory.CreatePen(RedBrush, 5));
 
-        private Brush Brush2 => _brush2 ?? (_brush2 = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 255, 150, 150)));
-        private Pen Pen2 => _pen2 ?? (_pen2 = Svg.Engine.Factory.CreatePen(Brush2, 5));
-
-        private Brush Brush3 => _brush3 ?? (_brush3 = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 155, 255, 150)));
-        private Pen Pen3 => _pen3 ?? (_pen3 = Svg.Engine.Factory.CreatePen(Brush3, 5));
+        private Brush GreenBrush => _brush3 ?? (_brush3 = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 0, 128, 0)));
+        private Pen GreenPen => _pen3 ?? (_pen3 = Svg.Engine.Factory.CreatePen(GreenBrush, 5));
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
@@ -137,7 +136,6 @@ namespace Svg.Core.Tools
         public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
         {
             _selectionRectangle = null;
-
         }
 
         private void SelectElementsUnder(RectangleF selectionRectangle, SvgDrawingCanvas ws, SelectionType selectionType, int maxItems = int.MaxValue)
@@ -166,23 +164,19 @@ namespace Svg.Core.Tools
                 var m = renderer.Graphics.Transform.Clone();
                 m.Invert();
                 renderer.Graphics.Concat(m);
-                renderer.DrawRectangle(_selectionRectangle, Pen);
+                renderer.DrawRectangle(_selectionRectangle, BluePen);
 
                 renderer.Graphics.Restore();
             }
 
+            // for debugging: draws green line around all selectable elements
             //foreach (var element in ws.Document.Children.OfType<SvgVisualElement>())
             //{
             //    renderer.Graphics.Save();
-            //    var m = renderer.Matrix.Clone();
+            //    var m = renderer.Graphics.Transform.Clone();
             //    m.Invert();
             //    renderer.Graphics.Concat(m);
-            //    renderer.DrawRectangle(element.RenderBounds, Pen3);
-            //    renderer.Graphics.Restore();
-
-
-            //    renderer.Graphics.Save();
-            //    renderer.DrawRectangle(element.Bounds, Pen2);
+            //    renderer.DrawRectangle(element.RenderBounds, GreenPen);
             //    renderer.Graphics.Restore();
             //}
 
@@ -193,10 +187,9 @@ namespace Svg.Core.Tools
                 
                 // we draw a selection adorner around all elements
                 // as the canvas is already translated, we do not need to use the renderbounds, but the bounds themselves
-                var b = element.Transforms.GetMatrix().TransformRectangle(element.Bounds);
-                renderer.DrawRectangle(b, Pen);
-                //renderer.DrawRectangle(element.Bounds, Pen);
-                
+                var m = element.Transforms.GetMatrix();
+                var b = m.TransformRectangle(element.Bounds);
+                renderer.DrawRectangle(b, BluePen);
 
                 renderer.Graphics.Restore();
             }
