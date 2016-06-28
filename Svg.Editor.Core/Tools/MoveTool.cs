@@ -48,7 +48,9 @@ namespace Svg.Core.Tools
                     if (ws.SelectedElements.Count != 0 &&
                         ws.GetElementsUnderPointer(p.Pointer1Position).Any(eup => ws.SelectedElements.Contains(eup)))
                     {
-                        this.IsActive = true;
+                        // move tool is only active, if SelectionTool is the "ActiveTool"
+                        // otherwise we'd move and pan at the same time, yielding confusing results... :)
+                        this.IsActive = ws.ActiveTool is SelectionTool;
                     }
                     else
                     {

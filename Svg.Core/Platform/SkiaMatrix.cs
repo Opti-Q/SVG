@@ -251,17 +251,6 @@ namespace Svg.Platform
             Rotate(fAngle, MatrixOrder.Prepend);
         }
 
-        public override void TransformVectors(PointF[] points)
-        {
-
-            foreach (var point in points)
-            {
-                // see http://math.stackexchange.com/questions/29257/find-2d-point-given-2d-point-and-transformation-matrix
-                // transformvectors needs to IGNORE the translation! (see: http://stackoverflow.com/questions/3265169/matrix-transformpoints-vs-transformvectors)
-                point.X = (_m.ScaleX*point.X) + (_m.SkewX*point.X); // + _m.TransX;
-                point.Y = (_m.SkewY*point.Y) + (_m.ScaleY*point.Y); // + _m.TransY;
-            }
-        }
 
         public override RectangleF TransformRectangle(RectangleF bound)
         {
@@ -272,6 +261,18 @@ namespace Svg.Platform
             TransformPoints(pts);
 
             return Engine.Factory.CreateRectangleF(start.X, start.Y, end.X - start.X, end.Y - start.Y);
+        }
+
+        public override void TransformVectors(PointF[] points)
+        {
+
+            foreach (var point in points)
+            {
+                // see http://math.stackexchange.com/questions/29257/find-2d-point-given-2d-point-and-transformation-matrix
+                // transformvectors needs to IGNORE the translation! (see: http://stackoverflow.com/questions/3265169/matrix-transformpoints-vs-transformvectors)
+                point.X = (_m.ScaleX * point.X) + (_m.SkewX * point.X); // + _m.TransX;
+                point.Y = (_m.SkewY * point.Y) + (_m.ScaleY * point.Y); // + _m.TransY;
+            }
         }
 
         public override void TransformPoints(PointF[] points)
