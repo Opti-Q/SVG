@@ -37,19 +37,23 @@ namespace Svg.Platform
         }
 
         public Region Clip { get { return _clip; } }
+
         // TODO LX use smootingmode
         public SmoothingMode SmoothingMode { get; set; }
+
         public void DrawImage(Bitmap bitmap, Interfaces.RectangleF rectangle, int x, int y, int width, int height, GraphicsUnit pixel)
         {
             var img = (SkiaBitmap) bitmap;
             _canvas.DrawBitmap(img.Image, new SKRect(x, y, x+width,y+height));
         }
+
         public void DrawImage(Bitmap bitmap, Interfaces.RectangleF rectangle, int x, int y, int width, int height, GraphicsUnit pixel, ImageAttributes attributes)
         {
             throw new NotImplementedException("ImageAttributes not implemented for now: see http://chiuki.github.io/android-shaders-filters/#/");
             //var img = (AndroidBitmap)bitmap;
             //_canvas.DrawBitmap(img.Image, null, new Rect(x, y, x + width, y + height), null);
         }
+
         public void DrawImage(Image bitmap, Interfaces.RectangleF destRect, Interfaces.RectangleF srcRect, GraphicsUnit graphicsUnit)
         {
             var img = (SkiaBitmap) bitmap;
@@ -59,16 +63,19 @@ namespace Svg.Platform
 
             _canvas.DrawBitmap(img.Image, src, dest, null);
         }
+
         public void DrawImageUnscaled(Image image, Svg.Interfaces.PointF location)
         {
             var img = (SkiaBitmap)image;
             _canvas.DrawBitmap(img.Image, (int)location.X, (int)location.Y, null);
         }
+
         public void DrawImage(Image image, Interfaces.PointF location)
         {
             var img = (SkiaBitmap)image;
             _canvas.DrawBitmap(img.Image, (int)location.X, (int)location.Y, null);
         }
+
         public void DrawPath(Pen pen, GraphicsPath path)
         {
             var p = (SkiaGraphicsPath) path;
@@ -85,6 +92,7 @@ namespace Svg.Platform
             }
 
         }
+
         public void FillPath(Brush brush, GraphicsPath path)
         {
             var p = (SkiaGraphicsPath)path;
@@ -97,6 +105,7 @@ namespace Svg.Platform
             _canvas.DrawPath(p.Path, b.Paint);
             
         }
+
         public void DrawText(string text, float x, float y, Pen pen)
         {
             if (text == null)
@@ -104,6 +113,7 @@ namespace Svg.Platform
             var paint = (SkiaPen)pen;
             _canvas.DrawText(text, x, y, paint.Paint);
         }
+
         private void SetSmoothingMode(SKPaint paint)
         {
             //switch (SmoothingMode)
@@ -120,6 +130,7 @@ namespace Svg.Platform
             //    //case SmoothingMode.Invalid:
             //}
         }
+
         public void SetClip(Region region, CombineMode combineMode)
         {
             var op = SKRegionOperation.Union;
@@ -156,6 +167,7 @@ namespace Svg.Platform
             //    _canvas.ClipRect(r, SKRegionOperation.Union);
             //}
         }
+
         public Region[] MeasureCharacterRanges(string text, Font font, Interfaces.RectangleF rectangle, StringFormat format)
         {
             // TODO LX: wtf?
@@ -169,13 +181,7 @@ namespace Svg.Platform
             set
             {
                 _matrix = (SkiaMatrix)value;
-
-                var m = new SkiaMatrix(_canvas.TotalMatrix);
-                m.Invert();
-                var m1 = m.Matrix;
-                _canvas.Concat(ref m1);
-                var m2 = _matrix.Matrix;
-                _canvas.Concat(ref m2);
+                _canvas.SetMatrix(_matrix.Matrix);
             }
         }
 
@@ -191,6 +197,7 @@ namespace Svg.Platform
                 _canvas.Translate(dx, dy);
             }
         }
+
         public void RotateTransform(float fAngle, MatrixOrder order)
         {
             if (order == MatrixOrder.Append)
@@ -203,6 +210,7 @@ namespace Svg.Platform
                 _canvas.RotateDegrees(fAngle);
             }
         }
+
         public void ScaleTransform(float sx, float sy, MatrixOrder order)
         {
             if (order == MatrixOrder.Append)
@@ -215,6 +223,7 @@ namespace Svg.Platform
                 _canvas.Scale(sx, sy);
             }
         }
+
         public void Concat(Matrix matrix)
         {
             var m = ((SkiaMatrix) matrix).Matrix;
@@ -231,14 +240,17 @@ namespace Svg.Platform
         {
             throw new NotSupportedException("Flushing not supported on android");
         }
+
         public void Save()
         {
             _canvas.Save();
         }
+
         public void Restore()
         {
             _canvas.Restore();
         }
+
         public void Dispose()
         {
             _surface.Dispose();

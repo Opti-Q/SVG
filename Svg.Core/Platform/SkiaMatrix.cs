@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using SkiaSharp;
 using Svg.Interfaces;
 
@@ -12,10 +11,7 @@ namespace Svg.Platform
         private SKMatrix _m;
         public SkiaMatrix()
         {
-            _m = new SKMatrix();
-            _m.ScaleX = 1;
-            _m.ScaleY = 1;
-            _m.Persp2 = 1;
+            _m = SKMatrix.MakeIdentity();
         }
         public SkiaMatrix(SKMatrix src)
         {
@@ -122,9 +118,7 @@ namespace Svg.Platform
 
         public override void Scale(float width, float height)
         {
-            var m = SKMatrix.MakeScale(width, height);
-
-            _m = CreateMatrix(Multiply(GetElements(m), GetElements(_m)));
+            Scale(width, height, MatrixOrder.Prepend);
         }
 
         public override void Scale(float width, float height, MatrixOrder order)
@@ -149,20 +143,6 @@ namespace Svg.Platform
 
         public override void TransformVectors(PointF[] points)
         {
-            //var a = new float[points.Length*2];
-            //for (int i = 0; i < points.Length; i++)
-            //{
-            //    a[i*2] = points[i].X;
-            //    a[i * 2 + 1] = points[i].Y;
-            //}
-
-            //_m.MapVectors(a);
-
-            //for (int i = 0; i < points.Length; i++)
-            //{
-            //    points[i].X = a[i * 2];
-            //    points[i].Y = a[i * 2 + 1];
-            //}
             foreach (var point in points)
             {
                 point.X = _m.ScaleX * point.X + _m.SkewX * point.X + _m.TransX * point.X;
@@ -172,9 +152,7 @@ namespace Svg.Platform
 
         public override void Translate(float left, float top)
         {
-            var m = SKMatrix.MakeTranslation(left, top);
-            
-            _m = CreateMatrix(Multiply(GetElements(m), GetElements(_m)));
+            Translate(left, top, MatrixOrder.Prepend);
         }
 
         /// <summary>
@@ -183,10 +161,7 @@ namespace Svg.Platform
         /// <param name="matrix"></param>
         public override void Multiply(Matrix matrix)
         {
-            var other = (SkiaMatrix) matrix;
-
-            _m = CreateMatrix(Multiply(GetElements(other.Matrix), GetElements(_m)));
-
+            Multiply(matrix, MatrixOrder.Prepend);
         }
 
         public override void Multiply(Matrix matrix, MatrixOrder order)
@@ -201,43 +176,22 @@ namespace Svg.Platform
 
         public override void TransformPoints(PointF[] points)
         {
-            //var a = new float[points.Length * 2];
-            //for (int i = 0; i < points.Length; i++)
-            //{
-            //    a[i * 2] = points[i].X;
-            //    a[i * 2 + 1] = points[i].Y;
-            //}
-
-            //_m.MapPoints(a);
-
-            //for (int i = 0; i < points.Length; i++)
-            //{
-            //    points[i].X = a[i * 2];
-            //    points[i].Y = a[i * 2 + 1];
-            //}
-
             foreach (var point in points)
             {
                 point.X = _m.ScaleX * point.X + _m.SkewX * point.X + _m.TransX * point.X;
                 point.Y = _m.ScaleY * point.Y + _m.SkewY * point.Y + _m.TransY * point.Y;
             }
-
         }
 
         public override void RotateAt(float angle, PointF midPoint, MatrixOrder order)
         {
-            // copied from https://github.com/google/skia/blob/master/src/core/SkMatrix.cpp "setSinCos("
-            var mr = SKMatrix.MakeRotation((float)RadianToDegree(angle));
-            var sinV = mr.SkewY;
-            var cosV = mr.ScaleX;
-            var oneMinusCosV = 1 - cosV;
-            /*
-             *  static inline SkScalar sdot(SkScalar a, SkScalar b, SkScalar c, SkScalar d) {
-                    return a * b + c * d;
-                }       
-            */
-            mr.TransX = sinV*midPoint.Y + oneMinusCosV*midPoint.X;
-            mr.TransY = (-sinV)*midPoint.X + oneMinusCosV*midPoint.Y;
+            var m1 = SKMatrix.MakeTranslation(midPoint.X, midPoint.Y);
+            var m2 = SKMatrix.MakeRotation((float)DegreeToRadian(angle));
+            var m3 = SKMatrix.MakeTranslation(-midPoint.X, -midPoint.Y);
+
+            var m12 = CreateMatrix(Multiply(GetElements(m2), GetElements(m1)));
+            var mr = CreateMatrix(Multiply(GetElements(m3), GetElements(m12)));
+
 
             if (order == MatrixOrder.Append)
                 _m = CreateMatrix(Multiply(GetElements(_m), GetElements(mr)));
@@ -247,7 +201,10 @@ namespace Svg.Platform
 
         public override void Rotate(float angle, MatrixOrder order)
         {
-            var m = SKMatrix.MakeRotation((float)RadianToDegree(angle));
+            var m = SKMatrix.MakeRotation((float)DegreeToRadian(angle));
+            //var m = SKMatrix.MakeRotation(angle);
+            //m.ScaleX = 0;
+            //m.ScaleY = 0;
 
             if (order == MatrixOrder.Append)
                 _m = CreateMatrix(Multiply(GetElements(_m), GetElements(m)));

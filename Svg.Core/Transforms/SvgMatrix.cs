@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using Svg.Platform;
 
 namespace Svg.Transforms
 {
@@ -59,6 +60,7 @@ namespace Svg.Transforms
                     //this.points[2],
                     //this.points[5]
                 );
+
                 return matrix;
             }
         }
