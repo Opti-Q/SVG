@@ -1,6 +1,7 @@
+using System;
 using System.IO;
+using SkiaSharp;
 using Svg.Core.Interfaces;
-using Svg.Platform;
 
 namespace Svg.Droid.Editor.Services
 {
@@ -8,9 +9,13 @@ namespace Svg.Droid.Editor.Services
     {
         public void SaveAsPng(Bitmap image, Stream stream)
         {
+#if !SKIA
             var bitmap = (AndroidBitmap) image;
 
             bitmap.Image.Compress(Android.Graphics.Bitmap.CompressFormat.Png, 100, stream);
+#else
+            throw new NotSupportedException("Not supported by SKIA at the moment");
+#endif
         }
     }
 }
