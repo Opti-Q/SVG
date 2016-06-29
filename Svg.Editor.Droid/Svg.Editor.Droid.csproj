@@ -59,7 +59,6 @@
   <ItemGroup>
     <Compile Include="Services\SKCanvasRenderer.cs" />
     <Compile Include="Services\AndroidCanvasRenderer.cs" />
-    <Compile Include="Services\ImageStorer.cs" />
     <Compile Include="Services\TextInputService.cs" />
     <Compile Include="SvgDrawingCanvasView.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

@@ -93,8 +93,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 new ToolCommand(this, "Share PNG", (obj) =>
                 {
                     var fs = Engine.Resolve<IFileSystem>();
-                    var storer = Engine.Resolve<IImageStorer>();
-
+                    
                     //using (var bmp = ws.GetOrCreate(ws.ScreenWidth, ws.ScreenHeight))
                     using (var bmp = ws.Document.DrawAllContents(Engine.Factory.Colors.White)) // 2MP (see https://de.wikipedia.org/wiki/Bildaufl%C3%B6sungen_in_der_Digitalfotografie)
                     {
@@ -105,7 +104,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
 
                         using (var stream = fs.OpenWrite(path))
                         {
-                            storer.SaveAsPng(bmp, stream);
+                            bmp.SavePng(stream);
                         }
 
                         // then share it using MVVMCross plugin
@@ -126,7 +125,6 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 new ToolCommand(this, "Share PNG thumb", (obj) =>
                 {
                     var fs = Engine.Resolve<IFileSystem>();
-                    var storer = Engine.Resolve<IImageStorer>();
 
                     using (var bmp = ws.Document.DrawAllContents(160, 160, Engine.Factory.Colors.White))
                     {
@@ -137,7 +135,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
 
                         using (var stream = fs.OpenWrite(path))
                         {
-                            storer.SaveAsPng(bmp, stream);
+                            bmp.SavePng(stream);
                         }
 
                         // then share it using MVVMCross plugin
@@ -158,7 +156,6 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 new ToolCommand(this, "Share PNG XL", (obj) =>
                 {
                     var fs = Engine.Resolve<IFileSystem>();
-                    var storer = Engine.Resolve<IImageStorer>();
 
                     using (var bmp = ws.Document.DrawAllContents(2048, 1920, Engine.Factory.Colors.White))
                     {
@@ -169,7 +166,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
 
                         using (var stream = fs.OpenWrite(path))
                         {
-                            storer.SaveAsPng(bmp, stream);
+                            bmp.SavePng(stream);
                         }
 
                         // then share it using MVVMCross plugin

@@ -4406,9 +4406,6 @@
   <ItemGroup>
     <AndroidAsset Include="Assets\resources\Plane1\svgtestsuite-woffmeta.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="MainActivity.cs.txt" />
-  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>xcopy "$(SolutionDir)Tests\W3CTestSuite\*.*" "$(ProjectDir)Assets\" /Y/D/E</PreBuildEvent>

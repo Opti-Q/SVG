@@ -9,7 +9,7 @@ using Xamarin.Forms;
 
 namespace SvgW3CTestSuite.Droid
 {
-    [Activity(Label = "SVG W3C TestSuite", MainLauncher = true, Theme = "@android:style/Theme.Holo.Light", ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "SVG W3C TestSuite", MainLauncher = true, Icon = "@drawable/icon", Theme = "@android:style/Theme.Holo.Light", ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsApplicationActivity
     {
         private static NUnit.Runner.App nunit = null;
@@ -33,18 +33,18 @@ namespace SvgW3CTestSuite.Droid
             if (nunit == null)
             {
                 // get all SVG assets
-                var svgFiles = Assets.List("svg");
+                var svgFiles = Assets.List("svg").Take(400)/*.Where(s => !s.StartsWith("struct-image"))*/;
                 Func<string, string> getPngPath = (svgPath) =>
                 {
                     var fileName = System.IO.Path.GetFileNameWithoutExtension(svgPath) + ".png";
                     return System.IO.Path.Combine("png", fileName);
                 };
                 W3CTestFixture.SvgTestCases = svgFiles.Select(path => new object[]
-                {
-                    System.IO.Path.Combine("svg", path),
-                    getPngPath(path)
-                })
-                    .ToArray();
+                                                        {
+                                                            System.IO.Path.Combine("svg", path),
+                                                            getPngPath(path)
+                                                        })
+                                                        .ToArray();
                 W3CTestFixture.FileSourceProvider = (path) => new SvgAssetSource(path, Assets);
 
                 // This will load all tests within the current project

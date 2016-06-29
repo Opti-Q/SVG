@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using SkiaSharp;
 using Svg.Interfaces;
 using RectangleF = Svg.Interfaces.RectangleF;
@@ -54,15 +55,26 @@ namespace Svg.Platform
             _image.UnlockPixels();
         }
 
-        public void Save(string path)
+        public void SavePng(Stream stream, int quality = 100)
         {
-            var fs = Engine.Resolve<IFileSystem>();
-
-            //using(var fn = fs.OpenWrite(path))
-            //    _image.Compress(Android.Graphics.Bitmap.CompressFormat.Png, 100, fn); // bmp is your Bitmap instance
-            //// PNG is a lossless format, the compression factor (100) is ignored
-            throw new NotImplementedException("Save not implemented");
+            SKBitmap bitmap = Image;
+            try
+            {
+                bitmap.LockPixels();
+                IntPtr p;
+                bitmap.GetPixels(out p);
+                using (var img = SKImage.FromPixels(bitmap.Info, p, bitmap.Width * bitmap.BytesPerPixel))
+                {
+                    var data = img.Encode(SKImageEncodeFormat.Png, quality: quality);
+                    data.SaveTo(stream);
+                }
+            }
+            finally
+            {
+                bitmap.UnlockPixels();
+            }
         }
+
 
         public int Width { get; set; }
         public int Height { get; set; }

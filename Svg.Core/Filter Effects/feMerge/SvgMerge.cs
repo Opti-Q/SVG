@@ -20,7 +20,7 @@ namespace Svg.FilterEffects
                 }
                 g.Flush();
             }
-            result.Save(@"C:\test.png");
+            //result.SavePng(@"C:\test.png");
             buffer[this.Result] = result;
         }
 

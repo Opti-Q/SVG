@@ -14,6 +14,9 @@ namespace SvgW3CTestSuite.Droid
     [TestFixture]
     public class W3CTestFixture
     {
+        private static int _testCount = 0;
+        private static int _succeededCount = 0;
+
         [SetUp]
         public void Setup()
         {
@@ -28,7 +31,6 @@ namespace SvgW3CTestSuite.Droid
         {
             await RunTest(() =>
             {
-                System.Diagnostics.Debug.Write($"starting test {svgPath}");
                 // Arrange
                 const int width = 480;
                 const int height = 360;
@@ -37,17 +39,20 @@ namespace SvgW3CTestSuite.Droid
                 using (var svgBitmap = RenderSvg(svgPath, width, height))
                 {
                     // Assert
-                    SKBitmap pngBitmap = new SKBitmap();
-                    using (var pngStream = new SKManagedStream(FileSourceProvider(pngPath).GetStream()))
+                    using (var stream = FileSourceProvider(pngPath).GetStream())
+                    using (var pngStream = new SKManagedStream(stream))
                     {
-                        SKImageDecoder.DecodeStream(pngStream, pngBitmap);
-                        using (pngBitmap)
-                        using (var c = ImageCompare(svgBitmap, pngBitmap))
+                        using (SKBitmap pngBitmap = new SKBitmap())
                         {
-                            Assert.GreaterOrEqual(c.Similarity, 90, $"{svgPath}");
+                            SKImageDecoder.DecodeStream(pngStream, pngBitmap);
+                            using (var c = ImageCompare(svgBitmap, pngBitmap))
+                            {
+                                Assert.GreaterOrEqual(c.Similarity, 90, $"{svgPath}");
+                            }
                         }
                     }
                 }
+               
             }, svgPath);
         }
 
@@ -60,6 +65,8 @@ namespace SvgW3CTestSuite.Droid
                 {
                     try
                     {
+                        Interlocked.Increment(ref _testCount);
+                        System.Diagnostics.Debug.Write($"starting test #{_testCount} '{name}#'");
                         test();
                         
 
@@ -99,8 +106,12 @@ namespace SvgW3CTestSuite.Droid
         {
             Xamarin.Forms.Device.BeginInvokeOnMainThread(async () =>
             {
+                Interlocked.Increment(ref _succeededCount);
+
+                var message = $"{svgPath} succeeded ({_succeededCount}/ {_testCount})";
+                System.Diagnostics.Debug.Write(message);
                 var notificator = DependencyService.Get<IToastNotificator>();
-                await notificator.Notify(ToastNotificationType.Success, "Finished test", svgPath, TimeSpan.FromMilliseconds(500));
+                await notificator.Notify(ToastNotificationType.Success, "Finished test", message, TimeSpan.FromMilliseconds(500));
             });
         }
 
@@ -108,8 +119,10 @@ namespace SvgW3CTestSuite.Droid
         {
             Xamarin.Forms.Device.BeginInvokeOnMainThread(async () =>
             {
+                var message = $"{svgPath} failed ({_succeededCount} / {_testCount})";
+                System.Diagnostics.Debug.Write(message);
                 var notificator = DependencyService.Get<IToastNotificator>();
-                await notificator.Notify(ToastNotificationType.Error, "Failed test", svgPath, TimeSpan.FromMilliseconds(500));
+                await notificator.Notify(ToastNotificationType.Error, "Failed test", message, TimeSpan.FromMilliseconds(500));
             });
         }
 
@@ -117,27 +130,17 @@ namespace SvgW3CTestSuite.Droid
         {
             var src = FileSourceProvider(svgPath);
 
-            var bitmap = Android.Graphics.Bitmap.CreateBitmap(width, height, Android.Graphics.Bitmap.Config.Argb8888);
             using (SvgDocument doc = SvgDocument.Open<SvgDocument>(src))
+            using (var surface = SKSurface.Create(width, height, SKColorType.Rgba_8888, SKAlphaType.Premul))
             {
-                try
-                {
-                    using (var surface = SKSurface.Create(width, height, SKColorType.Rgba_8888, SKAlphaType.Premul, bitmap.LockPixels(), width * 4))
-                    {
-                        doc.Draw(SvgRenderer.FromGraphics(new SkiaGraphics(surface)));
-                        var img = surface.Snapshot();
+                doc.Draw(SvgRenderer.FromGraphics(new SkiaGraphics(surface)));
+                var img = surface.Snapshot();
 
-                        using (var s = new SKManagedStream(img.Encode().AsStream()))
-                        {
-                            SKBitmap b = new SKBitmap();
-                            SKImageDecoder.DecodeStream(s, b);
-                            return b;
-                        }
-                    }
-                }
-                finally
+                using (var s = new SKManagedStream(img.Encode().AsStream()))
                 {
-                    bitmap.UnlockPixels();
+                    SKBitmap b = new SKBitmap();
+                    SKImageDecoder.DecodeStream(s, b);
+                    return b;
                 }
             }
         }

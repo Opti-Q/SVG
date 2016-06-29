@@ -1,5 +1,6 @@
 
 using System.Drawing;
+using System.IO;
 using Svg.Interfaces;
 
 namespace Svg
@@ -8,6 +9,6 @@ namespace Svg
     {
         BitmapData LockBits(RectangleF rectangle, ImageLockMode lockmode, PixelFormat pixelFormat);
         void UnlockBits(BitmapData bitmapData);
-        void Save(string path);
+        void SavePng(Stream stream, int quality = 100);
     }
 }
