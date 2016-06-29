@@ -17,10 +17,10 @@ namespace SvgW3CTestSuite.Droid
         {
             base.OnCreate(savedInstanceState);
 
-            string[] testCases = new[] {"coords-", "text-", "painting-", "paths-"};
+            //string[] testCases = new[] {"coords-", "text-", "painting-", "paths-"};
 
             // get all SVG assets
-            var svgFiles = Assets.List("svg").Where(p => testCases.Any(p.StartsWith));
+            var svgFiles = Assets.List("svg")/*.Where(p => testCases.Any(p.StartsWith))*/;
             Func<string, string> getPngPath = (svgPath) =>
             {
                 var fileName = System.IO.Path.GetFileNameWithoutExtension(svgPath)+".png";

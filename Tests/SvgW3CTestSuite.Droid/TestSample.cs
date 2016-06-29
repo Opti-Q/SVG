@@ -17,62 +17,100 @@ namespace SvgW3CTestSuite.Droid
     [TestFixture]
     public class TestsSample
     {
-
         [SetUp]
         public void Setup()
         {
             SvgPlatformSetup.Init(new SvgAndroidPlatformOptions() {EnableFastTextRendering = true});
         }
         
-
         public static object[] SvgTestCases = {};
         public static Func<string, SvgAssetSource> FileSourceProvider { get; set; }
 
         [Test, TestCaseSource(nameof(SvgTestCases))]
         public async Task W3CTestSuiteCompare(string svgPath, string pngPath)
         {
-            System.Diagnostics.Debug.Write($"starting test {svgPath}");
-            var tcs = new CancellationTokenSource();
-            tcs.CancelAfter(2000);
-            try
+            await RunTest(() =>
             {
-                await Task.Run(() =>
-                {
-                    // Arrange
-                    var width = 480;
-                    var height = 360;
+                System.Diagnostics.Debug.Write($"starting test {svgPath}");
+                // Arrange
+                const int width = 480;
+                const int height = 360;
 
-                    // Act
-                    using (var svgBitmap = RenderSvg(svgPath, width, height))
+                // Act
+                using (var svgBitmap = RenderSvg(svgPath, width, height))
+                {
+                    // Assert
+                    using (var pngStream = FileSourceProvider(pngPath).GetStream())
+                    using (var png = BitmapFactory.DecodeStream(pngStream))
                     {
-                        // Assert
-                        using (var pngStream = FileSourceProvider(pngPath).GetStream())
-                        using (var png = BitmapFactory.DecodeStream(pngStream))
+                        using (var c = ImageCompare(svgBitmap, png))
                         {
-                            using (var c = ImageCompare(svgBitmap, png))
-                            {
-                                Assert.GreaterOrEqual(c.Similarity, 90, $"{svgPath}");
-                            }
+                            Assert.GreaterOrEqual(c.Similarity, 90, $"{svgPath}");
                         }
                     }
-                }, tcs.Token);
+                }
+            }, svgPath);
+        }
+
+        private Task RunTest(Action test, string name, int timeout = 10000)
+        {
+            var tcs = new TaskCompletionSource<bool>();
+            try
+            {
+                var thread = new Thread(() =>
+                {
+                    try
+                    {
+                        test();
+                        
+
+                        NotifySuccess(name);
+                        tcs.TrySetResult(true);
+                    }
+                    catch (Exception x)
+                    {
+                        NotifyError(name);
+                        tcs.TrySetException(x);
+                    }
+
+                });
+                thread.Start();
+                Task.Run(async () =>
+                {
+                    await Task.Delay(timeout);
+                    thread.Abort();
+                    tcs.TrySetCanceled();
+                }).ConfigureAwait(false);
+
             }
             catch (TaskCanceledException)
             {
-                Assert.Fail($"rendering of {svgPath} took too much time");
+                NotifyError(name);
+                Assert.Fail($"test {name} took too much time");
             }
-            finally
+            catch (ThreadAbortException)
             {
-                NotifyAboutProgress(svgPath);
+                NotifyError(name);
+                Assert.Fail($"test {name} took too much time");
             }
+            return tcs.Task;
         }
 
-        private static void NotifyAboutProgress(string svgPath)
+        private static void NotifySuccess(string svgPath)
         {
             Xamarin.Forms.Device.BeginInvokeOnMainThread(async () =>
             {
                 var notificator = DependencyService.Get<IToastNotificator>();
-                await notificator.Notify(ToastNotificationType.Info, "Finished test", svgPath, TimeSpan.FromMilliseconds(500));
+                await notificator.Notify(ToastNotificationType.Success, "Finished test", svgPath, TimeSpan.FromMilliseconds(500));
+            });
+        }
+
+        private static void NotifyError(string svgPath)
+        {
+            Xamarin.Forms.Device.BeginInvokeOnMainThread(async () =>
+            {
+                var notificator = DependencyService.Get<IToastNotificator>();
+                await notificator.Notify(ToastNotificationType.Error, "Failed test", svgPath, TimeSpan.FromMilliseconds(500));
             });
         }
 
