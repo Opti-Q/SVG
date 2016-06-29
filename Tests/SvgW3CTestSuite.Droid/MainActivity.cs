@@ -2,19 +2,25 @@
 using System.Linq;
 using System.Reflection;
 using Android.App;
+using Android.Content.PM;
 using Android.OS;
+using Plugin.Toasts;
 using Svg.Platform;
-using Xamarin.Android.NUnitLite;
+using Xamarin.Forms;
 
 namespace SvgW3CTestSuite.Droid
 {
-    [Activity(Label = "SvgW3CTestSuite.Droid", MainLauncher = true, Icon = "@drawable/icon")]
-    public class MainActivity : TestSuiteActivity
+    [Activity(Label = "SVG W3C TestSuite", MainLauncher = true, Theme = "@android:style/Theme.Holo.Light", ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsApplicationActivity
     {
-        protected override void OnCreate(Bundle bundle)
+        protected override void OnCreate(Bundle savedInstanceState)
         {
+            base.OnCreate(savedInstanceState);
+
+            string[] testCases = new[] {"coords-", "text-", "painting-", "paths-"};
+
             // get all SVG assets
-            var svgFiles = Assets.List("svg").Where(@s => s.StartsWith("coords-")).Take(3);
+            var svgFiles = Assets.List("svg").Where(p => testCases.Any(p.StartsWith));
             Func<string, string> getPngPath = (svgPath) =>
             {
                 var fileName = System.IO.Path.GetFileNameWithoutExtension(svgPath)+".png";
@@ -29,12 +35,28 @@ namespace SvgW3CTestSuite.Droid
             TestsSample.FileSourceProvider = (path) => new SvgAssetSource(path, Assets);
 
             // tests can be inside the main assembly
-            AddTest(Assembly.GetExecutingAssembly());
+            //AddTest(Assembly.GetExecutingAssembly());
             // or in any reference assemblies
             // AddTest (typeof (Your.Library.TestClass).Assembly);
 
             // Once you called base.OnCreate(), you cannot add more assemblies.
-            base.OnCreate(bundle);
+            global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+
+            // register Xamarin.Form.Toasts plugin so we can see the progress of our test
+            DependencyService.Register<ToastNotificatorImplementation>();
+            ToastNotificatorImplementation.Init(this);
+
+
+            // This will load all tests within the current project
+            var nunit = new NUnit.Runner.App();
+
+            // If you want to add tests in another assembly
+            //nunit.AddTestAssembly(typeof(MyTests).Assembly);
+
+            // Do you want to automatically run tests when the app starts?
+            nunit.AutoRun = true;
+
+            LoadApplication(nunit);
         }
     }
 }

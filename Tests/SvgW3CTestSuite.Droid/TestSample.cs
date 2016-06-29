@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Android.Graphics;
 using NUnit.Framework;
+using Plugin.Toasts;
 using SkiaSharp;
 using Svg;
 using Svg.Platform;
+using Xamarin.Forms;
 using Bitmap = Android.Graphics.Bitmap;
+using Color = Android.Graphics.Color;
 
 
 namespace SvgW3CTestSuite.Droid
@@ -25,25 +29,51 @@ namespace SvgW3CTestSuite.Droid
         public static Func<string, SvgAssetSource> FileSourceProvider { get; set; }
 
         [Test, TestCaseSource(nameof(SvgTestCases))]
-        public void W3CTestCase(string svgPath, string pngPath)
+        public async Task W3CTestSuiteCompare(string svgPath, string pngPath)
         {
-            // Arrange
-            var width = 480;
-            var height = 360;
-
-            // Act
-            using (var svgBitmap = RenderSvg(svgPath, width, height))
+            System.Diagnostics.Debug.Write($"starting test {svgPath}");
+            var tcs = new CancellationTokenSource();
+            tcs.CancelAfter(2000);
+            try
             {
-                // Assert
-                using (var pngStream = FileSourceProvider(pngPath).GetStream())
-                using (var png = BitmapFactory.DecodeStream(pngStream))
+                await Task.Run(() =>
                 {
-                    using (var c = ImageCompare(svgBitmap, png))
+                    // Arrange
+                    var width = 480;
+                    var height = 360;
+
+                    // Act
+                    using (var svgBitmap = RenderSvg(svgPath, width, height))
                     {
-                        Assert.GreaterOrEqual(c.Similarity, 90, $"{svgPath}");
+                        // Assert
+                        using (var pngStream = FileSourceProvider(pngPath).GetStream())
+                        using (var png = BitmapFactory.DecodeStream(pngStream))
+                        {
+                            using (var c = ImageCompare(svgBitmap, png))
+                            {
+                                Assert.GreaterOrEqual(c.Similarity, 90, $"{svgPath}");
+                            }
+                        }
                     }
-                }
+                }, tcs.Token);
             }
+            catch (TaskCanceledException)
+            {
+                Assert.Fail($"rendering of {svgPath} took too much time");
+            }
+            finally
+            {
+                NotifyAboutProgress(svgPath);
+            }
+        }
+
+        private static void NotifyAboutProgress(string svgPath)
+        {
+            Xamarin.Forms.Device.BeginInvokeOnMainThread(async () =>
+            {
+                var notificator = DependencyService.Get<IToastNotificator>();
+                await notificator.Notify(ToastNotificationType.Info, "Finished test", svgPath, TimeSpan.FromMilliseconds(500));
+            });
         }
 
         private static Android.Graphics.Bitmap RenderSvg(string svgPath, int width, int height)
