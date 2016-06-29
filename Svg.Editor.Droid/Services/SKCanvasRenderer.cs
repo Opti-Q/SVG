@@ -33,7 +33,13 @@ namespace Svg.Droid.Editor.Services
 
         public void Scale(float zoomFactor, float focusX, float focusY)
         {
-            _canvas.Scale(zoomFactor, zoomFactor/*, focusX, focusY*/);
+            // see: https://github.com/android/platform_frameworks_base/blob/master/graphics/java/android/graphics/Canvas.java#L589
+            //translate(px, py);
+            //scale(sx, sy);
+            //translate(-px, -py);
+            _canvas.Translate(focusX, focusY);
+            _canvas.Scale(zoomFactor, zoomFactor);
+            _canvas.Translate(-focusX, -focusY);
         }
 
         public void Translate(float deltaX, float deltaY)
