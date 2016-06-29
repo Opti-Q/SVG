@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
 using Android.App;
 using Android.Content.PM;
 using Android.OS;
@@ -13,27 +12,12 @@ namespace SvgW3CTestSuite.Droid
     [Activity(Label = "SVG W3C TestSuite", MainLauncher = true, Theme = "@android:style/Theme.Holo.Light", ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsApplicationActivity
     {
+        private static NUnit.Runner.App nunit = null;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
-            //string[] testCases = new[] {"coords-", "text-", "painting-", "paths-"};
-
-            // get all SVG assets
-            var svgFiles = Assets.List("svg")/*.Where(p => testCases.Any(p.StartsWith))*/;
-            Func<string, string> getPngPath = (svgPath) =>
-            {
-                var fileName = System.IO.Path.GetFileNameWithoutExtension(svgPath)+".png";
-                return System.IO.Path.Combine("png", fileName);
-            };
-            W3CTestFixture.SvgTestCases = svgFiles.Select(path => new object[]
-                                                {
-                                                    System.IO.Path.Combine("svg", path),
-                                                    getPngPath(path)
-                                                })
-                                                .ToArray();
-            W3CTestFixture.FileSourceProvider = (path) => new SvgAssetSource(path, Assets);
-
+            
             // tests can be inside the main assembly
             //AddTest(Assembly.GetExecutingAssembly());
             // or in any reference assemblies
@@ -46,17 +30,34 @@ namespace SvgW3CTestSuite.Droid
             DependencyService.Register<ToastNotificatorImplementation>();
             ToastNotificatorImplementation.Init(this);
 
+            if (nunit == null)
+            {
+                // get all SVG assets
+                var svgFiles = Assets.List("svg");
+                Func<string, string> getPngPath = (svgPath) =>
+                {
+                    var fileName = System.IO.Path.GetFileNameWithoutExtension(svgPath) + ".png";
+                    return System.IO.Path.Combine("png", fileName);
+                };
+                W3CTestFixture.SvgTestCases = svgFiles.Select(path => new object[]
+                {
+                    System.IO.Path.Combine("svg", path),
+                    getPngPath(path)
+                })
+                    .ToArray();
+                W3CTestFixture.FileSourceProvider = (path) => new SvgAssetSource(path, Assets);
 
-            // This will load all tests within the current project
-            var nunit = new NUnit.Runner.App();
+                // This will load all tests within the current project
+                nunit = new NUnit.Runner.App();
 
-            // If you want to add tests in another assembly
-            //nunit.AddTestAssembly(typeof(MyTests).Assembly);
+                // If you want to add tests in another assembly
+                //nunit.AddTestAssembly(typeof(MyTests).Assembly);
 
-            // Do you want to automatically run tests when the app starts?
-            nunit.AutoRun = true;
+                // Do you want to automatically run tests when the app starts?
+                nunit.AutoRun = false;
 
-            LoadApplication(nunit);
+                LoadApplication(nunit);
+            }
         }
     }
 }

@@ -210,7 +210,6 @@ namespace SvgW3CTestRunner.Droid
                         using (SvgDocument doc = SvgDocument.Open<SvgDocument>(src))
                         using (var bitmap = Android.Graphics.Bitmap.CreateBitmap(width, height, Android.Graphics.Bitmap.Config.Argb8888))
                         {
-                            var canvas = new Canvas();
                             try
                             {
                                 using (var surface = SKSurface.Create(width, height, SKColorType.Rgba_8888, SKAlphaType.Premul, bitmap.LockPixels(), width * 4))
@@ -222,7 +221,6 @@ namespace SvgW3CTestRunner.Droid
                             {
                                 bitmap.UnlockPixels();
                             }
-                            canvas.DrawBitmap(bitmap, 0, 0, null);
                             ivSvg.SetImageBitmap(bitmap);
                         }
 #endif

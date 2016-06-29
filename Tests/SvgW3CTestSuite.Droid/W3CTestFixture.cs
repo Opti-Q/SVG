@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Android.Graphics;
 using NUnit.Framework;
 using Plugin.Toasts;
 using SkiaSharp;
 using Svg;
 using Svg.Platform;
 using Xamarin.Forms;
-using Bitmap = Android.Graphics.Bitmap;
-using Color = Android.Graphics.Color;
 
 
 namespace SvgW3CTestSuite.Droid
@@ -40,10 +37,12 @@ namespace SvgW3CTestSuite.Droid
                 using (var svgBitmap = RenderSvg(svgPath, width, height))
                 {
                     // Assert
-                    using (var pngStream = FileSourceProvider(pngPath).GetStream())
-                    using (var png = BitmapFactory.DecodeStream(pngStream))
+                    SKBitmap pngBitmap = new SKBitmap();
+                    using (var pngStream = new SKManagedStream(FileSourceProvider(pngPath).GetStream()))
                     {
-                        using (var c = ImageCompare(svgBitmap, png))
+                        SKImageDecoder.DecodeStream(pngStream, pngBitmap);
+                        using (pngBitmap)
+                        using (var c = ImageCompare(svgBitmap, pngBitmap))
                         {
                             Assert.GreaterOrEqual(c.Similarity, 90, $"{svgPath}");
                         }
@@ -114,71 +113,81 @@ namespace SvgW3CTestSuite.Droid
             });
         }
 
-        private static Android.Graphics.Bitmap RenderSvg(string svgPath, int width, int height)
+        private static SKBitmap RenderSvg(string svgPath, int width, int height)
         {
             var src = FileSourceProvider(svgPath);
 
             var bitmap = Android.Graphics.Bitmap.CreateBitmap(width, height, Android.Graphics.Bitmap.Config.Argb8888);
             using (SvgDocument doc = SvgDocument.Open<SvgDocument>(src))
             {
-                var canvas = new Canvas();
                 try
                 {
                     using (var surface = SKSurface.Create(width, height, SKColorType.Rgba_8888, SKAlphaType.Premul, bitmap.LockPixels(), width * 4))
                     {
                         doc.Draw(SvgRenderer.FromGraphics(new SkiaGraphics(surface)));
+                        var img = surface.Snapshot();
+
+                        using (var s = new SKManagedStream(img.Encode().AsStream()))
+                        {
+                            SKBitmap b = new SKBitmap();
+                            SKImageDecoder.DecodeStream(s, b);
+                            return b;
+                        }
                     }
                 }
                 finally
                 {
                     bitmap.UnlockPixels();
                 }
-                canvas.DrawBitmap(bitmap, 0, 0, null);
             }
-            return bitmap;
         }
 
-        private static ImageCompareResult ImageCompare(Android.Graphics.Bitmap i1, Android.Graphics.Bitmap i2)
+        private static ImageCompareResult ImageCompare(SKBitmap i1, SKBitmap i2)
         {
             float correctPixel = 0;
             float pixelAmount = i1.Height * i1.Width;
-            var bitmap = Android.Graphics.Bitmap.CreateBitmap(i1.Width, i1.Height, Android.Graphics.Bitmap.Config.Rgb565);
-            bitmap.EraseColor(Color.Red);
+            //var bitmap = Android.Graphics.Bitmap.CreateBitmap(i1.Width, i1.Height, Android.Graphics.Bitmap.Config.Rgb565);
+            //bitmap.EraseColor(Color.Red);
 
             for (var y = 0; y < i1.Height; ++y)
             {
                 for (var x = 0; x < i1.Width; ++x)
                 {
-                    if (i1.GetPixel(x, y) == i2.GetPixel(x, y))
+                    var c1 = i1.GetPixel(x, y);
+                    var c2 = i2.GetPixel(x, y);
+
+                    if (object.Equals(c1.Alpha, c2.Alpha) &&
+                        object.Equals(c1.Green, c2.Green) &&
+                        object.Equals(c1.Blue, c2.Blue) &&
+                        object.Equals(c1.Red, c2.Red))
                     {
-                        if (Color.GetAlphaComponent(i1.GetPixel(x, y)) != 0) // if pixel has alpha
+                        if (c1.Alpha != 0) // if pixel has alpha
                         {
                             pixelAmount--;
-                            bitmap.SetPixel(x, y, Color.White);
+                            //bitmap.SetPixel(x, y, Color.White);
                         }
                         else
                         {
                             correctPixel++;
-                            bitmap.SetPixel(x, y, Color.White);
+                            //bitmap.SetPixel(x, y, Color.White);
                         }
                     }
                 }
             }
 
-            return new ImageCompareResult((correctPixel / pixelAmount) * 100, bitmap);
+            return new ImageCompareResult((correctPixel / pixelAmount) * 100, /*bitmap*/null);
         }
 
         private class ImageCompareResult : IDisposable
         {
-            public ImageCompareResult(float similarity, Bitmap heatmap)
+            public ImageCompareResult(float similarity, SKBitmap heatmap)
             {
-                if (heatmap == null) throw new ArgumentNullException(nameof(heatmap));
                 Similarity = similarity;
                 Heatmap = heatmap;
             }
 
             public float Similarity { get; private set; }
-            public Android.Graphics.Bitmap Heatmap { get; private set; }
+            public SKBitmap Heatmap { get; private set; }
             public void Dispose()
             {
                 Heatmap?.Dispose();
