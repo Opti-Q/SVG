@@ -83,8 +83,14 @@ namespace Svg.Platform
 
         public SKMatrix Matrix => _m;
 
-        public override void Dispose()
+        public override bool IsIdentity
         {
+            get
+            {
+                return _m.ScaleX == 1f && _m.SkewX == 0f && _m.TransX == 0f &&
+                       _m.SkewY == 0f && _m.ScaleY == 1f && _m.TransY == 0f &&
+                       _m.Persp0 == 0f && _m.Persp1 == 0f && _m.Persp2 == 1f;
+            }
         }
 
         public override void Invert()
@@ -236,21 +242,17 @@ namespace Svg.Platform
                 _m = Multiply(mr, _m);
         }
 
-        public override bool IsIdentity
-        {
-            get
-            {
-                return _m.ScaleX == 1f && _m.SkewX == 0f && _m.TransX == 0f  &&
-                       _m.SkewY == 0f && _m.ScaleY == 1f && _m.TransY == 0f &&
-                       _m.Persp0 == 0f && _m.Persp1 == 0f && _m.Persp2 == 1f;
-            }
-        }
-
         public override void Rotate(float fAngle)
         {
             Rotate(fAngle, MatrixOrder.Prepend);
         }
 
+        public override void Shear(float f, float f1)
+        {
+            var m = SKMatrix.MakeSkew(f, f1);
+
+            _m = CreateMatrix(Multiply(GetElements(m), GetElements(_m)));
+        }
 
         public override RectangleF TransformRectangle(RectangleF bound)
         {
@@ -284,12 +286,7 @@ namespace Svg.Platform
                 point.Y = (_m.SkewY*point.Y) + (_m.ScaleY*point.Y) + _m.TransY;
             }
         }
-
-        public override Matrix Clone()
-        {
-            return new SkiaMatrix(_m);
-        }
-
+        
         public override float[] Elements
         {
             get
@@ -329,13 +326,7 @@ namespace Svg.Platform
         {
             get { return _m.ScaleY; }
         }
-        
-        public override void Shear(float f, float f1)
-        {
-            var m = SKMatrix.MakeSkew(f, f1);
 
-            _m = CreateMatrix(Multiply(GetElements(m), GetElements(_m)));
-        }
         private static float[] GetElements(SKMatrix m)
         {
             return new float[9]
@@ -373,11 +364,6 @@ namespace Svg.Platform
             return Math.PI * angle / 180.0;
         }
 
-        //private static double RadianToDegree(double angle)
-        //{
-        //    return angle * (180.0 / Math.PI);
-        //}
-
         private SKMatrix Multiply(SKMatrix m1, SKMatrix m2)
         {
             return CreateMatrix(Multiply(GetElements(m1), GetElements(m2)));
@@ -393,5 +379,13 @@ namespace Svg.Platform
             return other.Matrix;
         }
 
+        public override Matrix Clone()
+        {
+            return new SkiaMatrix(_m);
+        }
+
+        public override void Dispose()
+        {
+        }
     }
 }
