@@ -26,13 +26,13 @@ namespace SvgW3CTestSuite.Droid
                 var fileName = System.IO.Path.GetFileNameWithoutExtension(svgPath)+".png";
                 return System.IO.Path.Combine("png", fileName);
             };
-            TestsSample.SvgTestCases = svgFiles.Select(path => new object[]
+            W3CTestFixture.SvgTestCases = svgFiles.Select(path => new object[]
                                                 {
                                                     System.IO.Path.Combine("svg", path),
                                                     getPngPath(path)
                                                 })
                                                 .ToArray();
-            TestsSample.FileSourceProvider = (path) => new SvgAssetSource(path, Assets);
+            W3CTestFixture.FileSourceProvider = (path) => new SvgAssetSource(path, Assets);
 
             // tests can be inside the main assembly
             //AddTest(Assembly.GetExecutingAssembly());

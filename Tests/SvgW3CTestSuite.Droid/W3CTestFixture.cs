@@ -15,7 +15,7 @@ using Color = Android.Graphics.Color;
 namespace SvgW3CTestSuite.Droid
 {
     [TestFixture]
-    public class TestsSample
+    public class W3CTestFixture
     {
         [SetUp]
         public void Setup()
