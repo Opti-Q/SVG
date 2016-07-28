@@ -18,6 +18,8 @@ namespace Svg
         private Pen _strokePen;
         private Brush _strokeBrush;
         private Brush _fillBrush;
+        private PointF[] _boundingPoints;
+        private RectangleF _boundingBox;
 
         /// <summary>
         /// Gets the <see cref="GraphicsPath"/> for this element.
@@ -44,36 +46,46 @@ namespace Svg
         /// Gets the bounds of the element.
         /// </summary>
         /// <value>The bounds.</value>
-        public abstract RectangleF Bounds { get; }
-
-
-        /// <summary>
-        /// Returns the bounding rectangle transformed by the render matrix
-        /// or: return the bounds that this item had when it was last rendered
-        /// If the render transform is identity matrix, it returns the Bounds property
-        /// </summary>
-        public RectangleF RenderBounds
+        public virtual RectangleF Bounds
         {
             get
             {
-                // return cached bounds
-                if (_renderBounds != null)
-                    return _renderBounds;
+                if (Renderable)
+                {
+                    return this.Path(null).GetBounds();
+                }
+                else
+                {
+                    var r = Engine.Factory.CreateRectangleF();
+                    foreach (var c in this.Children.OfType<SvgVisualElement>())
+                    {
+                        // First it should check if rectangle is empty or it will return the wrong Bounds.
+                        // This is because when the Rectangle is Empty, the Union method adds as if the first values where X=0, Y=0
+                        if (r.IsEmpty)
+                        {
+                            r = ((SvgVisualElement)c).Bounds;
+                        }
+                        else
+                        {
+                            var childBounds = ((SvgVisualElement)c).Bounds;
+                            if (!childBounds.IsEmpty)
+                            {
+                                r = r.UnionAndCopy(childBounds);
+                            }
+                        }
+                    }
 
-                if (RenderTransform == null || RenderTransform.IsIdentity)
-                    return this.Bounds;
-
-                var b = this.Bounds;
-                
-                _renderBounds = RenderTransform.TransformRectangle(b);
-
-                return _renderBounds;
+                    return r;
+                }
             }
-            protected set { _renderBounds = value; }
         }
-
-        public PointF[] GetTransformedBounds()
+        
+        public PointF[] GetTransformedPoints()
         {
+            // use cached values if possible
+            if (_boundingPoints != null)
+                return _boundingPoints.Select(p => p.Clone()).ToArray();
+
             if (Renderable)
             {
                 var b = Bounds;
@@ -85,8 +97,7 @@ namespace Svg
                 var pts = new[] {p1, p2, p3, p4};
 
                 Transforms?.GetMatrix().TransformPoints(pts);
-
-                return pts;
+                _boundingPoints = pts;
             }
             else
             {
@@ -96,21 +107,31 @@ namespace Svg
                 {
                     if (c is SvgVisualElement)
                     {                        
-                        var childBounds = ((SvgVisualElement)c).GetTransformedBounds();
+                        var childBounds = ((SvgVisualElement)c).GetTransformedPoints();
                         pts.AddRange(childBounds);
                     }
                 }
-                var arr = pts.ToArray();
+                var temp = pts.ToArray();
 
-                Transforms?.GetMatrix().TransformPoints(arr);
-
-                return arr;
+                Transforms?.GetMatrix().TransformPoints(temp);
+                _boundingPoints = temp;
             }
+
+            return _boundingPoints.Select(p => p.Clone()).ToArray();
         }
 
-        public RectangleF GetBoundingBox()
+        public RectangleF GetBoundingBox(Matrix transform = null)
         {
-            return RectangleF.FromPoints(GetTransformedBounds());
+            var pts = GetTransformedPoints();
+
+            if (_boundingBox == null)
+                _boundingBox = RectangleF.FromPoints(pts);
+
+            if(transform == null || transform.IsIdentity)
+                return _boundingBox;
+
+            transform?.TransformPoints(pts);
+            return RectangleF.FromPoints(pts);
         }
 
         /// <summary>
@@ -178,7 +199,6 @@ namespace Svg
         /// <param name="renderer">The <see cref="ISvgRenderer"/> object to render to.</param>
         protected override void Render(ISvgRenderer renderer)
         {
-            RenderBounds = null; // clear render bounds on each render attempt
             this.Render(renderer, true);
         }
 
@@ -454,6 +474,15 @@ namespace Svg
         private Brush GetFillBrush(ISvgRenderer renderer)
         {
             return _fillBrush ?? (_fillBrush = this.Fill.GetBrush(this, renderer, Math.Min(Math.Max(this.FillOpacity * this.Opacity, 0), 1)));
+        }
+
+        protected override void OnSubTreeChanged(SvgElement svgElement)
+        {
+            // clear cached bounding boxes etc.
+            _boundingBox = null;
+            _boundingPoints = null;
+
+            base.OnSubTreeChanged(svgElement);
         }
 
         public override void Dispose()

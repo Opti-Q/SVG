@@ -244,7 +244,7 @@ namespace Svg.Core
             foreach (var child in children.Reverse())
             {
                 // get its transformed boundingbox (renderbounds)
-                var renderBounds = child.RenderBounds;
+                var renderBounds = child.GetBoundingBox(GetCanvasTransformationMatrix());
 
                 // then check if it intersects with selectionrectangle
                 if (selectionType == SelectionType.Intersect && selectionRectangle.IntersectsWith(renderBounds))
@@ -288,6 +288,14 @@ namespace Svg.Core
             Document.Children.Add(element);
 
             FireInvalidateCanvas();
+        }
+
+        public Matrix GetCanvasTransformationMatrix()
+        {
+            var m1 = Engine.Factory.CreateMatrix();
+            m1.Scale(ZoomFactor, ZoomFactor);
+            m1.Translate(Translate.X, Translate.Y);
+            return m1;
         }
 
         /// <summary>

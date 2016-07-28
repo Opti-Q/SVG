@@ -229,5 +229,10 @@ namespace Svg.Interfaces
         }
 
         public string DebuggerDisplay => $"{X} {Y}";
+
+        public PointF Clone()
+        {
+            return Engine.Factory.CreatePointF(this.X, this.Y);
+        }
     }
 }

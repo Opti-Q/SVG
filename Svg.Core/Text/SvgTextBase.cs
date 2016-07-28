@@ -263,8 +263,6 @@ namespace Svg
         /// <remarks>Necessary to make sure that any internal tspan elements get rendered as well</remarks>
         protected override void Render(ISvgRenderer renderer)
         {
-            RenderBounds = null; // clear render bounds on each render attempt
-
             if (this.Visible && this.Displayable && (_alternativeTextRenderer != null || this.Path(renderer) != null))
             {
                 this.PushTransforms(renderer);

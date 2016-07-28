@@ -301,12 +301,10 @@ namespace Svg
             // Return if there are no transforms
             if (this.Transforms == null || this.Transforms.Count == 0)
             {
-                RenderTransform = renderer.Transform.Clone();
                 return true;
             }
             if (this.Transforms.Count == 1 && this.Transforms[0].Matrix.Equals(_zeroMatrix))
             {
-                RenderTransform = renderer.Transform.Clone();
                 return false;
             }
             
@@ -318,17 +316,9 @@ namespace Svg
             {
                 transformation.ApplyTo(renderer);
             }
-
-            RenderTransform = renderer.Transform.Clone();
-
+            
             return true;
         }
-
-        /// <summary>
-        /// Gets the transformation that was active, when this element has been rendered
-        /// can be used to transform the bounding rectangle in order to do proper hittesting
-        /// </summary>
-        public Matrix RenderTransform { get; private set; }
         
         /// <summary>
         /// Removes any previously applied transforms from the specified <see cref="ISvgRenderer"/>.
@@ -466,6 +456,8 @@ namespace Svg
             }
 
             ChildAdded?.Invoke(this, new ChildAddedEventArgs { NewChild = child, BeforeSibling = sibling });
+
+            OnSubTreeChanged(this);
         }
 
         /// <summary>
@@ -489,6 +481,8 @@ namespace Svg
 
             
             ChildRemoved?.Invoke(this, new ChildRemovedEventArgs { RemovedChild = child});
+
+            OnSubTreeChanged(this);
         }
 
         /// <summary>
@@ -900,10 +894,9 @@ namespace Svg
 		protected void OnAttributeChanged(AttributeEventArgs args)
 		{
 			var handler = AttributeChanged;
-			if(handler != null)
-			{
-				handler(this, args);
-			}
+		    handler?.Invoke(this, args);
+
+		    OnSubTreeChanged(this);
 		}
 
 		/// <summary>
@@ -914,11 +907,17 @@ namespace Svg
 		protected void OnContentChanged(ContentEventArgs args)
 		{
 			var handler = ContentChanged;
-			if(handler != null)
-			{
-				handler(this, args);
-			}
+		    handler?.Invoke(this, args);
 		}
+
+        /// <summary>
+        /// called whenever some sub-element was added/removed or an attribute was changed
+        /// </summary>
+        /// <param name="svgElement"></param>
+        protected virtual void OnSubTreeChanged(SvgElement svgElement)
+        {
+            Parent?.OnSubTreeChanged(svgElement);
+        }
 
         #region graphical EVENTS
 

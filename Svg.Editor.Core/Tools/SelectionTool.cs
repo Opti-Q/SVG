@@ -169,51 +169,38 @@ namespace Svg.Core.Tools
             }
 
 
-            // for debugging: draws green line around all selectable elements
-            foreach (var element in ws.Document.Children.OfType<SvgVisualElement>())
-            {
-                renderer.Graphics.Save();
+            //// for debugging: connects all element points with a red line (clockwise)
+            //foreach (var element in ws.Document.Children.OfType<SvgVisualElement>())
+            //{
+            //    renderer.Graphics.Save();
 
-                var bds = element.GetTransformedBounds();
+            //    var bds = element.GetTransformedPoints();
+            //    renderer.DrawPolygon(bds, RedPen);
+            //    renderer.Graphics.Restore();
+            //}
 
-                renderer.DrawPolygon(bds, RedPen);
+            //// for debugging: draws green line around all selectable elements
+            //foreach (var element in ws.Document.Children.OfType<SvgVisualElement>())
+            //{
+            //    renderer.Graphics.Save();
+            //    var m = renderer.Graphics.Transform.Clone();
+            //    m.Invert();
+            //    renderer.Graphics.Concat(m);
 
-                var bb = element.GetBoundingBox();
-                //renderer.DrawRectangle(bb, GreenPen);
+            //    var box = element.GetBoundingBox(ws.GetCanvasTransformationMatrix());
 
-                renderer.Graphics.Restore();
-            }
-
-            // for debugging: draws green line around all selectable elements
-            foreach (var element in ws.Document.Children.OfType<SvgVisualElement>())
-            {
-                renderer.Graphics.Save();
-                var m = renderer.Graphics.Transform.Clone();
-                m.Invert();
-                renderer.Graphics.Concat(m);
-
-                var bb = element.GetTransformedBounds();
-
-                var m1 = Engine.Factory.CreateMatrix();
-                m1.Scale(ws.ZoomFactor, ws.ZoomFactor);
-                m1.Translate(ws.Translate.X, ws.Translate.Y);
-                m1.TransformPoints(bb);
-                var box = RectangleF.FromPoints(bb);
-
-                renderer.DrawRectangle(box, GreenPen);
-                renderer.Graphics.Restore();
-            }
+            //    renderer.DrawRectangle(box, GreenPen);
+            //    renderer.Graphics.Restore();
+            //}
 
             // we draw the selection boundingboxes of all selected elements
             foreach (var element in ws.SelectedElements)
             {
                 renderer.Graphics.Save();
-                
+
                 // we draw a selection adorner around all elements
-                // as the canvas is already translated, we do not need to use the renderbounds, but the bounds themselves
-                var m = element.Transforms.GetMatrix();
-                var b = m.TransformRectangle(element.Bounds);
-                renderer.DrawRectangle(b, BluePen);
+                // as the canvas is already translated and scaled, we just need the plaing boundingbox (as poopsed to transformed one using element.GetBoundingBox(ws.GetCanvasTransformationMatrix()))
+                renderer.DrawRectangle(element.GetBoundingBox(), BluePen);
 
                 renderer.Graphics.Restore();
             }
