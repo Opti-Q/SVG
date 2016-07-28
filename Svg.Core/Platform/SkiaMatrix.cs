@@ -270,20 +270,37 @@ namespace Svg.Platform
 
             foreach (var point in points)
             {
-                // see http://math.stackexchange.com/questions/29257/find-2d-point-given-2d-point-and-transformation-matrix
-                // transformvectors needs to IGNORE the translation! (see: http://stackoverflow.com/questions/3265169/matrix-transformpoints-vs-transformvectors)
-                point.X = (_m.ScaleX * point.X) + (_m.SkewX * point.X); // + _m.TransX;
-                point.Y = (_m.SkewY * point.Y) + (_m.ScaleY * point.Y); // + _m.TransY;
+                //// see http://math.stackexchange.com/questions/29257/find-2d-point-given-2d-point-and-transformation-matrix
+                //// transformvectors needs to IGNORE the translation! (see: http://stackoverflow.com/questions/3265169/matrix-transformpoints-vs-transformvectors)
+                //point.X = (_m.ScaleX * point.X) + (_m.SkewX * point.X); // + _m.TransX;
+                //point.Y = (_m.SkewY * point.Y) + (_m.ScaleY * point.Y); // + _m.TransY;
+
+
+                // see http://referencesource.microsoft.com/#WindowsBase/Base/System/Windows/Media/Matrix.cs,e4b18483d8c1404d
+                float xadd = point.Y * _m.SkewY /*+ _m.TransX*/;
+                float yadd = point.X * _m.SkewX /*+ _m.TransY*/;
+                point.X *= _m.ScaleX;
+                point.X += xadd;
+                point.Y *= _m.ScaleY;
+                point.Y += yadd;
             }
         }
 
         public override void TransformPoints(PointF[] points)
         {
             foreach (var point in points)
-            { 
-                // see http://math.stackexchange.com/questions/29257/find-2d-point-given-2d-point-and-transformation-matrix
-                point.X = (_m.ScaleX*point.X) + (_m.SkewX*point.X) + _m.TransX;
-                point.Y = (_m.SkewY*point.Y) + (_m.ScaleY*point.Y) + _m.TransY;
+            {
+                //// see http://math.stackexchange.com/questions/29257/find-2d-point-given-2d-point-and-transformation-matrix
+                //point.X = (_m.ScaleX*point.X) + (_m.SkewX*point.X) + _m.TransX;
+                //point.Y = (_m.SkewY*point.Y) + (_m.ScaleY*point.Y) + _m.TransY;
+
+                // see http://referencesource.microsoft.com/#WindowsBase/Base/System/Windows/Media/Matrix.cs,e4b18483d8c1404d
+                float xadd = point.Y * _m.SkewY + _m.TransX;
+                float yadd = point.X * _m.SkewX + _m.TransY;
+                point.X *= _m.ScaleX;
+                point.X += xadd;
+                point.Y *= _m.ScaleY;
+                point.Y += yadd;
             }
         }
         

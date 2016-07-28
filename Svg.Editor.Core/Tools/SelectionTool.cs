@@ -168,7 +168,27 @@ namespace Svg.Core.Tools
                 renderer.Graphics.Restore();
             }
 
+
             // for debugging: draws green line around all selectable elements
+            foreach (var element in ws.Document.Children.OfType<SvgVisualElement>())
+            {
+                renderer.Graphics.Save();
+
+                var bds = element.GetTransformedBounds();
+
+                for (int i = 1; i < bds.Length; i++)
+                {
+                    renderer.DrawLine(bds[i-1].X, bds[i-1].Y, bds[i].X, bds[i].Y, RedPen);
+                }
+                renderer.DrawLine(bds[bds.Length-1].X, bds[bds.Length - 1].Y, bds[0].X, bds[0].Y, RedPen);
+
+                var bb = element.GetBoundingBox();
+                renderer.DrawRectangle(bb, GreenPen);
+
+                renderer.Graphics.Restore();
+            }
+
+            //// for debugging: draws green line around all selectable elements
             //foreach (var element in ws.Document.Children.OfType<SvgVisualElement>())
             //{
             //    renderer.Graphics.Save();

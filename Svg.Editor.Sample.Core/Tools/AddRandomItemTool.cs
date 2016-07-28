@@ -28,9 +28,10 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     //var provider = SourceProvider("isolib/Valves/Valves/valve2.svg");
                     //var provider = SourceProvider("isolib/Valves/Valves/valve3.svg");
                     //var provider = SourceProvider("isolib/Valves/Valves/valve4.svg");
-                    var provider = SourceProvider("isolib/Reducers/solid/reducer1.svg");
+                    //var provider = SourceProvider("isolib/Reducers/solid/reducer1.svg");
                     //var provider = SourceProvider("isolib/Straights/solid and broken/solid1.svg");
                     //var provider = SourceProvider("svg/painting-control-01-f.svg");
+                    var provider = SourceProvider("svg/blind01.svg");
                     var otherDoc = SvgDocument.Open<SvgDocument>(provider);
                     var child = otherDoc.Children.OfType<SvgVisualElement>().First(e => e.Displayable && e.Visible);
                     var z = canvas.ZoomFactor;

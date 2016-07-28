@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Diagnostics;
 using System.Linq;
@@ -77,6 +78,47 @@ namespace Svg
                 return _renderBounds;
             }
             protected set { _renderBounds = value; }
+        }
+
+        public PointF[] GetTransformedBounds()
+        {
+            if (Renderable)
+            {
+                var b = Bounds;
+                var p1 = Engine.Factory.CreatePointF(b.Left, b.Top);
+                var p2 = Engine.Factory.CreatePointF(b.Right, b.Top);
+                var p3 = Engine.Factory.CreatePointF(b.Right, b.Bottom);
+                var p4 = Engine.Factory.CreatePointF(b.Left, b.Bottom);
+
+                var pts = new[] {p1, p2, p3, p4};
+
+                Transforms?.GetMatrix().TransformPoints(pts);
+
+                return pts;
+            }
+            else
+            {
+                var pts = new List<PointF>();
+                
+                foreach (var c in this.Children)
+                {
+                    if (c is SvgVisualElement)
+                    {                        
+                        var childBounds = ((SvgVisualElement)c).GetTransformedBounds();
+                        pts.AddRange(childBounds);
+                    }
+                }
+                var arr = pts.ToArray();
+
+                Transforms?.GetMatrix().TransformPoints(arr);
+
+                return arr;
+            }
+        }
+
+        public RectangleF GetBoundingBox()
+        {
+            return RectangleF.FromPoints(GetTransformedBounds());
         }
 
         /// <summary>

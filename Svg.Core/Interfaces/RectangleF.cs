@@ -36,6 +36,21 @@ namespace Svg.Interfaces
         }
 
         /// <summary>
+        /// Creates a rectangle that includes all points (bounding box)
+        /// </summary>
+        /// <param name="points"></param>
+        /// <returns></returns>
+        public static RectangleF FromPoints(PointF[] points)
+        {
+            var minX = points.Select(p => p.X).Min();
+            var minY = points.Select(p => p.Y).Min();
+            var maxX = points.Select(p => p.X).Max();
+            var maxY = points.Select(p => p.Y).Max();
+
+            return Engine.Factory.CreateRectangleF(minX, minY, maxX - minX, maxY - minY);
+        }
+
+        /// <summary>
         ///	Inflate Shared Method
         /// </summary>
         ///
