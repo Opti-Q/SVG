@@ -2,6 +2,7 @@ using Android.Graphics;
 using Svg.Core.Interfaces;
 using Svg.Interfaces;
 using Svg.Platform;
+using PointF = Svg.Interfaces.PointF;
 
 namespace Svg.Droid.Editor.Services
 {
@@ -53,6 +54,15 @@ namespace Svg.Droid.Editor.Services
         {
             var c = (AndroidColor) color;
             _canvas.DrawColor(c);
+        }
+
+        public void DrawPolygon(PointF[] points, Pen pen)
+        {
+            for (int i = 1; i < points.Length; i++)
+            {
+                DrawLine(points[i - 1].X, points[i - 1].Y, points[i].X, points[i].Y, pen);
+            }
+            DrawLine(points[points.Length - 1].X, points[points.Length - 1].Y, points[0].X, points[0].Y, pen);
         }
 
         public Graphics Graphics { get; }

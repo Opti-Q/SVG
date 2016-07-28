@@ -176,28 +176,33 @@ namespace Svg.Core.Tools
 
                 var bds = element.GetTransformedBounds();
 
-                for (int i = 1; i < bds.Length; i++)
-                {
-                    renderer.DrawLine(bds[i-1].X, bds[i-1].Y, bds[i].X, bds[i].Y, RedPen);
-                }
-                renderer.DrawLine(bds[bds.Length-1].X, bds[bds.Length - 1].Y, bds[0].X, bds[0].Y, RedPen);
+                renderer.DrawPolygon(bds, RedPen);
 
                 var bb = element.GetBoundingBox();
-                renderer.DrawRectangle(bb, GreenPen);
+                //renderer.DrawRectangle(bb, GreenPen);
 
                 renderer.Graphics.Restore();
             }
 
-            //// for debugging: draws green line around all selectable elements
-            //foreach (var element in ws.Document.Children.OfType<SvgVisualElement>())
-            //{
-            //    renderer.Graphics.Save();
-            //    var m = renderer.Graphics.Transform.Clone();
-            //    m.Invert();
-            //    renderer.Graphics.Concat(m);
-            //    renderer.DrawRectangle(element.RenderBounds, GreenPen);
-            //    renderer.Graphics.Restore();
-            //}
+            // for debugging: draws green line around all selectable elements
+            foreach (var element in ws.Document.Children.OfType<SvgVisualElement>())
+            {
+                renderer.Graphics.Save();
+                var m = renderer.Graphics.Transform.Clone();
+                m.Invert();
+                renderer.Graphics.Concat(m);
+
+                var bb = element.GetTransformedBounds();
+
+                var m1 = Engine.Factory.CreateMatrix();
+                m1.Scale(ws.ZoomFactor, ws.ZoomFactor);
+                m1.Translate(ws.Translate.X, ws.Translate.Y);
+                m1.TransformPoints(bb);
+                var box = RectangleF.FromPoints(bb);
+
+                renderer.DrawRectangle(box, GreenPen);
+                renderer.Graphics.Restore();
+            }
 
             // we draw the selection boundingboxes of all selected elements
             foreach (var element in ws.SelectedElements)

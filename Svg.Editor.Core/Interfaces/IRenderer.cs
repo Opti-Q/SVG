@@ -14,6 +14,7 @@ namespace Svg.Core.Interfaces
         void DrawRectangle(RectangleF rectangleF, Pen pen);
         void DrawPath(GraphicsPath path, Pen pen);
         void FillEntireCanvasWithColor(Svg.Interfaces.Color color);
+        void DrawPolygon(PointF[] points, Pen pen);
 
         Graphics Graphics { get; }
     }
