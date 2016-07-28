@@ -133,23 +133,20 @@ namespace Svg.Platform
 
         public void MoveTo(PointF start)
         {
-            _bounds = null;
-            Path.MoveTo(start.X, start.Y);
-            _points.Add(start);
-            _pathTypes.Add(1); // end point of line
+            var lp = GetLastPoint();
+            if (lp == null || lp != start)
+            {
+                _bounds = null;
+                Path.MoveTo(start.X, start.Y);
+                _points.Add(start);
+                _pathTypes.Add(1); // start point of line
+            }
         }
-
-
+        
         public void AddLine(PointF start, PointF end)
         {
             _bounds = null;
-            var lp = GetLastPoint();
-            if(lp == null || lp != start)
-            { 
-                Path.MoveTo(start.X, start.Y);
-                _points.Add(start);
-                _pathTypes.Add(1); // start of a line
-            }
+            MoveTo(start);
 
             Path.LineTo(end.X, end.Y);
             _points.Add(end);
@@ -229,9 +226,10 @@ namespace Svg.Platform
         public void AddBezier(PointF start, PointF point1, PointF point2, PointF point3)
         {
             _bounds = null;
-            Path.MoveTo(start.X, start.Y);
-            Path.CubicTo(point1.X, point1.Y, point2.X, point2.Y, point3.X, point3.Y);
 
+            MoveTo(start);
+            Path.CubicTo(point1.X, point1.Y, point2.X, point2.Y, point3.X, point3.Y);
+            
             _points.AddRange(new[] { start, point1, point2, point3 });
             _pathTypes.Add(1); // start point of line
             _pathTypes.Add(3); // control point of cubic bezier spline
@@ -242,7 +240,9 @@ namespace Svg.Platform
         public void AddBezier(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
         {
             _bounds = null;
-            Path.MoveTo(x1, y2);
+            var start = Engine.Factory.CreatePointF(x1, y1);
+
+            MoveTo(start);
             Path.CubicTo(x2, y2, x3, y3, x4, y4);
 
             _points.AddRange(new[] { Engine.Factory.CreatePointF(x1, y1), Engine.Factory.CreatePointF(x2, y2), Engine.Factory.CreatePointF(x3, y3), Engine.Factory.CreatePointF(x4, y4) });
@@ -294,8 +294,7 @@ namespace Svg.Platform
             _bounds = null;
             _path = new SKPath();
         }
-
-    
+        
         internal class TextInfo
         {
             public string text;

@@ -20,39 +20,8 @@ namespace Svg.Platform
 
             if (!textIsEmpty)
             {
-                if (txt.Fill != null)
-                {
-                    var brush = txt.Fill.GetBrush(txt, renderer, 1f);
-                    using (var pen = (SkiaPen) Engine.Factory.CreatePen(brush, 0f))
-                    {
-                        pen.TextSize = txt.FontSize.Value;
-                        pen.TextAlign = FromAnchor(txt.TextAnchor);
-
-                        var x = txt.X.Any() ? txt.X.FirstOrDefault().Value : 0f;
-                        var y = txt.Y.Any() ? txt.Y.FirstOrDefault().Value : 0f;
-
-                        pen.Paint.IsStroke = false;
-
-                        DrawLines(txt, renderer, x, y, pen);
-                    }
-                }
-
-                if (txt.Stroke != null)
-                {
-                    var brush = txt.Stroke.GetBrush(txt, renderer, 1f);
-                    using (var pen = (SkiaPen) Engine.Factory.CreatePen(brush, txt.StrokeWidth.Value))
-                    {
-                        pen.TextSize = txt.FontSize.Value;
-                        pen.TextAlign = FromAnchor(txt.TextAnchor);
-
-                        var x = txt.X.Any() ? txt.X.FirstOrDefault().Value : 0f;
-                        var y = txt.Y.Any() ? txt.Y.FirstOrDefault().Value : 0f;
-
-
-                        pen.Paint.IsStroke = true;
-                        DrawLines(txt, renderer, x, y, pen);
-                    }
-                }
+                RenderFill(txt, renderer);
+                RenderStroke(txt, renderer);
             }
 
             if (!hasNoChildren)
@@ -60,6 +29,46 @@ namespace Svg.Platform
                 // render children (text spans and the like)
                 foreach (var child in txt.Children.OfType<SvgTextBase>())
                     Render(child, renderer);
+            }
+        }
+
+        private void RenderStroke(SvgTextBase txt, ISvgRenderer renderer)
+        {
+            if (txt.Stroke != null)
+            {
+                var brush = txt.Stroke.GetBrush(txt, renderer, 1f);
+                using (var pen = (SkiaPen)Engine.Factory.CreatePen(brush, txt.StrokeWidth.Value))
+                {
+                    pen.TextSize = txt.FontSize.Value;
+                    pen.TextAlign = FromAnchor(txt.TextAnchor);
+
+                    var x = txt.X.Any() ? txt.X.FirstOrDefault().Value : 0f;
+                    var y = txt.Y.Any() ? txt.Y.FirstOrDefault().Value : 0f;
+
+
+                    pen.Paint.IsStroke = true;
+                    DrawLines(txt, renderer, x, y, pen);
+                }
+            }
+        }
+
+        private void RenderFill(SvgTextBase txt, ISvgRenderer renderer)
+        {
+            if (txt.Fill != null)
+            {
+                var brush = txt.Fill.GetBrush(txt, renderer, 1f);
+                using (var pen = (SkiaPen)Engine.Factory.CreatePen(brush, 0f))
+                {
+                    pen.TextSize = txt.FontSize.Value;
+                    pen.TextAlign = FromAnchor(txt.TextAnchor);
+
+                    var x = txt.X.Any() ? txt.X.FirstOrDefault().Value : 0f;
+                    var y = txt.Y.Any() ? txt.Y.FirstOrDefault().Value : 0f;
+
+                    pen.Paint.IsStroke = false;
+
+                    DrawLines(txt, renderer, x, y, pen);
+                }
             }
         }
 
