@@ -8,46 +8,59 @@ namespace Svg.Platform
     {
         public void Render(SvgTextBase txt, ISvgRenderer renderer)
         {
-            if (!txt.Visible || !txt.Displayable || string.IsNullOrEmpty(txt.Text))
+            if (!txt.Visible || !txt.Displayable)
+                return;
+
+            bool textIsEmpty = string.IsNullOrEmpty(txt.Text);
+            bool hasNoChildren = !txt.Children.OfType<SvgTextBase>().Any();
+
+            if (textIsEmpty && hasNoChildren)
                 return;
 
 
-            if(txt.Fill != null)
+            if (!textIsEmpty)
             {
-                var brush = txt.Fill.GetBrush(txt, renderer, 1f);
-                using (var pen = (SkiaPen)Engine.Factory.CreatePen(brush, 0f))
+                if (txt.Fill != null)
                 {
-                    pen.TextSize = txt.FontSize.Value;
-                    pen.TextAlign = FromAnchor(txt.TextAnchor);
+                    var brush = txt.Fill.GetBrush(txt, renderer, 1f);
+                    using (var pen = (SkiaPen) Engine.Factory.CreatePen(brush, 0f))
+                    {
+                        pen.TextSize = txt.FontSize.Value;
+                        pen.TextAlign = FromAnchor(txt.TextAnchor);
 
-                    var x = txt.X.Any() ? txt.X.FirstOrDefault().Value : 0f;
-                    var y = txt.Y.Any() ? txt.Y.FirstOrDefault().Value : 0f;
+                        var x = txt.X.Any() ? txt.X.FirstOrDefault().Value : 0f;
+                        var y = txt.Y.Any() ? txt.Y.FirstOrDefault().Value : 0f;
 
-                    pen.Paint.IsStroke = false;
+                        pen.Paint.IsStroke = false;
+
+                        DrawLines(txt, renderer, x, y, pen);
+                    }
+                }
+
+                if (txt.Stroke != null)
+                {
+                    var brush = txt.Stroke.GetBrush(txt, renderer, 1f);
+                    using (var pen = (SkiaPen) Engine.Factory.CreatePen(brush, txt.StrokeWidth.Value))
+                    {
+                        pen.TextSize = txt.FontSize.Value;
+                        pen.TextAlign = FromAnchor(txt.TextAnchor);
+
+                        var x = txt.X.Any() ? txt.X.FirstOrDefault().Value : 0f;
+                        var y = txt.Y.Any() ? txt.Y.FirstOrDefault().Value : 0f;
 
 
-
-                    DrawLines(txt, renderer, x, y, pen);
+                        pen.Paint.IsStroke = true;
+                        DrawLines(txt, renderer, x, y, pen);
+                    }
                 }
             }
 
-            if (txt.Stroke != null)
+            if (!hasNoChildren)
             {
-                var brush = txt.Stroke.GetBrush(txt, renderer, 1f);
-                using (var pen = (SkiaPen)Engine.Factory.CreatePen(brush, txt.StrokeWidth.Value))
-                {
-                    pen.TextSize = txt.FontSize.Value;
-                    pen.TextAlign = FromAnchor(txt.TextAnchor);
-
-                    var x = txt.X.Any() ? txt.X.FirstOrDefault().Value : 0f;
-                    var y = txt.Y.Any() ? txt.Y.FirstOrDefault().Value : 0f;
-
-
-                    pen.Paint.IsStroke = true;
-                    DrawLines(txt, renderer, x, y, pen);
-                }
+                // render children (text spans and the like)
+                foreach (var child in txt.Children.OfType<SvgTextBase>())
+                    Render(child, renderer);
             }
-
         }
 
         private static void DrawLines(SvgTextBase txt, ISvgRenderer renderer, float x, float y, SkiaPen pen)
@@ -63,48 +76,76 @@ namespace Svg.Platform
 
         public RectangleF GetBounds(SvgTextBase txt, ISvgRenderer renderer)
         {
-            if (!txt.Visible || !txt.Displayable || string.IsNullOrEmpty(txt.Text))
+            if (!txt.Visible || !txt.Displayable)
                 return Engine.Factory.CreateRectangleF(0f, 0f, 0f, 0f);
 
-            var brush = txt.Fill.GetBrush(txt, renderer, 1f);
-            using (var pen = (SkiaPen)Engine.Factory.CreatePen(brush, txt.StrokeWidth.Value))
+            bool textIsEmpty = string.IsNullOrEmpty(txt.Text);
+            bool hasNoChildren = !txt.Children.OfType<SvgTextBase>().Any();
+
+            if (textIsEmpty && hasNoChildren)
+                return Engine.Factory.CreateRectangleF(0f, 0f, 0f, 0f);
+
+            if (!textIsEmpty)
             {
-                pen.TextSize = txt.FontSize.Value;
-                pen.TextAlign = FromAnchor(txt.TextAnchor);
-
-                var x = txt.X.Any() ? txt.X.FirstOrDefault().Value : 0f;
-                var y = txt.Y.Any() ? txt.Y.FirstOrDefault().Value : 0f;
-
-
-                float width = 0f;
-                float height = 0f;
-
-                SKRect firstLineRect = default(SKRect);
-                var lines = txt.Text.Split('\n');
-                var lineCount = lines.Length;
-
-                // as android does not know the sense of "lines", we need to split the text and measure ourselves
-                // see: http://stackoverflow.com/questions/6756975/draw-multi-line-text-to-canvas
-                foreach (var line in lines)
+                var brush = txt.Fill.GetBrush(txt, renderer, 1f);
+                using (var pen = (SkiaPen) Engine.Factory.CreatePen(brush, txt.StrokeWidth.Value))
                 {
-                    SKRect rect = new SKRect();
-                    pen.Paint.MeasureText(line, ref rect);
+                    pen.TextSize = txt.FontSize.Value;
+                    pen.TextAlign = FromAnchor(txt.TextAnchor);
 
-                    if (IsEmpty(rect))
-                        firstLineRect = rect;
+                    var x = txt.X.Any() ? txt.X.FirstOrDefault().Value : 0f;
+                    var y = txt.Y.Any() ? txt.Y.FirstOrDefault().Value : 0f;
 
-                    var w = rect.Right - rect.Left;
-                    if (width < w)
-                        width = w;
+                    float width = 0f;
+                    float height = 0f;
 
-                    var h = rect.Bottom - rect.Top;
-                    if (height < h)
-                        height = h;
+                    SKRect firstLineRect = default(SKRect);
+                    var lines = txt.Text.Split('\n');
+                    var lineCount = lines.Length;
+
+                    // as android does not know the sense of "lines", we need to split the text and measure ourselves
+                    // see: http://stackoverflow.com/questions/6756975/draw-multi-line-text-to-canvas
+                    foreach (var line in lines)
+                    {
+                        SKRect rect = new SKRect();
+                        pen.Paint.MeasureText(line, ref rect);
+
+                        if (IsEmpty(rect))
+                            firstLineRect = rect;
+
+                        var w = rect.Right - rect.Left;
+                        if (width < w)
+                            width = w;
+
+                        var h = rect.Bottom - rect.Top;
+                        if (height < h)
+                            height = h;
+                    }
+
+
+                    return Engine.Factory.CreateRectangleF(x + firstLineRect.Left, y + firstLineRect.Top, width,
+                        height*lineCount);
+                }
+            }
+            else if(!hasNoChildren)
+            {
+                RectangleF r = null;
+
+                foreach (var child in txt.Children.OfType<SvgTextBase>())
+                {
+                    var bounds = GetBounds(child, renderer);
+                    if (r == null)
+                        r = bounds;
+                    else
+                    {
+                        r = r.UnionAndCopy(bounds);
+                    }
                 }
 
-                
-                return Engine.Factory.CreateRectangleF(x + firstLineRect.Left, y + firstLineRect.Top, width, height * lineCount);
+                return r;
             }
+
+            return Engine.Factory.CreateRectangleF(0f, 0f, 0f, 0f);
         }
 
         private bool IsEmpty(SKRect rect)

@@ -28,13 +28,6 @@ namespace Svg.Core.Tools
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
-            //Commands = new List<IToolCommand>
-            //{
-            //    new ToolCommand(this, "Text", (obj) =>
-            //    {
-            //        this.IsActive = !this.IsActive;
-            //    })
-            //};
 
             this.IsActive = false;
 

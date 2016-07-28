@@ -54,6 +54,7 @@
     <Compile Include="Events\UserInputEvent.cs" />
     <Compile Include="Interfaces\IRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools\DebugTool.cs" />
     <Compile Include="Tools\GridTool.cs" />
     <Compile Include="Tools\ITool.cs" />
     <Compile Include="Tools\MoveTool.cs" />

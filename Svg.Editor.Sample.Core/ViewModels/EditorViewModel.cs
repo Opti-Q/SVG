@@ -26,7 +26,8 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
             
             Canvas.Tools.Add(new SaveTool(false));
             Canvas.Document = SvgDocument.Open<SvgDocument>(GetSource("svg/large_svg_01.svg"));
-            
+            Canvas.IsDebugEnabled = true;
+
         }
 
         private ISvgSource GetSource(string source)

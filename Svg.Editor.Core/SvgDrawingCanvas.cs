@@ -22,6 +22,7 @@ namespace Svg.Core
         private SvgDocument _document;
         private bool _initialized = false;
         private ITool _activeTool;
+        private bool _isDebugEnabled;
 
         public event EventHandler CanvasInvalidated;
         public event EventHandler ToolCommandsChanged;
@@ -123,6 +124,32 @@ namespace Svg.Core
         public int ScreenWidth { get; private set; }
 
         public int ScreenHeight { get; private set; }
+
+        /// <summary>
+        /// If enabled, adds a DebugTool that brings some helpful visualizations
+        /// </summary>
+        public bool IsDebugEnabled
+        {
+            get { return _isDebugEnabled; }
+            set
+            {
+                _isDebugEnabled = value;
+
+                if (_isDebugEnabled)
+                {
+                    var dt = Tools.OfType<DebugTool>().FirstOrDefault();
+                    if (dt == null)
+                        Tools.Add(new DebugTool());
+                }
+                else
+                {
+                    var dt = Tools.OfType<DebugTool>().FirstOrDefault();
+                    if (dt != null)
+                        Tools.Remove(dt);
+                }
+
+            }
+        }
 
         public ITool ActiveTool
         {
