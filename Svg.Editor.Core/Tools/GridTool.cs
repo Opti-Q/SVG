@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
@@ -386,7 +384,7 @@ namespace Svg.Core.Tools
                     absoluteDeltaY = 0 - diffY + deltaY;
                     if (_generalTranslation == null)
                     {
-                        _generalTranslation = Engine.Factory.CreatePointF(absoluteDeltaX, absoluteDeltaY);
+                        _generalTranslation = PointF.Create(absoluteDeltaX, absoluteDeltaY);
                     }
                 }
                 

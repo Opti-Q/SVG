@@ -21,7 +21,7 @@ namespace Svg
         {
             get
             {
-                return Engine.Factory.CreatePointF(X, Y);
+                return PointF.Create(X, Y);
             }
         }
 
@@ -39,7 +39,7 @@ namespace Svg
             {
                 var loc = ((ISvgBoundable) this).Location;
                 var siz = ((ISvgBoundable) this).Size;
-                return Engine.Factory.CreateRectangleF(loc.X, loc.Y, siz.Width, siz.Height);
+                return RectangleF.Create(loc.X, loc.Y, siz.Width, siz.Height);
             }
         }
 
@@ -176,7 +176,7 @@ namespace Svg
                     try
                     {
                         var size = (this.Parent == null ? renderer.GetBoundable().Bounds.Size : GetDimensions());
-                        var clip = Engine.Factory.CreateRectangleF(this.X.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this),
+                        var clip = RectangleF.Create(this.X.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this),
                                                   this.Y.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this),
                                                   size.Width, size.Height);
                         renderer.SetClip(new Region(clip), CombineMode.Intersect);
@@ -221,7 +221,7 @@ namespace Svg
         {
             get
             {
-                var r = Engine.Factory.CreateRectangleF();
+                var r = RectangleF.Create();
                 foreach (var c in this.Children)
                 {
                     if (c is SvgVisualElement)
@@ -266,12 +266,12 @@ namespace Svg
             var isWidthperc = Width.Type == SvgUnitType.Percentage;
             var isHeightperc = Height.Type == SvgUnitType.Percentage;
 
-            RectangleF bounds = Engine.Factory.CreateRectangleF();
+            RectangleF bounds = RectangleF.Create();
             if (isWidthperc || isHeightperc)
             {
                 if (ViewBox.Width > 0 && ViewBox.Height > 0)
                 {
-                    bounds = Engine.Factory.CreateRectangleF(ViewBox.MinX, ViewBox.MinY, ViewBox.Width, ViewBox.Height);
+                    bounds = RectangleF.Create(ViewBox.MinX, ViewBox.MinY, ViewBox.Width, ViewBox.Height);
                 }
                 else
                 {
@@ -296,7 +296,7 @@ namespace Svg
                 h = Height.ToDeviceValue(null, UnitRenderingType.Vertical, this);
             }
 
-            return Engine.Factory.CreateSizeF(w, h);
+            return SizeF.Create(w, h);
         }
 
         public override SvgElement DeepCopy()

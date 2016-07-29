@@ -91,7 +91,7 @@ namespace Svg.Core.Tools
                         PointF previousDelta;
                         if (!_offsets.TryGetValue(element, out previousDelta))
                         {
-                            previousDelta = Engine.Factory.CreatePointF(0f, 0f);
+                            previousDelta = PointF.Create(0f, 0f);
                         }
                         
                         var relativeDeltaX = absoluteDeltaX - previousDelta.X;
@@ -138,23 +138,23 @@ namespace Svg.Core.Tools
             if (!_translates.TryGetValue(element, out previousTranslate))
             {
                 if (trans != null)
-                    previousTranslate = Engine.Factory.CreatePointF(trans.X, trans.Y);
+                    previousTranslate = PointF.Create(trans.X, trans.Y);
                 else
-                    previousTranslate = Engine.Factory.CreatePointF(0f, 0f);
+                    previousTranslate = PointF.Create(0f, 0f);
             }
 
             var transforms = element.Transforms;
             if (trans == null)
             {
                 trans = new SvgTranslate(deltaX, deltaY);
-                _translates[element] = Engine.Factory.CreatePointF(deltaX, deltaY);
+                _translates[element] = PointF.Create(deltaX, deltaY);
 
                 transforms.Add(trans);
             }
             else
             {
                 var t = new SvgTranslate(previousTranslate.X + deltaX, previousTranslate.Y + deltaY);
-                _translates[element] = Engine.Factory.CreatePointF(t.X, t.Y);
+                _translates[element] = PointF.Create(t.X, t.Y);
 
                 transforms[index] = t; // we MUST explicitly set the transform so the "OnTransformChanged" event is fired!
             }

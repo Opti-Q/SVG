@@ -111,7 +111,7 @@ namespace Svg
 
                 using (var transform = EffectiveGradientTransform)
                 {
-                    var midPoint = Engine.Factory.CreatePointF((points[0].X + points[1].X) / 2, (points[0].Y + points[1].Y) / 2);
+                    var midPoint = PointF.Create((points[0].X + points[1].X) / 2, (points[0].Y + points[1].Y) / 2);
                     transform.Translate(bounds.X, bounds.Y, MatrixOrder.Prepend);
                     if (this.GradientUnits == SvgCoordinateUnits.ObjectBoundingBox)
                     {
@@ -126,7 +126,7 @@ namespace Svg
                 {
                     // Transform the normal line back to a line such that the gradient still starts in the correct corners, but
                     // has the proper normal vector based on the transforms.  If you work out the geometry, these formulas should work.
-                    var midPoint = Engine.Factory.CreatePointF((points[0].X + points[1].X) / 2, (points[0].Y + points[1].Y) / 2);
+                    var midPoint = PointF.Create((points[0].X + points[1].X) / 2, (points[0].Y + points[1].Y) / 2);
                     var dy = (points[1].Y - points[0].Y);
                     var dx = (points[1].X - points[0].X);
                     var x2 = points[0].X;
@@ -134,21 +134,21 @@ namespace Svg
 
                     if (Math.Round(dx, 4) == 0)
                     {
-                        points[0] = Engine.Factory.CreatePointF(midPoint.X + dy / 2 * bounds.Width / bounds.Height, midPoint.Y);
-                        points[1] = Engine.Factory.CreatePointF(midPoint.X - dy / 2 * bounds.Width / bounds.Height, midPoint.Y);
+                        points[0] = PointF.Create(midPoint.X + dy / 2 * bounds.Width / bounds.Height, midPoint.Y);
+                        points[1] = PointF.Create(midPoint.X - dy / 2 * bounds.Width / bounds.Height, midPoint.Y);
                     }
                     else if (Math.Round(dy, 4) == 0)
                     {
-                        points[0] = Engine.Factory.CreatePointF(midPoint.X, midPoint.Y - dx / 2 * bounds.Height / bounds.Width);
-                        points[1] = Engine.Factory.CreatePointF(midPoint.X, midPoint.Y + dx / 2 * bounds.Height / bounds.Width); ;
+                        points[0] = PointF.Create(midPoint.X, midPoint.Y - dx / 2 * bounds.Height / bounds.Width);
+                        points[1] = PointF.Create(midPoint.X, midPoint.Y + dx / 2 * bounds.Height / bounds.Width); ;
                     }
                     else
                     {
                         var startX = (float)((dy * dx * (midPoint.Y - y2) + Math.Pow(dx, 2) * midPoint.X + Math.Pow(dy, 2) * x2) /
                         (Math.Pow(dx, 2) + Math.Pow(dy, 2)));
                         var startY = dy * (startX - x2) / dx + y2;
-                        points[0] = Engine.Factory.CreatePointF(startX, startY);
-                        points[1] = Engine.Factory.CreatePointF(midPoint.X + (midPoint.X - startX), midPoint.Y + (midPoint.Y - startY));
+                        points[0] = PointF.Create(startX, startY);
+                        points[1] = PointF.Create(midPoint.X + (midPoint.X - startX), midPoint.Y + (midPoint.Y - startY));
                     }
                 }
 
@@ -249,8 +249,8 @@ namespace Svg
                 case SvgGradientSpreadMethod.Reflect:
                 case SvgGradientSpreadMethod.Repeat:
                     var specifiedLength = CalculateDistance(specifiedStart, specifiedEnd);
-                    var specifiedUnitVector = Engine.Factory.CreatePointF((specifiedEnd.X - specifiedStart.X) / (float)specifiedLength, (specifiedEnd.Y - specifiedStart.Y) / (float)specifiedLength);
-                    var oppUnitVector = Engine.Factory.CreatePointF(-specifiedUnitVector.X, -specifiedUnitVector.Y);
+                    var specifiedUnitVector = PointF.Create((specifiedEnd.X - specifiedStart.X) / (float)specifiedLength, (specifiedEnd.Y - specifiedStart.Y) / (float)specifiedLength);
+                    var oppUnitVector = PointF.Create(-specifiedUnitVector.X, -specifiedUnitVector.Y);
 
                     var startExtend = (float)(Math.Ceiling(CalculateDistance(effectiveStart, specifiedStart) / specifiedLength) * specifiedLength);
                     effectiveStart = MovePointAlongVector(specifiedStart, oppUnitVector, startExtend);
@@ -267,13 +267,13 @@ namespace Svg
             var results = new List<PointF>();
             if (Math.Round(Math.Abs(p1.Y - p2.Y), 4) == 0)
             {
-                results.Add(Engine.Factory.CreatePointF(bounds.Left, p1.Y));
-                results.Add(Engine.Factory.CreatePointF(bounds.Right, p1.Y));
+                results.Add(PointF.Create(bounds.Left, p1.Y));
+                results.Add(PointF.Create(bounds.Right, p1.Y));
             }
             else if (Math.Round(Math.Abs(p1.X - p2.X), 4) == 0)
             {
-                results.Add(Engine.Factory.CreatePointF(p1.X, bounds.Top));
-                results.Add(Engine.Factory.CreatePointF(p1.X, bounds.Bottom));
+                results.Add(PointF.Create(p1.X, bounds.Top));
+                results.Add(PointF.Create(p1.X, bounds.Bottom));
             }
             else
             {
@@ -285,9 +285,9 @@ namespace Svg
                 }
                 else
                 {
-                    candidate = Engine.Factory.CreatePointF(bounds.Left, (p2.Y - p1.Y) / (p2.X - p1.X) * (bounds.Left - p1.X) + p1.Y);
+                    candidate = PointF.Create(bounds.Left, (p2.Y - p1.Y) / (p2.X - p1.X) * (bounds.Left - p1.X) + p1.Y);
                     if (bounds.Top <= candidate.Y && candidate.Y <= bounds.Bottom) results.Add(candidate);
-                    candidate = Engine.Factory.CreatePointF(bounds.Right, (p2.Y - p1.Y) / (p2.X - p1.X) * (bounds.Right - p1.X) + p1.Y);
+                    candidate = PointF.Create(bounds.Right, (p2.Y - p1.Y) / (p2.X - p1.X) * (bounds.Right - p1.X) + p1.Y);
                     if (bounds.Top <= candidate.Y && candidate.Y <= bounds.Bottom) results.Add(candidate);
                 }
                 if ((p2.X == bounds.Left || p2.X == bounds.Right) && (p2.Y == bounds.Top || p2.Y == bounds.Bottom))
@@ -296,9 +296,9 @@ namespace Svg
                 }
                 else
                 {
-                    candidate = Engine.Factory.CreatePointF((bounds.Top - p1.Y) / (p2.Y - p1.Y) * (p2.X - p1.X) + p1.X, bounds.Top);
+                    candidate = PointF.Create((bounds.Top - p1.Y) / (p2.Y - p1.Y) * (p2.X - p1.X) + p1.X, bounds.Top);
                     if (bounds.Left <= candidate.X && candidate.X <= bounds.Right) results.Add(candidate);
-                    candidate = Engine.Factory.CreatePointF((bounds.Bottom - p1.Y) / (p2.Y - p1.Y) * (p2.X - p1.X) + p1.X, bounds.Bottom);
+                    candidate = PointF.Create((bounds.Bottom - p1.Y) / (p2.Y - p1.Y) * (p2.X - p1.X) + p1.X, bounds.Bottom);
                     if (bounds.Left <= candidate.X && candidate.X <= bounds.Right) results.Add(candidate);
                 }
             }
@@ -324,7 +324,7 @@ namespace Svg
             }
 
             var specifiedLength = CalculateDistance(specifiedStart, specifiedEnd);
-            var specifiedUnitVector = Engine.Factory.CreatePointF((specifiedEnd.X - specifiedStart.X) / (float)specifiedLength, (specifiedEnd.Y - specifiedStart.Y) / (float)specifiedLength);
+            var specifiedUnitVector = PointF.Create((specifiedEnd.X - specifiedStart.X) / (float)specifiedLength, (specifiedEnd.Y - specifiedStart.Y) / (float)specifiedLength);
 
             var effectiveLength = CalculateDistance(effectiveStart, effectiveEnd);
 
@@ -537,7 +537,7 @@ namespace Svg
                         Math.Round(Math.Min(other.Y1, other.Y2), precision) <= Math.Round(yi, precision) &&
                         Math.Round(yi, precision) <= Math.Round(Math.Max(other.Y1, other.Y2), precision))
                     {
-                        return Engine.Factory.CreatePointF((float)xi, (float)yi);
+                        return PointF.Create((float)xi, (float)yi);
                     }
                     else
                     {

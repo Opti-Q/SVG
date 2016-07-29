@@ -165,7 +165,7 @@ namespace Svg.FilterEffects
             using (var graphics = Engine.Factory.CreateGraphicsFromImage(sourceAlpha))
             {
 
-                graphics.DrawImage(source, Engine.Factory.CreateRectangleF(0, 0, source.Width, source.Height), 0, 0,
+                graphics.DrawImage(source, RectangleF.Create(0, 0, source.Width, source.Height), 0, 0,
                       source.Width, source.Height, GraphicsUnit.Pixel, attributes);
                 graphics.Save();
             }

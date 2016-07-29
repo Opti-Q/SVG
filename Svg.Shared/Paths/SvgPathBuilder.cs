@@ -193,7 +193,7 @@ namespace Svg
                 y = mirror.Y - dy;
             }
 
-            return Engine.Factory.CreatePointF(x, y);
+            return PointF.Create(x, y);
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace Svg
         /// <returns><see cref="PointF"/> that contains absolute coordinates.</returns>
         private static PointF ToAbsolute(float x, float y, SvgPathSegmentList segments, bool isRelativeX, bool isRelativeY)
         {
-            var point = Engine.Factory.CreatePointF(x, y);
+            var point = PointF.Create(x, y);
 
             if ((isRelativeX || isRelativeY) && segments.Count > 0)
             {

@@ -54,7 +54,7 @@ namespace Svg
                 {
                     for (int i = 0; (i + 1) < Points.Count; i += 2)
                     {
-                        PointF endPoint = Svg.Engine.Factory.CreatePointF(Points[i].ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
+                        PointF endPoint = PointF.Create(Points[i].ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
                                                      Points[i + 1].ToDeviceValue(renderer, UnitRenderingType.Vertical, this));
 
                         // TODO: Remove unrequired first line

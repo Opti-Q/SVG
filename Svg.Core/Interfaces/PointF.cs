@@ -14,6 +14,16 @@ namespace Svg.Interfaces
         // Private x and y coordinate fields.
         private float x, y;
 
+        public static PointF Create()
+        {
+            return Create(0f, 0f);
+        }
+
+        public static PointF Create(float x, float y)
+        {
+            return Engine.Factory.CreatePointF(x, y);
+        }
+
         // -----------------------
         // Public Shared Members
         // -----------------------
@@ -44,7 +54,7 @@ namespace Svg.Interfaces
 
 		public static PointF operator + (PointF pt, SizeF sz)
 		{
-			return Engine.Factory.CreatePointF(pt.X + sz.Width, pt.Y + sz.Height);
+			return PointF.Create(pt.X + sz.Width, pt.Y + sz.Height);
 		}
 
         /// <summary>
@@ -88,7 +98,7 @@ namespace Svg.Interfaces
 
 		public static PointF operator - (PointF pt, SizeF sz)
 		{
-			return Engine.Factory.CreatePointF(pt.X - sz.Width, pt.Y - sz.Height);
+			return PointF.Create(pt.X - sz.Width, pt.Y - sz.Height);
 		}
 
         // -----------------------
@@ -232,7 +242,7 @@ namespace Svg.Interfaces
 
         public PointF Clone()
         {
-            return Engine.Factory.CreatePointF(this.X, this.Y);
+            return PointF.Create(this.X, this.Y);
         }
     }
 }

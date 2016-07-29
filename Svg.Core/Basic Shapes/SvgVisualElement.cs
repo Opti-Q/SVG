@@ -56,7 +56,7 @@ namespace Svg
                 }
                 else
                 {
-                    var r = Engine.Factory.CreateRectangleF();
+                    var r = RectangleF.Create();
                     foreach (var c in this.Children.OfType<SvgVisualElement>())
                     {
                         // First it should check if rectangle is empty or it will return the wrong Bounds.
@@ -89,10 +89,10 @@ namespace Svg
             if (Renderable)
             {
                 var b = Bounds;
-                var p1 = Engine.Factory.CreatePointF(b.Left, b.Top);
-                var p2 = Engine.Factory.CreatePointF(b.Right, b.Top);
-                var p3 = Engine.Factory.CreatePointF(b.Right, b.Bottom);
-                var p4 = Engine.Factory.CreatePointF(b.Left, b.Bottom);
+                var p1 = PointF.Create(b.Left, b.Top);
+                var p2 = PointF.Create(b.Right, b.Top);
+                var p3 = PointF.Create(b.Right, b.Bottom);
+                var p4 = PointF.Create(b.Left, b.Bottom);
 
                 var pts = new[] {p1, p2, p3, p4};
 
@@ -173,7 +173,7 @@ namespace Svg
             get { return this.Attributes.GetInheritedAttribute<Uri>("filter"); }
             set { this.Attributes["filter"] = value; }
         }
-
+        
         /// <summary>
         /// Gets or sets a value to determine if anti-aliasing should occur when the element is being rendered.
         /// </summary>
@@ -318,7 +318,7 @@ namespace Svg
                                 case SvgStrokeLineCap.Square:
                                     using (var capPath = Engine.Factory.CreateGraphicsPath())
                                     {
-                                        capPath.AddRectangle(Engine.Factory.CreateRectangleF(path.PathPoints[0].X - strokeWidth / 2, path.PathPoints[0].Y - strokeWidth / 2, strokeWidth, strokeWidth));
+                                        capPath.AddRectangle(RectangleF.Create(path.PathPoints[0].X - strokeWidth / 2, path.PathPoints[0].Y - strokeWidth / 2, strokeWidth, strokeWidth));
                                         renderer.FillPath(brush, capPath);
                                     }
                                     break;
@@ -396,7 +396,7 @@ namespace Svg
                     var offsets = (from o in clip.Substring(5, clip.Length - 6).Split(',')
                                    select float.Parse(o.Trim())).ToList();
                     var bounds = this.Bounds;
-                    var clipRect = Svg.Engine.Factory.CreateRectangleF(bounds.Left + offsets[3], bounds.Top + offsets[0],
+                    var clipRect = RectangleF.Create(bounds.Left + offsets[3], bounds.Top + offsets[0],
                                                   bounds.Width - (offsets[3] + offsets[1]),
                                                   bounds.Height - (offsets[2] + offsets[0]));
                     renderer.SetClip(new Region(clipRect), CombineMode.Intersect);

@@ -27,7 +27,7 @@ namespace Svg
         
         public static RectangleF GetRectangle(this SvgRectangle r)
         {
-            return Engine.Factory.CreateRectangleF(r.X, r.Y, r.Width, r.Height);
+            return RectangleF.Create(r.X, r.Y, r.Width, r.Height);
         }
 
         public static string GetXML(this SvgDocument doc)

@@ -125,9 +125,9 @@ namespace Svg
         {
             if (this._path == null || this.IsPathDirty)
             {
-                PointF start = Engine.Factory.CreatePointF(this.StartX.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
+                PointF start = PointF.Create(this.StartX.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
                                           this.StartY.ToDeviceValue(renderer, UnitRenderingType.Vertical, this));
-                PointF end = Engine.Factory.CreatePointF(this.EndX.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
+                PointF end = PointF.Create(this.EndX.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
                                         this.EndY.ToDeviceValue(renderer, UnitRenderingType.Vertical, this));
 
                 this._path = Engine.Factory.CreateGraphicsPath();

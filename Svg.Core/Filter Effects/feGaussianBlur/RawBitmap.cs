@@ -23,7 +23,7 @@ namespace Svg.FilterEffects
         public RawBitmap(Bitmap originBitmap)
         {
             _originBitmap = originBitmap;
-            _bitmapData = _originBitmap.LockBits(Engine.Factory.CreateRectangleF(0, 0, _originBitmap.Width, _originBitmap.Height), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+            _bitmapData = _originBitmap.LockBits(RectangleF.Create(0, 0, _originBitmap.Width, _originBitmap.Height), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
             _ptr = _bitmapData.Scan0;
             _bytes = this.Stride * _originBitmap.Height;
             _argbValues = new byte[_bytes];

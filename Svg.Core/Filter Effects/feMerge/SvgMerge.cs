@@ -1,5 +1,6 @@
 using System.Drawing;
 using System.Linq;
+using Svg.Interfaces;
 
 namespace Svg.FilterEffects
 {
@@ -15,7 +16,7 @@ namespace Svg.FilterEffects
             {
                 foreach (var child in children)
                 {
-                    g.DrawImage(buffer[child.Input], Engine.Factory.CreateRectangleF(0, 0, inputImage.Width, inputImage.Height),
+                    g.DrawImage(buffer[child.Input], RectangleF.Create(0, 0, inputImage.Width, inputImage.Height),
                                 0, 0, inputImage.Width, inputImage.Height, GraphicsUnit.Pixel);
                 }
                 g.Flush();

@@ -29,7 +29,7 @@ namespace Svg.Core
 
         public SvgDrawingCanvas()
         {
-            Translate = Svg.Engine.Factory.CreatePointF(0f, 0f);
+            Translate = PointF.Create(0f, 0f);
             ZoomFactor = 1f;
 
             _selectedElements = new ObservableCollection<SvgVisualElement>();
@@ -85,7 +85,7 @@ namespace Svg.Core
             SelectedElements.Clear();
 
             // also reset translate and zoomfactor
-            Translate = Svg.Engine.Factory.CreatePointF(0f, 0f);
+            Translate = PointF.Create(0f, 0f);
             ZoomFactor = 1f;
 
             // re-render
@@ -115,7 +115,7 @@ namespace Svg.Core
             }
         }
 
-        public PointF RelativeTranslate => Engine.Factory.CreatePointF(Translate.X/ZoomFactor, Translate.Y/ZoomFactor);
+        public PointF RelativeTranslate => PointF.Create(Translate.X/ZoomFactor, Translate.Y/ZoomFactor);
 
         public PointF Translate { get; set; }
 
@@ -253,7 +253,7 @@ namespace Svg.Core
         public RectangleF GetPointerRectangle(PointF p)
         {
             float halfFingerThickness = 20 / ZoomFactor;
-            return Engine.Factory.CreateRectangleF(p.X - halfFingerThickness, p.Y - halfFingerThickness, halfFingerThickness * 2, halfFingerThickness * 2); // "10 pixel fat finger"
+            return RectangleF.Create(p.X - halfFingerThickness, p.Y - halfFingerThickness, halfFingerThickness * 2, halfFingerThickness * 2); // "10 pixel fat finger"
         }
 
         /// <summary>

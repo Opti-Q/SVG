@@ -49,7 +49,7 @@ namespace Svg
                 format.FormatFlags |= StringFormatFlags.MeasureTrailingSpaces;
                 format.SetMeasurableCharacterRanges((from r in Enumerable.Range(32 * s, Math.Min(32, text.Length - 32 * s))
                                                      select new CharacterRange(r, 1)).ToArray());
-                regions.AddRange(from r in g.MeasureCharacterRanges(text, _font, Engine.Factory.CreateRectangleF(0, 0, 1000, 1000), format)
+                regions.AddRange(from r in g.MeasureCharacterRanges(text, _font, RectangleF.Create(0, 0, 1000, 1000), format)
                                  select r.GetBounds(g));
             }
             return regions;
@@ -62,10 +62,10 @@ namespace Svg
             StringFormat format = provider.GenericTypographic;
             format.SetMeasurableCharacterRanges(new CharacterRange[] { new CharacterRange(0, text.Length) });
             format.FormatFlags |= StringFormatFlags.MeasureTrailingSpaces;
-            Region[] r = g.MeasureCharacterRanges(text, _font, Engine.Factory.CreateRectangleF(0, 0, 1000, 1000), format);
+            Region[] r = g.MeasureCharacterRanges(text, _font, RectangleF.Create(0, 0, 1000, 1000), format);
             RectangleF rect = r[0].GetBounds(g);
 
-            return Engine.Factory.CreateSizeF(rect.Width, Ascent(renderer));
+            return SizeF.Create(rect.Width, Ascent(renderer));
         }
 
         private static Graphics _graphics;

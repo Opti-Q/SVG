@@ -114,9 +114,9 @@ namespace Svg
                 if (this.GradientUnits == SvgCoordinateUnits.ObjectBoundingBox) renderer.SetBoundable(renderingElement);
 
                 // Calculate the path and transform it appropriately
-                var center = Engine.Factory.CreatePointF(NormalizeUnit(CenterX).ToDeviceValue(renderer, UnitRenderingType.Horizontal, this),
+                var center = PointF.Create(NormalizeUnit(CenterX).ToDeviceValue(renderer, UnitRenderingType.Horizontal, this),
                                         NormalizeUnit(CenterY).ToDeviceValue(renderer, UnitRenderingType.Vertical, this));
-                var focals = new PointF[] {Engine.Factory.CreatePointF(NormalizeUnit(FocalX).ToDeviceValue(renderer, UnitRenderingType.Horizontal, this),
+                var focals = new PointF[] {PointF.Create(NormalizeUnit(FocalX).ToDeviceValue(renderer, UnitRenderingType.Horizontal, this),
                                                       NormalizeUnit(FocalY).ToDeviceValue(renderer, UnitRenderingType.Vertical, this)) };
                 var specifiedRadius = NormalizeUnit(Radius).ToDeviceValue(renderer, UnitRenderingType.Other, this);
                 var path = Engine.Factory.CreateGraphicsPath();
@@ -183,7 +183,7 @@ namespace Svg
 
                 // Transform the path based on the scaling
                 var gradBounds = path.GetBounds();
-                var transCenter = Engine.Factory.CreatePointF(gradBounds.Left + gradBounds.Width / 2, gradBounds.Top + gradBounds.Height / 2);
+                var transCenter = PointF.Create(gradBounds.Left + gradBounds.Width / 2, gradBounds.Top + gradBounds.Height / 2);
                 using (var scaleMat = Engine.Factory.CreateMatrix())
                 {
                     scaleMat.Translate(-1 * transCenter.X, -1 * transCenter.Y, MatrixOrder.Append);
@@ -218,13 +218,13 @@ namespace Svg
         private float CalcScale(RectangleF bounds, GraphicsPath path)
         {
             var points = new PointF[] {
-                Engine.Factory.CreatePointF(bounds.Left, bounds.Top), 
-                Engine.Factory.CreatePointF(bounds.Right, bounds.Top), 
-                Engine.Factory.CreatePointF(bounds.Right, bounds.Bottom), 
-                Engine.Factory.CreatePointF(bounds.Left, bounds.Bottom) 
+                PointF.Create(bounds.Left, bounds.Top), 
+                PointF.Create(bounds.Right, bounds.Top), 
+                PointF.Create(bounds.Right, bounds.Bottom), 
+                PointF.Create(bounds.Left, bounds.Bottom) 
             };
             var pathBounds = path.GetBounds();
-            var pathCenter = Engine.Factory.CreatePointF(pathBounds.X + pathBounds.Width / 2, pathBounds.Y + pathBounds.Height / 2);
+            var pathCenter = PointF.Create(pathBounds.X + pathBounds.Width / 2, pathBounds.Y + pathBounds.Height / 2);
             using (var transform = Engine.Factory.CreateMatrix())
             {
                 transform.Translate(-1 * pathCenter.X, -1 * pathCenter.Y, MatrixOrder.Append);
@@ -253,7 +253,7 @@ namespace Svg
             var bounds = subject.UnionAndCopy(clipBounds);
             bounds.Inflate(bounds.Width * .3f, bounds.Height * 0.3f);
 
-            var clipMidPoint = Engine.Factory.CreatePointF((clipBounds.Left + clipBounds.Right) / 2, (clipBounds.Top + clipBounds.Bottom) / 2);
+            var clipMidPoint = PointF.Create((clipBounds.Left + clipBounds.Right) / 2, (clipBounds.Top + clipBounds.Bottom) / 2);
             var leftPoints = new List<PointF>();
             var rightPoints = new List<PointF>();
             foreach (var pt in clipFlat.PathPoints)
@@ -270,23 +270,23 @@ namespace Svg
             leftPoints.Sort((p, q) => p.Y.CompareTo(q.Y));
             rightPoints.Sort((p, q) => p.Y.CompareTo(q.Y));
 
-            var point = Engine.Factory.CreatePointF((leftPoints.Last().X + rightPoints.Last().X) / 2,
+            var point = PointF.Create((leftPoints.Last().X + rightPoints.Last().X) / 2,
                                    (leftPoints.Last().Y + rightPoints.Last().Y) / 2);
             leftPoints.Add(point);
             rightPoints.Add(point);
-            point = Engine.Factory.CreatePointF(point.X, bounds.Bottom);
+            point = PointF.Create(point.X, bounds.Bottom);
             leftPoints.Add(point);
             rightPoints.Add(point);
 
-            leftPoints.Add(Engine.Factory.CreatePointF(bounds.Left, bounds.Bottom));
-            leftPoints.Add(Engine.Factory.CreatePointF(bounds.Left, bounds.Top));
-            rightPoints.Add(Engine.Factory.CreatePointF(bounds.Right, bounds.Bottom));
-            rightPoints.Add(Engine.Factory.CreatePointF(bounds.Right, bounds.Top));
+            leftPoints.Add(PointF.Create(bounds.Left, bounds.Bottom));
+            leftPoints.Add(PointF.Create(bounds.Left, bounds.Top));
+            rightPoints.Add(PointF.Create(bounds.Right, bounds.Bottom));
+            rightPoints.Add(PointF.Create(bounds.Right, bounds.Top));
 
-            point = Engine.Factory.CreatePointF((leftPoints.First().X + rightPoints.First().X) / 2, bounds.Top);
+            point = PointF.Create((leftPoints.First().X + rightPoints.First().X) / 2, bounds.Top);
             leftPoints.Add(point);
             rightPoints.Add(point);
-            point = Engine.Factory.CreatePointF(point.X, (leftPoints.First().Y + rightPoints.First().Y) / 2);
+            point = PointF.Create(point.X, (leftPoints.First().Y + rightPoints.First().Y) / 2);
             leftPoints.Add(point);
             rightPoints.Add(point);
 

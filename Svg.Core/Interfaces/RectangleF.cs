@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Svg.Interfaces
 {
-    public class RectangleF
+    public abstract class RectangleF
         : IEquatable<RectangleF>
     {
         private float x, y, width, height;
@@ -18,7 +18,9 @@ namespace Svg.Interfaces
         ///	An uninitialized RectangleF Structure.
         /// </remarks>
 
-        public static readonly RectangleF Empty;
+        public static readonly RectangleF Empty = RectangleF.Create();
+
+        protected RectangleF() { }
 
         /// <summary>
         ///	FromLTRB Shared Method
@@ -35,6 +37,21 @@ namespace Svg.Interfaces
             return Engine.Factory.CreateRectangleF(left, top, right - left, bottom - top);
         }
 
+        public static RectangleF Create()
+        {
+            return Engine.Factory.CreateRectangleF();
+        }
+
+        public static RectangleF Create(float x, float y, float width, float height)
+        {
+            return Engine.Factory.CreateRectangleF(x, y, width, height);
+        }
+
+        public static RectangleF Create(PointF location, SizeF size)
+        {
+            return Engine.Factory.CreateRectangleF(location, size);
+        }
+
         /// <summary>
         /// Creates a rectangle that includes all points (bounding box)
         /// </summary>
@@ -47,7 +64,7 @@ namespace Svg.Interfaces
             var maxX = points.Select(p => p.X).Max();
             var maxY = points.Select(p => p.Y).Max();
 
-            return Engine.Factory.CreateRectangleF(minX, minY, maxX - minX, maxY - minY);
+            return RectangleF.Create(minX, minY, maxX - minX, maxY - minY);
         }
 
         /// <summary>
@@ -62,7 +79,7 @@ namespace Svg.Interfaces
         public static RectangleF Inflate(RectangleF rect,
                           float x, float y)
         {
-            RectangleF ir = Engine.Factory.CreateRectangleF(rect.X, rect.Y, rect.Width, rect.Height);
+            RectangleF ir = RectangleF.Create(rect.X, rect.Y, rect.Width, rect.Height);
             ir.Inflate(x, y);
             return ir;
         }
@@ -77,7 +94,7 @@ namespace Svg.Interfaces
 
         public void Inflate(float x, float y)
         {
-            Inflate(new SizeF(x, y));
+            Inflate(SizeF.Create(x, y));
         }
 
         /// <summary>
@@ -306,7 +323,7 @@ namespace Svg.Interfaces
         {
             get
             {
-                return Engine.Factory.CreatePointF(x, y);
+                return PointF.Create(x, y);
             }
             set
             {
@@ -344,7 +361,7 @@ namespace Svg.Interfaces
         {
             get
             {
-                return Engine.Factory.CreateSizeF(width, height);
+                return SizeF.Create(width, height);
             }
             set
             {
@@ -577,53 +594,17 @@ namespace Svg.Interfaces
 
         public RectangleF UnionAndCopy(RectangleF childBounds)
         {
-            var newRect = Engine.Factory.CreateRectangleF(this.x, this.y, this.width, this.height);
+            var newRect = RectangleF.Create(this.x, this.y, this.width, this.height);
 
             return Union(newRect, childBounds);
         }
         
         public RectangleF InflateAndCopy(float x, float y)
         {
-            var newRect = Engine.Factory.CreateRectangleF(this.x, this.y, this.width, this.height);
+            var newRect = RectangleF.Create(this.x, this.y, this.width, this.height);
             newRect.Inflate(x, y);
             return newRect;
         }
+
     }
-    //public abstract class RectangleF
-    //{
-    //    public abstract void Inflate(float x, float y);
-    //    public abstract void Inflate(SizeF size);
-    //    public abstract void Intersect(RectangleF rect);
-    //    public abstract bool Contains(float x, float y);
-    //    public abstract bool Contains(PointF pt);
-    //    public abstract bool Contains(RectangleF rect);
-    //    public abstract bool IntersectsWith(RectangleF rect);
-    //    public abstract void Offset(float x, float y);
-    //    public abstract void Offset(PointF pos);
-    //    public abstract float Bottom { get; }
-    //    public abstract float Height { get; set; }
-    //    public abstract bool IsEmpty { get; }
-    //    public abstract float Left { get; }
-    //    public abstract PointF Location { get; set; }
-    //    public abstract float Right { get; }
-    //    public abstract SizeF Size { get; set; }
-    //    public abstract float Top { get; }
-    //    public abstract float Width { get; set; }
-    //    public abstract float X { get; set; }
-    //    public abstract float Y { get; set; }
-    //    public abstract RectangleF UnionAndCopy(RectangleF other);
-    //    public abstract RectangleF InflateAndCopy(float x, float y);
-
-
-
-    //    public static bool operator ==(RectangleF c1, RectangleF c2)
-    //    {
-    //        return c1?.X == c2?.X && c1?.Y == c2?.Y && c1?.Width == c2?.Width && c1?.Height == c2?.Height;
-    //    }
-
-    //    public static bool operator !=(RectangleF c1, RectangleF c2)
-    //    {
-    //        return c1?.X != c2?.X || c1?.Y != c2?.Y || c1?.Width != c2?.Width || c1?.Height != c2?.Height;
-    //    }
-    //}
 }

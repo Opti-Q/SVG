@@ -43,10 +43,9 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     var halfRelChildWidth = childBounds.Width/2;
                     var halfRelChildHeight = childBounds.Height/2;
 
-                    SvgTranslate tl = new SvgTranslate(-canvas.RelativeTranslate.X + halfRelWidth - halfRelChildWidth, -canvas.RelativeTranslate.Y + halfRelHeight - halfRelChildHeight);
-                    child.Transforms.Add(tl);
-
-                    child.CustomAttributes["ishelpline"] = "true";
+                    //SvgTranslate tl = new SvgTranslate(-canvas.RelativeTranslate.X + halfRelWidth - halfRelChildWidth, -canvas.RelativeTranslate.Y + halfRelHeight - halfRelChildHeight);
+                    //child.Transforms.Add(tl);
+                    
                     child.ID = $"{child.ElementName}_{_canvas.Document.Descendants().Count(d => d.ElementName == child.ElementName)+1}";
 
                     _canvas.Document.Children.Add(child);

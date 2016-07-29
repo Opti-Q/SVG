@@ -8,6 +8,16 @@ namespace Svg
 {
     public abstract class Matrix : IDisposable
     {
+        public static Matrix Create()
+        {
+            return Engine.Factory.CreateMatrix();
+        }
+
+        public static Matrix Create(float scaleX, float rotateX, float rotateY, float scaleY, float transX, float transY)
+        {
+            return Engine.Factory.CreateMatrix(scaleX, rotateX, rotateY, scaleY, transX, transY);
+        }
+
         public abstract void Scale(float width, float height);
         public abstract void Scale(float width, float height, MatrixOrder append);
         public abstract void Translate(float left, float top, MatrixOrder append);

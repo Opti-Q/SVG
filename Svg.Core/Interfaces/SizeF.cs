@@ -6,43 +6,7 @@ using System.Text;
 
 namespace Svg.Interfaces
 {
-    //public abstract class SizeF
-    //{
-    //    public abstract bool IsEmpty { get; }
-    //    public abstract float Width { get; set; }
-    //    public abstract float Height { get; set; }
-
-    //    public static SizeF operator +(SizeF c1, SizeF c2)
-    //    {
-    //        return Engine.Factory.CreateSizeF(c1.Width + c2.Width, c1.Height + c2.Height);
-    //    }
-
-    //    public static SizeF operator -(SizeF c1, SizeF c2)
-    //    {
-    //        return Engine.Factory.CreateSizeF(c1.Width - c2.Width, c1.Height - c2.Height);
-    //    }
-
-    //    public static SizeF operator *(SizeF c1, SizeF c2)
-    //    {
-    //        return Engine.Factory.CreateSizeF(c1.Width / c2.Width, c1.Height / c2.Height);
-    //    }
-
-    //    public static SizeF operator /(SizeF c1, SizeF c2)
-    //    {
-    //        return Engine.Factory.CreateSizeF(c1.Width / c2.Width, c1.Height / c2.Height);
-    //    }
-
-    //    public static bool operator ==(SizeF c1, SizeF c2)
-    //    {
-    //        return c1?.Width == c2?.Width && c1?.Height == c2?.Height;
-    //    }
-
-    //    public static bool operator !=(SizeF c1, SizeF c2)
-    //    {
-    //        return c1?.Width != c2?.Width || c1?.Height != c2?.Height;
-    //    }
-    //}
-    public class SizeF
+    public abstract class SizeF
         : IEquatable<SizeF>
     {
         // Private height and width fields.
@@ -60,7 +24,22 @@ namespace Svg.Interfaces
         ///	An uninitialized SizeF Structure.
         /// </remarks>
 
-        public static readonly SizeF Empty;
+        public static readonly SizeF Empty = SizeF.Create();
+
+        protected SizeF()
+        {
+            
+        }
+
+        public static SizeF Create()
+        {
+            return Create(0f, 0f);
+        }
+
+        public static SizeF Create(float x, float y)
+        {
+            return Engine.Factory.CreateSizeF(x, y);
+        }
 
         /// <summary>
         ///	Addition Operator
@@ -72,7 +51,7 @@ namespace Svg.Interfaces
 
         public static SizeF operator +(SizeF sz1, SizeF sz2)
         {
-            return Engine.Factory.CreateSizeF(sz1.Width + sz2.Width,
+            return SizeF.Create(sz1.Width + sz2.Width,
                       sz1.Height + sz2.Height);
         }
 
@@ -118,7 +97,7 @@ namespace Svg.Interfaces
 
         public static SizeF operator -(SizeF sz1, SizeF sz2)
         {
-            return Engine.Factory.CreateSizeF(sz1.Width - sz2.Width,
+            return SizeF.Create(sz1.Width - sz2.Width,
                       sz1.Height - sz2.Height);
         }
 
@@ -133,7 +112,7 @@ namespace Svg.Interfaces
 
         public static explicit operator PointF(SizeF size)
         {
-            return Engine.Factory.CreatePointF(size.Width, size.Height);
+            return PointF.Create(size.Width, size.Height);
         }
 
 
@@ -288,7 +267,7 @@ namespace Svg.Interfaces
 
         public PointF ToPointF()
         {
-            return Engine.Factory.CreatePointF(width, height);
+            return PointF.Create(width, height);
         }
 
         /// <summary>

@@ -64,7 +64,7 @@ namespace Svg.Platform
         public RectangleF GetBounds(SvgTextBase txt, ISvgRenderer renderer)
         {
             if (!txt.Visible || !txt.Displayable || string.IsNullOrEmpty(txt.Text))
-                return Engine.Factory.CreateRectangleF(0f, 0f, 0f, 0f);
+                return RectangleF.Create(0f, 0f, 0f, 0f);
 
             var brush = txt.Fill.GetBrush(txt, renderer, 1f);
             using (var pen = (AndroidPen)Engine.Factory.CreatePen(brush, txt.StrokeWidth.Value))
@@ -103,7 +103,7 @@ namespace Svg.Platform
                 }
 
                 
-                return Engine.Factory.CreateRectangleF(x + firstLineRect?.Left ?? 0f, y + firstLineRect?.Top ?? 0f, width, height * lineCount);
+                return RectangleF.Create(x + firstLineRect?.Left ?? 0f, y + firstLineRect?.Top ?? 0f, width, height * lineCount);
             }
         }
 

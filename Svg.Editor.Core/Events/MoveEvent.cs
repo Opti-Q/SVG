@@ -17,7 +17,7 @@ namespace Svg.Core.Events
             {
                 if (_absoluteDelta == null)
                 {
-                    _absoluteDelta = Engine.Factory.CreatePointF(Pointer1Position.X - Pointer1Down.X, Pointer1Position.Y - Pointer1Down.Y);
+                    _absoluteDelta = PointF.Create(Pointer1Position.X - Pointer1Down.X, Pointer1Position.Y - Pointer1Down.Y);
                 }
                 return _absoluteDelta;
             }

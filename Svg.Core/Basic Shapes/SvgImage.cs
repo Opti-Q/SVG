@@ -87,8 +87,8 @@ namespace Svg
         {
 			get
             {
-                return Engine.Factory.CreateRectangleF(this.Location.ToDeviceValue(null, this),
-                                        Engine.Factory.CreateSizeF(this.Width.ToDeviceValue(null, UnitRenderingType.Horizontal, this), 
+                return RectangleF.Create(this.Location.ToDeviceValue(null, this),
+                                        SizeF.Create(this.Width.ToDeviceValue(null, UnitRenderingType.Horizontal, this), 
                                                   this.Height.ToDeviceValue(null, UnitRenderingType.Vertical, this)));
             }
         }
@@ -119,19 +119,19 @@ namespace Svg
                     var svg = img as SvgFragment;
                     if (bmp != null)
                     {
-                        srcRect = Engine.Factory.CreateRectangleF(0, 0, bmp.Width, bmp.Height);
+                        srcRect = RectangleF.Create(0, 0, bmp.Width, bmp.Height);
                     }
                     else if (svg != null)
                     {
-                        srcRect = Engine.Factory.CreateRectangleF(Engine.Factory.CreatePointF(0, 0), svg.GetDimensions());
+                        srcRect = RectangleF.Create(PointF.Create(0, 0), svg.GetDimensions());
                     }
                     else
                     {
                         return;
                     }
 
-                    var destClip = Engine.Factory.CreateRectangleF(this.Location.ToDeviceValue(renderer, this),
-                                                  Engine.Factory.CreateSizeF(Width.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
+                    var destClip = RectangleF.Create(this.Location.ToDeviceValue(renderer, this),
+                                                  SizeF.Create(Width.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
                                                             Height.ToDeviceValue(renderer, UnitRenderingType.Vertical, this)));
                     RectangleF destRect = destClip;
                         
@@ -191,7 +191,7 @@ namespace Svg
                                 break;
                         }
 
-                        destRect = Engine.Factory.CreateRectangleF(destClip.X + xOffset, destClip.Y + yOffset, 
+                        destRect = RectangleF.Create(destClip.X + xOffset, destClip.Y + yOffset, 
                                                     srcRect.Width * fScaleX, srcRect.Height * fScaleY);
                     }
 
@@ -202,7 +202,7 @@ namespace Svg
                     }
                     else if (svg != null)
                     {
-                        var currOffset = Engine.Factory.CreatePointF(renderer.Transform.OffsetX, renderer.Transform.OffsetY);
+                        var currOffset = PointF.Create(renderer.Transform.OffsetX, renderer.Transform.OffsetY);
                         renderer.TranslateTransform(-currOffset.X, -currOffset.Y);
                         renderer.ScaleTransform(destRect.Width / srcRect.Width, destRect.Height / srcRect.Height);
                         renderer.TranslateTransform(currOffset.X + destRect.X, currOffset.Y + destRect.Y);

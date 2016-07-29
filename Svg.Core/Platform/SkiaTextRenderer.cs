@@ -86,13 +86,13 @@ namespace Svg.Platform
         public RectangleF GetBounds(SvgTextBase txt, ISvgRenderer renderer)
         {
             if (!txt.Visible || !txt.Displayable)
-                return Engine.Factory.CreateRectangleF(0f, 0f, 0f, 0f);
+                return RectangleF.Create(0f, 0f, 0f, 0f);
 
             bool textIsEmpty = string.IsNullOrEmpty(txt.Text);
             bool hasNoChildren = !txt.Children.OfType<SvgTextBase>().Any();
 
             if (textIsEmpty && hasNoChildren)
-                return Engine.Factory.CreateRectangleF(0f, 0f, 0f, 0f);
+                return RectangleF.Create(0f, 0f, 0f, 0f);
 
             if (!textIsEmpty)
             {
@@ -132,7 +132,7 @@ namespace Svg.Platform
                     }
 
 
-                    return Engine.Factory.CreateRectangleF(x + firstLineRect.Left, y + firstLineRect.Top, width,
+                    return RectangleF.Create(x + firstLineRect.Left, y + firstLineRect.Top, width,
                         height*lineCount);
                 }
             }
@@ -154,7 +154,7 @@ namespace Svg.Platform
                 return r;
             }
 
-            return Engine.Factory.CreateRectangleF(0f, 0f, 0f, 0f);
+            return RectangleF.Create(0f, 0f, 0f, 0f);
         }
 
         private bool IsEmpty(SKRect rect)

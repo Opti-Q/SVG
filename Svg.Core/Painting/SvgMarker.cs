@@ -104,7 +104,7 @@ namespace Svg
                 {
                     return path.GetBounds();
                 }
-                return Engine.Factory.CreateRectangleF();
+                return RectangleF.Create();
             }
         }
 

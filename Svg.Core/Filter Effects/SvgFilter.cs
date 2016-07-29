@@ -110,10 +110,10 @@ namespace Svg.FilterEffects
         private RectangleF GetPathBounds(SvgVisualElement element, ISvgRenderer renderer, Matrix transform)
         {
             var bounds = element.Path(renderer).GetBounds();
-            var pts = new PointF[] { bounds.Location, Engine.Factory.CreatePointF(bounds.Right, bounds.Bottom) };
+            var pts = new PointF[] { bounds.Location, PointF.Create(bounds.Right, bounds.Bottom) };
             transform.TransformPoints(pts);
 
-            return Engine.Factory.CreateRectangleF(Math.Min(pts[0].X, pts[1].X), Math.Min(pts[0].Y, pts[1].Y),
+            return RectangleF.Create(Math.Min(pts[0].X, pts[1].X), Math.Min(pts[0].Y, pts[1].Y),
                                   Math.Abs(pts[0].X - pts[1].X), Math.Abs(pts[0].Y - pts[1].Y));
         }
 
@@ -143,7 +143,7 @@ namespace Svg.FilterEffects
                 var imgDraw = bounds.InflateAndCopy(inflate * bounds.Width, inflate * bounds.Height);
                 var prevClip = renderer.GetClip();
                 renderer.SetClip(new Region(imgDraw));
-                renderer.DrawImage(bufferImg, imgDraw, Engine.Factory.CreateRectangleF(bounds.X, bounds.Y, imgDraw.Width, imgDraw.Height), GraphicsUnit.Pixel);
+                renderer.DrawImage(bufferImg, imgDraw, RectangleF.Create(bounds.X, bounds.Y, imgDraw.Width, imgDraw.Height), GraphicsUnit.Pixel);
                 renderer.SetClip(prevClip);
             }
         }

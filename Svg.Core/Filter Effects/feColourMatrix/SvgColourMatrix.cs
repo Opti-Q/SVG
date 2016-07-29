@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.Linq;
+using Svg.Interfaces;
 
 namespace Svg.FilterEffects
 {
@@ -96,7 +97,7 @@ namespace Svg.FilterEffects
                 var result = Engine.Factory.CreateBitmap(inputImage.Width, inputImage.Height);
                 using (var g = Engine.Factory.CreateGraphicsFromImage(result))
                 {
-                    g.DrawImage(inputImage, Engine.Factory.CreateRectangleF(0, 0, inputImage.Width, inputImage.Height),
+                    g.DrawImage(inputImage, RectangleF.Create(0, 0, inputImage.Width, inputImage.Height),
                                 0, 0, inputImage.Width, inputImage.Height, GraphicsUnit.Pixel, imageAttrs);
                     g.Flush();
                 }

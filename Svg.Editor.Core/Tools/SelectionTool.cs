@@ -84,7 +84,7 @@ namespace Svg.Core.Tools
                     startY = endY;
                     endY = t;
                 }
-                var rect = Engine.Factory.CreateRectangleF(startX, startY, endX - startX, endY - startY);
+                var rect = RectangleF.Create(startX, startY, endX - startX, endY - startY);
                 
                 // selection onyl counts if width and height are not too small
                 var dist = Math.Sqrt(Math.Pow(rect.Width, 2) + Math.Pow(rect.Height, 2));

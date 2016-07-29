@@ -153,7 +153,7 @@ namespace Svg.Platform
         public Region[] MeasureCharacterRanges(string text, Font font, Rectangle rectangle, StringFormat format)
         {
             // TODO LX: wtf?
-            return new[] { new Region(Engine.Factory.CreateRectangleF(rectangle.X, rectangle.Y,rectangle.Width, rectangle.Height)) };
+            return new[] { new Region(Svg.Interfaces.RectangleF.Create(rectangle.X, rectangle.Y,rectangle.Width, rectangle.Height)) };
         }
 
         public Matrix Transform

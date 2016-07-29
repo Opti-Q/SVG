@@ -48,7 +48,7 @@ namespace Svg.Platform
             {
                 var r = new SKRect();
                 _path.GetBounds(out r);
-                return Engine.Factory.CreateRectangleF(r.Left, r.Top, r.Right - r.Left, r.Bottom - r.Top);
+                return RectangleF.Create(r.Left, r.Top, r.Right - r.Left, r.Bottom - r.Top);
             }
 
             return _bounds;
@@ -125,8 +125,8 @@ namespace Svg.Platform
             // TODO LX: Which direction is correct?
             Path.AddOval(new SKRect(x, y, x + width, y + height), SKPathDirection.Clockwise);
 
-            _points.Add(Engine.Factory.CreatePointF(x, y));
-            _points.Add(Engine.Factory.CreatePointF(x + width, y + height));
+            _points.Add(PointF.Create(x, y));
+            _points.Add(PointF.Create(x + width, y + height));
             _pathTypes.Add(0); // start of a figure
             _pathTypes.Add(0x80); // last point in closed sublath
         }
@@ -162,13 +162,13 @@ namespace Svg.Platform
         {
             _bounds = null;
             Path.AddRect((SkiaRectangleF)rectangle, SKPathDirection.Clockwise);
-            _points.Add(Engine.Factory.CreatePointF(rectangle.Location.X, rectangle.Location.Y));
+            _points.Add(PointF.Create(rectangle.Location.X, rectangle.Location.Y));
             _pathTypes.Add(0); // start of a figure
-            _points.Add(Engine.Factory.CreatePointF(rectangle.Location.X + rectangle.Width, rectangle.Location.Y));
+            _points.Add(PointF.Create(rectangle.Location.X + rectangle.Width, rectangle.Location.Y));
             _pathTypes.Add(0x7); // TODO LX: ???
-            _points.Add(Engine.Factory.CreatePointF(rectangle.Location.X, rectangle.Location.Y + rectangle.Height));
+            _points.Add(PointF.Create(rectangle.Location.X, rectangle.Location.Y + rectangle.Height));
             _pathTypes.Add(0x7); // TODO LX: ???
-            _points.Add(Engine.Factory.CreatePointF(rectangle.Location.X + rectangle.Width, rectangle.Location.Y + rectangle.Height));
+            _points.Add(PointF.Create(rectangle.Location.X + rectangle.Width, rectangle.Location.Y + rectangle.Height));
             _pathTypes.Add(0x80); // TODO LX: ???
         }
 
@@ -177,13 +177,13 @@ namespace Svg.Platform
             _bounds = null;
             Path.AddArc((SkiaRectangleF)rectangle, startAngle, sweepAngle);
 
-            _points.Add(Engine.Factory.CreatePointF(rectangle.Location.X, rectangle.Location.Y));
+            _points.Add(PointF.Create(rectangle.Location.X, rectangle.Location.Y));
             _pathTypes.Add(1); // start point of line
-            _points.Add(Engine.Factory.CreatePointF(rectangle.Location.X + rectangle.Width, rectangle.Location.Y));
+            _points.Add(PointF.Create(rectangle.Location.X + rectangle.Width, rectangle.Location.Y));
             _pathTypes.Add(0x20); // TODO LX: ???
-            _points.Add(Engine.Factory.CreatePointF(rectangle.Location.X, rectangle.Location.Y + rectangle.Height));
+            _points.Add(PointF.Create(rectangle.Location.X, rectangle.Location.Y + rectangle.Height));
             _pathTypes.Add(0x20); // TODO LX: ???
-            _points.Add(Engine.Factory.CreatePointF(rectangle.Location.X + rectangle.Width, rectangle.Location.Y + rectangle.Height));
+            _points.Add(PointF.Create(rectangle.Location.X + rectangle.Width, rectangle.Location.Y + rectangle.Height));
             _pathTypes.Add(1); // end point of line
         }
 
@@ -240,12 +240,12 @@ namespace Svg.Platform
         public void AddBezier(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
         {
             _bounds = null;
-            var start = Engine.Factory.CreatePointF(x1, y1);
+            var start = PointF.Create(x1, y1);
 
             MoveTo(start);
             Path.CubicTo(x2, y2, x3, y3, x4, y4);
 
-            _points.AddRange(new[] { Engine.Factory.CreatePointF(x1, y1), Engine.Factory.CreatePointF(x2, y2), Engine.Factory.CreatePointF(x3, y3), Engine.Factory.CreatePointF(x4, y4) });
+            _points.AddRange(new[] { PointF.Create(x1, y1), PointF.Create(x2, y2), PointF.Create(x3, y3), PointF.Create(x4, y4) });
             _pathTypes.Add(1); // start point of line
             _pathTypes.Add(3); // control point of cubic bezier spline
             _pathTypes.Add(3); // control point of cubic bezier spline
