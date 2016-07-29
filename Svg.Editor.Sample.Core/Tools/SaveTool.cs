@@ -31,7 +31,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 new ToolCommand(this, "Save", (obj) =>
                 {
                     var fs = Svg.Engine.Resolve<IFileSystem>();
-                    var path = fs.GetDownloadFolder();
+                    var path = fs.GetDefaultStoragePath();
                     var storagePath = fs.PathCombine(path, _fileName());
 
                     if (fs.FileExists(storagePath))
@@ -49,7 +49,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 new ToolCommand(this, "Load", (obj) =>
                 {
                     var fs = Svg.Engine.Resolve<IFileSystem>();
-                    var path = fs.GetDownloadFolder();
+                    var path = fs.GetDefaultStoragePath();
                     var storagePath = fs.PathCombine(path, _fileName());
 
                     if (fs.FileExists(storagePath))
@@ -62,7 +62,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 (obj) =>
                 {
                     var fs = Svg.Engine.Resolve<IFileSystem>();
-                    var path = fs.GetDownloadFolder();
+                    var path = fs.GetDefaultStoragePath();
                     var storagePath = fs.PathCombine(path, _fileName());
                     return fs.FileExists(storagePath);
                 }),
@@ -70,7 +70,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 {
                     var fs = Svg.Engine.Resolve<IFileSystem>();
 
-                    var path = fs.GetDownloadFolder();
+                    var path = fs.GetDefaultStoragePath();
                     var storagePath = fs.PathCombine(path, _fileName());
 
                     if (fs.FileExists(storagePath))
@@ -86,7 +86,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 (obj) =>
                 {
                     var fs = Svg.Engine.Resolve<IFileSystem>();
-                    var path = fs.GetDownloadFolder();
+                    var path = fs.GetDefaultStoragePath();
                     var storagePath = fs.PathCombine(path, _fileName());
                     return fs.FileExists(storagePath);
                 }),
@@ -98,7 +98,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     using (var bmp = ws.Document.DrawAllContents(Engine.Factory.Colors.White)) // 2MP (see https://de.wikipedia.org/wiki/Bildaufl%C3%B6sungen_in_der_Digitalfotografie)
                     {
                         // now save it as PNG
-                        var path = fs.PathCombine(fs.GetDownloadFolder(), "svg_image.png");
+                        var path = fs.PathCombine(fs.GetDefaultStoragePath(), "svg_image.png");
                         if (fs.FileExists(path))
                             fs.DeleteFile(path);
 
@@ -118,7 +118,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 (obj) =>
                 {
                     var fs = Svg.Engine.Resolve<IFileSystem>();
-                    var path = fs.GetDownloadFolder();
+                    var path = fs.GetDefaultStoragePath();
                     var storagePath = fs.PathCombine(path, _fileName());
                     return fs.FileExists(storagePath);
                 }),
@@ -129,7 +129,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     using (var bmp = ws.Document.DrawAllContents(160, 160, Engine.Factory.Colors.White))
                     {
                         // now save it as PNG
-                        var path = fs.PathCombine(fs.GetDownloadFolder(), "svg_image_thumb.png");
+                        var path = fs.PathCombine(fs.GetDefaultStoragePath(), "svg_image_thumb.png");
                         if (fs.FileExists(path))
                             fs.DeleteFile(path);
 
@@ -149,7 +149,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 (obj) =>
                 {
                     var fs = Svg.Engine.Resolve<IFileSystem>();
-                    var path = fs.GetDownloadFolder();
+                    var path = fs.GetDefaultStoragePath();
                     var storagePath = fs.PathCombine(path, _fileName());
                     return fs.FileExists(storagePath);
                 }),
@@ -160,7 +160,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     using (var bmp = ws.Document.DrawAllContents(2048, 1920, Engine.Factory.Colors.White))
                     {
                         // now save it as PNG
-                        var path = fs.PathCombine(fs.GetDownloadFolder(), "svg_image_XL.png");
+                        var path = fs.PathCombine(fs.GetDefaultStoragePath(), "svg_image_XL.png");
                         if (fs.FileExists(path))
                             fs.DeleteFile(path);
 
@@ -180,7 +180,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 (obj) =>
                 {
                     var fs = Svg.Engine.Resolve<IFileSystem>();
-                    var path = fs.GetDownloadFolder();
+                    var path = fs.GetDefaultStoragePath();
                     var storagePath = fs.PathCombine(path, _fileName());
                     return fs.FileExists(storagePath);
                 }),

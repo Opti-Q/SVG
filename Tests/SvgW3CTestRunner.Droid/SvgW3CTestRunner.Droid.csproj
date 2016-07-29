@@ -438,7 +438,6 @@
     <AndroidAsset Include="Assets\resources\ZCSB.svg" />
     <AndroidAsset Include="Assets\resources\ZCXB.svg" />
     <AndroidAsset Include="Assets\resources\ZSSB.svg" />
-    <AndroidAsset Include="Assets\resources\Plane1\Tribase.svg" />
     <AndroidAsset Include="Assets\resources\Baselines\Tribase.svg" />
     <AndroidAsset Include="Assets\png\__AJ_Digital_Camera.png" />
     <AndroidAsset Include="Assets\png\__issue-015-01.png" />
@@ -1515,9 +1514,6 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\resources\ScheherazadeRegOT.ttf" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\resources\Plane1\Tribase.sfd" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\resources\Baselines\Tribase.sfd" />

@@ -15,7 +15,6 @@ namespace Svg.Interfaces
         string GetFullPath(string path);
 
         string GetDefaultStoragePath();
-        string GetDownloadFolder();
 
         string PathCombine(params string[] segments);
         void DeleteFile(string storagePath);

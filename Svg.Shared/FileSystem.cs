@@ -36,13 +36,6 @@ namespace Svg
             return System.Environment.GetFolderPath(Environment.SpecialFolder.Personal);
         }
 
-        public string GetDownloadFolder()
-        {
-            return
-                Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)
-                    .AbsolutePath;
-        }
-
         public string PathCombine(params string[] segments)
         {
             return Path.Combine(segments);
