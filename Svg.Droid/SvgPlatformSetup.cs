@@ -1,6 +1,8 @@
 using System;
+#if ANDROID
 using Android.Content;
 using Javax.Crypto;
+#endif
 using Svg.Interfaces;
 using Svg.Platform;
 
@@ -19,7 +21,7 @@ namespace Svg
         {
             base.Initialize(options);
 
-#if !SKIA
+#if ANDROID
             Engine.Register<IFactory, IFactory>(() => new Factory());
 
             var ops = (SvgAndroidPlatformOptions)options;
@@ -27,7 +29,7 @@ namespace Svg
             {
                 Engine.Register<IAlternativeSvgTextRenderer, AndroidTextRenderer>(() => new AndroidTextRenderer());
             }
-#else 
+#else
             Engine.Register<IFactory, IFactory>(() => new SKFactory());
             var ops = (SvgAndroidPlatformOptions)options;
             if (ops.EnableFastTextRendering)

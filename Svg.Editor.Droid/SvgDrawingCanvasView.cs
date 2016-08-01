@@ -15,7 +15,7 @@ namespace Svg.Droid.Editor
 {
     public class SvgDrawingCanvasView : ImageView
     {
-#if SKIA
+#if !ANDROID
         private Android.Graphics.Bitmap _bitmap;
 #endif
         private readonly GestureDetector _detector;
@@ -46,7 +46,7 @@ namespace Svg.Droid.Editor
             return true;
         }
 
-#if !SKIA
+#if ANDROID
         protected override void OnDraw(Canvas canvas)
         {
             // this is intentionally not awaited

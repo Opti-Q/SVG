@@ -16,7 +16,7 @@ namespace Svg.Platform
             Width = width;
             Height = height;
             
-            _image = new SKBitmap(width, height, SKColorType.Rgba_8888, SKAlphaType.Opaque);
+            _image = new SKBitmap(width, height, SKColorType.Rgba8888, SKAlphaType.Opaque);
         }
 
         public SkiaBitmap(Image inputImage)

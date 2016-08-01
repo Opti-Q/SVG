@@ -42,9 +42,9 @@ namespace SvgW3CTestSuite.Droid
                     using (var stream = FileSourceProvider(pngPath).GetStream())
                     using (var pngStream = new SKManagedStream(stream))
                     {
-                        using (SKBitmap pngBitmap = new SKBitmap())
+                        var pngBitmap = SKBitmap.Decode(pngStream);
+                        using (pngBitmap)
                         {
-                            SKImageDecoder.DecodeStream(pngStream, pngBitmap);
                             using (var c = ImageCompare(svgBitmap, pngBitmap))
                             {
                                 Assert.GreaterOrEqual(c.Similarity, 90, $"{svgPath}");
@@ -131,7 +131,7 @@ namespace SvgW3CTestSuite.Droid
             var src = FileSourceProvider(svgPath);
 
             using (SvgDocument doc = SvgDocument.Open<SvgDocument>(src))
-            using (var surface = SKSurface.Create(width, height, SKColorType.Rgba_8888, SKAlphaType.Premul))
+            using (var surface = SKSurface.Create(width, height, SKColorType.Rgba8888, SKAlphaType.Premul))
             {
                 doc.Draw(SvgRenderer.FromGraphics(new SkiaGraphics(surface)));
                 var img = surface.Snapshot();
@@ -139,8 +139,7 @@ namespace SvgW3CTestSuite.Droid
                 using (var s = new SKManagedStream(img.Encode().AsStream()))
                 {
                     SKBitmap b = new SKBitmap();
-                    SKImageDecoder.DecodeStream(s, b);
-                    return b;
+                    return SKBitmap.Decode(s);
                 }
             }
         }

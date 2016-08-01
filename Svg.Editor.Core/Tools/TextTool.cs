@@ -69,7 +69,7 @@ namespace Svg.Core.Tools
                 if (dX < 20 && dY < 20)
                 {
                     // if there is text below the pointer, edit it
-                    var e = ws.GetElementsUnderPointer(pe.Pointer1Position).OfType<SvgText>().FirstOrDefault();
+                    var e = ws.GetElementsUnderPointer(pe.Pointer1Position).OfType<SvgTextBase>().FirstOrDefault();
 
                     if (e != null)
                     {

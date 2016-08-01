@@ -191,8 +191,8 @@ namespace SvgW3CTestRunner.Droid
                         // SVG
                         // --------------------------------------------------------
                         watch.Start();
-
-#if !SKIA
+                        
+#if ANDROID
                         var svgBitmap = new AndroidBitmap(480, 360);
                         var src = new SvgAssetSource($"svg/{svg}", Assets);
                         using (SvgDocument doc = SvgDocument.Open<SvgDocument>(src))
@@ -212,7 +212,7 @@ namespace SvgW3CTestRunner.Droid
                         {
                             try
                             {
-                                using (var surface = SKSurface.Create(width, height, SKColorType.Rgba_8888, SKAlphaType.Premul, bitmap.LockPixels(), width * 4))
+                                using (var surface = SKSurface.Create(width, height, SKColorType.Rgba8888, SKAlphaType.Premul, bitmap.LockPixels(), width * 4))
                                 {
                                     doc.Draw(SvgRenderer.FromGraphics(new SkiaGraphics(surface)));
                                 }
