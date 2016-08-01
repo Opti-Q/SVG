@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using SkiaSharp;
-using Svg.Interfaces;
 using RectangleF = Svg.Interfaces.RectangleF;
 
 namespace Svg.Platform
@@ -9,7 +8,7 @@ namespace Svg.Platform
 
     public class SkiaBitmap : Svg.Bitmap
     {
-        protected SKBitmap _image;
+        protected readonly SKBitmap _image;
 
         public SkiaBitmap(int width, int height)
         {
@@ -57,26 +56,15 @@ namespace Svg.Platform
 
         public void SavePng(Stream stream, int quality = 100)
         {
-            SKBitmap bitmap = Image;
-            try
+            using (var img = SKImage.FromBitmap(Image))
             {
-                bitmap.LockPixels();
-                IntPtr p;
-                bitmap.GetPixels(out p);
-                using (var img = SKImage.FromPixels(bitmap.Info, p, bitmap.Width * bitmap.BytesPerPixel))
-                {
-                    var data = img.Encode(SKImageEncodeFormat.Png, quality: quality);
-                    data.SaveTo(stream);
-                }
-            }
-            finally
-            {
-                bitmap.UnlockPixels();
+                var data = img.Encode(SKImageEncodeFormat.Png, quality: quality);
+                data.SaveTo(stream);
             }
         }
 
 
-        public int Width { get; set; }
-        public int Height { get; set; }
+        public int Width { get; private set; }
+        public int Height { get; private set; }
     }
 }

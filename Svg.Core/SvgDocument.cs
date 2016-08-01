@@ -578,10 +578,7 @@ namespace Svg
 
             foreach (var element in Children.OfType<SvgVisualElement>())
             {
-                RectangleF bounds = element.Bounds;
-                var m = element.Transforms?.GetMatrix();
-                if (m != null)
-                    bounds = m.TransformRectangle(bounds);
+                RectangleF bounds = element.GetBoundingBox();
 
                 if (documentSize == null)
                     documentSize = bounds;
@@ -602,7 +599,6 @@ namespace Svg
 
         public void Write(Stream stream)
         {
-
             var xmlWriter = Engine.Factory.CreateXmlTextWriter(stream, Encoding.UTF8);
 
             xmlWriter.WriteStartDocument();
@@ -618,7 +614,6 @@ namespace Svg
 
         public void Write(string path)
         {
-            //using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
             using (var fs = Engine.Resolve<IFileSystem>().OpenWrite(path))
             {
                 this.Write(fs);

@@ -125,7 +125,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 new ToolCommand(this, "Share PNG thumb", (obj) =>
                 {
                     var fs = Engine.Resolve<IFileSystem>();
-
+                    
                     using (var bmp = ws.Document.DrawAllContents(160, 160, Engine.Factory.Colors.White))
                     {
                         // now save it as PNG

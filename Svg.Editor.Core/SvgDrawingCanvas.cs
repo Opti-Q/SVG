@@ -305,11 +305,19 @@ namespace Svg.Core
             var z = ZoomFactor;
             var halfRelWidth = ScreenWidth / z / 2;
             var halfRelHeight = ScreenHeight / z / 2;
-            var childBounds = element.Bounds;
+            var childBounds = element.GetBoundingBox();
             var halfRelChildWidth = childBounds.Width / 2;
             var halfRelChildHeight = childBounds.Height / 2;
+            var centerPosX = -RelativeTranslate.X + halfRelWidth - halfRelChildWidth;
+            var centerPosY = -RelativeTranslate.Y + halfRelHeight - halfRelChildHeight;
 
-            SvgTranslate tl = new SvgTranslate(-RelativeTranslate.X + halfRelWidth - halfRelChildWidth, -RelativeTranslate.Y + halfRelHeight - halfRelChildHeight);
+            // make sure it is centered
+            if (childBounds.X != 0)
+                centerPosX -= childBounds.X;
+            if (childBounds.Y != 0)
+                centerPosY -= childBounds.Y;
+
+            SvgTranslate tl = new SvgTranslate(centerPosX, centerPosY);
             element.Transforms.Add(tl);
 
             Document.Children.Add(element);

@@ -165,7 +165,7 @@ namespace Svg.Core.Tools
                 renderer.Graphics.Save();
 
                 // we draw a selection adorner around all elements
-                // as the canvas is already translated and scaled, we just need the plaing boundingbox (as poopsed to transformed one using element.GetBoundingBox(ws.GetCanvasTransformationMatrix()))
+                // as the canvas is already translated and scaled, we just need the plai boundingbox (as poopsed to transformed one using element.GetBoundingBox(ws.GetCanvasTransformationMatrix()))
                 renderer.DrawRectangle(element.GetBoundingBox(), BluePen);
 
                 renderer.Graphics.Restore();

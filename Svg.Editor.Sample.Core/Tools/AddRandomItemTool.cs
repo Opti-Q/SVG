@@ -40,11 +40,19 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     var z = canvas.ZoomFactor;
                     var halfRelWidth = canvas.ScreenWidth/z/2;
                     var halfRelHeight = canvas.ScreenHeight/z/2;
-                    var childBounds = child.Bounds;
+                    var childBounds = child.GetBoundingBox();
                     var halfRelChildWidth = childBounds.Width/2;
                     var halfRelChildHeight = childBounds.Height/2;
+                    var centerPosX = -canvas.RelativeTranslate.X + halfRelWidth - halfRelChildWidth;
+                    var centerPosY = -canvas.RelativeTranslate.Y + halfRelHeight - halfRelChildHeight;
 
-                    SvgTranslate tl = new SvgTranslate(-canvas.RelativeTranslate.X + halfRelWidth - halfRelChildWidth, -canvas.RelativeTranslate.Y + halfRelHeight - halfRelChildHeight);
+                    //var bounds = child.GetBoundingBox();
+                    if (childBounds.X != 0)
+                        centerPosX -= childBounds.X;
+                    if (childBounds.Y != 0)
+                        centerPosY -= childBounds.Y;
+
+                    SvgTranslate tl = new SvgTranslate(centerPosX, centerPosY);
                     child.Transforms.Add(tl);
 
                     child.ID = $"{child.ElementName}_{_canvas.Document.Descendants().Count(d => d.ElementName == child.ElementName)+1}";

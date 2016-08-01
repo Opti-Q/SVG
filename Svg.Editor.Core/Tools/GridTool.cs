@@ -284,7 +284,7 @@ namespace Svg.Core.Tools
             try
             {
                 _isSnappingInProgress = true;
-                
+
                 // snap to grid:
                 // get absolute point
                 var bounds = ve.Bounds;
