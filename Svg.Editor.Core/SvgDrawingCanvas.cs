@@ -320,8 +320,8 @@ namespace Svg.Core
         public Matrix GetCanvasTransformationMatrix()
         {
             var m1 = Engine.Factory.CreateMatrix();
-            m1.Scale(ZoomFactor, ZoomFactor);
             m1.Translate(Translate.X, Translate.Y);
+            m1.Scale(ZoomFactor, ZoomFactor);
             return m1;
         }
 

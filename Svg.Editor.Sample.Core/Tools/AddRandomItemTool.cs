@@ -32,7 +32,8 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     //var provider = SourceProvider("isolib/Straights/solid and broken/solid1.svg");
                     //var provider = SourceProvider("svg/painting-control-01-f.svg");
                     //var provider = SourceProvider("svg/blind01.svg");
-                    var provider = SourceProvider("svg/Blinds_6_gezoomtes_minibild.svg");
+                    var provider = SourceProvider("svg/Blinds_6.svg");
+                    //var provider = SourceProvider("svg/Blinds_6_gezoomtes_minibild.svg");
                     //var provider = SourceProvider("svg/Positions_13_kein_text_im_minibild_und_canvas.svg");
                     var otherDoc = SvgDocument.Open<SvgDocument>(provider);
                     var child = otherDoc.Children.OfType<SvgVisualElement>().First(e => e.Displayable && e.Visible);
@@ -43,9 +44,9 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     var halfRelChildWidth = childBounds.Width/2;
                     var halfRelChildHeight = childBounds.Height/2;
 
-                    //SvgTranslate tl = new SvgTranslate(-canvas.RelativeTranslate.X + halfRelWidth - halfRelChildWidth, -canvas.RelativeTranslate.Y + halfRelHeight - halfRelChildHeight);
-                    //child.Transforms.Add(tl);
-                    
+                    SvgTranslate tl = new SvgTranslate(-canvas.RelativeTranslate.X + halfRelWidth - halfRelChildWidth, -canvas.RelativeTranslate.Y + halfRelHeight - halfRelChildHeight);
+                    child.Transforms.Add(tl);
+
                     child.ID = $"{child.ElementName}_{_canvas.Document.Descendants().Count(d => d.ElementName == child.ElementName)+1}";
 
                     _canvas.Document.Children.Add(child);

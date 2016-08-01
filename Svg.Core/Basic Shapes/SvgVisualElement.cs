@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Diagnostics;
 using System.Linq;
 using Svg.Interfaces;
+using Svg.Transforms;
 
 namespace Svg
 {
@@ -80,11 +81,16 @@ namespace Svg
             }
         }
         
-        public PointF[] GetTransformedPoints()
+        public PointF[] GetTransformedPoints(Matrix transform = null)
         {
-            // use cached values if possible
-            if (_boundingPoints != null)
-                return _boundingPoints.Select(p => p.Clone()).ToArray();
+            if (transform == null)
+                transform = Matrix.Create();
+            else
+                transform = transform.Clone();
+
+            //// use cached values if possible
+            //if (_boundingPoints != null)
+            //    return _boundingPoints.Select(p => p.Clone()).ToArray();
 
             if (Renderable)
             {
@@ -96,24 +102,33 @@ namespace Svg
 
                 var pts = new[] {p1, p2, p3, p4};
 
-                Transforms?.GetMatrix().TransformPoints(pts);
+                foreach (SvgTransform transformation in this.Transforms)
+                {
+                    transformation.ApplyTo(transform);
+                }
+
+                transform.TransformPoints(pts);
                 _boundingPoints = pts;
             }
             else
             {
                 var pts = new List<PointF>();
-                
+
+                foreach (SvgTransform transformation in this.Transforms)
+                {
+                    transformation.ApplyTo(transform);
+                }
+
                 foreach (var c in this.Children)
                 {
                     if (c is SvgVisualElement)
                     {                        
-                        var childBounds = ((SvgVisualElement)c).GetTransformedPoints();
+                        var childBounds = ((SvgVisualElement)c).GetTransformedPoints(transform);
                         pts.AddRange(childBounds);
                     }
                 }
                 var temp = pts.ToArray();
-
-                Transforms?.GetMatrix().TransformPoints(temp);
+                
                 _boundingPoints = temp;
             }
 
@@ -122,15 +137,14 @@ namespace Svg
 
         public RectangleF GetBoundingBox(Matrix transform = null)
         {
-            var pts = GetTransformedPoints();
+            var pts = GetTransformedPoints(transform);
 
             if (_boundingBox == null)
                 _boundingBox = RectangleF.FromPoints(pts);
 
             if(transform == null || transform.IsIdentity)
                 return _boundingBox;
-
-            transform?.TransformPoints(pts);
+            
             return RectangleF.FromPoints(pts);
         }
 

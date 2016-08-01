@@ -54,13 +54,13 @@
      inkscape:current-layer="g4450-2" />
 
 
-  <!-- -->
   <g
    id="g4450-1"
    xml:space="default">
+    <!--
+       transform="matrix(-0.5, -0.8, -0.8, 0.5, 0, 0)" -->
     <g
        id="g4450-2"
-       transform="matrix(-0.5, -0.8, -0.8, 0.5, 0, 0)"
        xml:space="default">
     <!--<path
        d="m -64.626638,37.157448 17.3206,9.9999"
@@ -142,16 +142,16 @@
        open="true"
        style="fill:none;stroke:#000000;stroke-width:1.49999988"
        inkscape:connector-curvature="0" />-->
-  <!---->
-  <rect
-    transform="matrix(0.50,0.8,-0.8,0.5,0,0)"
-       x="0"
-       y="0"
-       width="50"
-       height="100"
-       id="rect4420-3"
-       xml:space="default"
-       style="fill:#000000;stroke:#000000;stroke-width:1.5;stroke-opacity:0;fill-opacity:0.19614148" />
-  </g>
+      <!--transform="matrix(0.50,0.8,-0.8,0.5,0,0)"-->
+      <rect
+        
+           x="0"
+           y="0"
+           width="50"
+           height="100"
+           id="rect4420-3"
+           xml:space="default"
+           style="fill:#000000;stroke:#000000;stroke-width:1.5;stroke-opacity:0;fill-opacity:0.19614148" />
+    </g>
   </g>
 </svg>

@@ -386,6 +386,9 @@
   <ItemGroup>
     <AndroidAsset Include="Assets\svg\Positions_13_kein_text_im_minibild_und_canvas.svg" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\svg\Blinds_6.svg" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
      Other similar extension points exist, see Microsoft.Common.targets.
