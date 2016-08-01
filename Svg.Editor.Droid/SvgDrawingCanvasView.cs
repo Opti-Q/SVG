@@ -67,7 +67,7 @@ namespace Svg.Droid.Editor
 
             try
             {
-                using (var surface = SkiaSharp.SKSurface.Create(canvas.Width, canvas.Height, SkiaSharp.SKColorType.Rgba_8888, SkiaSharp.SKAlphaType.Premul, _bitmap.LockPixels(), canvas.Width * 4))
+                using (var surface = SkiaSharp.SKSurface.Create(canvas.Width, canvas.Height, SkiaSharp.SKColorType.Rgba8888, SkiaSharp.SKAlphaType.Premul, _bitmap.LockPixels(), canvas.Width * 4))
                 {
                     await DrawingCanvas.OnDraw(new SKCanvasRenderer(surface, canvas.Width, canvas.Height));
                 }

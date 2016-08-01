@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-using Java.Lang;
 using Svg.Interfaces;
 
 namespace Svg.Platform
@@ -232,10 +229,10 @@ namespace Svg.Platform
 
         public Android.Graphics.Matrix Matrix => _m;
 
-        public override void Shear(float f, float f1)
+        public override void Shear(float sx, float sy)
         {
             //_m.SetSkew(f, f1);
-            _m.PreSkew(f, f1);
+            _m.PreSkew(sx, sy);
         }
 
         public static implicit operator AndroidMatrix(Android.Graphics.Matrix other)

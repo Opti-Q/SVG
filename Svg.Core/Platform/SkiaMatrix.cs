@@ -1,4 +1,4 @@
-using System;
+using System.Linq;
 using SkiaSharp;
 using Svg.Interfaces;
 
@@ -139,30 +139,30 @@ namespace Svg.Platform
             //    return;
             //}
 
-            var m = _m;
-            float det = m.ScaleX * (m.ScaleY * m.Persp2 - m.Persp1 * m.TransY) -
-             m.SkewX * (m.SkewY * m.Persp2 - m.TransY * m.Persp0) +
-             m.TransX * (m.SkewY * m.Persp1 - m.ScaleY * m.Persp0);
+            //var m = _m;
+            //float det = m.ScaleX * (m.ScaleY * m.Persp2 - m.Persp1 * m.TransY) -
+            // m.SkewX * (m.SkewY * m.Persp2 - m.TransY * m.Persp0) +
+            // m.TransX * (m.SkewY * m.Persp1 - m.ScaleY * m.Persp0);
 
-            float invdet = 1 / det;
+            //float invdet = 1 / det;
 
-            var m1 = new SKMatrix();
-            m1.ScaleX = (m.ScaleY * m.Persp2 - m.Persp1 * m.TransY) * invdet;
-            m1.SkewX = (m.TransX * m.Persp1 - m.SkewX * m.Persp2) * invdet;
-            m1.TransX = (m.SkewX * m.TransY - m.TransX * m.ScaleY) * invdet;
-            m1.SkewY = (m.TransY * m.Persp0 - m.SkewY * m.Persp2) * invdet;
-            m1.ScaleY = (m.ScaleX * m.Persp2 - m.TransX * m.Persp0) * invdet;
-            m1.TransY = (m.SkewY * m.TransX - m.ScaleX * m.TransY) * invdet;
-            m1.Persp0 = (m.SkewY * m.Persp1 - m.Persp0 * m.ScaleY) * invdet;
-            m1.Persp1 = (m.Persp0 * m.SkewX - m.ScaleX * m.Persp1) * invdet;
-            m1.Persp2 = (m.ScaleX * m.ScaleY - m.SkewY * m.SkewX) * invdet;
-            _m = m1;
+            //var m1 = new SKMatrix();
+            //m1.ScaleX = (m.ScaleY * m.Persp2 - m.Persp1 * m.TransY) * invdet;
+            //m1.SkewX = (m.TransX * m.Persp1 - m.SkewX * m.Persp2) * invdet;
+            //m1.TransX = (m.SkewX * m.TransY - m.TransX * m.ScaleY) * invdet;
+            //m1.SkewY = (m.TransY * m.Persp0 - m.SkewY * m.Persp2) * invdet;
+            //m1.ScaleY = (m.ScaleX * m.Persp2 - m.TransX * m.Persp0) * invdet;
+            //m1.TransY = (m.SkewY * m.TransX - m.ScaleX * m.TransY) * invdet;
+            //m1.Persp0 = (m.SkewY * m.Persp1 - m.Persp0 * m.ScaleY) * invdet;
+            //m1.Persp1 = (m.Persp0 * m.SkewX - m.ScaleX * m.Persp1) * invdet;
+            //m1.Persp2 = (m.ScaleX * m.ScaleY - m.SkewY * m.SkewX) * invdet;
+            //_m = m1;
 
-            //SKMatrix m;
-            //if (_m.TryInvert(out m))
-            //{
-            //    _m = m;
-            //}
+            SKMatrix m;
+            if (_m.TryInvert(out m))
+            {
+                _m = m;
+            }
         }
 
         public override void Scale(float width, float height)
@@ -175,9 +175,9 @@ namespace Svg.Platform
             var m = SKMatrix.MakeScale(width, height);
 
             if (order == MatrixOrder.Append)
-                _m = Multiply(_m, m);
+                SKMatrix.PostConcat(ref _m, ref m);
             else
-                _m = Multiply(m, _m);
+                SKMatrix.PreConcat(ref _m, ref m);
         }
 
         public override void Translate(float left, float top)
@@ -190,9 +190,9 @@ namespace Svg.Platform
             var m = SKMatrix.MakeTranslation(left, top);
 
             if (order == MatrixOrder.Append)
-                _m = Multiply(_m, m);
+                SKMatrix.PostConcat(ref _m, ref m);
             else
-                _m = Multiply(m, _m);
+                SKMatrix.PreConcat(ref _m, ref m);
         }
         
         /// <summary>
@@ -206,40 +206,32 @@ namespace Svg.Platform
 
         public override void Multiply(Matrix matrix, MatrixOrder order)
         {
-            var other = (SkiaMatrix)matrix;
+            var m = ((SkiaMatrix)matrix).Matrix;
 
             if (order == MatrixOrder.Append)
-                _m = Multiply(_m, other.Matrix);
+                SKMatrix.PostConcat(ref _m, ref m);
             else
-                _m = Multiply(other.Matrix, _m);
+                SKMatrix.PreConcat(ref _m, ref m);
         }
 
         public override void Rotate(float angle, MatrixOrder order)
         {
-            var mr = SKMatrix.MakeRotation((float)DegreeToRadian(angle));
-            //var mr = SKMatrix.MakeRotationDegrees(angle);
+            var m = SKMatrix.MakeRotationDegrees(angle);
 
             if (order == MatrixOrder.Append)
-                _m = Multiply(_m, mr);
+                SKMatrix.PostConcat(ref _m, ref m);
             else
-                _m = Multiply(mr, _m);
+                SKMatrix.PreConcat(ref _m, ref m);
         }
 
         public override void RotateAt(float angle, PointF midPoint, MatrixOrder order)
         {
-            var m1 = SKMatrix.MakeTranslation(midPoint.X, midPoint.Y);
-            var m2 = SKMatrix.MakeRotation((float)DegreeToRadian(angle));
-            var m3 = SKMatrix.MakeTranslation(-midPoint.X, -midPoint.Y);
-
-            var m12 = CreateMatrix(Multiply(GetElements(m2), GetElements(m1)));
-            var mr = CreateMatrix(Multiply(GetElements(m3), GetElements(m12)));
-
-            //var mr = SKMatrix.MakeRotationDegrees(angle, midPoint.X, midPoint.Y);
+            var m = SKMatrix.MakeRotationDegrees(angle, midPoint.X, midPoint.Y);
 
             if (order == MatrixOrder.Append)
-                _m = Multiply(_m, mr);
+                SKMatrix.PostConcat(ref _m, ref m);
             else
-                _m = Multiply(mr, _m);
+                SKMatrix.PreConcat(ref _m, ref m);
         }
 
         public override void Rotate(float fAngle)
@@ -247,60 +239,47 @@ namespace Svg.Platform
             Rotate(fAngle, MatrixOrder.Prepend);
         }
 
-        public override void Shear(float f, float f1)
+        public override void Shear(float sx, float sy)
         {
-            var m = SKMatrix.MakeSkew(f, f1);
+            var m = SKMatrix.MakeSkew(sx, sy);
 
-            _m = CreateMatrix(Multiply(GetElements(m), GetElements(_m)));
+            SKMatrix.PreConcat(ref _m, ref m);
         }
 
-        public override RectangleF TransformRectangle(RectangleF bound)
+        public override RectangleF TransformRectangle(RectangleF b)
         {
-            var start = PointF.Create(bound.X, bound.Y);
-            var end = PointF.Create(bound.X + bound.Width, bound.Y + bound.Height);
-            var pts = new[] { start, end };
+            var p1 = PointF.Create(b.Left, b.Top);
+            var p2 = PointF.Create(b.Right, b.Top);
+            var p3 = PointF.Create(b.Right, b.Bottom);
+            var p4 = PointF.Create(b.Left, b.Bottom);
+            var pts = new[] {p1, p2, p3, p4};
 
             TransformPoints(pts);
 
-            return RectangleF.Create(start.X, start.Y, end.X - start.X, end.Y - start.Y);
+            return RectangleF.FromPoints(pts);
         }
 
         public override void TransformVectors(PointF[] points)
         {
+            var pts = points.Select(p => new SKPoint(p.X, p.Y)).ToArray();
 
-            foreach (var point in points)
+            var mappedPoints = _m.MapVectors(pts);
+            for (int i = 0; i < mappedPoints.Length; i++)
             {
-                //// see http://math.stackexchange.com/questions/29257/find-2d-point-given-2d-point-and-transformation-matrix
-                //// transformvectors needs to IGNORE the translation! (see: http://stackoverflow.com/questions/3265169/matrix-transformpoints-vs-transformvectors)
-                //point.X = (_m.ScaleX * point.X) + (_m.SkewX * point.X); // + _m.TransX;
-                //point.Y = (_m.SkewY * point.Y) + (_m.ScaleY * point.Y); // + _m.TransY;
-
-
-                // see http://referencesource.microsoft.com/#WindowsBase/Base/System/Windows/Media/Matrix.cs,e4b18483d8c1404d
-                float xadd = point.Y * _m.SkewY /*+ _m.TransX*/;
-                float yadd = point.X * _m.SkewX /*+ _m.TransY*/;
-                point.X *= _m.ScaleX;
-                point.X += xadd;
-                point.Y *= _m.ScaleY;
-                point.Y += yadd;
+                points[i].X = mappedPoints[i].X;
+                points[i].Y = mappedPoints[i].Y;
             }
         }
 
         public override void TransformPoints(PointF[] points)
         {
-            foreach (var point in points)
-            {
-                //// see http://math.stackexchange.com/questions/29257/find-2d-point-given-2d-point-and-transformation-matrix
-                //point.X = (_m.ScaleX*point.X) + (_m.SkewX*point.X) + _m.TransX;
-                //point.Y = (_m.SkewY*point.Y) + (_m.ScaleY*point.Y) + _m.TransY;
+            var pts = points.Select(p => new SKPoint(p.X, p.Y)).ToArray();
 
-                // see http://referencesource.microsoft.com/#WindowsBase/Base/System/Windows/Media/Matrix.cs,e4b18483d8c1404d
-                float xadd = point.Y * _m.SkewY + _m.TransX;
-                float yadd = point.X * _m.SkewX + _m.TransY;
-                point.X *= _m.ScaleX;
-                point.X += xadd;
-                point.Y *= _m.ScaleY;
-                point.Y += yadd;
+            var mappedPoints = _m.MapPoints(pts);
+            for (int i = 0; i < mappedPoints.Length; i++)
+            {
+                points[i].X = mappedPoints[i].X;
+                points[i].Y = mappedPoints[i].Y;
             }
         }
         
@@ -359,33 +338,7 @@ namespace Svg.Platform
                     m.Persp2,
                 };
         }
-
-        private static SKMatrix CreateMatrix(float[] e)
-        {
-            return new SKMatrix()
-            {
-                ScaleX = e[0],
-                SkewX = e[1],
-                TransX = e[2],
-                SkewY = e[3],
-                ScaleY = e[4],
-                TransY = e[5],
-                Persp0 = e[6],
-                Persp1 = e[7],
-                Persp2 = e[8]
-            };
-        }
-
-        private static double DegreeToRadian(double angle)
-        {
-            return Math.PI * angle / 180.0;
-        }
-
-        private SKMatrix Multiply(SKMatrix m1, SKMatrix m2)
-        {
-            return CreateMatrix(Multiply(GetElements(m1), GetElements(m2)));
-        }
-
+        
         public static implicit operator SkiaMatrix(SKMatrix other)
         {
             return new SkiaMatrix(other, true);

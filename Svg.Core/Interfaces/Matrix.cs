@@ -37,7 +37,7 @@ namespace Svg
         public abstract bool IsIdentity { get; }
 
         public abstract void Rotate(float fAngle);
-        public abstract void Shear(float f, float f1);
+        public abstract void Shear(float sx, float sy);
         public virtual void Dispose()
         { }
         public override string ToString()
