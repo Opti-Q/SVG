@@ -47,6 +47,7 @@
     <Compile Include="Commands\IUndoRedoCommand.cs" />
     <Compile Include="Commands\ICommandService.cs" />
     <Compile Include="Events\MoveEvent.cs" />
+    <Compile Include="Events\RotateEvent.cs" />
     <Compile Include="Events\ScaleEvent.cs" />
     <Compile Include="Events\PointerEvent.cs" />
     <Compile Include="Interfaces\ICanInvalidateCanvas.cs" />
