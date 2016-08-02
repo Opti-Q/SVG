@@ -11,7 +11,7 @@ namespace Svg.Editor.Tests
     public class SelectionToolTests : SvgDrawingCanvasTestBase
     {
         [Test]
-        public async Task CanSelectTransformedElement_ByTappingIt()
+        public async Task IfUserTapsCanvas_AndTapPositionIntersectsWithElement_SelectsElement()
         {
             // Arrange
             await Canvas.EnsureInitialized();
@@ -37,7 +37,7 @@ namespace Svg.Editor.Tests
         }
 
         [Test]
-        public async Task CanDeselect_ByTappingToNowhere()
+        public async Task IfUserTapsCanvas_AndTapPositionDoesNotIntersectWithSelectedElements_Deselects()
         {
             // Arrange
             await Canvas.EnsureInitialized();
@@ -64,7 +64,7 @@ namespace Svg.Editor.Tests
         }
 
         [Test]
-        public async Task CanSelectTransformedElement_ByDrawingSelectionRectangle()
+        public async Task IfUserDrawsSelectionRectangle_AndElementsAreContained_ElementsAreSelected()
         {
             // Arrange
             await Canvas.EnsureInitialized();
@@ -102,6 +102,45 @@ namespace Svg.Editor.Tests
             Assert.AreEqual(2, Canvas.SelectedElements.Count);
             Assert.AreSame(element2, Canvas.SelectedElements.First(), "z-index wrong?");
             Assert.AreSame(element1, Canvas.SelectedElements.Last(), "z-index wrong?");
+        }
+
+        [Test]
+        public async Task IfUserDrawsSelectionRectangle_AndElementsAreNotContained_ElementsAreNotSelected()
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            var txtTool = Canvas.Tools.OfType<SelectionTool>().Single();
+            Canvas.ActiveTool = txtTool;
+            Canvas.ScreenWidth = 800;
+            Canvas.ScreenHeight = 500;
+
+            var element1 = new SvgRectangle()
+            {
+                X = new SvgUnit(SvgUnitType.Pixel, 200),
+                Y = new SvgUnit(SvgUnitType.Pixel, 200),
+                Width = new SvgUnit(SvgUnitType.Pixel, 30),
+                Height = new SvgUnit(SvgUnitType.Pixel, 20),
+            };
+            Canvas.Document.Children.Add(element1);
+            var b1 = element1.GetBoundingBox(Canvas.GetCanvasTransformationMatrix());
+
+            var d = LoadDocument("nested_transformed_text.svg");
+            var element2 = d.Children.OfType<SvgVisualElement>().Single(c => c.Visible && c.Displayable);
+            Canvas.AddItemInScreenCenter(element2);
+            var b2 = element2.GetBoundingBox(Canvas.GetCanvasTransformationMatrix());
+
+            // Preassert
+            Assert.AreEqual(0, Canvas.SelectedElements.Count);
+
+            // Act
+            var start = PointF.Create(b1.Left + 1, b1.Top + 1);
+            var end = PointF.Create(b2.Right - 1, b2.Bottom - 1);
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, start, start, start));
+            await Canvas.OnEvent(new MoveEvent(start, start, end, end - start));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, end, end, end));
+
+            // Assert
+            Assert.AreEqual(0, Canvas.SelectedElements.Count);
         }
     }
 }
