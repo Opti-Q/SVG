@@ -1,13 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using Svg.Interfaces;
 using Svg.Transforms;
 
 namespace Svg
 {
+    public enum SelectionType
+    {
+        Intersect,
+        Contain
+    }
+
     /// <summary>
     /// The class that all SVG elements should derive from when they are to be rendered.
     /// </summary>
@@ -15,12 +20,9 @@ namespace Svg
     {
         private bool _requiresSmoothRendering;
         private Region _previousClip;
-        private RectangleF _renderBounds;
         private Pen _strokePen;
         private Brush _strokeBrush;
         private Brush _fillBrush;
-        private PointF[] _boundingPoints;
-        private RectangleF _boundingBox;
 
         /// <summary>
         /// Gets the <see cref="GraphicsPath"/> for this element.
@@ -87,65 +89,122 @@ namespace Svg
                 transform = Matrix.Create();
             else
                 transform = transform.Clone();
-
-            //// use cached values if possible
-            //if (_boundingPoints != null)
-            //    return _boundingPoints.Select(p => p.Clone()).ToArray();
-
+            
             if (Renderable)
             {
-                var b = Bounds;
-                var p1 = PointF.Create(b.Left, b.Top);
-                var p2 = PointF.Create(b.Right, b.Top);
-                var p3 = PointF.Create(b.Right, b.Bottom);
-                var p4 = PointF.Create(b.Left, b.Bottom);
-
-                var pts = new[] {p1, p2, p3, p4};
-
-                foreach (SvgTransform transformation in this.Transforms)
-                {
-                    transformation.ApplyTo(transform);
-                }
-
-                transform.TransformPoints(pts);
-                _boundingPoints = pts;
+                return GetTransformedElementPoints(transform);
             }
             else
             {
-                var pts = new List<PointF>();
-
-                foreach (SvgTransform transformation in this.Transforms)
-                {
-                    transformation.ApplyTo(transform);
-                }
-
-                foreach (var c in this.Children)
-                {
-                    if (c is SvgVisualElement)
-                    {                        
-                        var childBounds = ((SvgVisualElement)c).GetTransformedPoints(transform);
-                        pts.AddRange(childBounds);
-                    }
-                }
-                var temp = pts.ToArray();
-                
-                _boundingPoints = temp;
+                return GetTransformedChildPoints(transform);
             }
-
-            return _boundingPoints.Select(p => p.Clone()).ToArray();
         }
 
         public RectangleF GetBoundingBox(Matrix transform = null)
         {
             var pts = GetTransformedPoints(transform);
-
-            if (_boundingBox == null)
-                _boundingBox = RectangleF.FromPoints(pts);
-
-            if(transform == null || transform.IsIdentity)
-                return _boundingBox;
             
             return RectangleF.FromPoints(pts);
+        }
+
+        public IEnumerable<TElement> HitTest<TElement>(RectangleF rectangle, SelectionType selectionType = SelectionType.Intersect,
+            Matrix transform = null, int maxRecursion = int.MaxValue) where TElement : SvgVisualElement
+        {
+            return HitTestInternal<TElement>(rectangle, selectionType, transform ?? Matrix.Create(), maxRecursion);
+        }
+
+        private IEnumerable<TElement> HitTestInternal<TElement>(RectangleF rectangle, SelectionType selectionType,
+            Matrix transform, int maxRecursion) where TElement : SvgVisualElement
+        {
+            if (transform == null)
+                transform = Matrix.Create();
+            else
+                transform = transform.Clone();
+
+            if (Renderable)
+            {
+                var pts = GetTransformedElementPoints(transform);
+                var box = RectangleF.FromPoints(pts);
+                // if this element fits the type filter, check if it fits the hittest rectangle
+                if (this is TElement)
+                {
+                    if ((selectionType == SelectionType.Intersect) && rectangle.IntersectsWith(box))
+                        yield return (TElement)this;
+                    else if ((selectionType == SelectionType.Contain) && rectangle.Contains(box))
+                        yield return (TElement)this;
+                }
+            }
+            else
+            {
+                // recurse the hittest to the inner levels
+                var recurs = maxRecursion - 1;
+                if (recurs > 0)
+                {
+                    var t2 = transform.Clone();
+                    foreach (SvgTransform transformation in this.Transforms)
+                    {
+                        transformation.ApplyTo(t2);
+                    }
+
+                    // reverse children because of z-index
+                    foreach (var hit in this.Children.Reverse().OfType<SvgVisualElement>()
+                            .SelectMany(child => child.HitTestInternal<TElement>(rectangle, selectionType, t2, recurs)))
+                    {
+                        yield return hit;
+                    }
+                }
+
+                // if this element fits the type filter, check if it fits the hittest rectangle
+                if (this is TElement)
+                {
+                    var points = GetTransformedChildPoints(transform);
+                    var box = RectangleF.FromPoints(points);
+
+                    if ((selectionType == SelectionType.Intersect) && rectangle.IntersectsWith(box))
+                        yield return (TElement) this;
+                    else if ((selectionType == SelectionType.Contain) && rectangle.Contains(box))
+                        yield return (TElement) this;
+                }
+            }
+        }
+
+        private PointF[] GetTransformedElementPoints(Matrix transform)
+        {
+            var b = Bounds;
+            var p1 = PointF.Create(b.Left, b.Top);
+            var p2 = PointF.Create(b.Right, b.Top);
+            var p3 = PointF.Create(b.Right, b.Bottom);
+            var p4 = PointF.Create(b.Left, b.Bottom);
+
+            var pts = new[] {p1, p2, p3, p4};
+
+            foreach (SvgTransform transformation in this.Transforms)
+            {
+                transformation.ApplyTo(transform);
+            }
+
+            transform.TransformPoints(pts);
+            return pts.Select(p => p.Clone()).ToArray();
+        }
+
+        private PointF[] GetTransformedChildPoints(Matrix transform)
+        {
+            var pts = new List<PointF>();
+
+            foreach (SvgTransform transformation in this.Transforms)
+            {
+                transformation.ApplyTo(transform);
+            }
+
+            foreach (var c in this.Children)
+            {
+                if (c is SvgVisualElement)
+                {
+                    var childBounds = ((SvgVisualElement) c).GetTransformedPoints(transform);
+                    pts.AddRange(childBounds);
+                }
+            }
+            return pts.Select(p => p.Clone()).ToArray();
         }
 
         /// <summary>
@@ -488,15 +547,6 @@ namespace Svg
         private Brush GetFillBrush(ISvgRenderer renderer)
         {
             return _fillBrush ?? (_fillBrush = this.Fill.GetBrush(this, renderer, Math.Min(Math.Max(this.FillOpacity * this.Opacity, 0), 1)));
-        }
-
-        protected override void OnSubTreeChanged(SvgElement svgElement)
-        {
-            // clear cached bounding boxes etc.
-            _boundingBox = null;
-            _boundingPoints = null;
-
-            base.OnSubTreeChanged(svgElement);
         }
 
         public override void Dispose()
