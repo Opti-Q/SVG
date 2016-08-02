@@ -7,6 +7,16 @@ namespace Svg.Interfaces
 {
     public abstract class Color
     {
+        public static Color Create(int r, int g, int b)
+        {
+            return Engine.Factory.CreateColorFromArgb(255, r, g, b);
+        }
+
+        public static Color Create(int a, int r, int g, int b)
+        {
+            return Engine.Factory.CreateColorFromArgb(a, r, g, b);
+        }
+
         public abstract string Name { get; }
         public abstract bool IsKnownColor { get; }
         public abstract bool IsSystemColor { get; }
