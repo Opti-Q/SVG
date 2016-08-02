@@ -265,7 +265,6 @@ namespace Svg.Core
         public IList<TElement> GetElementsUnder<TElement>(RectangleF selectionRectangle, SelectionType selectionType, int maxItems = int.MaxValue, int recursionLevel = 1)
             where TElement : SvgVisualElement
         {
-            //var selected = new List<SvgVisualElement>();
             // to speed up selection, this only takes first-level children into account!
             var children = Document?.Children.OfType<SvgVisualElement>() ?? Enumerable.Empty<SvgVisualElement>();
 
@@ -277,29 +276,6 @@ namespace Svg.Core
                                 GetCanvasTransformationMatrix(), recursionLevel))
                     .Take(maxItems)
                     .ToList();
-
-
-            //// go through children in reverse order so we follow the z-index
-            //foreach (var child in children.Reverse())
-            //{
-            //    // get its transformed boundingbox (renderbounds)
-            //    var renderBounds = child.GetBoundingBox(GetCanvasTransformationMatrix());
-
-            //    // then check if it intersects with selectionrectangle
-            //    if (selectionType == SelectionType.Intersect && selectionRectangle.IntersectsWith(renderBounds))
-            //    {
-            //        selected.Add(child);
-            //    }
-            //    // then check if the selectionrectangle contains it
-            //    else if (selectionType == SelectionType.Contain && selectionRectangle.Contains(renderBounds))
-            //    {
-            //        selected.Add(child);
-            //    }
-
-            //    if (selected.Count >= maxItems)
-            //        break;
-            //}
-            //return selected;
         }
 
         /// <summary>

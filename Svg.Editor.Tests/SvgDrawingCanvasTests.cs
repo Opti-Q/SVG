@@ -72,7 +72,7 @@ namespace Svg.Editor.Tests
             Assert.AreEqual(355.793488f, b.X);
             Assert.AreEqual(220.0f, b.Y);
             Assert.AreEqual(69.2820435f, b.Width);
-            Assert.AreEqual(51.2116699f, b.Height);
+            Assert.GreaterOrEqual(b.Height, 51.2116699f);
         }
     }
 }
