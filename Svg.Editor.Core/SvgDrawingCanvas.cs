@@ -121,9 +121,9 @@ namespace Svg.Core
 
         public float ZoomFactor { get; set; }
 
-        public int ScreenWidth { get; private set; }
+        public int ScreenWidth { get; set; }
 
-        public int ScreenHeight { get; private set; }
+        public int ScreenHeight { get; set; }
 
         /// <summary>
         /// If enabled, adds a DebugTool that brings some helpful visualizations
@@ -154,7 +154,7 @@ namespace Svg.Core
         public ITool ActiveTool
         {
             get { return _activeTool; }
-            private set
+            set
             {
                 _activeTool = value;
                 if (_activeTool != null)

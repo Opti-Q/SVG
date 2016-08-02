@@ -9,9 +9,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: global::Android.Runtime.ResourceDesignerAttribute("Svg.Editor.Droid.Tests.Resource", IsApplication=true)]
+[assembly: global::Android.Runtime.ResourceDesignerAttribute("Svg.Editor.Tests.Resource", IsApplication=true)]
 
-namespace Svg.Editor.Droid.Tests
+namespace Svg.Editor.Tests
 {
 	
 	
@@ -26,10 +26,10 @@ namespace Svg.Editor.Droid.Tests
 		
 		public static void UpdateIdValues()
 		{
-			global::Nunit.Runner.Resource.String.ApplicationName = global::Svg.Editor.Droid.Tests.Resource.String.ApplicationName;
-			global::Nunit.Runner.Resource.String.Hello = global::Svg.Editor.Droid.Tests.Resource.String.Hello;
-			global::Xamarin.Forms.Platform.Resource.String.ApplicationName = global::Svg.Editor.Droid.Tests.Resource.String.ApplicationName;
-			global::Xamarin.Forms.Platform.Resource.String.Hello = global::Svg.Editor.Droid.Tests.Resource.String.Hello;
+			global::Nunit.Runner.Resource.String.ApplicationName = global::Svg.Editor.Tests.Resource.String.ApplicationName;
+			global::Nunit.Runner.Resource.String.Hello = global::Svg.Editor.Tests.Resource.String.Hello;
+			global::Xamarin.Forms.Platform.Resource.String.ApplicationName = global::Svg.Editor.Tests.Resource.String.ApplicationName;
+			global::Xamarin.Forms.Platform.Resource.String.Hello = global::Svg.Editor.Tests.Resource.String.Hello;
 		}
 		
 		public partial class Attribute

@@ -80,7 +80,7 @@ namespace Svg.Core.Tools
                         var txt = await TextInputService.GetUserInput("Edit text", e.Text?.Trim());
 
                         // make sure there is at least empty text in it so we actually still have a bounding box!!
-                        if (string.IsNullOrEmpty(txt))
+                        if (string.IsNullOrEmpty(txt?.Trim()))
                             txt = "  ";
 
                         // if text was removed, and parent was document, remove element

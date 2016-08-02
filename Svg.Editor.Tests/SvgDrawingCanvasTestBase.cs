@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Svg.Core;
 
-namespace Svg.Editor.Core.Tests
+namespace Svg.Editor.Tests
 {
     public abstract class SvgDrawingCanvasTestBase
     {
@@ -15,7 +11,12 @@ namespace Svg.Editor.Core.Tests
 
         static SvgDrawingCanvasTestBase()
         {
-            SvgPlatformSetup.Init(new SvgSkiaPlatformOptions() {EnableFastTextRendering = true});
+            SvgPlatformSetup.Init(new SvgSkiaPlatformOptions() { EnableFastTextRendering = true });
+#if WIN
+            // register dummy factory for windows builds (only used in unittests)
+            Engine.Register<IFactory, WinSKFactory>(() => new WinSKFactory());
+            Engine.Register<IFileLoader, FileLoader>(() => new FileLoader());
+#endif
         }
 
         [SetUp]
@@ -28,6 +29,12 @@ namespace Svg.Editor.Core.Tests
         public virtual void TearDown()
         {
             _canvas.Dispose();
+        }
+
+        protected SvgDocument LoadDocument(string fileName)
+        {
+            var l = Engine.Resolve<IFileLoader>();
+            return l.Load(fileName);
         }
     }
 }

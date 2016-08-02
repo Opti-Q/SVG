@@ -123,6 +123,9 @@
     <Compile Include="..\Svg.Shared\SvgNodeReader.cs">
       <Link>SvgNodeReader.cs</Link>
     </Compile>
+    <Compile Include="..\Svg.Shared\SvgPlatformSetup.cs">
+      <Link>SvgPlatformSetup.cs</Link>
+    </Compile>
     <Compile Include="..\Svg.Shared\SvgPlatformSetupBase.cs">
       <Link>SvgPlatformSetupBase.cs</Link>
     </Compile>

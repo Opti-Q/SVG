@@ -9,7 +9,12 @@
     <Import_RootNamespace>Svg.Editor.Tests</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)IFIleLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgDrawingCanvasTestBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgDrawingCanvasTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TextToolTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Assets\nested_transformed_text.svg" />
   </ItemGroup>
 </Project>
