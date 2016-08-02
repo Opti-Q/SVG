@@ -8,12 +8,6 @@ using Svg.Interfaces;
 
 namespace Svg.Core.Tools
 {
-    public enum SelectionType
-    {
-        Intersect,
-        Contain
-    }
-
     public class SelectionTool : ToolBase
     {
         private RectangleF _selectionRectangle = null;
@@ -133,7 +127,7 @@ namespace Svg.Core.Tools
 
             // the canvas has not been scaled and translated yet
             // we need to compare our rectangle to the translated boundingboxes of the svg elements
-            var selected = ws.GetElementsUnder(selectionRectangle, selectionType, maxItems);
+            var selected = ws.GetElementsUnder<SvgVisualElement>(selectionRectangle, selectionType, maxItems);
 
             foreach (var element in selected)
                 ws.SelectedElements.Add(element);

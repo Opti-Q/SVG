@@ -121,9 +121,9 @@ namespace Svg.Core
 
         public float ZoomFactor { get; set; }
 
-        public int ScreenWidth { get; private set; }
+        public int ScreenWidth { get; set; }
 
-        public int ScreenHeight { get; private set; }
+        public int ScreenHeight { get; set; }
 
         /// <summary>
         /// If enabled, adds a DebugTool that brings some helpful visualizations
@@ -154,7 +154,7 @@ namespace Svg.Core
         public ITool ActiveTool
         {
             get { return _activeTool; }
-            private set
+            set
             {
                 _activeTool = value;
                 if (_activeTool != null)
@@ -262,32 +262,20 @@ namespace Svg.Core
         /// <param name="selectionRectangle"></param>
         /// <param name="selectionType"></param>
         /// <returns></returns>
-        public IList<SvgVisualElement> GetElementsUnder(RectangleF selectionRectangle, SelectionType selectionType, int maxItems = int.MaxValue)
+        public IList<TElement> GetElementsUnder<TElement>(RectangleF selectionRectangle, SelectionType selectionType, int maxItems = int.MaxValue, int recursionLevel = 1)
+            where TElement : SvgVisualElement
         {
-            var selected = new List<SvgVisualElement>();
             // to speed up selection, this only takes first-level children into account!
             var children = Document?.Children.OfType<SvgVisualElement>() ?? Enumerable.Empty<SvgVisualElement>();
-            // go through children in reverse order so we follow the z-index
-            foreach (var child in children.Reverse())
-            {
-                // get its transformed boundingbox (renderbounds)
-                var renderBounds = child.GetBoundingBox(GetCanvasTransformationMatrix());
 
-                // then check if it intersects with selectionrectangle
-                if (selectionType == SelectionType.Intersect && selectionRectangle.IntersectsWith(renderBounds))
-                {
-                    selected.Add(child);
-                }
-                // then check if the selectionrectangle contains it
-                else if (selectionType == SelectionType.Contain && selectionRectangle.Contains(renderBounds))
-                {
-                    selected.Add(child);
-                }
-
-                if (selected.Count >= maxItems)
-                    break;
-            }
-            return selected;
+            return
+                children.Reverse()
+                    .SelectMany(
+                        ch =>
+                            ch.HitTest<TElement>(selectionRectangle, selectionType,
+                                GetCanvasTransformationMatrix(), recursionLevel))
+                    .Take(maxItems)
+                    .ToList();
         }
 
         /// <summary>
@@ -295,9 +283,10 @@ namespace Svg.Core
         /// </summary>
         /// <param name="pointer1Position"></param>
         /// <returns></returns>
-        public IList<SvgVisualElement> GetElementsUnderPointer(PointF pointer1Position)
+        public IList<TElement> GetElementsUnderPointer<TElement>(PointF pointer1Position, int recursionLevel = 1)
+            where TElement : SvgVisualElement
         {
-            return GetElementsUnder(GetPointerRectangle(pointer1Position), SelectionType.Intersect);
+            return GetElementsUnder<TElement>(GetPointerRectangle(pointer1Position), SelectionType.Intersect, recursionLevel: recursionLevel);
         }
         
         public void AddItemInScreenCenter(SvgVisualElement element)
@@ -319,6 +308,7 @@ namespace Svg.Core
 
             SvgTranslate tl = new SvgTranslate(centerPosX, centerPosY);
             element.Transforms.Add(tl);
+            element.ID = $"{element.ElementName}_{Guid.NewGuid():N}";
 
             Document.Children.Add(element);
 

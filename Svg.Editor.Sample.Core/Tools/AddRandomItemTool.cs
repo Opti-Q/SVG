@@ -32,34 +32,34 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     //var provider = SourceProvider("isolib/Straights/solid and broken/solid1.svg");
                     //var provider = SourceProvider("svg/painting-control-01-f.svg");
                     //var provider = SourceProvider("svg/blind01.svg");
-                    var provider = SourceProvider("svg/Blinds_6.svg");
+                    //var provider = SourceProvider("svg/Blinds_6.svg");
                     //var provider = SourceProvider("svg/Blinds_6_gezoomtes_minibild.svg");
-                    //var provider = SourceProvider("svg/Positions_13_kein_text_im_minibild_und_canvas.svg");
+                    var provider = SourceProvider("svg/Positions_13_kein_text_im_minibild_und_canvas.svg");
                     var otherDoc = SvgDocument.Open<SvgDocument>(provider);
                     var child = otherDoc.Children.OfType<SvgVisualElement>().First(e => e.Displayable && e.Visible);
-                    var z = canvas.ZoomFactor;
-                    var halfRelWidth = canvas.ScreenWidth/z/2;
-                    var halfRelHeight = canvas.ScreenHeight/z/2;
-                    var childBounds = child.GetBoundingBox();
-                    var halfRelChildWidth = childBounds.Width/2;
-                    var halfRelChildHeight = childBounds.Height/2;
-                    var centerPosX = -canvas.RelativeTranslate.X + halfRelWidth - halfRelChildWidth;
-                    var centerPosY = -canvas.RelativeTranslate.Y + halfRelHeight - halfRelChildHeight;
+                    //var z = canvas.ZoomFactor;
+                    //var halfRelWidth = canvas.ScreenWidth/z/2;
+                    //var halfRelHeight = canvas.ScreenHeight/z/2;
+                    //var childBounds = child.GetBoundingBox();
+                    //var halfRelChildWidth = childBounds.Width/2;
+                    //var halfRelChildHeight = childBounds.Height/2;
+                    //var centerPosX = -canvas.RelativeTranslate.X + halfRelWidth - halfRelChildWidth;
+                    //var centerPosY = -canvas.RelativeTranslate.Y + halfRelHeight - halfRelChildHeight;
 
-                    //var bounds = child.GetBoundingBox();
-                    if (childBounds.X != 0)
-                        centerPosX -= childBounds.X;
-                    if (childBounds.Y != 0)
-                        centerPosY -= childBounds.Y;
+                    ////var bounds = child.GetBoundingBox();
+                    //if (childBounds.X != 0)
+                    //    centerPosX -= childBounds.X;
+                    //if (childBounds.Y != 0)
+                    //    centerPosY -= childBounds.Y;
 
-                    SvgTranslate tl = new SvgTranslate(centerPosX, centerPosY);
-                    child.Transforms.Add(tl);
+                    //SvgTranslate tl = new SvgTranslate(centerPosX, centerPosY);
+                    //child.Transforms.Add(tl);
 
-                    child.ID = $"{child.ElementName}_{_canvas.Document.Descendants().Count(d => d.ElementName == child.ElementName)+1}";
+                    //child.ID = $"{child.ElementName}_{_canvas.Document.Descendants().Count(d => d.ElementName == child.ElementName)+1}";
 
-                    _canvas.Document.Children.Add(child);
-
-                    _canvas.FireInvalidateCanvas();
+                    //_canvas.Document.Children.Add(child);
+                    _canvas.AddItemInScreenCenter(child);
+                    
                 } , sortFunc:(x) => 1000)
             };
         }

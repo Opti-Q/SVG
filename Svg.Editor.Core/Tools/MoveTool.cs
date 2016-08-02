@@ -46,7 +46,7 @@ namespace Svg.Core.Tools
                     // determine if active by searching thorough selection and determining whether pointer was put on selected element
                     // if there are selected elements and pointer was put down on one of them, activate tool, otherwhise deactivate
                     if (ws.SelectedElements.Count != 0 &&
-                        ws.GetElementsUnderPointer(p.Pointer1Position).Any(eup => ws.SelectedElements.Contains(eup)))
+                        ws.GetElementsUnderPointer<SvgVisualElement>(p.Pointer1Position).Any(eup => ws.SelectedElements.Contains(eup)))
                     {
                         // move tool is only active, if SelectionTool is the "ActiveTool"
                         // otherwise we'd move and pan at the same time, yielding confusing results... :)

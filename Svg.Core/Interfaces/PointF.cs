@@ -55,7 +55,12 @@ namespace Svg.Interfaces
 		public static PointF operator + (PointF pt, SizeF sz)
 		{
 			return PointF.Create(pt.X + sz.Width, pt.Y + sz.Height);
-		}
+        }
+
+        public static PointF operator +(PointF pt, PointF sz)
+        {
+            return PointF.Create(pt.X + sz.X, pt.Y + sz.Y);
+        }
 
         /// <summary>
         ///	Equality Operator
@@ -99,7 +104,20 @@ namespace Svg.Interfaces
 		public static PointF operator - (PointF pt, SizeF sz)
 		{
 			return PointF.Create(pt.X - sz.Width, pt.Y - sz.Height);
-		}
+        }
+        /// <summary>
+        ///	Subtraction Operator
+        /// </summary>
+        ///
+        /// <remarks>
+        ///	Translates a PointF using the negation of the Width 
+        ///	and Height properties of the given Size.
+        /// </remarks>
+
+        public static PointF operator -(PointF pt, PointF sz)
+        {
+            return PointF.Create(pt.X - sz.X, pt.Y - sz.Y);
+        }
 
         // -----------------------
         // Public Constructor

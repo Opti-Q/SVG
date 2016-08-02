@@ -20,7 +20,7 @@ namespace Svg.Droid.SampleEditor.Views
         protected override void OnCreate(Bundle bundle)
         {
             // register first
-            SvgPlatformSetup.Init(new SvgAndroidPlatformOptions() {EnableFastTextRendering = true});
+            SvgPlatformSetup.Init(new SvgSkiaPlatformOptions() {EnableFastTextRendering = true});
             Engine.Register<ISvgSourceFactory, SvgSourceFactory>(() => new SvgSourceFactory(Assets));
 
             SetupIconCache();

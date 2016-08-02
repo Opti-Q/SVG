@@ -15,97 +15,97 @@ namespace Svg
     {
         private static readonly Colors _colors = new SkiaColors();
 
-        public GraphicsPath CreateGraphicsPath()
+        public virtual GraphicsPath CreateGraphicsPath()
         {
             return new SkiaGraphicsPath();
         }
 
-        public GraphicsPath CreateGraphicsPath(FillMode winding)
+        public virtual GraphicsPath CreateGraphicsPath(FillMode winding)
         {
             return new SkiaGraphicsPath(winding);
         }
 
-        public Region CreateRegion(RectangleF rect)
+        public virtual Region CreateRegion(RectangleF rect)
         {
             return new Region(rect);
         }
 
-        public Pen CreatePen(Brush brush, float strokeWidth)
+        public virtual Pen CreatePen(Brush brush, float strokeWidth)
         {
             return new SkiaPen(brush, strokeWidth);
         }
 
-        public Matrix CreateMatrix()
+        public virtual Matrix CreateMatrix()
         {
             return new SkiaMatrix();
         }
 
-        public Matrix CreateMatrix(float scaleX, float rotateX, float rotateY, float scaleY, float transX, float transY)
+        public virtual Matrix CreateMatrix(float scaleX, float rotateX, float rotateY, float scaleY, float transX, float transY)
         {
             return new SkiaMatrix(scaleX, rotateX, rotateY, scaleY, transX, transY);
         }
 
-        public Bitmap CreateBitmap(Image inputImage)
+        public virtual Bitmap CreateBitmap(Image inputImage)
         {
             return new SkiaBitmap(inputImage);
         }
 
-        public Bitmap CreateBitmap(int width, int height)
+        public virtual Bitmap CreateBitmap(int width, int height)
         {
             return new SkiaBitmap(width, height);
         }
 
-        public Graphics CreateGraphicsFromImage(Bitmap input)
+        public virtual Graphics CreateGraphicsFromImage(Bitmap input)
         {
             return new SkiaGraphics((SkiaBitmap)input);
         }
 
-        public Graphics CreateGraphicsFromImage(Image image)
+        public virtual Graphics CreateGraphicsFromImage(Image image)
         {
             return new SkiaGraphics((SkiaBitmap)image);
         }
 
-        public ColorMatrix CreateColorMatrix(float[][] colorMatrixElements)
+        public virtual ColorMatrix CreateColorMatrix(float[][] colorMatrixElements)
         {
             return new SkiaColorMatrix(colorMatrixElements);
         }
 
-        public ImageAttributes CreateImageAttributes()
+        public virtual ImageAttributes CreateImageAttributes()
         {
             throw new NotImplementedException();
         }
 
-        public SolidBrush CreateSolidBrush(Color color)
+        public virtual SolidBrush CreateSolidBrush(Color color)
         {
             return new SkiaSolidBrush(color);
         }
 
-        public ColorBlend CreateColorBlend(int colourBlends)
+        public virtual ColorBlend CreateColorBlend(int colourBlends)
         {
             return new ColorBlend(colourBlends);
         }
 
-        public TextureBrush CreateTextureBrush(Bitmap image)
+        public virtual TextureBrush CreateTextureBrush(Bitmap image)
         {
             return new SkiaTextureBrush((SkiaBitmap)image);
         }
 
-        public LinearGradientBrush CreateLinearGradientBrush(PointF start, PointF end, Color startColor, Color endColor)
+        public virtual LinearGradientBrush CreateLinearGradientBrush(PointF start, PointF end, Color startColor, Color endColor)
         {
             return new SkiaLinearGradientBrush(start, end, startColor, endColor);
         }
 
-        public PathGradientBrush CreatePathGradientBrush(GraphicsPath path)
+        public virtual PathGradientBrush CreatePathGradientBrush(GraphicsPath path)
         {
             throw new NotImplementedException();
         }
 
-        public StringFormat CreateStringFormatGenericTypographic()
+        public virtual StringFormat CreateStringFormatGenericTypographic()
         {
             return new SkiaStringFormat();
         }
 
-        public Font CreateFont(FontFamily fontFamily, float fontSize, FontStyle fontStyle, GraphicsUnit graphicsUnit)
+        public virtual Font CreateFont(FontFamily fontFamily, float fontSize, FontStyle fontStyle, GraphicsUnit graphicsUnit)
         {
             var font = new SkiaFont((SkiaFontFamily)fontFamily);
             font.Size = fontSize;
@@ -115,53 +115,53 @@ namespace Svg
             return font;
         }
 
-        public FontFamilyProvider GetFontFamilyProvider()
+        public virtual FontFamilyProvider GetFontFamilyProvider()
         {
             return new SkiaFontFamilyProvider();
         }
 
-        public RectangleF CreateRectangleF()
+        public virtual RectangleF CreateRectangleF()
         {
             return new SkiaRectangleF();
         }
 
-        public RectangleF CreateRectangleF(PointF location, SizeF size)
+        public virtual RectangleF CreateRectangleF(PointF location, SizeF size)
         {
             return new SkiaRectangleF(location, size);
         }
 
-        public RectangleF CreateRectangleF(float left, float top, float width, float height)
+        public virtual RectangleF CreateRectangleF(float left, float top, float width, float height)
         {
             return new SkiaRectangleF(left, top, width, height);
         }
 
-        public Colors Colors => _colors;
-        public Color CreateColorFromArgb(int alpha, Color colour)
+        public virtual Colors Colors => _colors;
+        public virtual Color CreateColorFromArgb(int alpha, Color colour)
         {
             return new SkiaColor((byte)alpha, colour);
         }
 
-        public Color CreateColorFromArgb(int alpha, int r, int g, int b)
+        public virtual Color CreateColorFromArgb(int alpha, int r, int g, int b)
         {
             return new SkiaColor((byte) alpha, (byte)r, (byte)g, (byte)b);
         }
 
-        public PointF CreatePointF(float x, float y)
+        public virtual PointF CreatePointF(float x, float y)
         {
             return new SkiaPointF(x, y);
         }
 
-        public SizeF CreateSizeF(float width, float height)
+        public virtual SizeF CreateSizeF(float width, float height)
         {
             return new SkiaSizeF(width, height);
         }
 
-        public IDictionary<TKey, TValue> CreateSortedDictionary<TKey, TValue>()
+        public virtual IDictionary<TKey, TValue> CreateSortedDictionary<TKey, TValue>()
         {
             return new SortedDictionary<TKey, TValue>();
         }
 
-        public Bitmap CreateBitmapFromStream(Stream stream)
+        public virtual Bitmap CreateBitmapFromStream(Stream stream)
         {
             using (var ms = new MemoryStream())
             using (var s = new SKMemoryStream())
@@ -172,7 +172,7 @@ namespace Svg
             }
         }
 
-        public Image CreateImageFromStream(Stream stream)
+        public virtual Image CreateImageFromStream(Stream stream)
         {
             using(var ms = new MemoryStream())
             using (var s = new SKMemoryStream())

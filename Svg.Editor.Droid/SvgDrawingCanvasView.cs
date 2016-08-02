@@ -30,7 +30,7 @@ namespace Svg.Droid.Editor
         public SvgDrawingCanvasView(Context context, IAttributeSet attr) : base(context, attr)
         {
             // Initialize SVG Platform and tie together PCL and platform specific modules
-            SvgPlatformSetup.Init(new SvgAndroidPlatformOptions() {EnableFastTextRendering = true});
+            SvgPlatformSetup.Init(new SvgSkiaPlatformOptions() {EnableFastTextRendering = true});
 
             _drawingCanvas = new SvgDrawingCanvas();
             _detector = new GestureDetector(this.Context, (e) => DrawingCanvas.OnEvent(e));

@@ -61,7 +61,6 @@ namespace Svg.Core.Tools
                     return;
                 }
                 
-                                
                 var dX = pe.Pointer1Position.X - pe.Pointer1Down.X;
                 var dY = pe.Pointer1Position.Y - pe.Pointer1Down.Y;
 
@@ -69,13 +68,24 @@ namespace Svg.Core.Tools
                 if (dX < 20 && dY < 20)
                 {
                     // if there is text below the pointer, edit it
-                    var e = ws.GetElementsUnderPointer(pe.Pointer1Position).OfType<SvgTextBase>().FirstOrDefault();
+                    var e = ws.GetElementsUnderPointer<SvgTextBase>(pe.Pointer1Position, 20).FirstOrDefault();
 
                     if (e != null)
                     {
-                        var txt = await TextInputService.GetUserInput("Edit text", e.Text);
-                        // if text was removed, remove element
-                        if (string.IsNullOrWhiteSpace(txt))
+                        // primitive handling of text spans
+                        var span = e.Children.OfType<SvgTextSpan>().FirstOrDefault();
+                        if (span != null)
+                            e = span;
+
+                        var txt = await TextInputService.GetUserInput("Edit text", e.Text?.Trim());
+
+                        // make sure there is at least empty text in it so we actually still have a bounding box!!
+                        if (string.IsNullOrEmpty(txt?.Trim()))
+                            txt = "  ";
+
+                        // if text was removed, and parent was document, remove element
+                        // if parent was not the document, then this would be a text within another group and should not be removed
+                        if (string.IsNullOrWhiteSpace(txt) && e.Parent is SvgDocument)
                         {
                             e.Parent.Children.Remove(e);
                         }

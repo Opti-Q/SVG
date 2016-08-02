@@ -20,7 +20,7 @@ namespace SvgW3CTestSuite.Droid
         [SetUp]
         public void Setup()
         {
-            SvgPlatformSetup.Init(new SvgAndroidPlatformOptions() {EnableFastTextRendering = true});
+            SvgPlatformSetup.Init(new SvgSkiaPlatformOptions() {EnableFastTextRendering = true});
         }
         
         public static object[] SvgTestCases = {};
