@@ -31,9 +31,10 @@ namespace Svg.Core.Tools
         private PointF _generalTranslation = null;
         
 
-        public GridTool(float angle = 30f, int stepSizeY = 20)
+        public GridTool(float angle = 30f, int stepSizeY = 20, bool isSnappingEnabled = true)
             : base("Grid")
         {
+            IsSnappingEnabled = isSnappingEnabled;
             StepSizeY = stepSizeY;
             Alpha = angle;
 
@@ -66,6 +67,7 @@ namespace Svg.Core.Tools
 
         public string IconGridOn { get; set; } = "ic_grid_on_white_48dp.png";
         public string IconGridOFf { get; set; } = "ic_grid_off_white_48dp.png";
+        public bool IsSnappingEnabled { get; set; }
 
         public bool IsVisible { get; set; } = true;
         private Brush Brush => _brush ?? (_brush = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 210, 210, 210)));
@@ -277,6 +279,8 @@ namespace Svg.Core.Tools
 
         private void SnapToGrid(SvgElement element)
         {
+            if (!IsSnappingEnabled)
+                return;
 
             var ve = element as SvgVisualElement;
             if (ve == null)
