@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using SkiaSharp;
 
 namespace Svg.Platform
@@ -13,7 +12,9 @@ namespace Svg.Platform
 
         public SkiaGraphics(SkiaBitmap image)
         {
-            _surface = SKSurface.Create(image.Image.Info);
+            IntPtr length;
+            var b = image.Image;
+            _surface = SKSurface.Create(b.Info, b.GetPixels(out length), b.RowBytes);
             _canvas = _surface.Canvas;
             _matrix = new SkiaMatrix(_canvas.TotalMatrix);
         }
@@ -37,9 +38,8 @@ namespace Svg.Platform
         }
 
         public Region Clip { get { return _clip; } }
-
-        // TODO LX use smootingmode
-        public SmoothingMode SmoothingMode { get; set; }
+        
+        public SmoothingMode SmoothingMode { get; set; } = SmoothingMode.AntiAlias | SmoothingMode.HighQuality;
 
         public void DrawImage(Bitmap bitmap, Interfaces.RectangleF rectangle, int x, int y, int width, int height, GraphicsUnit pixel)
         {
@@ -49,9 +49,9 @@ namespace Svg.Platform
 
         public void DrawImage(Bitmap bitmap, Interfaces.RectangleF rectangle, int x, int y, int width, int height, GraphicsUnit pixel, ImageAttributes attributes)
         {
-            throw new NotImplementedException("ImageAttributes not implemented for now: see http://chiuki.github.io/android-shaders-filters/#/");
-            //var img = (AndroidBitmap)bitmap;
-            //_canvas.DrawBitmap(img.Image, null, new Rect(x, y, x + width, y + height), null);
+            var img = (SkiaBitmap)bitmap;
+            _canvas.DrawBitmap(img.Image, new SKRect(x, y, x + width, y + height));
+            //throw new NotImplementedException("ImageAttributes not implemented for now: see http://chiuki.github.io/android-shaders-filters/#/");
         }
 
         public void DrawImage(Image bitmap, Interfaces.RectangleF destRect, Interfaces.RectangleF srcRect, GraphicsUnit graphicsUnit)
@@ -90,7 +90,6 @@ namespace Svg.Platform
             {
                 _canvas.DrawText(text.text, text.location.X, text.location.Y, paint.Paint);
             }
-
         }
 
         public void FillPath(Brush brush, GraphicsPath path)
@@ -103,7 +102,6 @@ namespace Svg.Platform
             SetSmoothingMode(b.Paint);
                 
             _canvas.DrawPath(p.Path, b.Paint);
-            
         }
 
         public void DrawText(string text, float x, float y, Pen pen)
@@ -116,19 +114,24 @@ namespace Svg.Platform
 
         private void SetSmoothingMode(SKPaint paint)
         {
-            //switch (SmoothingMode)
-            //{
-            //    case SmoothingMode.Default:
-            //    case SmoothingMode.None:
-            //        paint.Flags = 0;
-            //        break;
-            //    case SmoothingMode.AntiAlias:
-            //        paint.Flags |= PaintFlags.AntiAlias;
-            //        break;
-            //    //case SmoothingMode.HighQuality:
-            //    //case SmoothingMode.HighSpeed:
-            //    //case SmoothingMode.Invalid:
-            //}
+            switch (SmoothingMode)
+            {
+                case SmoothingMode.HighQuality:
+                    paint.FilterQuality = SKFilterQuality.High;
+                    break;
+                case SmoothingMode.AntiAlias:
+                    paint.IsAntialias = true;
+                    break;
+                case SmoothingMode.HighSpeed:
+                    paint.FilterQuality = SKFilterQuality.Low;
+                    break;
+                case SmoothingMode.Invalid:
+                case SmoothingMode.Default:
+                case SmoothingMode.None:
+                    paint.IsAntialias = false;
+                    paint.FilterQuality = SKFilterQuality.Medium;
+                    break;
+            }
         }
 
         public void SetClip(Region region, CombineMode combineMode)

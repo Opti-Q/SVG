@@ -46,40 +46,10 @@ namespace SvgW3CTestRunner.Droid
 
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.Main);
-        }
-
-        private Tuple<float, Android.Graphics.Bitmap> ImageCompare(Android.Graphics.Bitmap i1, Android.Graphics.Bitmap i2)
-        {
-            float correctPixel = 0;
-            float pixelAmount = i1.Height * i1.Width;
-            _globalPixelAmount += pixelAmount;
-            var bitmap = Android.Graphics.Bitmap.CreateBitmap(i1.Width, i1.Height, Android.Graphics.Bitmap.Config.Rgb565);
-            bitmap.EraseColor(Color.Red);
-
-            for (var y = 0; y < i1.Height; ++y)
-                for (var x = 0; x < i1.Width; ++x)
-                    if (i1.GetPixel(x, y) == i2.GetPixel(x, y))
-                    {
-                        if (Color.GetAlphaComponent(i1.GetPixel(x, y)) != 0) // if pixel has alpha
-                        {
-                            pixelAmount--;
-                            _globalPixelAmount--;
-                            bitmap.SetPixel(x, y, Color.White);
-                        }
-                        else
-                        {
-                            correctPixel++;
-                            _globalCorrectPixelAmount++;
-                            bitmap.SetPixel(x, y, Color.White);
-                        }
-                    }
-
-            return new Tuple<float, Android.Graphics.Bitmap>((correctPixel / pixelAmount) * 100, bitmap);
-        }
-
-        protected override void OnPostResume()
-        {
-            base.OnPostResume();
+        //}
+        //protected override void OnPostResume()
+        //{
+        //    base.OnPostResume();
 
             var mainView = FindViewById<LinearLayout>(Resource.Id.mainView);
             mainView.AddView(new View(this) // Trennlinie
@@ -127,8 +97,8 @@ namespace SvgW3CTestRunner.Droid
                 var svgs = assetManager.List("svg")
                     //.Where(@s => s.StartsWith("painting-"))
                     //.Where(@s => s.StartsWith("text-"))
-                    .Where(@s => s.StartsWith("coords-"))
-                    //.Where(@s => s.StartsWith("paths-"))
+                    //.Where(@s => s.StartsWith("coords-"))
+                    .Where(@s => s.StartsWith("paths-"))
                     //.Where(@s => s.StartsWith("coords-trans-09-t"))
                     //.Where(@s => s.StartsWith("coords-transformattr-05-f"))
                     .OrderBy(@s => s).ToList();
@@ -136,8 +106,8 @@ namespace SvgW3CTestRunner.Droid
                 var pngs = assetManager.List("png")
                     //.Where(@s => s.StartsWith("painting-"))
                     //.Where(@s => s.StartsWith("text-"))
-                    .Where(@s => s.StartsWith("coords-"))
-                    //.Where(@s => s.StartsWith("paths-"))
+                    //.Where(@s => s.StartsWith("coords-"))
+                    .Where(@s => s.StartsWith("paths-"))
                     //.Where(@s => s.StartsWith("coords-trans-09-t"))
                     //.Where(@s => s.StartsWith("coords-transformattr-05-f"))
                     .OrderBy(@s => s).ToList();
@@ -324,6 +294,36 @@ namespace SvgW3CTestRunner.Droid
                                             $"=> {(_svgGlobalTime / _pngGlobalTime).ToString("0.00")}x";
                 });
             }
+        }
+
+
+        private Tuple<float, Android.Graphics.Bitmap> ImageCompare(Android.Graphics.Bitmap i1, Android.Graphics.Bitmap i2)
+        {
+            float correctPixel = 0;
+            float pixelAmount = i1.Height * i1.Width;
+            _globalPixelAmount += pixelAmount;
+            var bitmap = Android.Graphics.Bitmap.CreateBitmap(i1.Width, i1.Height, Android.Graphics.Bitmap.Config.Rgb565);
+            bitmap.EraseColor(Color.Red);
+
+            for (var y = 0; y < i1.Height; ++y)
+                for (var x = 0; x < i1.Width; ++x)
+                    if (i1.GetPixel(x, y) == i2.GetPixel(x, y))
+                    {
+                        if (Color.GetAlphaComponent(i1.GetPixel(x, y)) != 0) // if pixel has alpha
+                        {
+                            pixelAmount--;
+                            _globalPixelAmount--;
+                            bitmap.SetPixel(x, y, Color.White);
+                        }
+                        else
+                        {
+                            correctPixel++;
+                            _globalCorrectPixelAmount++;
+                            bitmap.SetPixel(x, y, Color.White);
+                        }
+                    }
+
+            return new Tuple<float, Android.Graphics.Bitmap>((correctPixel / pixelAmount) * 100, bitmap);
         }
 
         public Android.Graphics.Bitmap GetResizedBitmap(Android.Graphics.Bitmap bm, int newWidth, int newHeight)

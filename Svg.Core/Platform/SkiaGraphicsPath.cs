@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using SkiaSharp;
 using Svg.Interfaces;
 using PointF = Svg.Interfaces.PointF;
@@ -204,15 +203,14 @@ namespace Svg.Platform
 
         public void AddPath(GraphicsPath childPath, bool connect)
         {
-            throw new NotSupportedException("AddPath not yet supported by skiasharp");
+            _bounds = null;
+            var ap = (SkiaGraphicsPath)childPath;
             
-            //_bounds = null;
-            //var ap = (SkiaGraphicsPath) childPath;
-            //// TODO LX: How to connect? And is 0, 0 correct?
-            //Path.AddPath(ap.Path, 0, 0);
-            
-            //_points.AddRange(ap._points);
-            //_pathTypes.AddRange(ap._pathTypes);
+            var mode = connect ? SKPath.AddMode.Extend : SKPath.AddMode.Append;
+            Path.AddPath(ap.Path, mode);
+
+            _points.AddRange(ap._points);
+            _pathTypes.AddRange(ap._pathTypes);
         }
 
         public void AddString(string text, FontFamily fontFamily, int style, float size, PointF location,

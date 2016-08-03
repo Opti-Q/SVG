@@ -163,10 +163,8 @@ namespace Svg
 
         public virtual Bitmap CreateBitmapFromStream(Stream stream)
         {
-            using (var ms = new MemoryStream())
-            using (var s = new SKMemoryStream())
+            using (var s = new SKManagedStream(stream))
             {
-                s.SetMemory(ms.ToArray());
                 var bm = SKBitmap.Decode(s);
                 return new SkiaBitmap(bm);
             }
@@ -174,16 +172,13 @@ namespace Svg
 
         public virtual Image CreateImageFromStream(Stream stream)
         {
-            using(var ms = new MemoryStream())
-            using (var s = new SKMemoryStream())
+            using (var s = new SKManagedStream(stream))
             {
-                s.SetMemory(ms.ToArray());
-
                 var bm = SKBitmap.Decode(s);
                 return new SkiaBitmap(bm);
             }
         }
-
+        
         public abstract ISortedList<TKey, TValue> CreateSortedList<TKey, TValue>();
 
         public abstract IXmlTextWriter CreateXmlTextWriter(StringWriter writer);

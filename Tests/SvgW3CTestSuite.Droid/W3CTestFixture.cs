@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -32,28 +33,38 @@ namespace SvgW3CTestSuite.Droid
             await RunTest(() =>
             {
                 // Arrange
-                const int width = 480;
-                const int height = 360;
-
-                // Act
-                using (var svgBitmap = RenderSvg(svgPath, width, height))
+                using (var pngBitmap = GetBitmap(pngPath))
                 {
-                    // Assert
-                    using (var stream = FileSourceProvider(pngPath).GetStream())
-                    using (var pngStream = new SKManagedStream(stream))
+                    // Act
+                    using (var svgBitmap = RenderSvg(svgPath, pngBitmap.Width, pngBitmap.Height))
                     {
-                        var pngBitmap = SKBitmap.Decode(pngStream);
-                        using (pngBitmap)
+                        // Assert
+                        using (var c = ImageCompare(svgBitmap, pngBitmap))
                         {
-                            using (var c = ImageCompare(svgBitmap, pngBitmap))
-                            {
-                                Assert.GreaterOrEqual(c.Similarity, 90, $"{svgPath}");
-                            }
+                            Assert.GreaterOrEqual(c.Similarity, 90, $"{svgPath}");
                         }
                     }
                 }
-               
+
             }, svgPath);
+        }
+
+        private SKBitmap GetBitmap(string pngPath)
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var stream = FileSourceProvider(pngPath).GetStream())
+                {
+                    stream.CopyTo(ms);
+                    ms.Seek(0, SeekOrigin.Begin);
+                }
+
+                using (var pngStream = new SKManagedStream(ms))
+                {
+                    var pngBitmap = SKBitmap.Decode(pngStream);
+                    return pngBitmap;
+                }
+            }
         }
 
         private Task RunTest(Action test, string name, int timeout = 10000)
@@ -146,6 +157,9 @@ namespace SvgW3CTestSuite.Droid
 
         private static ImageCompareResult ImageCompare(SKBitmap i1, SKBitmap i2)
         {
+            if(i1.Height != i2.Height || i1.Width != i2.Width)
+                Assert.Fail($"SKBitmap dimensions differ! rendered:{i1.Width}x{i1.Height} vs png:{i2.Width}x{i2.Height}");
+
             float correctPixel = 0;
             float pixelAmount = i1.Height * i1.Width;
             //var bitmap = Android.Graphics.Bitmap.CreateBitmap(i1.Width, i1.Height, Android.Graphics.Bitmap.Config.Rgb565);
