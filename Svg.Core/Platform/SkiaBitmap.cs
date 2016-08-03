@@ -15,7 +15,7 @@ namespace Svg.Platform
             Width = width;
             Height = height;
             
-            _image = new SKBitmap(width, height, SKColorType.Rgba8888, SKAlphaType.Opaque);
+            _image = new SKBitmap(width, height, SKColorType.Rgba8888, SKAlphaType.Premul);
         }
 
         public SkiaBitmap(Image inputImage)
@@ -56,13 +56,12 @@ namespace Svg.Platform
 
         public void SavePng(Stream stream, int quality = 100)
         {
-            using (var img = SKImage.FromBitmap(Image))
+            using (var img = SKImage.FromBitmap(_image))
             {
                 var data = img.Encode(SKImageEncodeFormat.Png, quality: quality);
                 data.SaveTo(stream);
             }
         }
-
 
         public int Width { get; private set; }
         public int Height { get; private set; }

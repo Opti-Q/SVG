@@ -13,7 +13,9 @@ namespace Svg.Platform
 
         public SkiaGraphics(SkiaBitmap image)
         {
-            _surface = SKSurface.Create(image.Image.Info);
+            IntPtr length;
+            var b = image.Image;
+            _surface = SKSurface.Create(b.Info, b.GetPixels(out length), b.RowBytes);
             _canvas = _surface.Canvas;
             _matrix = new SkiaMatrix(_canvas.TotalMatrix);
         }
