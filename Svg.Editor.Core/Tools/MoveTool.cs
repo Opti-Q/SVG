@@ -50,6 +50,7 @@ namespace Svg.Core.Tools
 
                     if (_implicitlyActivated)
                     {
+                        _implicitlyActivated = false;
                         ws.ActiveTool = ws.Tools.OfType<SelectionTool>().Single();
                     }
                 }

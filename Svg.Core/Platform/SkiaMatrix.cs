@@ -323,6 +323,16 @@ namespace Svg.Platform
             get { return _m.ScaleY; }
         }
 
+        public override float SkewX
+        {
+            get { return _m.SkewX; }
+        }
+
+        public override float SkewY
+        {
+            get { return _m.SkewY; }
+        }
+
         private static float[] GetElements(SKMatrix m)
         {
             return new float[9]

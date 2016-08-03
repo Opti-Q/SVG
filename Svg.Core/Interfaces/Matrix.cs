@@ -1,8 +1,10 @@
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Svg.Interfaces;
+using Svg.Transforms;
 
 namespace Svg
 {
@@ -34,6 +36,8 @@ namespace Svg
         public abstract float OffsetY { get;  }
         public abstract float ScaleX { get; }
         public abstract float ScaleY { get; }
+        public abstract float SkewX { get; }
+        public abstract float SkewY { get; }
         public abstract bool IsIdentity { get; }
 
         public abstract void Rotate(float fAngle);
@@ -52,6 +56,16 @@ namespace Svg
                 return false;
 
             return Elements.SequenceEqual(matrix.Elements);
+        }
+
+        public float RotationDegrees
+        {
+            get { return (float)RadianToDegree(Math.Atan(SkewY/ScaleY)); }
+        }
+
+        public float Rotation
+        {
+            get { return (float)(Math.Atan(SkewY / ScaleY)); }
         }
 
         /// <summary>
@@ -139,5 +153,34 @@ namespace Svg
         public abstract void Invert();
 
         public abstract RectangleF TransformRectangle(RectangleF bounds);
+
+        public SvgMatrix ToSvgMatrix()
+        {
+            var points = new List<float>
+            {
+                ScaleX,
+                SkewX,
+                SkewY,
+                ScaleY,
+                OffsetX,
+                OffsetY
+            };
+            return new SvgMatrix(points);
+        }
+
+        public static implicit operator SvgMatrix(Matrix other)
+        {
+            return other.ToSvgMatrix();
+        }
+
+        public static double DegreeToRadian(double angle)
+        {
+            return Math.PI * angle / 180.0;
+        }
+
+        public static double RadianToDegree(double angle)
+        {
+            return angle * (180.0 / Math.PI);
+        }
     }
 }
