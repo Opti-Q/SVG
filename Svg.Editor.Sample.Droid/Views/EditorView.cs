@@ -13,6 +13,7 @@ using Svg.Droid.Editor;
 using Svg.Droid.SampleEditor.Core;
 using Svg.Droid.SampleEditor.Core.ViewModels;
 using Svg.Interfaces;
+using Color = Android.Graphics.Color;
 using Path = System.IO.Path;
 
 namespace Svg.Droid.SampleEditor.Views
@@ -62,12 +63,13 @@ namespace Svg.Droid.SampleEditor.Views
         private void SetupSvgCache()
         {
             // load svg from FS
-            var provider = SvgSourceProvider("svg/ic_format_color_fill_white_48px.svg");
+            var colorTool = ViewModel.Canvas.Tools.OfType<ColorTool>().Single();
+            var provider = SvgSourceProvider($"svg/{colorTool.ColorIconName}");
             var document = SvgDocument.Open<SvgDocument>(provider);
             var fs = Engine.Resolve<IFileSystem>();
 
 
-            foreach (var selectableColor in ViewModel.Canvas.Tools.OfType<ColorTool>().Single().SelectableColors)
+            foreach (var selectableColor in colorTool.SelectableColors)
             {
                 // apply changes to svg
                 document.Children.Single().Children.Last().Fill = new SvgColourServer(selectableColor);
@@ -105,10 +107,11 @@ namespace Svg.Droid.SampleEditor.Views
                     var cmd = cmds.Single();
                     var mi = menu.Add(cmd.GetHashCode(), cmd.GetHashCode(), 1, cmd.Name);
 
-                    if (cmd.Tool is ColorTool)
+                    var colorTool = cmd.Tool as ColorTool;
+                    if (colorTool != null)
                     {
                         var fs = Engine.Resolve<IFileSystem>();
-                        var selectedColor = ((ColorTool) cmd.Tool).SelectedColor;
+                        var selectedColor = colorTool.SelectedColor;
                         var path = fs.PathCombine(fs.GetDefaultStoragePath(), $"icon_{selectedColor.R}_{selectedColor.G}_{selectedColor.B}.png");
                         var drawable = Drawable.CreateFromPath(path);
 

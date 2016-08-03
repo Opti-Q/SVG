@@ -18,7 +18,7 @@ namespace Svg.Core.Tools
         {
         }
 
-        public string ColorIconName { get; set; } = "ic_color_lens_white_48dp.png";
+        public string ColorIconName { get; set; } = "ic_format_color_fill_white_48px.svg";
 
         public Color[] SelectableColors { get; set; } = {
             Color.Create(0, 0, 0),
