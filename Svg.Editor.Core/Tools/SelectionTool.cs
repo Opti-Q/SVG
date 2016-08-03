@@ -13,7 +13,8 @@ namespace Svg.Core.Tools
         private RectangleF _selectionRectangle = null;
         private Brush _brush;
         private Pen _pen;
-        
+        private bool _handledPointerDown;
+
         public string DeleteIconName { get; set; } = "ic_delete_white_48dp.png";
         public string SelectIconName { get; set; } = "ic_select_tool_white_48dp.png";
 
@@ -87,22 +88,27 @@ namespace Svg.Core.Tools
             var p = @event as PointerEvent;
             if (p != null)
             {
+                if (p.EventType == EventType.PointerDown)
+                {
+                    _handledPointerDown = true;
+                }
                 // if the user never moved, but clicked on an item, we try to select that spot
-                if (p.EventType == EventType.PointerUp && _selectionRectangle == null)
+                if (_handledPointerDown && p.EventType == EventType.PointerUp && _selectionRectangle == null)
                 {
                     // select elements under pointer
                     SelectElementsUnder(ws.GetPointerRectangle(p.Pointer1Position), ws, SelectionType.Intersect, 1);
                     _selectionRectangle = null;
-
+                    _handledPointerDown = false;
                     ws.FireInvalidateCanvas();
                 }
                 // on pointer up or cancel, we remove the selection rectangle
-                else if (p.EventType == EventType.PointerUp || p.EventType == EventType.Cancel)
+                else if (_handledPointerDown && p.EventType == EventType.PointerUp || p.EventType == EventType.Cancel)
                 {
                     // select elements under rectangle
                     SelectElementsUnder(_selectionRectangle, ws, SelectionType.Contain);
 
                     _selectionRectangle = null;
+                    _handledPointerDown = false;
                     ws.FireInvalidateCanvas();
                 }
             }
