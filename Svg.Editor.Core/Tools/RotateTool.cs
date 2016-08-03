@@ -20,7 +20,7 @@ namespace Svg.Core.Tools
         public bool IsDebugEnabled { get; set; }
 
         public Func<SvgVisualElement, bool> Filter { get; set; }
-
+        
         public RotateTool() : base("Rotate")
         {
         }
@@ -97,6 +97,8 @@ namespace Svg.Core.Tools
                 var matrix = element.Transforms.GetMatrix();
                 centerX -= matrix.OffsetX;
                 centerY -= matrix.OffsetY;
+
+
 
                 // then apply the transformation
                 m.RotateAt(rotateEvent.AbsoluteRotationDegrees, PointF.Create(centerX, centerY), MatrixOrder.Prepend);
