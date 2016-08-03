@@ -10,6 +10,7 @@ using MvvmCross.Platform;
 using MvvmCross.Plugins.Email;
 using Svg.Core.Tools;
 using Svg.Droid.Editor;
+using Svg.Droid.Editor.Services;
 using Svg.Droid.SampleEditor.Core;
 using Svg.Droid.SampleEditor.Core.ViewModels;
 using Svg.Interfaces;
@@ -30,13 +31,13 @@ namespace Svg.Droid.SampleEditor.Views
             SvgPlatformSetup.Init(new SvgSkiaPlatformOptions() { EnableFastTextRendering = true });
             Engine.Register<ISvgSourceFactory, SvgSourceFactory>(() => new SvgSourceFactory(Assets));
 
-            SvgSourceProvider = source => Engine.Resolve<ISvgSourceFactory>().Create(source);
 
             SetupIconCache();
 
             base.OnCreate(bundle);
 
-            SetupSvgCache();
+            Func<string, ISvgSource> svgSourceProvider = source => Engine.Resolve<ISvgSourceFactory>().Create(source);
+            new SvgCachingService().SetupSvgCache(ViewModel.Canvas.Tools.OfType<ColorTool>().Single(), svgSourceProvider);
 
             SetContentView(Resource.Layout.EditorView);
             _padView = FindViewById<SvgDrawingCanvasView>(Resource.Id.pad);
@@ -44,8 +45,6 @@ namespace Svg.Droid.SampleEditor.Views
             _padView.DrawingCanvas = this.ViewModel.Canvas;
 
         }
-
-        public Func<string, ISvgSource> SvgSourceProvider { get; set; }
 
         private void SetupIconCache()
         {
@@ -57,38 +56,6 @@ namespace Svg.Droid.SampleEditor.Views
                     continue;
 
                 _iconCache.Add(constant.Name, (int)rawValue);
-            }
-        }
-
-        private void SetupSvgCache()
-        {
-            // load svg from FS
-            var colorTool = ViewModel.Canvas.Tools.OfType<ColorTool>().Single();
-            var provider = SvgSourceProvider($"svg/{colorTool.ColorIconName}");
-            var document = SvgDocument.Open<SvgDocument>(provider);
-            var fs = Engine.Resolve<IFileSystem>();
-
-
-            foreach (var selectableColor in colorTool.SelectableColors)
-            {
-                // apply changes to svg
-                document.Children.Single().Children.Last().Fill = new SvgColourServer(selectableColor);
-
-                // save svg as png
-                using (var bmp = document.DrawAllContents(Engine.Factory.Colors.Transparent))
-                {
-                    // now save it as PNG
-                    //var path = fs.PathCombine(Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)
-                    //    .AbsolutePath, $"icon_{selectableColor.R}_{selectableColor.G}_{selectableColor.B}.png");
-                    var path = fs.PathCombine(fs.GetDefaultStoragePath(), $"icon_{selectableColor.R}_{selectableColor.G}_{selectableColor.B}.png");
-                    if (fs.FileExists(path))
-                        fs.DeleteFile(path);
-
-                    using (var stream = fs.OpenWrite(path))
-                    {
-                        bmp.SavePng(stream);
-                    }
-                }
             }
         }
 

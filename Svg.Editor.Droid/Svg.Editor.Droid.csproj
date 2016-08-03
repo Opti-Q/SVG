@@ -60,6 +60,7 @@
     <Compile Include="Services\ColorInputService.cs" />
     <Compile Include="Services\SKCanvasRenderer.cs" />
     <Compile Include="Services\AndroidCanvasRenderer.cs" />
+    <Compile Include="Services\SvgCachingService.cs" />
     <Compile Include="Services\TextInputService.cs" />
     <Compile Include="SvgDrawingCanvasView.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

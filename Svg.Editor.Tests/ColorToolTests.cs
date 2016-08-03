@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using Svg.Core.Events;
 using Svg.Core.Tools;
 using Svg.Interfaces;
 
@@ -76,8 +75,8 @@ namespace Svg.Editor.Tests
         {
             // Arrange
             await Canvas.EnsureInitialized();
-            var color = Color.Create(255, 0, 0);
-            _colorMock.F = () => color;
+            var color = Canvas.Tools.OfType<ColorTool>().Single().SelectableColors[1];
+            _colorMock.F = () => 1;
             var element = new SvgText("hello");
             Canvas.AddItemInScreenCenter(element);
             var changeColorCommand = Canvas.ToolCommands.Single(x => x.FirstOrDefault()?.Name == "Change color").First();
@@ -104,8 +103,8 @@ namespace Svg.Editor.Tests
         {
             // Arrange
             await Canvas.EnsureInitialized();
-            var color = Color.Create(255, 0, 0);
-            _colorMock.F = () => color;
+            var color = Canvas.Tools.OfType<ColorTool>().Single().SelectableColors[1];
+            _colorMock.F = () => 1;
             var parent = new SvgGroup();
             var child = new SvgText("hello");
             parent.Children.Add(child);
@@ -141,9 +140,9 @@ namespace Svg.Editor.Tests
 
         private class MockColorInputService : IColorInputService
         {
-            public Func<Color> F { get; set; } = () => null;
+            public Func<int> F { get; set; } = () => 0;
 
-            public Task<Color> GetUserInput(string title, Color[] items)
+            public Task<int> GetIndexFromUserInput(string title, string[] items)
             {
                 return Task.FromResult(F());
             }
