@@ -18,20 +18,23 @@ namespace Svg.Core.Tools
         {
         }
 
-        public Color SelectedColor { get; set; } = Color.Create(0, 0, 0);
-
         public string ColorIconName { get; set; } = "ic_color_lens_white_48dp.png";
 
         public Color[] SelectableColors { get; set; } = {
             Color.Create(0, 0, 0),
             Color.Create(255, 0, 0),
             Color.Create(0, 255, 0),
-            Color.Create(0, 0, 255),
-            Color.Create(255, 255, 255)
+            Color.Create(255, 255, 0),
+            Color.Create(255, 0, 255),
+            Color.Create(0, 255, 255)
         };
+
+        public Color SelectedColor { get; set; }
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
+            SelectedColor = SelectableColors?.FirstOrDefault();
+
             // add tool commands
             Commands = new List<IToolCommand>
             {
@@ -131,6 +134,7 @@ namespace Svg.Core.Tools
                 }
 
                 t.SelectedColor = color;
+                _canvas.FireToolCommandsChanged();
             }
         }
     }

@@ -1,12 +1,18 @@
+using System;
 using System.Collections.Generic;
 using Android.App;
 using Android.OS;
 using Android.Views;
 using System.Linq;
+using Android.Graphics.Drawables;
 using MvvmCross.Droid.Views;
+using MvvmCross.Platform;
+using MvvmCross.Plugins.Email;
+using Svg.Core.Tools;
 using Svg.Droid.Editor;
 using Svg.Droid.SampleEditor.Core;
 using Svg.Droid.SampleEditor.Core.ViewModels;
+using Svg.Interfaces;
 using Path = System.IO.Path;
 
 namespace Svg.Droid.SampleEditor.Views
@@ -20,12 +26,16 @@ namespace Svg.Droid.SampleEditor.Views
         protected override void OnCreate(Bundle bundle)
         {
             // register first
-            SvgPlatformSetup.Init(new SvgSkiaPlatformOptions() {EnableFastTextRendering = true});
+            SvgPlatformSetup.Init(new SvgSkiaPlatformOptions() { EnableFastTextRendering = true });
             Engine.Register<ISvgSourceFactory, SvgSourceFactory>(() => new SvgSourceFactory(Assets));
+
+            SvgSourceProvider = source => Engine.Resolve<ISvgSourceFactory>().Create(source);
 
             SetupIconCache();
 
             base.OnCreate(bundle);
+
+            SetupSvgCache();
 
             SetContentView(Resource.Layout.EditorView);
             _padView = FindViewById<SvgDrawingCanvasView>(Resource.Id.pad);
@@ -33,6 +43,8 @@ namespace Svg.Droid.SampleEditor.Views
             _padView.DrawingCanvas = this.ViewModel.Canvas;
 
         }
+
+        public Func<string, ISvgSource> SvgSourceProvider { get; set; }
 
         private void SetupIconCache()
         {
@@ -43,7 +55,38 @@ namespace Svg.Droid.SampleEditor.Views
                 if (!(rawValue is int))
                     continue;
 
-                _iconCache.Add(constant.Name, (int) rawValue);
+                _iconCache.Add(constant.Name, (int)rawValue);
+            }
+        }
+
+        private void SetupSvgCache()
+        {
+            // load svg from FS
+            var provider = SvgSourceProvider("svg/ic_format_color_fill_white_48px.svg");
+            var document = SvgDocument.Open<SvgDocument>(provider);
+            var fs = Engine.Resolve<IFileSystem>();
+
+
+            foreach (var selectableColor in ViewModel.Canvas.Tools.OfType<ColorTool>().Single().SelectableColors)
+            {
+                // apply changes to svg
+                document.Children.Single().Children.Last().Fill = new SvgColourServer(selectableColor);
+
+                // save svg as png
+                using (var bmp = document.DrawAllContents(Engine.Factory.Colors.Transparent))
+                {
+                    // now save it as PNG
+                    //var path = fs.PathCombine(Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads)
+                    //    .AbsolutePath, $"icon_{selectableColor.R}_{selectableColor.G}_{selectableColor.B}.png");
+                    var path = fs.PathCombine(fs.GetDefaultStoragePath(), $"icon_{selectableColor.R}_{selectableColor.G}_{selectableColor.B}.png");
+                    if (fs.FileExists(path))
+                        fs.DeleteFile(path);
+
+                    using (var stream = fs.OpenWrite(path))
+                    {
+                        bmp.SavePng(stream);
+                    }
+                }
             }
         }
 
@@ -61,7 +104,18 @@ namespace Svg.Droid.SampleEditor.Views
                 {
                     var cmd = cmds.Single();
                     var mi = menu.Add(cmd.GetHashCode(), cmd.GetHashCode(), 1, cmd.Name);
-                    mi.SetIcon(GetIconIdFromName(cmd.IconName));
+
+                    if (cmd.Tool is ColorTool)
+                    {
+                        var fs = Engine.Resolve<IFileSystem>();
+                        var selectedColor = ((ColorTool) cmd.Tool).SelectedColor;
+                        var path = fs.PathCombine(fs.GetDefaultStoragePath(), $"icon_{selectedColor.R}_{selectedColor.G}_{selectedColor.B}.png");
+                        var drawable = Drawable.CreateFromPath(path);
+
+                        mi.SetIcon(drawable);
+                    }
+                    else
+                        mi.SetIcon(GetIconIdFromName(cmd.IconName));
 
                     if (shownActions > 0)
                         mi.SetShowAsAction(ShowAsAction.IfRoom);
@@ -113,7 +167,7 @@ namespace Svg.Droid.SampleEditor.Views
 
         public new EditorViewModel ViewModel
         {
-            get { return (EditorViewModel) base.ViewModel; }
+            get { return (EditorViewModel)base.ViewModel; }
             set { base.ViewModel = value; }
         }
 
