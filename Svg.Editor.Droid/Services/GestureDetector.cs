@@ -189,7 +189,8 @@ namespace Svg.Droid.Editor.Services
             private readonly Context _ctx;
             private float _fX, _fY, _sX, _sY;
             private int _ptrId1, _ptrId2;
-            private float _angle = 0f;
+            private float? _startAngle = null;
+            private float? _previousAngle = null;
 
             public RotateDetector(Context ctx, GestureDetector owner)
             {
@@ -223,30 +224,48 @@ namespace Svg.Droid.Editor.Services
                             nfX = ev.GetX(ev.FindPointerIndex(_ptrId2));
                             nfY = ev.GetY(ev.FindPointerIndex(_ptrId2));
 
-                            _angle = AngleBetweenLines(_fX, _fY, _sX, _sY, nfX, nfY, nsX, nsY);
-                            
-                            var uie = new RotateEvent(_angle);
+                            var angle = AngleBetweenLines(_fX, _fY, _sX, _sY, nfX, nfY, nsX, nsY);
 
-                            System.Diagnostics.Debug.WriteLine(uie.DebuggerDisplay);
-                            _owner._callback(uie);
+                            if (_startAngle == null)
+                            {
+                                _startAngle = angle;
+                            }
+                            if (_previousAngle != null)
+                            {
+                                var delta = (_previousAngle.Value - angle) % 360;
+                                var absoluteDelta = (_startAngle.Value - angle) % 360;
+
+                                var uie = new RotateEvent(delta, absoluteDelta);
+                                _owner._callback(uie);
+                            }
+                            _previousAngle = angle;
+
                         }
                         break;
                     case (int) MotionEventActions.Up:
                         _ptrId1 = INVALID_POINTER_ID;
+                        CleanUp();
                         break;
                     case (int) MotionEventActions.PointerUp:
                         _ptrId2 = INVALID_POINTER_ID;
+                        CleanUp();
                         break;
                     case (int) MotionEventActions.Cancel:
                         _ptrId1 = INVALID_POINTER_ID;
                         _ptrId2 = INVALID_POINTER_ID;
+                        CleanUp();
                         break;
                 }
                 return true;
             }
 
-            private float AngleBetweenLines(float fX, float fY, float sX, float sY, float nfX, float nfY, float nsX,
-                float nsY)
+            private void CleanUp()
+            {
+                _startAngle = null;
+                _previousAngle = null;
+            }
+
+            private float AngleBetweenLines(float fX, float fY, float sX, float sY, float nfX, float nfY, float nsX, float nsY)
             {
                 float angle1 = (float) Math.Atan2((fY - sY), (fX - sX));
                 float angle2 = (float) Math.Atan2((nfY - nsY), (nfX - nsX));

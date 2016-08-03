@@ -5,14 +5,15 @@ namespace Svg.Core.Events
     [DebuggerDisplay("{DebuggerDisplay}")]
     public class RotateEvent : UserInputEvent
     {
-        public RotateEvent(float angle)
+        public RotateEvent(float relativeRotationDegrees, float absoluteRotationDegrees)
         {
-            Angle = angle;
+            RelativeRotationDegrees = relativeRotationDegrees;
+            AbsoluteRotationDegrees = absoluteRotationDegrees;
         }
 
-        public float Angle { get; private set; }
+        public float RelativeRotationDegrees { get; private set; }
+        public float AbsoluteRotationDegrees { get; private set; }
         
-
-        public string DebuggerDisplay => $"Rotate angle: {Angle}";
+        public string DebuggerDisplay => $"Rotate angle: relative delta {RelativeRotationDegrees}, absolute delta {AbsoluteRotationDegrees}";
     }
 }
