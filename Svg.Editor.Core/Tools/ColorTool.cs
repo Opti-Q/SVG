@@ -7,7 +7,7 @@ namespace Svg.Core.Tools
 {
     public interface IColorInputService
     {
-        Task<Color> GetUserInput(string title, Color[] items);
+        Task<int> GetIndexFromUserInput(string title, string[] items);
     }
 
     public class ColorTool : ToolBase
@@ -24,6 +24,7 @@ namespace Svg.Core.Tools
             Color.Create(0, 0, 0),
             Color.Create(255, 0, 0),
             Color.Create(0, 255, 0),
+            Color.Create(0, 0, 255),
             Color.Create(255, 255, 0),
             Color.Create(255, 0, 255),
             Color.Create(0, 255, 255)
@@ -119,7 +120,8 @@ namespace Svg.Core.Tools
             {
                 var t = (ColorTool)Tool;
 
-                var color = await ColorInputServiceProxy.GetUserInput("Choose color", t.SelectableColors);
+                var colorNames = new[] { "Black", "Red", "Green", "Blue", "Yellow", "Magenta", "Cyan" };
+                var color = t.SelectableColors[await ColorInputServiceProxy.GetIndexFromUserInput("Choose color", colorNames)];
 
                 if (_canvas.SelectedElements.Any())
                 {

@@ -17,15 +17,14 @@ namespace Svg.Droid.Editor.Services
             Context = context;
         }
 
-        public Task<Color> GetUserInput(string title, Color[] items)
+        public Task<int> GetIndexFromUserInput(string title, string[] items)
         {
             var builder = new AlertDialog.Builder(Context);
-            var tcs = new TaskCompletionSource<Color>();
+            var tcs = new TaskCompletionSource<int>();
             builder.SetTitle(title);
-            builder.SetItems(items.Select(x => x.IsNamedColor ? x.Name : $"{x.R}, {x.G}, {x.B}").ToArray(), (sender, args) =>
+            builder.SetItems(items, (sender, args) =>
             {
-                var selectedColor = items[args.Which];
-                tcs.SetResult(selectedColor);
+                tcs.SetResult(args.Which);
             });
             builder.Show();
 
