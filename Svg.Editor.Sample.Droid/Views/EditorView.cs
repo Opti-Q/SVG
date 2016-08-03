@@ -49,7 +49,7 @@ namespace Svg.Droid.SampleEditor.Views
 
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
-            var shownActions = 2;
+            var shownActions = 3;
 
             foreach (var commands in ViewModel.Canvas.ToolCommands)
             {

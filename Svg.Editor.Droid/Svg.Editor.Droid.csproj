@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Services\ColorInputService.cs" />
     <Compile Include="Services\SKCanvasRenderer.cs" />
     <Compile Include="Services\AndroidCanvasRenderer.cs" />
     <Compile Include="Services\TextInputService.cs" />

@@ -41,6 +41,7 @@ namespace Svg.Core.Tools
 
     public class ToolCommand : IToolCommand
     {
+        private const int DEFAULT_SORT_VALUE = 1000;
         private readonly Action<object> _execute;
         private readonly Func<object, bool> _canExecute;
         private readonly Func<IToolCommand, int> _sortFunc;
@@ -58,7 +59,7 @@ namespace Svg.Core.Tools
                 if (_sortFunc != null)
                     return _sortFunc(this);
 
-                return 100;
+                return DEFAULT_SORT_VALUE;
             }
         }
 
