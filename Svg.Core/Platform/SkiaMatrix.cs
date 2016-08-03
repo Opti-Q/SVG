@@ -69,7 +69,7 @@ namespace Svg.Platform
             _m.SkewY = rotateX;
             _m.ScaleY = scaleY;
             _m.TransY = transY;
-            _m.Persp0= 0;
+            _m.Persp0 = 0;
             _m.Persp1 = 0;
             _m.Persp2 = 1;
 
