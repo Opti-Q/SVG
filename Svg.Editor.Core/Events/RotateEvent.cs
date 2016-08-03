@@ -1,18 +1,30 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace Svg.Core.Events
 {
+    public enum RotateStatus
+    {
+        Start,
+        Rotating,
+        End
+    }
+
     [DebuggerDisplay("{DebuggerDisplay}")]
     public class RotateEvent : UserInputEvent
     {
-        public RotateEvent(float angle)
+
+        public RotateEvent(float relativeRotationDegrees, float absoluteRotationDegrees, RotateStatus status)
         {
-            Angle = angle;
+            RelativeRotationDegrees = relativeRotationDegrees;
+            AbsoluteRotationDegrees = absoluteRotationDegrees;
+            Status = status;
         }
 
-        public float Angle { get; private set; }
-        
+        public float RelativeRotationDegrees { get; private set; }
+        public float AbsoluteRotationDegrees { get; private set; }
+        public RotateStatus Status { get; private set; }
 
-        public string DebuggerDisplay => $"Rotate angle: {Angle}";
+        public string DebuggerDisplay => $"Rotate '{Enum.GetName(typeof(RotateStatus), Status)}' relative delta {RelativeRotationDegrees}, absolute delta {AbsoluteRotationDegrees}";
     }
 }

@@ -11,7 +11,6 @@ namespace Svg.Platform
         private LineJoin _lineJoin;
         private float _miterLimit;
         private LineCap _cap;
-        private LineCap _endCap;
 
         public SkiaPen(Brush brush, float strokeWidth)
         {
@@ -21,13 +20,13 @@ namespace Svg.Platform
             _brush.Paint.IsStroke = true;
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             _brush?.Dispose();
             _dashes?.Dispose();
         }
 
-        public float[] DashPattern
+        public override float[] DashPattern
         {
             get { return _dashPattern; }
             set
@@ -50,7 +49,7 @@ namespace Svg.Platform
             }
         }
 
-        public LineJoin LineJoin
+        public override LineJoin LineJoin
         {
             get { return _lineJoin; }
             set
@@ -75,7 +74,7 @@ namespace Svg.Platform
             }
         }
 
-        public float MiterLimit
+        public override float MiterLimit
         {
             get { return _miterLimit; }
             set
@@ -85,7 +84,7 @@ namespace Svg.Platform
             }
         }
 
-        public LineCap StartCap
+        public override LineCap StartCap
         {
             get { return _cap; }
             set
@@ -119,7 +118,7 @@ namespace Svg.Platform
             }
         }
 
-        public LineCap EndCap
+        public override LineCap EndCap
         {
             get { return StartCap; }
             set { StartCap = value; }

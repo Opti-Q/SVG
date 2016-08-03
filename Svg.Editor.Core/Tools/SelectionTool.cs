@@ -49,12 +49,6 @@ namespace Svg.Core.Tools
 
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
-            // skip if movetool is active
-            var moveTool = ws.Tools.OfType<MoveTool>().SingleOrDefault();
-            if (moveTool.IsActive)
-                return Task.FromResult(true);
-
-
             if (!IsActive)
                 return Task.FromResult(true);
 

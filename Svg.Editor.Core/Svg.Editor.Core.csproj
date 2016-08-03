@@ -61,6 +61,7 @@
     <Compile Include="Tools\ITool.cs" />
     <Compile Include="Tools\MoveTool.cs" />
     <Compile Include="Tools\PanTool.cs" />
+    <Compile Include="Tools\RotateTool.cs" />
     <Compile Include="Tools\SelectionTool.cs" />
     <Compile Include="Tools\TextTool.cs" />
     <Compile Include="Tools\ToolBase.cs" />

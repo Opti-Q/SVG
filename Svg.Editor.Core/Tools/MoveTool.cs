@@ -11,29 +11,10 @@ namespace Svg.Core.Tools
     {
         private readonly Dictionary<object, PointF> _offsets = new Dictionary<object, PointF>();
         private readonly Dictionary<object, PointF> _translates = new Dictionary<object, PointF>();
+        private bool _implicitlyActivated = false;
 
         public MoveTool() : base("Move")
         {
-        }
-
-        public override Task Initialize(SvgDrawingCanvas ws)
-        {
-            //Commands = new List<IToolCommand>
-            //{
-            //    new ToolCommand(this, "Move", (obj) =>
-            //    {
-            //        this.IsActive = !this.IsActive;
-            //        var panTool = ws.Tools.OfType<PanTool>().FirstOrDefault();
-            //        if (panTool != null)
-            //        {
-            //            // only either pantool or movetool can be active
-            //            panTool.IsActive = !this.IsActive;
-            //        }
-
-            //    }, (obj) => !this.IsActive)
-            //};
-
-            return Task.FromResult(true);
         }
         
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
@@ -50,7 +31,11 @@ namespace Svg.Core.Tools
                     {
                         // move tool is only active, if SelectionTool is the "ActiveTool"
                         // otherwise we'd move and pan at the same time, yielding confusing results... :)
-                        this.IsActive = ws.ActiveTool is SelectionTool;
+                        if (ws.ActiveTool is SelectionTool)
+                        {
+                            ws.ActiveTool = this;
+                            _implicitlyActivated = true;
+                        }
                     }
                     else
                     {
@@ -62,6 +47,12 @@ namespace Svg.Core.Tools
                 {
                     _offsets.Clear();
                     _translates.Clear();
+
+                    if (_implicitlyActivated)
+                    {
+                        _implicitlyActivated = false;
+                        ws.ActiveTool = ws.Tools.OfType<SelectionTool>().Single();
+                    }
                 }
             }
 

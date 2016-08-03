@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Events;
-using Svg.Core.Interfaces;
-using Svg.Transforms;
 
 namespace Svg.Core.Tools
 {
@@ -28,7 +25,6 @@ namespace Svg.Core.Tools
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
-
             this.IsActive = false;
 
             return Task.FromResult(true);
@@ -126,7 +122,6 @@ namespace Svg.Core.Tools
                 }
             }
         }
-
 
     }
 }
