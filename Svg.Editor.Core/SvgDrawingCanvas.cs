@@ -40,6 +40,7 @@ namespace Svg.Core
                     new GridTool(angle:27.3f), // must be before movetool!
                     new MoveTool(), // must be before pantool as it decides whether or not it is active based on selection
                     new PanTool(),
+                    new RotateTool(),
                     new ZoomTool(),
                     new SelectionTool(),
                     new TextTool(),
@@ -265,6 +266,9 @@ namespace Svg.Core
         public IList<TElement> GetElementsUnder<TElement>(RectangleF selectionRectangle, SelectionType selectionType, int maxItems = int.MaxValue, int recursionLevel = 1)
             where TElement : SvgVisualElement
         {
+            if (selectionRectangle == null)
+                return new List<TElement>();
+
             // to speed up selection, this only takes first-level children into account!
             var children = Document?.Children.OfType<SvgVisualElement>() ?? Enumerable.Empty<SvgVisualElement>();
 

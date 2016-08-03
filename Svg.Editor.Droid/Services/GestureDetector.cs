@@ -74,23 +74,23 @@ namespace Svg.Droid.Editor.Services
                     break;
 
                 case (int) MotionEventActions.Move:
-                    var pointerIndex = ev.FindPointerIndex(ActivePointerId);
-                    x = ev.GetX(pointerIndex);
-                    y = ev.GetY(pointerIndex);
+                    if (ev.PointerCount == 1)
+                    {
+                        var pointerIndex = ev.FindPointerIndex(ActivePointerId);
+                        x = ev.GetX(pointerIndex);
+                        y = ev.GetY(pointerIndex);
 
-                    var relativeDeltaX = x - _lastTouchX;
-                    var relativeDeltaY = y - _lastTouchY;
+                        var relativeDeltaX = x - _lastTouchX;
+                        var relativeDeltaY = y - _lastTouchY;
+                        
+                        uie = new MoveEvent(Svg.Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
+                            Svg.Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY),
+                            Svg.Factory.Instance.CreatePointF(x, y),
+                            Svg.Factory.Instance.CreatePointF(relativeDeltaX, relativeDeltaY));
 
-                    //System.Diagnostics.Debug.WriteLine($"{absoluteDeltaX}:{absoluteDeltaY}");
-
-                    uie = new MoveEvent(Svg.Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
-                        Svg.Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY),
-                        Svg.Factory.Instance.CreatePointF(x, y),
-                        Svg.Factory.Instance.CreatePointF(relativeDeltaX, relativeDeltaY));
-
-                    _lastTouchX = x;
-                    _lastTouchY = y;
-
+                        _lastTouchX = x;
+                        _lastTouchY = y;
+                    }
                     break;
 
                 case (int) MotionEventActions.PointerUp:
@@ -191,6 +191,7 @@ namespace Svg.Droid.Editor.Services
             private int _ptrId1, _ptrId2;
             private float? _startAngle = null;
             private float? _previousAngle = null;
+            private float _angle;
 
             public RotateDetector(Context ctx, GestureDetector owner)
             {
@@ -224,21 +225,25 @@ namespace Svg.Droid.Editor.Services
                             nfX = ev.GetX(ev.FindPointerIndex(_ptrId2));
                             nfY = ev.GetY(ev.FindPointerIndex(_ptrId2));
 
-                            var angle = AngleBetweenLines(_fX, _fY, _sX, _sY, nfX, nfY, nsX, nsY);
-
+                            _angle = AngleBetweenLines(_fX, _fY, _sX, _sY, nfX, nfY, nsX, nsY);
+                            
                             if (_startAngle == null)
                             {
-                                _startAngle = angle;
+                                _startAngle = _angle;
+                                var uie = new RotateEvent(0, 0, RotateStatus.Start);
+                                System.Diagnostics.Debug.WriteLine(uie.DebuggerDisplay);
+                                _owner._callback(uie);
                             }
                             if (_previousAngle != null)
                             {
-                                var delta = (_previousAngle.Value - angle) % 360;
-                                var absoluteDelta = (_startAngle.Value - angle) % 360;
-
-                                var uie = new RotateEvent(delta, absoluteDelta);
+                                var delta = (_previousAngle.Value - _angle) % 360;
+                                var absoluteDelta = (_startAngle.Value - _angle) % 360;
+                                
+                                var uie = new RotateEvent(delta, absoluteDelta, RotateStatus.Rotating);
+                                System.Diagnostics.Debug.WriteLine(uie.DebuggerDisplay);
                                 _owner._callback(uie);
                             }
-                            _previousAngle = angle;
+                            _previousAngle = _angle;
 
                         }
                         break;
@@ -261,8 +266,20 @@ namespace Svg.Droid.Editor.Services
 
             private void CleanUp()
             {
+                // we have been rotating
+                if (_startAngle.HasValue && _previousAngle.HasValue)
+                {
+                    var delta = (_previousAngle.Value - _angle) % 360;
+                    var absoluteDelta = (_startAngle.Value - _angle) % 360;
+
+                    var uie = new RotateEvent(delta, absoluteDelta, RotateStatus.End);
+                    System.Diagnostics.Debug.WriteLine(uie.DebuggerDisplay);
+                    _owner._callback(uie);
+                }
+
                 _startAngle = null;
                 _previousAngle = null;
+                _angle = 0f;
             }
 
             private float AngleBetweenLines(float fX, float fY, float sX, float sY, float nfX, float nfY, float nsX, float nsY)
