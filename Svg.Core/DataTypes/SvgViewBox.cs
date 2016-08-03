@@ -69,6 +69,7 @@ namespace Svg
         /// <returns>The result of the conversion.</returns>
         public static implicit operator SvgViewBox(RectangleF value)
         {
+            value = value ?? RectangleF.Empty;
             return new SvgViewBox(value.X, value.Y, value.Width, value.Height);
         }
 
