@@ -105,22 +105,8 @@ namespace Svg.Core.Tools
 
         private void AddTranslate(SvgVisualElement element, float deltaX, float deltaY)
         {
-            SvgTranslate trans = null;
-            int index = -1;
-            
-            //if (element.Transforms.OfType<SvgTranslate>().Count() > 1)
-            {
-                for (int i = element.Transforms.Count - 1; i >= 0; i--)
-                {
-                    var translate = element.Transforms[i] as SvgTranslate;
-                    if (translate != null)
-                    {
-                        trans = translate;
-                        index = i;
-                        break;
-                    }
-                }
-            }
+            var transforms = element.Transforms;
+            var tm = transforms.GetMatrix();
 
             // the movetool stores the last translation explicitly for each element
             // that way, if another tool manipulates the translation (e.g. the snapping tool)
@@ -128,27 +114,18 @@ namespace Svg.Core.Tools
             PointF previousTranslate;
             if (!_translates.TryGetValue(element, out previousTranslate))
             {
-                if (trans != null)
-                    previousTranslate = PointF.Create(trans.X, trans.Y);
-                else
-                    previousTranslate = PointF.Create(0f, 0f);
+               previousTranslate = PointF.Create(tm.OffsetX, tm.OffsetY);
             }
+            
+            var t = new SvgTranslate(previousTranslate.X + deltaX, previousTranslate.Y + deltaY);
+            _translates[element] = PointF.Create(t.X, t.Y);
 
-            var transforms = element.Transforms;
-            if (trans == null)
-            {
-                trans = new SvgTranslate(deltaX, deltaY);
-                _translates[element] = PointF.Create(deltaX, deltaY);
+            tm.Translate(-tm.OffsetX, -tm.OffsetY);
+            tm.Translate(t.X, t.Y);
 
-                transforms.Add(trans);
-            }
-            else
-            {
-                var t = new SvgTranslate(previousTranslate.X + deltaX, previousTranslate.Y + deltaY);
-                _translates[element] = PointF.Create(t.X, t.Y);
-
-                transforms[index] = t; // we MUST explicitly set the transform so the "OnTransformChanged" event is fired!
-            }
+            transforms.Clear();
+            transforms.Add(tm.ToSvgMatrix());
+            
         }
     }
 }
