@@ -214,9 +214,9 @@ namespace Svg.Platform
                 SKMatrix.PreConcat(ref _m, ref m);
         }
 
-        public override void Rotate(float angle, MatrixOrder order)
+        public override void Rotate(float angleDegrees, MatrixOrder order)
         {
-            var m = SKMatrix.MakeRotationDegrees(angle);
+            var m = SKMatrix.MakeRotationDegrees(angleDegrees);
 
             if (order == MatrixOrder.Append)
                 SKMatrix.PostConcat(ref _m, ref m);
@@ -224,9 +224,9 @@ namespace Svg.Platform
                 SKMatrix.PreConcat(ref _m, ref m);
         }
 
-        public override void RotateAt(float angle, PointF midPoint, MatrixOrder order)
+        public override void RotateAt(float angleDegrees, PointF midPoint, MatrixOrder order)
         {
-            var m = SKMatrix.MakeRotationDegrees(angle, midPoint.X, midPoint.Y);
+            var m = SKMatrix.MakeRotationDegrees(angleDegrees, midPoint.X, midPoint.Y);
 
             if (order == MatrixOrder.Append)
                 SKMatrix.PostConcat(ref _m, ref m);
@@ -234,9 +234,9 @@ namespace Svg.Platform
                 SKMatrix.PreConcat(ref _m, ref m);
         }
 
-        public override void Rotate(float fAngle)
+        public override void Rotate(float angleDegrees)
         {
-            Rotate(fAngle, MatrixOrder.Prepend);
+            Rotate(angleDegrees, MatrixOrder.Prepend);
         }
 
         public override void Shear(float sx, float sy)

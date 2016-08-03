@@ -28,8 +28,8 @@ namespace Svg
         public abstract void Multiply(Matrix matrix);
         public abstract void Multiply(Matrix matrix, MatrixOrder prepend);
         public abstract void TransformPoints(PointF[] points);
-        public abstract void RotateAt(float f, PointF midPoint, MatrixOrder prepend);
-        public abstract void Rotate(float fAngle, MatrixOrder append);
+        public abstract void RotateAt(float angleDegrees, PointF midPoint, MatrixOrder prepend);
+        public abstract void Rotate(float angleDegrees, MatrixOrder append);
         public abstract Matrix Clone();
         public abstract float[] Elements { get; }
         public abstract float OffsetX { get;  }
@@ -40,7 +40,7 @@ namespace Svg
         public abstract float SkewY { get; }
         public abstract bool IsIdentity { get; }
 
-        public abstract void Rotate(float fAngle);
+        public abstract void Rotate(float angleDegrees);
         public abstract void Shear(float sx, float sy);
         public virtual void Dispose()
         { }

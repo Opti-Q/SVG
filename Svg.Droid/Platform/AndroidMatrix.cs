@@ -148,28 +148,28 @@ namespace Svg.Platform
             }
         }
 
-        public override void RotateAt(float angle, PointF midPoint, MatrixOrder order)
+        public override void RotateAt(float angleDegrees, PointF midPoint, MatrixOrder order)
         {
             if (order == MatrixOrder.Append)
-                _m.PostRotate(angle, midPoint.X, midPoint.Y);
+                _m.PostRotate(angleDegrees, midPoint.X, midPoint.Y);
             else
-                _m.PreRotate(angle, midPoint.X, midPoint.Y);
+                _m.PreRotate(angleDegrees, midPoint.X, midPoint.Y);
         }
 
-        public override void Rotate(float angle, MatrixOrder order)
+        public override void Rotate(float angleDegrees, MatrixOrder order)
         {
             if (order == MatrixOrder.Append)
-                _m.PostRotate(angle);
+                _m.PostRotate(angleDegrees);
             else
-                _m.PreRotate(angle);
+                _m.PreRotate(angleDegrees);
         }
 
         public override bool IsIdentity => _m.IsIdentity;
 
-        public override void Rotate(float fAngle)
+        public override void Rotate(float angleDegrees)
         {
             //_m.SetRotate(fAngle);
-            _m.PreRotate(fAngle);
+            _m.PreRotate(angleDegrees);
         }
 
         public override Matrix Clone()
