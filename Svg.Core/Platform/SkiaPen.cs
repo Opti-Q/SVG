@@ -6,7 +6,7 @@ namespace Svg.Platform
     public class SkiaPen : Pen
     {
         private readonly SkiaBrushBase _brush;
-        //private SKDashPathEffect _dashes;
+        private SKPathEffect _dashes;
         private float[] _dashPattern;
         private LineJoin _lineJoin;
         private float _miterLimit;
@@ -24,7 +24,7 @@ namespace Svg.Platform
         public void Dispose()
         {
             _brush?.Dispose();
-            //_dashes?.Dispose();
+            _dashes?.Dispose();
         }
 
         public float[] DashPattern
@@ -33,20 +33,20 @@ namespace Svg.Platform
             set
             {
                 _dashPattern = value;
-                //if (_dashPattern == null && _dashes != null)
-                //{
-                //    _dashes.Dispose();
-                //    _dashes = null;
-                //}
+                if (_dashPattern == null && _dashes != null)
+                {
+                    _dashes.Dispose();
+                    _dashes = null;
+                }
 
-                //if (_dashPattern != null)
-                //{
-                //    if (_dashes != null)
-                //        _dashes.Dispose();
+                if (_dashPattern != null)
+                {
+                    if (_dashes != null)
+                        _dashes.Dispose();
 
-                //    _dashes = new DashPathEffect(_dashPattern, 0f);
-                //    _brush.Paint.SetPathEffect(_dashes);
-                //}
+                    _dashes = SKPathEffect.CreateDash(_dashPattern, 0f);
+                    _brush.Paint.PathEffect = _dashes;
+                }
             }
         }
 
