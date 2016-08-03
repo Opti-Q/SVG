@@ -277,6 +277,7 @@ namespace Svg.Core.Tools
 
         private void SnapToGrid(SvgElement element)
         {
+
             var ve = element as SvgVisualElement;
             if (ve == null)
                 return;
@@ -400,34 +401,10 @@ namespace Svg.Core.Tools
 
         private static void AddTranslate(SvgVisualElement element, float deltaX, float deltaY)
         {
-            SvgTranslate trans = null;
-            int index = -1;
-
-            //if (element.Transforms.OfType<SvgTranslate>().Count() > 1)
-            {
-                for (int i = element.Transforms.Count - 1; i >= 0; i--)
-                {
-                    var translate = element.Transforms[i] as SvgTranslate;
-                    if (translate != null)
-                    {
-                        trans = translate;
-                        index = i;
-                        break;
-                    }
-                }
-            }
-
-            var transforms = element.Transforms;
-            if (trans == null)
-            {
-                trans = new SvgTranslate(deltaX, deltaY);
-                transforms.Add(trans);
-            }
-            else
-            {
-                var t = new SvgTranslate(trans.X + deltaX, trans.Y + deltaY);
-                transforms[index] = t; // we MUST explicitly set the transform so the "OnTransformChanged" event is fired!
-            }
+            var m = element.Transforms.GetMatrix();
+            m.Translate(deltaX, deltaY);
+            element.Transforms.Clear();
+            element.Transforms.Add(m);
         }
 
         #endregion
