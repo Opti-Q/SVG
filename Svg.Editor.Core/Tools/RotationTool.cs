@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Events;
@@ -15,10 +16,13 @@ namespace Svg.Core.Tools
         private Pen _pen2;
         private Brush RedBrush => _brush2 ?? (_brush2 = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 255, 150, 150)));
         private Pen RedPen => _pen2 ?? (_pen2 = Svg.Engine.Factory.CreatePen(RedBrush, 3));
+        private readonly Dictionary<SvgElement, float> _rotations = new Dictionary<SvgElement, float>();
 
         public bool IsDebugEnabled { get; set; }
 
         public Func<SvgVisualElement, bool> Filter { get; set; }
+
+        public float RotationStep { get; set; }
         
         public RotationTool() : base("Rotate")
         {
@@ -43,6 +47,7 @@ namespace Svg.Core.Tools
                     ws.ActiveTool = this;
                     _wasImplicitlyActivated = true;
                     zt.IsActive = false;
+                    _rotations.Clear();
                 }
                 else if (re.Status == RotateStatus.Rotating &&
                          ws.SelectedElements.Count == 1)
@@ -57,6 +62,7 @@ namespace Svg.Core.Tools
                     }
                     zt.IsActive = true;
                     _lastRotationCenter = null;
+                    _rotations.Clear();
                 }
             }
             
@@ -76,11 +82,45 @@ namespace Svg.Core.Tools
             // if element must not be rotated
             if (Filter?.Invoke(element) == false)
                 return;
-            
-            var m = element.CreateOriginRotation(rotateEvent.RelativeRotationDegrees);
-            element.SetTransformationMatrix(m);
 
-            ws.FireInvalidateCanvas();
+            // always rotate by absolute radius!
+            float previousAngle;
+            if (!_rotations.TryGetValue(element, out previousAngle))
+            {
+                previousAngle = 0f;
+            }
+
+            var absoluteAngle = rotateEvent.AbsoluteRotationDegrees;
+            var angle = CalculateNewRotation(absoluteAngle);
+            var delta = angle - previousAngle;
+
+            _rotations[element] = angle;
+
+            if (delta != 0)
+            {
+                var m = element.CreateOriginRotation(delta);
+                element.SetTransformationMatrix(m);
+
+                ws.FireInvalidateCanvas();
+            }
+        }
+
+        private float CalculateNewRotation(float absoluteAngle)
+        {
+            // if we can rotate with any angle, just return the absolute one
+            if(RotationStep <= 0)
+                return absoluteAngle;
+
+            // else make sure we only rotate with the specified step size (e.g. 45°)
+            var rest = absoluteAngle % RotationStep;
+
+            // if the remainder is less than halph the step size, just remove it
+            if (rest <= RotationStep/2)
+            {
+                return absoluteAngle - rest;
+            }
+            // otherwise round up to the next allowed angle (add stepsize)
+            return absoluteAngle - rest + RotationStep;
         }
 
         public override void Dispose()

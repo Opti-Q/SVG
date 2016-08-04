@@ -30,9 +30,9 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
             Canvas.IsDebugEnabled = true;
 
             //// only allow to rotate text elements
-            //var rt = Canvas.Tools.OfType<RotateTool>().Single();
+            var rt = Canvas.Tools.OfType<RotationTool>().Single();
             //rt.Filter = (ve => ve is SvgTextBase);
-
+            rt.RotationStep = 30; // rotate in 30 degree steps
         }
 
         private ISvgSource GetSource(string source)

@@ -138,8 +138,7 @@ namespace Svg.Editor.Tests
             Assert.AreEqual(1, Canvas.SelectedElements.Count);
             Assert.IsTrue(Canvas.SelectedElements.Single() == element1, "must still be selected");
         }
-
-
+        
         [Test]
         public async Task SingleElementSelected_RotateTranslateTranslateRotate_ElementsAreRotatedAndTranslatedCorrectly()
         {
@@ -177,6 +176,75 @@ namespace Svg.Editor.Tests
             Assert.AreEqual(1, Canvas.SelectedElements.Count);
             Assert.IsTrue(Canvas.SelectedElements.Single() == element1, "must still be selected");
         }
+        
+        [Test]
+        public async Task SingleElementSelected_RotatesByStepSize()
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            var gt = Canvas.Tools.OfType<GridTool>().Single();
+            var rt = Canvas.Tools.OfType<RotationTool>().Single();
+            gt.IsSnappingEnabled = false;
+            rt.RotationStep = 30;
+
+            Canvas.ActiveTool = Canvas.Tools.OfType<SelectionTool>().Single();
+
+            var element1 = new SvgRectangle()
+            {
+                X = new SvgUnit(SvgUnitType.Pixel, 0),
+                Y = new SvgUnit(SvgUnitType.Pixel, 0),
+                Width = new SvgUnit(SvgUnitType.Pixel, 30),
+                Height = new SvgUnit(SvgUnitType.Pixel, 30),
+            };
+            Canvas.Document.Children.Add(element1);
+            Canvas.SelectedElements.Add(element1);
+            var matrix = element1.Transforms.GetMatrix();
+            matrix.RotateAt(30f, PointF.Create(15, 15), MatrixOrder.Prepend);
+
+            // Act
+            await Rotate(10, 33); // rotate to 43 degree => should remain 30 deg
+
+            // Assert
+            var actual = element1.Transforms.GetMatrix();
+            AssertAreEqual(matrix, actual);
+            Assert.AreEqual(1, Canvas.SelectedElements.Count);
+            Assert.IsTrue(Canvas.SelectedElements.Single() == element1, "must still be selected");
+        }
+
+        [Test]
+        public async Task SingleElementSelected_RotatesByStepSize_2()
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            var gt = Canvas.Tools.OfType<GridTool>().Single();
+            var rt = Canvas.Tools.OfType<RotationTool>().Single();
+            gt.IsSnappingEnabled = false;
+            rt.RotationStep = 30;
+
+            Canvas.ActiveTool = Canvas.Tools.OfType<SelectionTool>().Single();
+
+            var element1 = new SvgRectangle()
+            {
+                X = new SvgUnit(SvgUnitType.Pixel, 0),
+                Y = new SvgUnit(SvgUnitType.Pixel, 0),
+                Width = new SvgUnit(SvgUnitType.Pixel, 30),
+                Height = new SvgUnit(SvgUnitType.Pixel, 30),
+            };
+            Canvas.Document.Children.Add(element1);
+            Canvas.SelectedElements.Add(element1);
+            var matrix = element1.Transforms.GetMatrix();
+            matrix.RotateAt(30f, PointF.Create(15, 15), MatrixOrder.Prepend);
+
+            // Act
+            await Rotate(+10, +33, -10, -5, +4); // rotate to 43 degree => should remain 30 deg
+
+            // Assert
+            var actual = element1.Transforms.GetMatrix();
+            AssertAreEqual(matrix, actual);
+            Assert.AreEqual(1, Canvas.SelectedElements.Count);
+            Assert.IsTrue(Canvas.SelectedElements.Single() == element1, "must still be selected");
+        }
+
 
         private void AssertAreEqual(Matrix expected, Matrix actual)
         {
