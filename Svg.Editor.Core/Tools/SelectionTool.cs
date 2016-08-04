@@ -27,6 +27,16 @@ namespace Svg.Core.Tools
         private Brush BlueBrush => _brush ?? (_brush = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
         private Pen BluePen => _pen ?? (_pen = Svg.Engine.Factory.CreatePen(BlueBrush, 5));
 
+        public override bool IsActive
+        {
+            get { return base.IsActive; }
+            set
+            {
+                base.IsActive = value;
+                Reset();
+            }
+        }
+
         public override Task Initialize(SvgDrawingCanvas ws)
         {
             Commands = new List<IToolCommand>
@@ -54,7 +64,7 @@ namespace Svg.Core.Tools
                 return Task.FromResult(true);
 
             var e = @event as MoveEvent;
-            if (e != null)
+            if (e != null && _handledPointerDown)
             {
                 float startX = e.Pointer1Down.X;
                 float startY = e.Pointer1Down.Y;
@@ -97,8 +107,7 @@ namespace Svg.Core.Tools
                 {
                     // select elements under pointer
                     SelectElementsUnder(ws.GetPointerRectangle(p.Pointer1Position), ws, SelectionType.Intersect, 1);
-                    _selectionRectangle = null;
-                    _handledPointerDown = false;
+                    Reset();
                     ws.FireInvalidateCanvas();
                 }
                 // on pointer up or cancel, we remove the selection rectangle
@@ -107,8 +116,7 @@ namespace Svg.Core.Tools
                     // select elements under rectangle
                     SelectElementsUnder(_selectionRectangle, ws, SelectionType.Contain);
 
-                    _selectionRectangle = null;
-                    _handledPointerDown = false;
+                    Reset();
                     ws.FireInvalidateCanvas();
                 }
             }
@@ -166,6 +174,12 @@ namespace Svg.Core.Tools
             }
 
             return Task.FromResult(true);
+        }
+
+        private void Reset()
+        {
+            _handledPointerDown = false;
+            _selectionRectangle = null;
         }
     }
 }
