@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -44,6 +45,8 @@ namespace Svg.Core.Tools
 
         public Color SelectedColor { get; set; }
 
+        public string ColorIconNameModifier => StringifyColor(SelectedColor);
+
         public override Task Initialize(SvgDrawingCanvas ws)
         {
             var selectableColors = SelectableColors;
@@ -52,12 +55,12 @@ namespace Svg.Core.Tools
             var cachingService = Engine.Resolve<ISvgCachingService>();
             foreach (var selectableColor in selectableColors)
             {
-                cachingService.SaveAsPng(ColorIconName,
-                    $"{Name}_icon_{selectableColor.R}_{selectableColor.G}_{selectableColor.B}.png",
+                Action<SvgDocument> action =
                     document =>
                     {
                         document.Children.Single().Children.Last().Fill = new SvgColourServer(selectableColor);
-                    });
+                    };
+                cachingService.SaveAsPng(ColorIconName, StringifyColor(selectableColor), action);
             }
 
             // add tool commands
@@ -70,6 +73,11 @@ namespace Svg.Core.Tools
             WatchDocument(ws.Document);
 
             return Task.FromResult(true);
+        }
+
+        private static string StringifyColor(Color color)
+        {
+            return $"{color.R}_{color.G}_{color.B}";
         }
 
         private static void ColorizeElement(SvgElement element, Color color)

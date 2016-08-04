@@ -5,6 +5,7 @@ namespace Svg.Core.Interfaces
 {
     public interface ISvgCachingService
     {
-        void SaveAsPng(string sourceName, string name, Action<SvgDocument> preprocessAction = null);
+        void SaveAsPng(string svgFilePath, string nameModifier, Action<SvgDocument> preprocessAction = null);
+        string GetCachedPngPath(string svgFilePath, string nameModifier, IFileSystem fs);
     }
 }

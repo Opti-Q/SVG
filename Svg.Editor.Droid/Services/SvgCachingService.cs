@@ -13,11 +13,10 @@ namespace Svg.Droid.Editor.Services
             _sourceProvider = sourceProvider;
         }
 
-        public void SaveAsPng(string sourceName, string name, Action<SvgDocument> preprocessAction = null)
+        public void SaveAsPng(string svgFilePath, string nameModifier, Action<SvgDocument> preprocessAction)
         {
             // load svg from FS
-            var document = SvgDocument.Open<SvgDocument>(_sourceProvider(sourceName));
-            var fs = Engine.Resolve<IFileSystem>();
+            var document = SvgDocument.Open<SvgDocument>(_sourceProvider(svgFilePath));
 
             // apply changes to svg
             preprocessAction?.Invoke(document);
@@ -25,8 +24,8 @@ namespace Svg.Droid.Editor.Services
             // save svg as png
             using (var bmp = document.DrawAllContents(Engine.Factory.Colors.Transparent))
             {
-                // now save it as PNG
-                var path = fs.PathCombine(fs.GetDefaultStoragePath(), name);
+                var fs = Engine.Resolve<IFileSystem>();
+                var path = GetCachedPngPath(svgFilePath, nameModifier, fs);
                 if (fs.FileExists(path))
                     fs.DeleteFile(path);
 
@@ -35,6 +34,12 @@ namespace Svg.Droid.Editor.Services
                     bmp.SavePng(stream);
                 }
             }
+        }
+
+        public string GetCachedPngPath(string svgFilePath, string nameModifier, IFileSystem fs)
+        {
+            var fileName = System.IO.Path.GetFileNameWithoutExtension(svgFilePath);
+            return fs.PathCombine(fs.GetDefaultStoragePath(), $"{fileName}_{nameModifier}.png");
         }
     }
 }
