@@ -52,15 +52,20 @@ namespace Svg.Core.Tools
             var selectableColors = SelectableColors;
 
             SelectedColor = SelectableColors?.FirstOrDefault();
-            var cachingService = Engine.Resolve<ISvgCachingService>();
-            foreach (var selectableColor in selectableColors)
+
+            // cache icons
+            var cachingService = Engine.TryResolve<ISvgCachingService>();
+            if (cachingService != null)
             {
-                Action<SvgDocument> action =
-                    document =>
-                    {
-                        document.Children.Single().Children.Last().Fill = new SvgColourServer(selectableColor);
-                    };
-                cachingService.SaveAsPng(ColorIconName, StringifyColor(selectableColor), action);
+                foreach (var selectableColor in selectableColors)
+                {
+                    Action<SvgDocument> action =
+                        document =>
+                        {
+                            document.Children.Single().Children.Last().Fill = new SvgColourServer(selectableColor);
+                        };
+                    cachingService.SaveAsPng(ColorIconName, StringifyColor(selectableColor), action);
+                }
             }
 
             // add tool commands
