@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)IFIleLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RotateToolTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SelectionToolTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgDrawingCanvasTestBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgDrawingCanvasTests.cs" />

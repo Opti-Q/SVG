@@ -105,27 +105,19 @@ namespace Svg.Core.Tools
 
         private void AddTranslate(SvgVisualElement element, float deltaX, float deltaY)
         {
-            var transforms = element.Transforms;
-            var tm = transforms.GetMatrix();
-
             // the movetool stores the last translation explicitly for each element
             // that way, if another tool manipulates the translation (e.g. the snapping tool)
             // the movetool is not interfered by that
-            PointF previousTranslate;
-            if (!_translates.TryGetValue(element, out previousTranslate))
+            PointF translate;
+            if (!_translates.TryGetValue(element, out translate))
             {
-               previousTranslate = PointF.Create(tm.OffsetX, tm.OffsetY);
+                translate = PointF.Create(0, 0);
             }
-            
-            var t = new SvgTranslate(previousTranslate.X + deltaX, previousTranslate.Y + deltaY);
-            _translates[element] = PointF.Create(t.X, t.Y);
+            translate.X += deltaX;
+            translate.Y += deltaY;
 
-            tm.Translate(-tm.OffsetX, -tm.OffsetY);
-            tm.Translate(t.X, t.Y);
-
-            transforms.Clear();
-            transforms.Add(tm.ToSvgMatrix());
-            
+            var m = element.CreateTranslation(translate.X, translate.Y);
+            element.SetTransofmrationMatrix(m);
         }
     }
 }

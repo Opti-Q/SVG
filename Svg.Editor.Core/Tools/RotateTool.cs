@@ -78,61 +78,27 @@ namespace Svg.Core.Tools
             if (Filter?.Invoke(element) == false)
                 return;
 
-            var b = element.GetBoundingBox();
-            var centerX = b.X + (b.Width / 2);
-            var centerY = b.Y + (b.Height / 2);
+            //var b = element.GetBoundingBox();
+            //var centerX = b.X + (b.Width / 2);
+            //var centerY = b.Y + (b.Height / 2);
 
-            _lastRotationCenter = PointF.Create(centerX, centerY);
+            //_lastRotationCenter = PointF.Create(centerX, centerY);
             
-            // to rotate precisely at the center
-            // we need to undo all translates of the preceding transformations
-            var matrix = element.Transforms.GetMatrix();
-            centerX -= matrix.OffsetX;
-            centerY -= matrix.OffsetY;
+            //// to rotate precisely at the center
+            //// we need to undo all translates of the preceding transformations
+            //var matrix = element.Transforms.GetMatrix();
+            //centerX -= matrix.OffsetX;
+            //centerY -= matrix.OffsetY;
 
-            // then apply the transformation
+            //// then apply the transformation
+            ////matrix.RotateAt(rotateEvent.RelativeRotationDegrees, PointF.Create(centerX, centerY), MatrixOrder.Prepend);
             //matrix.RotateAt(rotateEvent.RelativeRotationDegrees, PointF.Create(centerX, centerY), MatrixOrder.Prepend);
-            matrix.Rotate(rotateEvent.RelativeRotationDegrees, MatrixOrder.Prepend);
-            element.Transforms.Clear();
-            element.Transforms.Add(matrix);
 
+            //element.Transforms.Clear();
+            //element.Transforms.Add(matrix);
 
-            //var rotateTrans = element.Transforms.OfType<SvgMatrix>().LastOrDefault();
-
-            //// in case there is no SvgMatrix transformation present yet...
-            //if (rotateTrans == null)
-            //{
-            //    // we create our own one
-            //    var m = Matrix.Create();
-
-            //    // to rotate precisely at the center
-            //    // we need to undo all translates of the preceding transformations
-            //    var matrix = element.Transforms.GetMatrix();
-            //    centerX -= matrix.OffsetX;
-            //    centerY -= matrix.OffsetY;
-
-
-
-            //    // then apply the transformation
-            //    m.RotateAt(rotateEvent.AbsoluteRotationDegrees, PointF.Create(centerX, centerY), MatrixOrder.Prepend);
-
-            //    // and add it
-            //    element.Transforms.Add(m.ToSvgMatrix());
-            //}
-            //else
-            //{
-            //    var m = rotateTrans.Matrix;
-
-            //    // to rotate precisely at the center
-            //    // we need to undo all translates of the preceding transformations
-            //    var matrix = element.Transforms.GetMatrix();
-            //    centerX -= matrix.OffsetX;
-            //    centerY -= matrix.OffsetY;
-
-            //    // then apply the transformation
-            //    m.RotateAt(rotateEvent.RelativeRotationDegrees, PointF.Create(centerX, centerY), MatrixOrder.Prepend);
-
-            //}
+            var m = element.CreateOriginRotation(rotateEvent.RelativeRotationDegrees);
+            element.SetTransofmrationMatrix(m);
 
             ws.FireInvalidateCanvas();
         }
