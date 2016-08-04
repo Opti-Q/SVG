@@ -1,12 +1,20 @@
+using System;
 using System.Collections.Generic;
 using Android.App;
 using Android.OS;
 using Android.Views;
 using System.Linq;
+using Android.Graphics.Drawables;
 using MvvmCross.Droid.Views;
+using MvvmCross.Platform;
+using MvvmCross.Plugins.Email;
+using Svg.Core.Tools;
 using Svg.Droid.Editor;
+using Svg.Droid.Editor.Services;
 using Svg.Droid.SampleEditor.Core;
 using Svg.Droid.SampleEditor.Core.ViewModels;
+using Svg.Interfaces;
+using Color = Android.Graphics.Color;
 using Path = System.IO.Path;
 
 namespace Svg.Droid.SampleEditor.Views
@@ -20,12 +28,16 @@ namespace Svg.Droid.SampleEditor.Views
         protected override void OnCreate(Bundle bundle)
         {
             // register first
-            SvgPlatformSetup.Init(new SvgSkiaPlatformOptions() {EnableFastTextRendering = true});
+            SvgPlatformSetup.Init(new SvgSkiaPlatformOptions() { EnableFastTextRendering = true });
             Engine.Register<ISvgSourceFactory, SvgSourceFactory>(() => new SvgSourceFactory(Assets));
+
 
             SetupIconCache();
 
             base.OnCreate(bundle);
+
+            Func<string, ISvgSource> svgSourceProvider = source => Engine.Resolve<ISvgSourceFactory>().Create(source);
+            new SvgCachingService().SetupSvgCache(ViewModel.Canvas.Tools.OfType<ColorTool>().Single(), svgSourceProvider);
 
             SetContentView(Resource.Layout.EditorView);
             _padView = FindViewById<SvgDrawingCanvasView>(Resource.Id.pad);
@@ -43,13 +55,13 @@ namespace Svg.Droid.SampleEditor.Views
                 if (!(rawValue is int))
                     continue;
 
-                _iconCache.Add(constant.Name, (int) rawValue);
+                _iconCache.Add(constant.Name, (int)rawValue);
             }
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
-            var shownActions = 2;
+            var shownActions = 3;
 
             foreach (var commands in ViewModel.Canvas.ToolCommands)
             {
@@ -61,7 +73,19 @@ namespace Svg.Droid.SampleEditor.Views
                 {
                     var cmd = cmds.Single();
                     var mi = menu.Add(cmd.GetHashCode(), cmd.GetHashCode(), 1, cmd.Name);
-                    mi.SetIcon(GetIconIdFromName(cmd.IconName));
+
+                    var colorTool = cmd.Tool as ColorTool;
+                    if (colorTool != null)
+                    {
+                        var fs = Engine.Resolve<IFileSystem>();
+                        var selectedColor = colorTool.SelectedColor;
+                        var path = fs.PathCombine(fs.GetDefaultStoragePath(), $"icon_{selectedColor.R}_{selectedColor.G}_{selectedColor.B}.png");
+                        var drawable = Drawable.CreateFromPath(path);
+
+                        mi.SetIcon(drawable);
+                    }
+                    else
+                        mi.SetIcon(GetIconIdFromName(cmd.IconName));
 
                     if (shownActions > 0)
                         mi.SetShowAsAction(ShowAsAction.IfRoom);
@@ -113,7 +137,7 @@ namespace Svg.Droid.SampleEditor.Views
 
         public new EditorViewModel ViewModel
         {
-            get { return (EditorViewModel) base.ViewModel; }
+            get { return (EditorViewModel)base.ViewModel; }
             set { base.ViewModel = value; }
         }
 

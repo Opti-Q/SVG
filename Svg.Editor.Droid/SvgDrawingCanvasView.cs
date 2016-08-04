@@ -36,6 +36,7 @@ namespace Svg.Droid.Editor
             _detector = new GestureDetector(this.Context, (e) => DrawingCanvas.OnEvent(e));
 
             Engine.Register<ITextInputService, TextInputService>(() => new TextInputService(context));
+            Engine.Register<IColorInputService, ColorInputService>(() => new ColorInputService(context));
         }
 
         public override bool OnTouchEvent(MotionEvent ev)

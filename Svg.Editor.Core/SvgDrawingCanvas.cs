@@ -44,6 +44,7 @@ namespace Svg.Core
                     new ZoomTool(),
                     new SelectionTool(),
                     new TextTool(),
+                    new ColorTool()
             };
             _tools.CollectionChanged += OnToolsChanged;
         }

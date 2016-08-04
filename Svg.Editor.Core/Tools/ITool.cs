@@ -19,6 +19,10 @@ namespace Svg.Core.Tools
         ToolUsage ToolUsage { get; }
         bool IsActive { get; set; }
         IEnumerable<IToolCommand> Commands { get; }
+        /// <summary>
+        /// Properties for the tool that can be configured in the designer. Key should be lower-case for consistency.
+        /// </summary>
+        IDictionary<string, object> Properties { get; }
         string IconName { get; }
         Task Initialize(SvgDrawingCanvas ws);
         Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws);
@@ -41,6 +45,7 @@ namespace Svg.Core.Tools
 
     public class ToolCommand : IToolCommand
     {
+        private const int DEFAULT_SORT_VALUE = 1000;
         private readonly Action<object> _execute;
         private readonly Func<object, bool> _canExecute;
         private readonly Func<IToolCommand, int> _sortFunc;
@@ -58,7 +63,7 @@ namespace Svg.Core.Tools
                 if (_sortFunc != null)
                     return _sortFunc(this);
 
-                return 100;
+                return DEFAULT_SORT_VALUE;
             }
         }
 
