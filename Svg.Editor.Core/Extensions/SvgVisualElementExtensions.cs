@@ -50,15 +50,5 @@ namespace Svg
                 e.Transforms.Clear();
             }
         }
-
-        //public static void SetTransformationMatrix(this SvgVisualElement e, Matrix m)
-        //{
-        //    if (e == null)
-        //        throw new ArgumentNullException(nameof(e));
-
-        //    e.Transforms.Clear();
-        //    if (m != null)
-        //        e.Transforms.Add(m);
-        //}
     }
 }

@@ -119,8 +119,11 @@ namespace Svg.Core.Tools
             translate.Y += deltaY;
 
             _translates[element] = translate;
-        
-            var m = element.CreateTranslation(translate.X - b.X, translate.Y - b.Y);
+
+            var dX = translate.X - b.X;
+            var dY = translate.Y - b.Y;
+
+            var m = element.CreateTranslation(dX, dY);
             element.SetTransformationMatrix(m);
         }
     }

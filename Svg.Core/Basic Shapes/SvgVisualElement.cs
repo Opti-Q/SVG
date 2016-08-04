@@ -125,6 +125,7 @@ namespace Svg
             {
                 var pts = GetTransformedElementPoints(transform);
                 var box = RectangleF.FromPoints(pts);
+
                 // if this element fits the type filter, check if it fits the hittest rectangle
                 if (this is TElement)
                 {
