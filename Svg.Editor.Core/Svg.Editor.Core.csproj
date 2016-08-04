@@ -50,6 +50,7 @@
     <Compile Include="Events\RotateEvent.cs" />
     <Compile Include="Events\ScaleEvent.cs" />
     <Compile Include="Events\PointerEvent.cs" />
+    <Compile Include="Extensions\SvgVisualElementExtensions.cs" />
     <Compile Include="Interfaces\ICanInvalidateCanvas.cs" />
     <Compile Include="SvgDrawingCanvas.cs" />
     <Compile Include="Events\UserInputEvent.cs" />
