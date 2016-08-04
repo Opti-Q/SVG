@@ -49,9 +49,10 @@ namespace Svg
         	set
         	{
         		if(_x != value)
-        		{
+		        {
+		            var oldValue = _x;
         			_x = value;
-        			OnAttributeChanged(new AttributeEventArgs{ Attribute = "x", Value = value });
+        			OnAttributeChanged(new AttributeEventArgs("x", value, oldValue));
         			IsPathDirty = true;
         		}
         	}
@@ -67,9 +68,10 @@ namespace Svg
         	set
         	{
         		if(_y != value)
-        		{
-        			_y = value;
-        			OnAttributeChanged(new AttributeEventArgs{ Attribute = "y", Value = value });
+                {
+                    var oldValue = _y;
+                    _y = value;
+        			OnAttributeChanged(new AttributeEventArgs("y", value, oldValue));
         			IsPathDirty = true;
         		}
         	}
@@ -85,9 +87,10 @@ namespace Svg
         	set
         	{
         		if(_width != value)
-        		{
-        			_width = value;
-        			OnAttributeChanged(new AttributeEventArgs{ Attribute = "width", Value = value });
+                {
+                    var oldValue = _width;
+                    _width = value;
+        			OnAttributeChanged(new AttributeEventArgs("width", value, oldValue));
         			IsPathDirty = true;
         		}
         	}
@@ -103,9 +106,10 @@ namespace Svg
         	set
         	{
         		if(_height != value)
-        		{
-        			_height = value;
-        			OnAttributeChanged(new AttributeEventArgs{ Attribute = "height", Value = value });
+                {
+                    var oldValue = _height;
+                    _height = value;
+        			OnAttributeChanged(new AttributeEventArgs("height", value, oldValue));
         			IsPathDirty = true;
         		}
         	}

@@ -98,7 +98,7 @@ namespace Svg.Core.Tools
             //element.Transforms.Add(matrix);
 
             var m = element.CreateOriginRotation(rotateEvent.RelativeRotationDegrees);
-            element.SetTransofmrationMatrix(m);
+            element.SetTransformationMatrix(m);
 
             ws.FireInvalidateCanvas();
         }

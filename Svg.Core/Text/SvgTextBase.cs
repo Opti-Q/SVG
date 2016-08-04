@@ -71,9 +71,10 @@ namespace Svg
             {
                 if (_x != value)
                 {
+                    var oldValue = _x;
                     this._x = value;
                     this.IsPathDirty = true;
-                    OnAttributeChanged(new AttributeEventArgs { Attribute = "x", Value = value });
+                    OnAttributeChanged(new AttributeEventArgs("x", value, oldValue));
                 }
             }
         }
@@ -90,9 +91,10 @@ namespace Svg
             {
                 if (_dx != value)
                 {
+                    var oldValue = _dx;
                     this._dx = value;
                     this.IsPathDirty = true;
-                    OnAttributeChanged(new AttributeEventArgs { Attribute = "dx", Value = value });
+                    OnAttributeChanged(new AttributeEventArgs("dx", value, oldValue));
                 }
             }
         }
@@ -109,9 +111,10 @@ namespace Svg
             {
                 if (_y != value)
                 {
+                    var oldValue = _y;
                     this._y = value;
                     this.IsPathDirty = true;
-                    OnAttributeChanged(new AttributeEventArgs { Attribute = "y", Value = value });
+                    OnAttributeChanged(new AttributeEventArgs("y", value, oldValue));
                 }
             }
         }
@@ -128,9 +131,10 @@ namespace Svg
             {
                 if (_dy != value)
                 {
+                    var oldValue = _dy;
                     this._dy = value;
                     this.IsPathDirty = true;
-                    OnAttributeChanged(new AttributeEventArgs { Attribute = "dy", Value = value });
+                    OnAttributeChanged(new AttributeEventArgs("dy", value, oldValue));
                 }
             }
         }
@@ -147,11 +151,12 @@ namespace Svg
             {
                 if (_rotate != value)
                 {
+                    var oldValue = _rotate;
                     this._rotate = value;
                     this._rotations.Clear();
                     this._rotations.AddRange(from r in _rotate.Split(new char[] { ',', ' ', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries) select float.Parse(r));
                     this.IsPathDirty = true;
-                    OnAttributeChanged(new AttributeEventArgs { Attribute = "rotate", Value = value });
+                    OnAttributeChanged(new AttributeEventArgs("rotate", value, oldValue));
                 }
             }
         }

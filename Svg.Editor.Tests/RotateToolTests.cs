@@ -10,7 +10,6 @@ namespace Svg.Editor.Tests
     [TestFixture]
     public class RotateToolTests : SvgDrawingCanvasTestBase
     {
-
         [Test]
         public void CanCombine_ScaleTranslateRotate_ToMatrix()
         {
@@ -48,8 +47,7 @@ namespace Svg.Editor.Tests
             // Assert
             Assert.AreEqual(box1, box2);
         }
-
-
+        
         [Test]
         public void CanAddRotation()
         {
@@ -142,15 +140,15 @@ namespace Svg.Editor.Tests
 
             // Act
             rect.Transforms.Clear();
-            rect.SetTransofmrationMatrix(rect.CreateTranslation(100, 150));
-            rect.SetTransofmrationMatrix(rect.CreateOriginRotation(135f));
+            rect.SetTransformationMatrix(rect.CreateTranslation(100, 150));
+            rect.SetTransformationMatrix(rect.CreateOriginRotation(135f));
             var box2 = rect.GetBoundingBox();
 
             rect.Transforms.Clear();
-            rect.SetTransofmrationMatrix(rect.CreateTranslation(200, -150));
-            rect.SetTransofmrationMatrix(rect.CreateOriginRotation(90f));
-            rect.SetTransofmrationMatrix(rect.CreateTranslation(-100, 300));
-            rect.SetTransofmrationMatrix(rect.CreateOriginRotation(45f));
+            rect.SetTransformationMatrix(rect.CreateTranslation(200, -150));
+            rect.SetTransformationMatrix(rect.CreateOriginRotation(90f));
+            rect.SetTransformationMatrix(rect.CreateTranslation(-100, 300));
+            rect.SetTransformationMatrix(rect.CreateOriginRotation(45f));
             var box3 = rect.GetBoundingBox();
 
             // Assert

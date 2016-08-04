@@ -121,7 +121,7 @@ namespace Svg.Core.Tools
             _translates[element] = translate;
         
             var m = element.CreateTranslation(translate.X - b.X, translate.Y - b.Y);
-            element.SetTransofmrationMatrix(m);
+            element.SetTransformationMatrix(m);
         }
     }
 }

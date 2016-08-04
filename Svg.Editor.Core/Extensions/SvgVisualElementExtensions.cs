@@ -29,14 +29,35 @@ namespace Svg
             return m;
         }
 
-        public static void SetTransofmrationMatrix(this SvgVisualElement e, Matrix m)
+        public static void SetTransformationMatrix(this SvgVisualElement e, Matrix m)
         {
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
 
-            e.Transforms.Clear();
-            if (m != null)
-                e.Transforms.Add(m);
+            if (e.Transforms.Count != 1)
+            {
+                e.Transforms.Clear();
+                if (m != null)
+                    e.Transforms.Add(m);
+            }
+            else if (m != null)
+            {
+                e.Transforms[0] = m;
+            }
+            else
+            {
+                e.Transforms.Clear();
+            }
         }
+
+        //public static void SetTransformationMatrix(this SvgVisualElement e, Matrix m)
+        //{
+        //    if (e == null)
+        //        throw new ArgumentNullException(nameof(e));
+
+        //    e.Transforms.Clear();
+        //    if (m != null)
+        //        e.Transforms.Add(m);
+        //}
     }
 }

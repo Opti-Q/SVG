@@ -1108,8 +1108,15 @@ namespace Svg
     /// </summary>
     public class AttributeEventArgs : SVGArg
     {
-    	public string Attribute;
-    	public object Value;
+        public AttributeEventArgs(string attribute, object value, object oldValue)
+        {
+            Attribute = attribute;
+            Value = value;
+            OldValue = oldValue;
+        }
+    	public string Attribute { get; private set; }
+    	public object Value { get; private set; }
+        public object OldValue { get; private set; }
     }
     
     /// <summary>

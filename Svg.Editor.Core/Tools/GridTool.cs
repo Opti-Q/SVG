@@ -272,7 +272,15 @@ namespace Svg.Core.Tools
 
             if (!string.Equals(e.Attribute, "transform"))
                 return;
+
             var element = (SvgElement)sender;
+
+            // if transform was changed and rotation has been added, skip snapping
+            var oldRotation = (e.OldValue as SvgTransformCollection)?.GetMatrix()?.RotationDegrees;
+            var newRotation = (e.Value as SvgTransformCollection)?.GetMatrix()?.RotationDegrees;
+            if (oldRotation != newRotation)
+                return;
+
             // otherwise we need to reevaluate the translate of that particular element
             SnapToGrid(element);
         }
@@ -392,7 +400,7 @@ namespace Svg.Core.Tools
                 }
 
                 var mx = ve.CreateTranslation(absoluteDeltaX, absoluteDeltaY);
-                ve.SetTransofmrationMatrix(mx);
+                ve.SetTransformationMatrix(mx);
             }
             finally
             {

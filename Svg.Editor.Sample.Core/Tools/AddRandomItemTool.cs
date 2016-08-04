@@ -34,8 +34,8 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     //var provider = SourceProvider("svg/blind01.svg");
                     //var provider = SourceProvider("svg/Blinds_6.svg");
                     //var provider = SourceProvider("svg/Blinds_6_gezoomtes_minibild.svg");
-                    //var provider = SourceProvider("svg/Positions_13_kein_text_im_minibild_und_canvas.svg");
-                    var provider = SourceProvider("svg/ic_format_color_fill_white_48px.svg");
+                    var provider = SourceProvider("svg/Positions_13_kein_text_im_minibild_und_canvas.svg");
+                    //var provider = SourceProvider("svg/ic_format_color_fill_white_48px.svg");
                     var otherDoc = SvgDocument.Open<SvgDocument>(provider);
                     var visibleChildren = otherDoc.Children.OfType<SvgVisualElement>().Where(e => e.Displayable && e.Visible).ToList();
 

@@ -90,10 +90,10 @@ namespace Svg
             return _path;
         }
 
-        internal void OnPathUpdated()
+        internal void OnPathUpdated(SvgPathSegmentList oldValue)
         {
             this.IsPathDirty = true;
-            OnAttributeChanged(new AttributeEventArgs{ Attribute = "d", Value = this.Attributes.GetAttribute<SvgPathSegmentList>("d") });
+            OnAttributeChanged(new AttributeEventArgs("d", this.Attributes.GetAttribute<SvgPathSegmentList>("d"), oldValue));
         }
 
         /// <summary>
