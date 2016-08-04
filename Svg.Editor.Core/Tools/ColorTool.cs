@@ -16,19 +16,30 @@ namespace Svg.Core.Tools
 
         public ColorTool() : base("Color")
         {
+            Properties.Add("selectablecolors", new[]
+            {
+                Color.Create(0, 0, 0),
+                Color.Create(255, 0, 0),
+                Color.Create(0, 255, 0),
+                Color.Create(0, 0, 255),
+                Color.Create(255, 255, 0),
+                Color.Create(255, 0, 255),
+                Color.Create(0, 255, 255)
+            });
         }
 
         public string ColorIconName { get; set; } = "ic_format_color_fill_white_48px.svg";
 
-        public Color[] SelectableColors { get; set; } = {
-            Color.Create(0, 0, 0),
-            Color.Create(255, 0, 0),
-            Color.Create(0, 255, 0),
-            Color.Create(0, 0, 255),
-            Color.Create(255, 255, 0),
-            Color.Create(255, 0, 255),
-            Color.Create(0, 255, 255)
-        };
+        public Color[] SelectableColors
+        {
+            get
+            {
+                object selectableColors;
+                Properties.TryGetValue("selectablecolors", out selectableColors);
+                if (selectableColors == null) selectableColors = Enumerable.Empty<Color>();
+                return (Color[])selectableColors;
+            }
+        }
 
         public Color SelectedColor { get; set; }
 

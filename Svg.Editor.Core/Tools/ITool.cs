@@ -19,6 +19,10 @@ namespace Svg.Core.Tools
         ToolUsage ToolUsage { get; }
         bool IsActive { get; set; }
         IEnumerable<IToolCommand> Commands { get; }
+        /// <summary>
+        /// Properties for the tool that can be configured in the designer. Key should be lower-case for consistency.
+        /// </summary>
+        IDictionary<string, object> Properties { get; }
         string IconName { get; }
         Task Initialize(SvgDrawingCanvas ws);
         Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws);
