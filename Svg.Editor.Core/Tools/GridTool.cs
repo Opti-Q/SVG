@@ -17,7 +17,7 @@ namespace Svg.Core.Tools
         private double B;
         private double C;
         private float StepSizeX;
-        private double Alpha = 27.3f;
+        private double Alpha;
         private double Gamma = 90f;
         private double Beta;
         private Pen _pen;

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Events;
+using Svg.Transforms;
 
 namespace Svg.Core.Tools
 {
@@ -111,8 +112,9 @@ namespace Svg.Core.Tools
 
                             var x = -ws.RelativeTranslate.X + halfRelWidth - halfRelChildWidth;
                             var y = -ws.RelativeTranslate.Y + halfRelHeight - halfRelChildHeight;
-                            t.X = new SvgUnitCollection {new SvgUnit(SvgUnitType.Pixel, x)};
-                            t.Y = new SvgUnitCollection { new SvgUnit(SvgUnitType.Pixel, y) };
+                            //t.X = new SvgUnitCollection {new SvgUnit(SvgUnitType.Pixel, x)};
+                            //t.Y = new SvgUnitCollection { new SvgUnit(SvgUnitType.Pixel, y) };
+                            t.Transforms.Add(new SvgTranslate(x, y));
 
                             ws.Document.Children.Add(t);
                         }
