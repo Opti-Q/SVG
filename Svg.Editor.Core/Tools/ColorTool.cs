@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Svg.Core.Interfaces;
 using Svg.Interfaces;
 
 namespace Svg.Core.Tools
@@ -28,7 +29,7 @@ namespace Svg.Core.Tools
             });
         }
 
-        public string ColorIconName { get; set; } = "ic_format_color_fill_white_48px.svg";
+        public string ColorIconName { get; set; } = "svg/ic_format_color_fill_white_48px.svg";
 
         public Color[] SelectableColors
         {
@@ -45,7 +46,19 @@ namespace Svg.Core.Tools
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
+            var selectableColors = SelectableColors;
+
             SelectedColor = SelectableColors?.FirstOrDefault();
+            var cachingService = Engine.Resolve<ISvgCachingService>();
+            foreach (var selectableColor in selectableColors)
+            {
+                cachingService.SaveAsPng(ColorIconName,
+                    $"{Name}_icon_{selectableColor.R}_{selectableColor.G}_{selectableColor.B}.png",
+                    document =>
+                    {
+                        document.Children.Single().Children.Last().Fill = new SvgColourServer(selectableColor);
+                    });
+            }
 
             // add tool commands
             Commands = new List<IToolCommand>

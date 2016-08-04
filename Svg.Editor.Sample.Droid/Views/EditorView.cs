@@ -8,6 +8,7 @@ using Android.Graphics.Drawables;
 using MvvmCross.Droid.Views;
 using MvvmCross.Platform;
 using MvvmCross.Plugins.Email;
+using Svg.Core.Interfaces;
 using Svg.Core.Tools;
 using Svg.Droid.Editor;
 using Svg.Droid.Editor.Services;
@@ -30,14 +31,12 @@ namespace Svg.Droid.SampleEditor.Views
             // register first
             SvgPlatformSetup.Init(new SvgSkiaPlatformOptions() { EnableFastTextRendering = true });
             Engine.Register<ISvgSourceFactory, SvgSourceFactory>(() => new SvgSourceFactory(Assets));
-
+            Func<string, ISvgSource> svgSourceProvider = source => Engine.Resolve<ISvgSourceFactory>().Create(source);
+            Engine.Register<ISvgCachingService, SvgCachingService>(() => new SvgCachingService(svgSourceProvider));
 
             SetupIconCache();
 
             base.OnCreate(bundle);
-
-            Func<string, ISvgSource> svgSourceProvider = source => Engine.Resolve<ISvgSourceFactory>().Create(source);
-            new SvgCachingService().SetupSvgCache(ViewModel.Canvas.Tools.OfType<ColorTool>().Single(), svgSourceProvider);
 
             SetContentView(Resource.Layout.EditorView);
             _padView = FindViewById<SvgDrawingCanvasView>(Resource.Id.pad);
@@ -79,7 +78,7 @@ namespace Svg.Droid.SampleEditor.Views
                     {
                         var fs = Engine.Resolve<IFileSystem>();
                         var selectedColor = colorTool.SelectedColor;
-                        var path = fs.PathCombine(fs.GetDefaultStoragePath(), $"icon_{selectedColor.R}_{selectedColor.G}_{selectedColor.B}.png");
+                        var path = fs.PathCombine(fs.GetDefaultStoragePath(), $"{colorTool.Name}_icon_{selectedColor.R}_{selectedColor.G}_{selectedColor.B}.png");
                         var drawable = Drawable.CreateFromPath(path);
 
                         mi.SetIcon(drawable);
