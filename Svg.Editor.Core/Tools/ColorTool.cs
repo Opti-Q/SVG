@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Svg.Core.Interfaces;
 using Svg.Interfaces;
 
 namespace Svg.Core.Tools
@@ -28,7 +30,7 @@ namespace Svg.Core.Tools
             });
         }
 
-        public string ColorIconName { get; set; } = "ic_format_color_fill_white_48px.svg";
+        public string ColorIconName { get; set; } = "svg/ic_format_color_fill_white_48px.svg";
 
         public Color[] SelectableColors
         {
@@ -43,9 +45,28 @@ namespace Svg.Core.Tools
 
         public Color SelectedColor { get; set; }
 
+        public string ColorIconNameModifier => StringifyColor(SelectedColor);
+
         public override Task Initialize(SvgDrawingCanvas ws)
         {
+            var selectableColors = SelectableColors;
+
             SelectedColor = SelectableColors?.FirstOrDefault();
+
+            // cache icons
+            var cachingService = Engine.TryResolve<ISvgCachingService>();
+            if (cachingService != null)
+            {
+                foreach (var selectableColor in selectableColors)
+                {
+                    Action<SvgDocument> action =
+                        document =>
+                        {
+                            document.Children.Single().Children.Last().Fill = new SvgColourServer(selectableColor);
+                        };
+                    cachingService.SaveAsPng(ColorIconName, StringifyColor(selectableColor), action);
+                }
+            }
 
             // add tool commands
             Commands = new List<IToolCommand>
@@ -57,6 +78,11 @@ namespace Svg.Core.Tools
             WatchDocument(ws.Document);
 
             return Task.FromResult(true);
+        }
+
+        private static string StringifyColor(Color color)
+        {
+            return $"{color.R}_{color.G}_{color.B}";
         }
 
         private static void ColorizeElement(SvgElement element, Color color)
