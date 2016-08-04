@@ -292,9 +292,7 @@ namespace Svg.Core.Tools
 
                 // snap to grid:
                 // get absolute point
-                var bounds = ve.Bounds;
-                var m = ve.Transforms.GetMatrix();
-                var b = m.TransformRectangle(bounds);
+                var b = ve.GetBoundingBox();
 
                 // determine next intersection of gridlines
                 // so we determine which point P1, P2 is the nearest one
@@ -392,23 +390,14 @@ namespace Svg.Core.Tools
                         _generalTranslation = PointF.Create(absoluteDeltaX, absoluteDeltaY);
                     }
                 }
-                
-                // and translate element to that next intersection
-                AddTranslate(ve, absoluteDeltaX, absoluteDeltaY);
 
+                var mx = ve.CreateTranslation(absoluteDeltaX, absoluteDeltaY);
+                ve.SetTransofmrationMatrix(mx);
             }
             finally
             {
                 _isSnappingInProgress = false;
             }
-        }
-
-        private static void AddTranslate(SvgVisualElement element, float deltaX, float deltaY)
-        {
-            var m = element.Transforms.GetMatrix();
-            m.Translate(deltaX, deltaY);
-            element.Transforms.Clear();
-            element.Transforms.Add(m);
         }
 
         #endregion

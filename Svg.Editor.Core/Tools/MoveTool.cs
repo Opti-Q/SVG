@@ -108,15 +108,19 @@ namespace Svg.Core.Tools
             // the movetool stores the last translation explicitly for each element
             // that way, if another tool manipulates the translation (e.g. the snapping tool)
             // the movetool is not interfered by that
+            var b = element.GetBoundingBox();
             PointF translate;
             if (!_translates.TryGetValue(element, out translate))
             {
-                translate = PointF.Create(0, 0);
+                translate = PointF.Create(b.X, b.Y);
             }
+            
             translate.X += deltaX;
             translate.Y += deltaY;
 
-            var m = element.CreateTranslation(translate.X, translate.Y);
+            _translates[element] = translate;
+        
+            var m = element.CreateTranslation(translate.X - b.X, translate.Y - b.Y);
             element.SetTransofmrationMatrix(m);
         }
     }
