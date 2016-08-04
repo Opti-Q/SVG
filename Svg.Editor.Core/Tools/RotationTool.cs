@@ -4,11 +4,10 @@ using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 using Svg.Interfaces;
-using Svg.Transforms;
 
 namespace Svg.Core.Tools
 {
-    public class RotateTool : ToolBase
+    public class RotationTool : ToolBase
     {
         private bool _wasImplicitlyActivated = false;
         private PointF _lastRotationCenter;
@@ -21,7 +20,7 @@ namespace Svg.Core.Tools
 
         public Func<SvgVisualElement, bool> Filter { get; set; }
         
-        public RotateTool() : base("Rotate")
+        public RotationTool() : base("Rotate")
         {
         }
 
@@ -77,26 +76,7 @@ namespace Svg.Core.Tools
             // if element must not be rotated
             if (Filter?.Invoke(element) == false)
                 return;
-
-            //var b = element.GetBoundingBox();
-            //var centerX = b.X + (b.Width / 2);
-            //var centerY = b.Y + (b.Height / 2);
-
-            //_lastRotationCenter = PointF.Create(centerX, centerY);
             
-            //// to rotate precisely at the center
-            //// we need to undo all translates of the preceding transformations
-            //var matrix = element.Transforms.GetMatrix();
-            //centerX -= matrix.OffsetX;
-            //centerY -= matrix.OffsetY;
-
-            //// then apply the transformation
-            ////matrix.RotateAt(rotateEvent.RelativeRotationDegrees, PointF.Create(centerX, centerY), MatrixOrder.Prepend);
-            //matrix.RotateAt(rotateEvent.RelativeRotationDegrees, PointF.Create(centerX, centerY), MatrixOrder.Prepend);
-
-            //element.Transforms.Clear();
-            //element.Transforms.Add(matrix);
-
             var m = element.CreateOriginRotation(rotateEvent.RelativeRotationDegrees);
             element.SetTransformationMatrix(m);
 
