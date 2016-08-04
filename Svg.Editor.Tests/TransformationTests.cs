@@ -8,7 +8,7 @@ using Svg.Transforms;
 namespace Svg.Editor.Tests
 {
     [TestFixture]
-    public class RotateToolTests : SvgDrawingCanvasTestBase
+    public class TransformationTests : SvgDrawingCanvasTestBase
     {
         [Test]
         public void CanCombine_ScaleTranslateRotate_ToMatrix()
@@ -49,7 +49,7 @@ namespace Svg.Editor.Tests
         }
         
         [Test]
-        public void CanAddRotation()
+        public void CanAddRotation_ToExistingTransforMatrix()
         {
             // Arrange
             var width = 200;
@@ -123,7 +123,7 @@ namespace Svg.Editor.Tests
         }
 
         [Test]
-        public void CanAddRotation_UsingHelpers()
+        public void CanAddRotationAndTranslation_ToExistingTransforMatrix_UsingHelpers()
         {
             // Arrange
             var width = 200;
@@ -155,7 +155,7 @@ namespace Svg.Editor.Tests
             EnsureRectanglesEqual(box1, box2);
             EnsureRectanglesEqual(box1, box3);
         }
-
+        
         private void EnsureRectanglesEqual(RectangleF expected, RectangleF actual)
         {
             Assert.AreEqual(Math.Round(expected.X, 2), Math.Round(actual.X, 2), $"{expected} \nvs {actual}");
