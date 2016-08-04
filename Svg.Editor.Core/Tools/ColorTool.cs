@@ -18,6 +18,7 @@ namespace Svg.Core.Tools
 
         public ColorTool() : base("Color")
         {
+            IconName = "svg/ic_format_color_fill_white_48px.svg";
             Properties.Add("selectablecolors", new[]
             {
                 Color.Create(0, 0, 0),
@@ -29,8 +30,6 @@ namespace Svg.Core.Tools
                 Color.Create(0, 255, 255)
             });
         }
-
-        public string ColorIconName { get; set; } = "svg/ic_format_color_fill_white_48px.svg";
 
         public Color[] SelectableColors
         {
@@ -64,7 +63,7 @@ namespace Svg.Core.Tools
                         {
                             document.Children.Single().Children.Last().Fill = new SvgColourServer(selectableColor);
                         };
-                    cachingService.SaveAsPng(ColorIconName, StringifyColor(selectableColor), action);
+                    cachingService.SaveAsPng(IconName, StringifyColor(selectableColor), action);
                 }
             }
 
@@ -148,7 +147,7 @@ namespace Svg.Core.Tools
             private readonly SvgDrawingCanvas _canvas;
 
             public ChangeColorCommand(SvgDrawingCanvas canvas, ColorTool tool, string name)
-                : base(tool, name, o => { }, iconName: tool.ColorIconName, sortFunc: tc => 500)
+                : base(tool, name, o => { }, iconName: tool.IconName, sortFunc: tc => 500)
             {
                 _canvas = canvas;
             }
