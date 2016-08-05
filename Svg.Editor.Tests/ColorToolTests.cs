@@ -142,7 +142,7 @@ namespace Svg.Editor.Tests
         {
             public Func<int> F { get; set; } = () => 0;
 
-            public Task<int> GetIndexFromUserInput(string title, string[] items)
+            public Task<int> GetIndexFromUserInput(string title, string[] items, string[] colors)
             {
                 return Task.FromResult(F());
             }
