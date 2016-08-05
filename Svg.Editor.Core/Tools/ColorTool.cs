@@ -157,7 +157,7 @@ namespace Svg.Core.Tools
                 var t = (ColorTool)Tool;
 
                 var colorNames = new[] { "Black", "Red", "Green", "Blue", "Yellow", "Magenta", "Cyan" };
-                var colors = new[] { "#000", "#F00", "#0F0", "#00F", "#FF0", "#F0F", "#0FF" };
+                var colors = new[] { "#000000", "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF" };
                 var color = t.SelectableColors[await ColorInputServiceProxy.GetIndexFromUserInput("Choose color", colorNames, colors)];
 
                 if (_canvas.SelectedElements.Any())
