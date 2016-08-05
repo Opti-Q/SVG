@@ -95,23 +95,21 @@ namespace SvgW3CTestRunner.Droid
 
                 var assetManager = Assets;
                 var svgs = assetManager.List("svg")
-                    .Where(@s => s.StartsWith("painting-"))
+                    //.Where(@s => s.StartsWith("painting-"))
                     //.Where(@s => s.StartsWith("text-"))
                     //.Where(@s => s.StartsWith("coords-"))
-                    //.Where(@s => s.StartsWith("paths-"))
+                    .Where(@s => s.StartsWith("paths-"))
                     //.Where(@s => s.StartsWith("coords-trans-09-t"))
                     //.Where(@s => s.StartsWith("coords-transformattr-05-f"))
-                    //.Where(@s => s.StartsWith("imp-"))
                     .OrderBy(@s => s).ToList();
 
                 var pngs = assetManager.List("png")
-                    .Where(@s => s.StartsWith("painting-"))
+                    //.Where(@s => s.StartsWith("painting-"))
                     //.Where(@s => s.StartsWith("text-"))
                     //.Where(@s => s.StartsWith("coords-"))
-                    //.Where(@s => s.StartsWith("paths-"))
+                    .Where(@s => s.StartsWith("paths-"))
                     //.Where(@s => s.StartsWith("coords-trans-09-t"))
                     //.Where(@s => s.StartsWith("coords-transformattr-05-f"))
-                    //.Where(@s => s.StartsWith("imp-"))
                     .OrderBy(@s => s).ToList();
 
                 _globalGfxCount = pngs.Count;

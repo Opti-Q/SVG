@@ -11,7 +11,6 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)IFIleLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColorToolTests.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)LineToolTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SelectionToolTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgDrawingCanvasTestBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgDrawingCanvasTests.cs" />
