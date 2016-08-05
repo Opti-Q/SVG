@@ -27,7 +27,7 @@ namespace Svg.Core.Events
             FocusY = focusY;
         }
 
-        public string DebuggerDisplay => $"Scale ({Enum.GetName(typeof(ScaleStatus), Status)}) {ScaleFactor} at x:{FocusX} y:{FocusY}";
+        public override string DebuggerDisplay => $"Scale ({Enum.GetName(typeof(ScaleStatus), Status)}) {ScaleFactor} at x:{FocusX} y:{FocusY}";
 
         public override string ToString()
         {

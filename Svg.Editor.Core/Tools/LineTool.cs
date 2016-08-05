@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Core.Utils;
@@ -29,20 +31,21 @@ namespace Svg.Core.Tools
         {
             IsActive = false;
 
-            var definitions = new SvgDefinitionList();
-            var marker = new SvgMarker { ID = "marker" };
-            var markerRect = new SvgRectangle();
-            var bounds = RectangleF.Create(0, 0, 48, 48);
-            markerRect.SetRectangle(bounds);
-            marker.Children.Add(markerRect);
-            definitions.Children.Add(marker);
-            ws.Document.Children.Insert(0, definitions);
-
             return Task.FromResult(true);
         }
 
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
+
+            var p = @event as PointerEvent;
+            if (p != null)
+            {
+                if (p.EventType == EventType.PointerUp || p.EventType == EventType.Cancel)
+                {
+                    _currentLine = null;
+                }
+            }
+
             if (!IsActive)
                 return Task.FromResult(true);
 
@@ -82,6 +85,23 @@ namespace Svg.Core.Tools
 
                     if (_currentLine == null)
                     {
+
+                        if (ws.Document.IdManager.GetElementById("marker") == null)
+                        {
+                            var definitions = ws.Document.Children.OfType<SvgDefinitionList>().FirstOrDefault();
+                            if (definitions == null)
+                            {
+                                definitions = new SvgDefinitionList();
+                                ws.Document.Children.Add(definitions);
+                            }
+                            var marker = new SvgMarker { ID = "marker" };
+                            definitions.Children.Add(marker);
+                            var markerRect = new SvgRectangle();
+                            var bounds = RectangleF.Create(0, 0, 48, 48);
+                            markerRect.SetRectangle(bounds);
+                            marker.Children.Add(markerRect);
+                        }
+
                         _currentLine = new SvgLine
                         {
                             Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
@@ -91,7 +111,7 @@ namespace Svg.Core.Tools
                             StartY = new SvgUnit(SvgUnitType.Pixel, relativeStartY),
                             EndX = new SvgUnit(SvgUnitType.Pixel, relativeEndX),
                             EndY = new SvgUnit(SvgUnitType.Pixel, relativeEndY),
-                            //MarkerEnd = new Uri("#marker")
+                            MarkerEnd = new Uri("#marker", UriKind.Relative)
                         };
 
                         ws.Document.Children.Add(_currentLine);
@@ -102,12 +122,6 @@ namespace Svg.Core.Tools
 
                     ws.FireInvalidateCanvas();
                 }
-            }
-
-            var p = @event as PointerEvent;
-            if (p != null && (p.EventType == EventType.PointerUp || p.EventType == EventType.Cancel))
-            {
-                _currentLine = null;
             }
 
             return Task.FromResult(true);
