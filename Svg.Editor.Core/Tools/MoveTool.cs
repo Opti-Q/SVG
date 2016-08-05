@@ -105,50 +105,26 @@ namespace Svg.Core.Tools
 
         private void AddTranslate(SvgVisualElement element, float deltaX, float deltaY)
         {
-            SvgTranslate trans = null;
-            int index = -1;
-            
-            //if (element.Transforms.OfType<SvgTranslate>().Count() > 1)
-            {
-                for (int i = element.Transforms.Count - 1; i >= 0; i--)
-                {
-                    var translate = element.Transforms[i] as SvgTranslate;
-                    if (translate != null)
-                    {
-                        trans = translate;
-                        index = i;
-                        break;
-                    }
-                }
-            }
-
             // the movetool stores the last translation explicitly for each element
             // that way, if another tool manipulates the translation (e.g. the snapping tool)
             // the movetool is not interfered by that
-            PointF previousTranslate;
-            if (!_translates.TryGetValue(element, out previousTranslate))
+            var b = element.GetBoundingBox();
+            PointF translate;
+            if (!_translates.TryGetValue(element, out translate))
             {
-                if (trans != null)
-                    previousTranslate = PointF.Create(trans.X, trans.Y);
-                else
-                    previousTranslate = PointF.Create(0f, 0f);
+                translate = PointF.Create(b.X, b.Y);
             }
+            
+            translate.X += deltaX;
+            translate.Y += deltaY;
 
-            var transforms = element.Transforms;
-            if (trans == null)
-            {
-                trans = new SvgTranslate(deltaX, deltaY);
-                _translates[element] = PointF.Create(deltaX, deltaY);
+            _translates[element] = translate;
 
-                transforms.Add(trans);
-            }
-            else
-            {
-                var t = new SvgTranslate(previousTranslate.X + deltaX, previousTranslate.Y + deltaY);
-                _translates[element] = PointF.Create(t.X, t.Y);
+            var dX = translate.X - b.X;
+            var dY = translate.Y - b.Y;
 
-                transforms[index] = t; // we MUST explicitly set the transform so the "OnTransformChanged" event is fired!
-            }
+            var m = element.CreateTranslation(dX, dY);
+            element.SetTransformationMatrix(m);
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Svg.Interfaces;
 
 namespace Svg.Transforms
@@ -10,47 +8,46 @@ namespace Svg.Transforms
     //[TypeConverter(typeof(SvgTransformConverter))]
     public class SvgTransformCollection : List<SvgTransform>, ICloneable
     {
-        private Matrix transformMatrix;
-
     	private void AddItem(SvgTransform item)
     	{
     		base.Add(item);
     	}
     	
     	public new void Add(SvgTransform item)
-    	{
+	    {
+	        var o = this.Clone();
     		AddItem(item);
-    		OnTransformChanged();
-    	}
+            OnTransformChanged((SvgTransformCollection)o);
+        }
     	
     	public new void AddRange(IEnumerable<SvgTransform> collection)
-    	{
-    		base.AddRange(collection);
-    		OnTransformChanged();
-    	}
+        {
+            var o = this.Clone();
+            base.AddRange(collection);
+            OnTransformChanged((SvgTransformCollection)o);
+        }
     	
     	public new void Remove(SvgTransform item)
-    	{
-    		base.Remove(item);
-    		OnTransformChanged();
-    	}
+        {
+            var o = this.Clone();
+            base.Remove(item);
+            OnTransformChanged((SvgTransformCollection)o);
+        }
     	
     	public new void RemoveAt(int index)
-    	{
-    		base.RemoveAt(index);
-    		OnTransformChanged();
-    	}
+        {
+            var o = this.Clone();
+            base.RemoveAt(index);
+            OnTransformChanged((SvgTransformCollection)o);
+        }
     	
     	/// <summary>
     	/// Multiplies all matrices
     	/// </summary>
     	/// <returns>The result of all transforms</returns>
     	public Matrix GetMatrix()
-    	{
-    	    if (transformMatrix != null)
-    	        return transformMatrix;
-
-            transformMatrix = Engine.Factory.CreateMatrix();
+        {
+            var transformMatrix = Engine.Factory.CreateMatrix();
     		
     		// Return if there are no transforms
             if (this.Count == 0)
@@ -83,10 +80,11 @@ namespace Svg.Transforms
 			get { return base[i]; }
 			set
 			{
+			    var o = this.Clone();
 				var oldVal = base[i];
 				base[i] = value;
 				if(oldVal != value)
-					OnTransformChanged();
+                    OnTransformChanged((SvgTransformCollection)o);
 			}
 		}
 		
@@ -95,11 +93,10 @@ namespace Svg.Transforms
         /// </summary>
         public event EventHandler<AttributeEventArgs> TransformChanged;
         
-        protected void OnTransformChanged()
+        protected void OnTransformChanged(SvgTransformCollection oldValue)
         {
-            transformMatrix = null;
             //make a copy of the current value to avoid collection changed exceptions
-            TransformChanged?.Invoke(this, new AttributeEventArgs { Attribute = "transform", Value = this.Clone() });
+            TransformChanged?.Invoke(this, new AttributeEventArgs("transform", this.Clone(), oldValue));
         }	
     	
 		public object Clone()

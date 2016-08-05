@@ -13,7 +13,8 @@ namespace Svg.Core.Tools
         private RectangleF _selectionRectangle = null;
         private Brush _brush;
         private Pen _pen;
-        
+        private bool _handledPointerDown;
+
         public string DeleteIconName { get; set; } = "ic_delete_white_48dp.png";
         public string SelectIconName { get; set; } = "ic_select_tool_white_48dp.png";
 
@@ -25,6 +26,16 @@ namespace Svg.Core.Tools
 
         private Brush BlueBrush => _brush ?? (_brush = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
         private Pen BluePen => _pen ?? (_pen = Svg.Engine.Factory.CreatePen(BlueBrush, 5));
+
+        public override bool IsActive
+        {
+            get { return base.IsActive; }
+            set
+            {
+                base.IsActive = value;
+                Reset();
+            }
+        }
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
@@ -53,7 +64,7 @@ namespace Svg.Core.Tools
                 return Task.FromResult(true);
 
             var e = @event as MoveEvent;
-            if (e != null)
+            if (e != null && _handledPointerDown)
             {
                 float startX = e.Pointer1Down.X;
                 float startY = e.Pointer1Down.Y;
@@ -87,22 +98,25 @@ namespace Svg.Core.Tools
             var p = @event as PointerEvent;
             if (p != null)
             {
+                if (p.EventType == EventType.PointerDown)
+                {
+                    _handledPointerDown = true;
+                }
                 // if the user never moved, but clicked on an item, we try to select that spot
-                if (p.EventType == EventType.PointerUp && _selectionRectangle == null)
+                if (_handledPointerDown && p.EventType == EventType.PointerUp && _selectionRectangle == null)
                 {
                     // select elements under pointer
                     SelectElementsUnder(ws.GetPointerRectangle(p.Pointer1Position), ws, SelectionType.Intersect, 1);
-                    _selectionRectangle = null;
-
+                    Reset();
                     ws.FireInvalidateCanvas();
                 }
                 // on pointer up or cancel, we remove the selection rectangle
-                else if (p.EventType == EventType.PointerUp || p.EventType == EventType.Cancel)
+                else if (_handledPointerDown && p.EventType == EventType.PointerUp || p.EventType == EventType.Cancel)
                 {
                     // select elements under rectangle
                     SelectElementsUnder(_selectionRectangle, ws, SelectionType.Contain);
 
-                    _selectionRectangle = null;
+                    Reset();
                     ws.FireInvalidateCanvas();
                 }
             }
@@ -160,6 +174,12 @@ namespace Svg.Core.Tools
             }
 
             return Task.FromResult(true);
+        }
+
+        private void Reset()
+        {
+            _handledPointerDown = false;
+            _selectionRectangle = null;
         }
     }
 }

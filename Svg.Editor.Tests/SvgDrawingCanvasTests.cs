@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Svg.Core.Tools;
+using Svg.Interfaces;
 
 namespace Svg.Editor.Tests
 {
@@ -59,6 +61,8 @@ namespace Svg.Editor.Tests
             var element = d.Children.OfType<SvgVisualElement>().Single(c => c.Visible && c.Displayable);
             Canvas.ScreenWidth = 800;
             Canvas.ScreenHeight = 500;
+            var gt = Canvas.Tools.OfType<GridTool>().Single();
+            gt.IsSnappingEnabled = false; // disable snapping in this case
             
             // Act
             Canvas.AddItemInScreenCenter(element);
@@ -69,10 +73,16 @@ namespace Svg.Editor.Tests
             var child = children.Single();
             var b = child.GetBoundingBox(Canvas.GetCanvasTransformationMatrix());
 
-            Assert.AreEqual(355.793488f, b.X);
-            Assert.AreEqual(220.0f, b.Y);
-            Assert.AreEqual(69.2820435f, b.Width);
-            Assert.GreaterOrEqual(b.Height, 51.2116699f);
+            var e = RectangleF.Create(365.359f, 224.3942f, 69.28204f, 51.21167f);
+            EnsureRectanglesEqual(e, b);
+        }
+
+        private void EnsureRectanglesEqual(RectangleF expected, RectangleF actual)
+        {
+            Assert.AreEqual(Math.Round(expected.X, 2), Math.Round(actual.X, 2), $"{expected} \nvs {actual}");
+            Assert.AreEqual(Math.Round(expected.Y, 2), Math.Round(actual.Y, 2), $"{expected} \nvs {actual}");
+            Assert.AreEqual(Math.Round(expected.Width, 2), Math.Round(actual.Width, 2), $"{expected} \nvs {actual}");
+            Assert.AreEqual(Math.Round(expected.Height, 2), Math.Round(actual.Height, 2), $"{expected} \nvs {actual}");
         }
     }
 }

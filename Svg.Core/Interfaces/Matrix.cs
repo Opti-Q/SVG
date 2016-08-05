@@ -21,15 +21,15 @@ namespace Svg
         }
 
         public abstract void Scale(float width, float height);
-        public abstract void Scale(float width, float height, MatrixOrder append);
-        public abstract void Translate(float left, float top, MatrixOrder append);
+        public abstract void Scale(float width, float height, MatrixOrder order);
+        public abstract void Translate(float left, float top, MatrixOrder order);
         public abstract void TransformVectors(PointF[] points);
         public abstract void Translate(float left, float top);
         public abstract void Multiply(Matrix matrix);
-        public abstract void Multiply(Matrix matrix, MatrixOrder prepend);
+        public abstract void Multiply(Matrix matrix, MatrixOrder order);
         public abstract void TransformPoints(PointF[] points);
-        public abstract void RotateAt(float f, PointF midPoint, MatrixOrder prepend);
-        public abstract void Rotate(float fAngle, MatrixOrder append);
+        public abstract void RotateAt(float angleDegrees, PointF midPoint, MatrixOrder order);
+        public abstract void Rotate(float angleDegrees, MatrixOrder order);
         public abstract Matrix Clone();
         public abstract float[] Elements { get; }
         public abstract float OffsetX { get;  }
@@ -40,7 +40,7 @@ namespace Svg
         public abstract float SkewY { get; }
         public abstract bool IsIdentity { get; }
 
-        public abstract void Rotate(float fAngle);
+        public abstract void Rotate(float angleDegrees);
         public abstract void Shear(float sx, float sy);
         public virtual void Dispose()
         { }
@@ -159,8 +159,8 @@ namespace Svg
             var points = new List<float>
             {
                 ScaleX,
-                SkewX,
-                SkewY,
+                SkewY, // x and y need to be swapped!
+                SkewX, // x and y need to be swapped!
                 ScaleY,
                 OffsetX,
                 OffsetY

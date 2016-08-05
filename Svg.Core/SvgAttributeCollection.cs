@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace Svg
 {
@@ -113,13 +110,13 @@ namespace Svg
 	            	if(TryUnboxedCheck(oldVal, value))
 	            	{
 	            		base[attributeName] = value;
-	            		OnAttributeChanged(attributeName, value);
+	            		OnAttributeChanged(attributeName, value, oldVal);
 	            	}
             	}
             	else
             	{
             		base[attributeName] = value;
-	            	OnAttributeChanged(attributeName, value);
+	            	OnAttributeChanged(attributeName, value, null);
             	}
             }
         }
@@ -162,12 +159,12 @@ namespace Svg
         /// </summary>
         public event EventHandler<AttributeEventArgs> AttributeChanged;
         
-        private void OnAttributeChanged(string attribute, object value)
+        private void OnAttributeChanged(string attribute, object value, object oldValue)
         {
         	var handler = AttributeChanged;
         	if(handler != null)
         	{
-        		handler(this._owner, new AttributeEventArgs { Attribute = attribute, Value = value });
+        		handler(this._owner, new AttributeEventArgs(attribute, value, oldValue));
         	}
         }
     }
@@ -203,12 +200,12 @@ namespace Svg
             	{
 	            	var oldVal = base[attributeName];
 	            	base[attributeName] = value;
-	            	if(oldVal != value) OnAttributeChanged(attributeName, value);
+	            	if(oldVal != value) OnAttributeChanged(attributeName, value, oldVal);
             	}
             	else
             	{
             		base[attributeName] = value;
-	            	OnAttributeChanged(attributeName, value);
+	            	OnAttributeChanged(attributeName, value, null);
             	}
             }
         }
@@ -218,12 +215,12 @@ namespace Svg
         /// </summary>
         public event EventHandler<AttributeEventArgs> AttributeChanged;
         
-        private void OnAttributeChanged(string attribute, object value)
+        private void OnAttributeChanged(string attribute, object value, object oldValue)
         {
         	var handler = AttributeChanged;
         	if(handler != null)
         	{
-        		handler(this._owner, new AttributeEventArgs { Attribute = attribute, Value = value });
+        		handler(this._owner, new AttributeEventArgs(attribute, value, oldValue));
         	}
         }
     }

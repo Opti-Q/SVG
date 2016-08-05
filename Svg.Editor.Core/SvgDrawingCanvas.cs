@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -40,7 +39,7 @@ namespace Svg.Core
                     new GridTool(angle:27.3f), // must be before movetool!
                     new MoveTool(), // must be before pantool as it decides whether or not it is active based on selection
                     new PanTool(),
-                    new RotateTool(),
+                    new RotationTool(),
                     new ZoomTool(),
                     new SelectionTool(),
                     new TextTool(),
@@ -293,7 +292,30 @@ namespace Svg.Core
         {
             return GetElementsUnder<TElement>(GetPointerRectangle(pointer1Position), SelectionType.Intersect, recursionLevel: recursionLevel);
         }
-        
+
+        public void AddItemInScreenCenter(SvgDocument document)
+        {
+            var visibleChildren =
+                document.Children.OfType<SvgVisualElement>().Where(e => e.Displayable && e.Visible).ToList();
+
+            var element = visibleChildren.First();
+            if (visibleChildren.Count > 1)
+            {
+                var group = new SvgGroup
+                {
+                    Fill = document.Fill,
+                    Stroke = document.Stroke
+                };
+                foreach (var visibleChild in visibleChildren)
+                {
+                    group.Children.Add(visibleChild);
+                }
+                element = group;
+            }
+
+            AddItemInScreenCenter(element);
+        }
+
         public void AddItemInScreenCenter(SvgVisualElement element)
         {
             var z = ZoomFactor;

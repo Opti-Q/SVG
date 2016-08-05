@@ -57,8 +57,9 @@ namespace Svg
             {
                 if (_x != value)
                 {
+                    var oldValue = _x;
                     _x = value;
-                    OnAttributeChanged(new AttributeEventArgs { Attribute = "x", Value = value });
+                    OnAttributeChanged(new AttributeEventArgs("x", value, oldValue));
                 }
             }
         }
@@ -74,8 +75,9 @@ namespace Svg
             {
                 if (_y != value)
                 {
+                    var oldValue = _y;
                     _y = value;
-                    OnAttributeChanged(new AttributeEventArgs { Attribute = "y", Value = value });
+                    OnAttributeChanged(new AttributeEventArgs("y", value, oldValue));
                 }
             }
         }

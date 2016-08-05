@@ -50,6 +50,7 @@
     <Compile Include="Events\RotateEvent.cs" />
     <Compile Include="Events\ScaleEvent.cs" />
     <Compile Include="Events\PointerEvent.cs" />
+    <Compile Include="Extensions\SvgVisualElementExtensions.cs" />
     <Compile Include="Interfaces\ICanInvalidateCanvas.cs" />
     <Compile Include="Interfaces\ISvgCachingService.cs" />
     <Compile Include="SvgDrawingCanvas.cs" />
@@ -62,7 +63,7 @@
     <Compile Include="Tools\ITool.cs" />
     <Compile Include="Tools\MoveTool.cs" />
     <Compile Include="Tools\PanTool.cs" />
-    <Compile Include="Tools\RotateTool.cs" />
+    <Compile Include="Tools\RotationTool.cs" />
     <Compile Include="Tools\SelectionTool.cs" />
     <Compile Include="Tools\TextTool.cs" />
     <Compile Include="Tools\ToolBase.cs" />

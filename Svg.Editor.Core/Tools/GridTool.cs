@@ -17,7 +17,7 @@ namespace Svg.Core.Tools
         private double B;
         private double C;
         private float StepSizeX;
-        private double Alpha = 27.3f;
+        private double Alpha;
         private double Gamma = 90f;
         private double Beta;
         private Pen _pen;
@@ -31,9 +31,10 @@ namespace Svg.Core.Tools
         private PointF _generalTranslation = null;
         
 
-        public GridTool(float angle = 30f, int stepSizeY = 20)
+        public GridTool(float angle = 30f, int stepSizeY = 20, bool isSnappingEnabled = true)
             : base("Grid")
         {
+            IsSnappingEnabled = isSnappingEnabled;
             StepSizeY = stepSizeY;
             Alpha = angle;
 
@@ -66,6 +67,7 @@ namespace Svg.Core.Tools
 
         public string IconGridOn { get; set; } = "ic_grid_on_white_48dp.png";
         public string IconGridOFf { get; set; } = "ic_grid_off_white_48dp.png";
+        public bool IsSnappingEnabled { get; set; }
 
         public bool IsVisible { get; set; } = true;
         private Brush Brush => _brush ?? (_brush = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 210, 210, 210)));
@@ -270,13 +272,24 @@ namespace Svg.Core.Tools
 
             if (!string.Equals(e.Attribute, "transform"))
                 return;
+
             var element = (SvgElement)sender;
+
+            // if transform was changed and rotation has been added, skip snapping
+            var oldRotation = (e.OldValue as SvgTransformCollection)?.GetMatrix()?.RotationDegrees;
+            var newRotation = (e.Value as SvgTransformCollection)?.GetMatrix()?.RotationDegrees;
+            if (oldRotation != newRotation)
+                return;
+
             // otherwise we need to reevaluate the translate of that particular element
             SnapToGrid(element);
         }
 
         private void SnapToGrid(SvgElement element)
         {
+            if (!IsSnappingEnabled)
+                return;
+
             var ve = element as SvgVisualElement;
             if (ve == null)
                 return;
@@ -287,9 +300,7 @@ namespace Svg.Core.Tools
 
                 // snap to grid:
                 // get absolute point
-                var bounds = ve.Bounds;
-                var m = ve.Transforms.GetMatrix();
-                var b = m.TransformRectangle(bounds);
+                var b = ve.GetBoundingBox();
 
                 // determine next intersection of gridlines
                 // so we determine which point P1, P2 is the nearest one
@@ -387,46 +398,13 @@ namespace Svg.Core.Tools
                         _generalTranslation = PointF.Create(absoluteDeltaX, absoluteDeltaY);
                     }
                 }
-                
-                // and translate element to that next intersection
-                AddTranslate(ve, absoluteDeltaX, absoluteDeltaY);
 
+                var mx = ve.CreateTranslation(absoluteDeltaX, absoluteDeltaY);
+                ve.SetTransformationMatrix(mx);
             }
             finally
             {
                 _isSnappingInProgress = false;
-            }
-        }
-
-        private static void AddTranslate(SvgVisualElement element, float deltaX, float deltaY)
-        {
-            SvgTranslate trans = null;
-            int index = -1;
-
-            //if (element.Transforms.OfType<SvgTranslate>().Count() > 1)
-            {
-                for (int i = element.Transforms.Count - 1; i >= 0; i--)
-                {
-                    var translate = element.Transforms[i] as SvgTranslate;
-                    if (translate != null)
-                    {
-                        trans = translate;
-                        index = i;
-                        break;
-                    }
-                }
-            }
-
-            var transforms = element.Transforms;
-            if (trans == null)
-            {
-                trans = new SvgTranslate(deltaX, deltaY);
-                transforms.Add(trans);
-            }
-            else
-            {
-                var t = new SvgTranslate(trans.X + deltaX, trans.Y + deltaY);
-                transforms[index] = t; // we MUST explicitly set the transform so the "OnTransformChanged" event is fired!
             }
         }
 

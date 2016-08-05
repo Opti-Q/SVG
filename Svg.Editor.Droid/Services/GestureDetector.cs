@@ -231,7 +231,7 @@ namespace Svg.Droid.Editor.Services
                             {
                                 _startAngle = _angle;
                                 var uie = new RotateEvent(0, 0, RotateStatus.Start);
-                                System.Diagnostics.Debug.WriteLine(uie.DebuggerDisplay);
+                                //System.Diagnostics.Debug.WriteLine(uie.DebuggerDisplay);
                                 _owner._callback(uie);
                             }
                             if (_previousAngle != null)
@@ -240,7 +240,7 @@ namespace Svg.Droid.Editor.Services
                                 var absoluteDelta = (_startAngle.Value - _angle) % 360;
                                 
                                 var uie = new RotateEvent(delta, absoluteDelta, RotateStatus.Rotating);
-                                System.Diagnostics.Debug.WriteLine(uie.DebuggerDisplay);
+                                //System.Diagnostics.Debug.WriteLine(uie.DebuggerDisplay);
                                 _owner._callback(uie);
                             }
                             _previousAngle = _angle;
@@ -273,7 +273,7 @@ namespace Svg.Droid.Editor.Services
                     var absoluteDelta = (_startAngle.Value - _angle) % 360;
 
                     var uie = new RotateEvent(delta, absoluteDelta, RotateStatus.End);
-                    System.Diagnostics.Debug.WriteLine(uie.DebuggerDisplay);
+                    //System.Diagnostics.Debug.WriteLine(uie.DebuggerDisplay);
                     _owner._callback(uie);
                 }
 

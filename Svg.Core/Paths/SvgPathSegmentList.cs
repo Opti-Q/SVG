@@ -1,12 +1,14 @@
 using System;
 using System.ComponentModel;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using Svg.Interfaces;
 
 namespace Svg.Pathing
 {
     //[TypeConverter(typeof(SvgPathBuilder))]
-    public sealed class SvgPathSegmentList : IList<SvgPathSegment>
+    public sealed class SvgPathSegmentList : IList<SvgPathSegment>, ICloneable
     {
         internal SvgPath _owner;
         private List<SvgPathSegment> _segments;
@@ -14,6 +16,11 @@ namespace Svg.Pathing
         public SvgPathSegmentList()
         {
             this._segments = new List<SvgPathSegment>();
+        }
+
+        public SvgPathSegmentList(IEnumerable<SvgPathSegment> segments)
+        {
+            this._segments = segments.ToList();
         }
 
         public SvgPathSegment Last
@@ -28,34 +35,42 @@ namespace Svg.Pathing
 
         public void Insert(int index, SvgPathSegment item)
         {
+            var o = (SvgPathSegmentList)this.Clone();
             this._segments.Insert(index, item);
             if (this._owner != null)
             {
-                this._owner.OnPathUpdated();
+                this._owner.OnPathUpdated(o);
             }
         }
 
         public void RemoveAt(int index)
         {
+            var o = (SvgPathSegmentList)this.Clone();
             this._segments.RemoveAt(index);
             if (this._owner != null)
             {
-                this._owner.OnPathUpdated();
+                this._owner.OnPathUpdated(o);
             }
         }
 
         public SvgPathSegment this[int index]
         {
             get { return this._segments[index]; }
-            set { this._segments[index] = value; this._owner.OnPathUpdated(); }
+            set
+            {
+                var o = (SvgPathSegmentList)this.Clone();
+                this._segments[index] = value;
+                this._owner.OnPathUpdated(o);
+            }
         }
 
         public void Add(SvgPathSegment item)
         {
+            var o = (SvgPathSegmentList)this.Clone();
             this._segments.Add(item);
             if (this._owner != null)
             {
-                this._owner.OnPathUpdated();
+                this._owner.OnPathUpdated(o);
             }
         }
 
@@ -86,13 +101,14 @@ namespace Svg.Pathing
 
         public bool Remove(SvgPathSegment item)
         {
+            var o = (SvgPathSegmentList)this.Clone();
             bool removed = this._segments.Remove(item);
 
             if (removed)
             {
                 if (this._owner != null)
                 {
-                    this._owner.OnPathUpdated();
+                    this._owner.OnPathUpdated(o);
                 }
             }
 
@@ -107,6 +123,11 @@ namespace Svg.Pathing
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return this._segments.GetEnumerator();
+        }
+
+        public object Clone()
+        {
+            return new SvgPathSegmentList(this._segments.Select(s => s.Clone()));
         }
     }
 }

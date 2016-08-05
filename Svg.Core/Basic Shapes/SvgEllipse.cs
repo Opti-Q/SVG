@@ -22,10 +22,11 @@ namespace Svg
             set
             {
             	if(_centerX != value)
-            	{
+	            {
+	                var oldValue = _centerX;
             		this._centerX = value;
             		this.IsPathDirty = true;
-            		OnAttributeChanged(new AttributeEventArgs{ Attribute = "cx", Value = value });
+            		OnAttributeChanged(new AttributeEventArgs("cx", value, oldValue));
             	}
             }
         }
@@ -37,10 +38,11 @@ namespace Svg
         	set
         	{
         		if(_centerY != value)
-        		{
-        			this._centerY = value;
+                {
+                    var oldValue = _centerY;
+                    this._centerY = value;
         			this.IsPathDirty = true;
-        			OnAttributeChanged(new AttributeEventArgs{ Attribute = "cy", Value = value });
+        			OnAttributeChanged(new AttributeEventArgs("cy", value, oldValue));
         		}
         	}
         }
@@ -52,10 +54,11 @@ namespace Svg
         	set
         	{
         		if(_radiusX != value)
-        		{
+		        {
+		            var oldValue = _radiusX;
         			this._radiusX = value;
         			this.IsPathDirty = true;
-        			OnAttributeChanged(new AttributeEventArgs{ Attribute = "rx", Value = value });
+        			OnAttributeChanged(new AttributeEventArgs("rx", value, oldValue));
         		}
         	}
         }
@@ -67,10 +70,11 @@ namespace Svg
         	set
         	{
         		if(_radiusY != value)
-        		{
+		        {
+		            var oldValue = _radiusY;
         			this._radiusY = value;
         			this.IsPathDirty = true;
-        			OnAttributeChanged(new AttributeEventArgs{ Attribute = "ry", Value = value });
+        			OnAttributeChanged(new AttributeEventArgs("ry", value, oldValue));
         		}
         	}
         }
