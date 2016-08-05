@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Svg.Core.Interfaces;
 using Svg.Interfaces;
 
 namespace Svg.Core.Tools
@@ -16,6 +18,7 @@ namespace Svg.Core.Tools
 
         public ColorTool() : base("Color")
         {
+            IconName = "svg/ic_format_color_fill_white_48px.svg";
             Properties.Add("selectablecolors", new[]
             {
                 Color.Create(0, 0, 0),
@@ -27,8 +30,6 @@ namespace Svg.Core.Tools
                 Color.Create(0, 255, 255)
             });
         }
-
-        public string ColorIconName { get; set; } = "ic_format_color_fill_white_48px.svg";
 
         public Color[] SelectableColors
         {
@@ -43,9 +44,28 @@ namespace Svg.Core.Tools
 
         public Color SelectedColor { get; set; }
 
+        public string ColorIconNameModifier => StringifyColor(SelectedColor);
+
         public override Task Initialize(SvgDrawingCanvas ws)
         {
+            var selectableColors = SelectableColors;
+
             SelectedColor = SelectableColors?.FirstOrDefault();
+
+            // cache icons
+            var cachingService = Engine.TryResolve<ISvgCachingService>();
+            if (cachingService != null)
+            {
+                foreach (var selectableColor in selectableColors)
+                {
+                    Action<SvgDocument> action =
+                        document =>
+                        {
+                            document.Children.Single().Children.Last().Fill = new SvgColourServer(selectableColor);
+                        };
+                    cachingService.SaveAsPng(IconName, StringifyColor(selectableColor), action);
+                }
+            }
 
             // add tool commands
             Commands = new List<IToolCommand>
@@ -57,6 +77,11 @@ namespace Svg.Core.Tools
             WatchDocument(ws.Document);
 
             return Task.FromResult(true);
+        }
+
+        private static string StringifyColor(Color color)
+        {
+            return $"{color.R}_{color.G}_{color.B}";
         }
 
         private static void ColorizeElement(SvgElement element, Color color)
@@ -122,7 +147,7 @@ namespace Svg.Core.Tools
             private readonly SvgDrawingCanvas _canvas;
 
             public ChangeColorCommand(SvgDrawingCanvas canvas, ColorTool tool, string name)
-                : base(tool, name, o => { }, iconName: tool.ColorIconName, sortFunc: tc => 500)
+                : base(tool, name, o => { }, iconName: tool.IconName, sortFunc: tc => 500)
             {
                 _canvas = canvas;
             }
