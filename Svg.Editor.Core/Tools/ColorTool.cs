@@ -93,8 +93,8 @@ namespace Svg.Core.Tools
                 ColorizeElement(child, color);
             }
 
-            // only colorize texts and paths
-            if (!(element is SvgPath || element is SvgText)) return;
+            // only colorize visual elements
+            if (!(element is SvgVisualElement)) return;
 
             if (element is SvgText)
             {

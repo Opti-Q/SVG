@@ -64,9 +64,11 @@
     <Compile Include="Tools\PanTool.cs" />
     <Compile Include="Tools\RotateTool.cs" />
     <Compile Include="Tools\SelectionTool.cs" />
+    <Compile Include="Tools\LineTool.cs" />
     <Compile Include="Tools\TextTool.cs" />
     <Compile Include="Tools\ToolBase.cs" />
     <Compile Include="Tools\ZoomTool.cs" />
+    <Compile Include="Utils\CanvasCalculationUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Svg.Core\Svg.Core.csproj">
