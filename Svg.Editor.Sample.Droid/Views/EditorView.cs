@@ -75,7 +75,7 @@ namespace Svg.Droid.SampleEditor.Views
                     {
                         var fs = Engine.Resolve<IFileSystem>();
                         var svgCachingService = Engine.Resolve<ISvgCachingService>();
-                        var path = svgCachingService.GetCachedPngPath(colorTool.ColorIconName,
+                        var path = svgCachingService.GetCachedPngPath(colorTool.IconName,
                             colorTool.ColorIconNameModifier, fs);
                         var drawable = Drawable.CreateFromPath(path);
 

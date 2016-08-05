@@ -9,7 +9,7 @@ namespace Svg.Core.Tools
 {
     public interface IColorInputService
     {
-        Task<int> GetIndexFromUserInput(string title, string[] items);
+        Task<int> GetIndexFromUserInput(string title, string[] items, string[] colors);
     }
 
     public class ColorTool : ToolBase
@@ -18,28 +18,27 @@ namespace Svg.Core.Tools
 
         public ColorTool() : base("Color")
         {
+            IconName = "svg/ic_format_color_fill_white_48px.svg";
             Properties.Add("selectablecolors", new[]
             {
-                Color.Create(0, 0, 0),
-                Color.Create(255, 0, 0),
-                Color.Create(0, 255, 0),
-                Color.Create(0, 0, 255),
-                Color.Create(255, 255, 0),
-                Color.Create(255, 0, 255),
-                Color.Create(0, 255, 255)
+                "#000000",
+                "#FF0000",
+                "#00FF00",
+                "#0000FF",
+                "#FFFF00",
+                "#FF00FF",
+                "#00FFFF"
             });
         }
 
-        public string ColorIconName { get; set; } = "svg/ic_format_color_fill_white_48px.svg";
-
-        public Color[] SelectableColors
+        public string[] SelectableColors
         {
             get
             {
                 object selectableColors;
                 Properties.TryGetValue("selectablecolors", out selectableColors);
                 if (selectableColors == null) selectableColors = Enumerable.Empty<Color>();
-                return (Color[])selectableColors;
+                return (string[])selectableColors;
             }
         }
 
@@ -51,7 +50,7 @@ namespace Svg.Core.Tools
         {
             var selectableColors = SelectableColors;
 
-            SelectedColor = SelectableColors?.FirstOrDefault();
+            SelectedColor = Color.Create(SelectableColors?.FirstOrDefault());
 
             // cache icons
             var cachingService = Engine.TryResolve<ISvgCachingService>();
@@ -59,12 +58,13 @@ namespace Svg.Core.Tools
             {
                 foreach (var selectableColor in selectableColors)
                 {
+                    var color = Color.Create(selectableColor);
                     Action<SvgDocument> action =
                         document =>
                         {
-                            document.Children.Single().Children.Last().Fill = new SvgColourServer(selectableColor);
+                            document.Children.Single().Children.Last().Fill = new SvgColourServer(color);
                         };
-                    cachingService.SaveAsPng(ColorIconName, StringifyColor(selectableColor), action);
+                    cachingService.SaveAsPng(IconName, StringifyColor(color), action);
                 }
             }
 
@@ -148,7 +148,7 @@ namespace Svg.Core.Tools
             private readonly SvgDrawingCanvas _canvas;
 
             public ChangeColorCommand(SvgDrawingCanvas canvas, ColorTool tool, string name)
-                : base(tool, name, o => { }, iconName: tool.ColorIconName, sortFunc: tc => 500)
+                : base(tool, name, o => { }, iconName: tool.IconName, sortFunc: tc => 500)
             {
                 _canvas = canvas;
             }
@@ -158,7 +158,7 @@ namespace Svg.Core.Tools
                 var t = (ColorTool)Tool;
 
                 var colorNames = new[] { "Black", "Red", "Green", "Blue", "Yellow", "Magenta", "Cyan" };
-                var color = t.SelectableColors[await ColorInputServiceProxy.GetIndexFromUserInput("Choose color", colorNames)];
+                var color = Color.Create(t.SelectableColors[await ColorInputServiceProxy.GetIndexFromUserInput("Choose color", colorNames, t.SelectableColors)]);
 
                 if (_canvas.SelectedElements.Any())
                 {

@@ -173,6 +173,11 @@ namespace Svg
             return new AndroidColor((byte)alpha, (byte)r, (byte)g, (byte)b);
         }
 
+        public Color CreateColorFromHexString(string hex)
+        {
+            throw new NotImplementedException();
+        }
+
         public PointF CreatePointF(float x, float y)
         {
             return new AndroidPointF(x, y);
