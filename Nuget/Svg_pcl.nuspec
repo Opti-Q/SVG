@@ -19,16 +19,18 @@ License: Microsoft Public License: https://svg.codeplex.com/license</description
         <releaseNotes>Open source library to load/save and render SVG vector graphics.</releaseNotes>
         <tags>svg, vector graphics, rendering</tags>
         <dependencies>
-            <dependency id="SkiaSharp" version="1.53.3" />
+            <dependency id="SkiaSharp" version="1.53.3-alpha" />
         </dependencies>
     </metadata>
     <files>
         <file src="..\Svg.Droid\bin\Debug\Svg.Droid.dll" target="lib\MonoAndroid\Svg.Droid.dll" />
         <file src="..\Svg.Droid\bin\Debug\Svg.Droid.dll.mdb" target="lib\MonoAndroid\Svg.Droid.dll.mdb" />
         <file src="..\Svg.Droid\bin\Debug\Svg.Droid.pdb" target="lib\MonoAndroid\Svg.Droid.pdb" />
+        <file src="..\Svg.Droid\bin\Debug\Svg.Portable.dll" target="lib\MonoAndroid\Svg.Portable.dll" />
+        <file src="..\Svg.Win\bin\x86\Debug\Svg.Portable.dll" target="lib\net452\Svg.Portable.dll" />
         <file src="..\Svg.Win\bin\x86\Debug\Svg.Win.dll" target="lib\net452\Svg.Win.dll" />
         <file src="..\Svg.Win\bin\x86\Debug\Svg.Win.pdb" target="lib\net452\Svg.Win.pdb" />
-        <file src="..\Svg.Win\bin\x86\Debug\Svg.Portable.dll" target="lib\portable-net45+xamarinmac+xamarinios+monotouch+monoandroid+win8+wpa81+wp8+xamarin.watchos+xamarin.tvos" />
-        <file src="..\Svg.Win\bin\x86\Debug\Svg.Portable.pdb" target="lib\portable-net45+xamarinmac+xamarinios+monotouch+monoandroid+win8+wpa81+wp8+xamarin.watchos+xamarin.tvos" />
+        <file src="..\Svg.Win\bin\x86\Debug\Svg.Portable.dll" target="lib\portable-net45+xamarinmac+xamarinios+monotouch+monoandroid+win8+wpa81+wp8+xamarin.watchos+xamarin.tvos\Svg.Portable.dll" />
+        <file src="..\Svg.Win\bin\x86\Debug\Svg.Portable.pdb" target="lib\portable-net45+xamarinmac+xamarinios+monotouch+monoandroid+win8+wpa81+wp8+xamarin.watchos+xamarin.tvos\Svg.Portable.pdb" />
     </files>
 </package>

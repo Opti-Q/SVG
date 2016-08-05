@@ -395,6 +395,9 @@
   <ItemGroup>
     <AndroidAsset Include="Assets\svg\ic_format_color_fill_white_48px.svg" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\svg\Spec_change_2.svg" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
      Other similar extension points exist, see Microsoft.Common.targets.
