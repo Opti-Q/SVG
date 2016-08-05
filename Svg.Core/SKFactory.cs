@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
+using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using SkiaSharp;
 using Svg.Interfaces;
@@ -143,7 +145,32 @@ namespace Svg
 
         public virtual Color CreateColorFromArgb(int alpha, int r, int g, int b)
         {
-            return new SkiaColor((byte) alpha, (byte)r, (byte)g, (byte)b);
+            return new SkiaColor((byte)alpha, (byte)r, (byte)g, (byte)b);
+        }
+
+        public virtual Color CreateColorFromHexString(string hex)
+        {
+            if (Regex.IsMatch(hex.ToLowerInvariant(), @"^#[a-f0-9]{8}$"))
+            {
+                var a = int.Parse(hex.Substring(1, 2), NumberStyles.HexNumber);
+                var r = int.Parse(hex.Substring(3, 2), NumberStyles.HexNumber);
+                var g = int.Parse(hex.Substring(5, 2), NumberStyles.HexNumber);
+                var b = int.Parse(hex.Substring(7, 2), NumberStyles.HexNumber);
+
+                return CreateColorFromArgb(a, r, g, b);
+            }
+
+            if (Regex.IsMatch(hex.ToLowerInvariant(), @"^#[a-f0-9]{6}$"))
+            {
+                var r = int.Parse(hex.Substring(1, 2), NumberStyles.HexNumber);
+                var g = int.Parse(hex.Substring(3, 2), NumberStyles.HexNumber);
+                var b = int.Parse(hex.Substring(5, 2), NumberStyles.HexNumber);
+
+                return CreateColorFromArgb(255, r, g, b);
+            }
+
+            throw new ArgumentException("Not a valid hex string.", nameof(hex));
+
         }
 
         public virtual PointF CreatePointF(float x, float y)
@@ -178,7 +205,7 @@ namespace Svg
                 return new SkiaBitmap(bm);
             }
         }
-        
+
         public abstract ISortedList<TKey, TValue> CreateSortedList<TKey, TValue>();
 
         public abstract IXmlTextWriter CreateXmlTextWriter(StringWriter writer);

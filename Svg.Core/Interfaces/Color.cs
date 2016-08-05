@@ -17,6 +17,11 @@ namespace Svg.Interfaces
             return Engine.Factory.CreateColorFromArgb(a, r, g, b);
         }
 
+        public static Color Create(string hex)
+        {
+            return Engine.Factory.CreateColorFromHexString(hex);
+        }
+
         public abstract string Name { get; }
         public abstract bool IsKnownColor { get; }
         public abstract bool IsSystemColor { get; }

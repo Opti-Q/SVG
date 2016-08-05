@@ -75,7 +75,7 @@ namespace Svg.Editor.Tests
         {
             // Arrange
             await Canvas.EnsureInitialized();
-            var color = Canvas.Tools.OfType<ColorTool>().Single().SelectableColors[1];
+            var color = Color.Create(Canvas.Tools.OfType<ColorTool>().Single().SelectableColors[1]);
             _colorMock.F = () => 1;
             var element = new SvgText("hello");
             Canvas.AddItemInScreenCenter(element);
@@ -103,7 +103,7 @@ namespace Svg.Editor.Tests
         {
             // Arrange
             await Canvas.EnsureInitialized();
-            var color = Canvas.Tools.OfType<ColorTool>().Single().SelectableColors[1];
+            var color = Color.Create(Canvas.Tools.OfType<ColorTool>().Single().SelectableColors[1]);
             _colorMock.F = () => 1;
             var parent = new SvgGroup();
             var child = new SvgText("hello");
