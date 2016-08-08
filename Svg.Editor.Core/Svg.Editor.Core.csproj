@@ -5,7 +5,7 @@
     <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4CF34D1C-662C-400D-BEAF-E87CE1D08FAB}</ProjectGuid>
+    <ProjectGuid>{54D4AD34-C83E-4BC0-AE9F-4F5269606E7A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Svg.Core</RootNamespace>

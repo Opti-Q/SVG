@@ -59,6 +59,9 @@ namespace Svg.Interfaces
         /// <returns></returns>
         public static RectangleF FromPoints(PointF[] points)
         {
+            if (points.Length == 0)
+                return RectangleF.Create();
+
             var minX = points.Select(p => p.X).Min();
             var minY = points.Select(p => p.Y).Min();
             var maxX = points.Select(p => p.X).Max();

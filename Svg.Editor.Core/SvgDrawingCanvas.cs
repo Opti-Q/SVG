@@ -36,7 +36,7 @@ namespace Svg.Core
 
             _tools = new ObservableCollection<ITool>
             {
-                    new GridTool(angle:27.3f), // must be before movetool!
+                    new GridTool(), // must be before movetool!
                     new MoveTool(), // must be before pantool as it decides whether or not it is active based on selection
                     new PanTool(),
                     new RotationTool(),
@@ -333,6 +333,9 @@ namespace Svg.Core
             if (childBounds.Y != 0)
                 centerPosY -= childBounds.Y;
 
+
+            MergeSvgDefs(Document, element.OwnerDocument);
+
             SvgTranslate tl = new SvgTranslate(centerPosX, centerPosY);
             element.Transforms.Add(tl);
             element.ID = $"{element.ElementName}_{Guid.NewGuid():N}";
@@ -340,6 +343,33 @@ namespace Svg.Core
             Document.Children.Add(element);
 
             FireInvalidateCanvas();
+        }
+
+        private static void MergeSvgDefs(SvgDocument target, SvgDocument source)
+        {
+            if (target == null) throw new ArgumentNullException(nameof(target));
+            if (source == null) throw new ArgumentNullException(nameof(source));
+
+            if (target == source)
+                return;
+
+            var invisibleChildren = source.Children.Where(c => !(c is SvgVisualElement)).ToArray();
+            var defs = invisibleChildren.FirstOrDefault(ic => ic.ElementName == "defs");
+            if (defs != null)
+            {
+                var docDefs = target.Children.FirstOrDefault(c => c.ElementName == "defs");
+                if (docDefs == null)
+                    target.Children.Add(defs);
+                else
+                {
+                    foreach (var defChild in defs.Children)
+                    {
+                        var docDefChild = docDefs.Children.FirstOrDefault(c => c.ID == defChild.ID);
+                        if (docDefChild == null)
+                            docDefs.Children.Add(defChild);
+                    }
+                }
+            }
         }
 
         public Matrix GetCanvasTransformationMatrix()
