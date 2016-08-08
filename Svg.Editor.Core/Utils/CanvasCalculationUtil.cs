@@ -4,8 +4,8 @@
     {
         public static float GetRelativeDimension(float canvasDimension, float targetDimension, float zoomFactor = 1.0f)
         {
-            var halfRelStartWidth = targetDimension / zoomFactor;
-            return -canvasDimension + halfRelStartWidth;
+            var relativeDimension = targetDimension / zoomFactor;
+            return -canvasDimension + relativeDimension;
         }
     }
 }

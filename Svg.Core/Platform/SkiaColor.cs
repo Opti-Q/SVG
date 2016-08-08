@@ -26,7 +26,7 @@ namespace Svg.Platform
 
         public SkiaColor(byte a, Color baseColor)
         {
-            var b = ((SkiaColor) baseColor)._inner;
+            var b = ((SkiaColor)baseColor)._inner;
             _inner = new SKColor(b.Red, b.Green, b.Blue, a);
         }
 
@@ -58,10 +58,9 @@ namespace Svg.Platform
         }
         public override int ToArgb()
         {
-            //return _inner.ToArgb();
-            throw new NotImplementedException();
+            return B + G * 0x100 + R * 0x10000 + A * 0x1000000;
         }
-        
+
         public static implicit operator SkiaColor(SKColor other)
         {
             return new SkiaColor(other);

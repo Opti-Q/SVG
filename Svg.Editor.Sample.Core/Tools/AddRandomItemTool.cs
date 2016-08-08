@@ -54,7 +54,10 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     //var provider = SourceProvider("svg/Positions_13_kein_text_im_minibild_und_canvas.svg");
                     //var provider = SourceProvider("svg/ic_format_color_fill_white_48px.svg");
                     //var provider = SourceProvider("svg/Spec_change_2.svg");
-                    var provider = SourceProvider(SvgPathStrings[new Random().Next(0, SvgPathStrings.Length - 1)]);
+                    //var provider = SourceProvider("svg/painting-marker-05-f.svg");
+                    //var provider = SourceProvider("svg/painting-marker-01-f.svg");
+                    var provider = SourceProvider("svg/rect.svg");
+                    //var provider = SourceProvider(SvgPathStrings[new Random().Next(0, SvgPathStrings.Length - 1)]);
                     var otherDoc = SvgDocument.Open<SvgDocument>(provider);
 
                     _canvas.AddItemInScreenCenter(otherDoc);

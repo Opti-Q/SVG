@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 using Svg.Core.Tools;
+using Svg.Core.Utils;
 using Svg.Interfaces;
 using Svg.Transforms;
 

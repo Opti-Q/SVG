@@ -401,6 +401,15 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\ic_mode_edit_white_48dp.png" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\svg\painting-marker-05-f.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\svg\painting-marker-01-f.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\svg\rect.svg" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
      Other similar extension points exist, see Microsoft.Common.targets.
