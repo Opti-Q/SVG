@@ -23,8 +23,8 @@ namespace Svg.Editor.Tests
 
             // Act
             var pt1 = PointF.Create(10, 10);
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, pt1, pt1, pt1));
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, pt1, pt1, pt1));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, pt1, pt1, pt1, 1));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, pt1, pt1, pt1, 1));
 
             // Assert
             Assert.False(Canvas.Document.Descendants().Any());
@@ -41,9 +41,9 @@ namespace Svg.Editor.Tests
             // Act
             var start = PointF.Create(10, 10);
             var end = PointF.Create(10, 39);
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, start, start, start));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, start, start, start, 1));
             await Canvas.OnEvent(new MoveEvent(start, start, end, end - start));
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, end, end, end));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, end, end, end, 1));
 
             // Assert
             Assert.False(Canvas.Document.Descendants().Any());
@@ -60,9 +60,9 @@ namespace Svg.Editor.Tests
             // Act
             var start = PointF.Create(10, 10);
             var end = PointF.Create(10, 100);
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, start, start, start));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, start, start, start, 1));
             await Canvas.OnEvent(new MoveEvent(start, start, end, end - start));
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, end, end, end));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, end, end, end, 1));
 
             // Assert
             Assert.AreEqual(1, Canvas.Document.Descendants().OfType<SvgLine>().Count());

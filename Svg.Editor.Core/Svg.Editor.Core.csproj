@@ -53,6 +53,7 @@
     <Compile Include="Extensions\SvgVisualElementExtensions.cs" />
     <Compile Include="Interfaces\ICanInvalidateCanvas.cs" />
     <Compile Include="Interfaces\ISvgCachingService.cs" />
+    <Compile Include="Interfaces\ISvgSourceFactory.cs" />
     <Compile Include="SvgDrawingCanvas.cs" />
     <Compile Include="Events\UserInputEvent.cs" />
     <Compile Include="Interfaces\IRenderer.cs" />

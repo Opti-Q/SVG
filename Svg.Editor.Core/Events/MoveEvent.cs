@@ -24,7 +24,7 @@ namespace Svg.Core.Events
         }
 
         public MoveEvent(PointF pointer1Down, PointF lastPointer1Position, PointF pointer1Position, PointF relativeDelta)
-            : base(EventType.Move, pointer1Down, lastPointer1Position, pointer1Position)
+            : base(EventType.Move, pointer1Down, lastPointer1Position, pointer1Position, 1)
         {
             RelativeDelta = relativeDelta;
         }

@@ -18,13 +18,16 @@ namespace Svg.Core.Events
         public EventType EventType { get; private set; }
         public PointF Pointer1Down { get; private set; }
 
-        public PointerEvent(EventType eventType, PointF pointer1Down, PointF lastPointer1Position, PointF pointer1Position)
+        public PointerEvent(EventType eventType, PointF pointer1Down, PointF lastPointer1Position, PointF pointer1Position, int pointerCount)
         {
             EventType = eventType;
             Pointer1Down = pointer1Down;
             LastPointer1DownPosition = lastPointer1Position;
             Pointer1Position = pointer1Position;
+            PointerCount = pointerCount;
         }
+
+        public int PointerCount { get; }
 
         public PointF LastPointer1DownPosition { get; private set; }
 

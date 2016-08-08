@@ -33,8 +33,8 @@ namespace Svg.Editor.Tests
             _textMock.F = ((x, y) => "hello");
 
             // Act
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10)));
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10)));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
 
             // Assert
             var texts = Canvas.Document.Children.OfType<SvgTextBase>().ToList();
@@ -63,8 +63,8 @@ namespace Svg.Editor.Tests
             _textMock.F = ((x, y) => "hello");
 
             // Act
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10)));
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10)));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
 
             // Assert
             var texts = Canvas.Document.Children.OfType<SvgTextBase>().ToList();
@@ -97,8 +97,8 @@ namespace Svg.Editor.Tests
             _textMock.F = ((x, y) => theText);
 
             // Act
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10)));
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10)));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
 
             // Assert
             var texts = Canvas.Document.Children.OfType<SvgTextBase>().ToList();
@@ -128,8 +128,8 @@ namespace Svg.Editor.Tests
 
             // Act
             var pt1 = PointF.Create(370, 260);
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, pt1, pt1, pt1));
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, pt1, pt1, pt1));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, pt1, pt1, pt1, 1));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, pt1, pt1, pt1, 1));
 
             // Assert
             var texts = Canvas.Document.Children.OfType<SvgTextBase>().ToList();

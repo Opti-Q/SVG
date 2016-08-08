@@ -56,10 +56,10 @@ namespace Svg.Editor.Tests
 
         protected async Task Move(PointF start, PointF end)
         {
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, start, start, start));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, start, start, start, 1));
             var delta = end - start;
             await Canvas.OnEvent(new MoveEvent(start, start, end, delta));
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, start, start, end));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, start, start, end, 1));
         }
     }
 }

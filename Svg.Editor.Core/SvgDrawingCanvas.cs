@@ -315,6 +315,8 @@ namespace Svg.Core
             }
 
             AddItemInScreenCenter(element);
+
+            MergeSvgDefs(Document, document);
         }
 
         public void AddItemInScreenCenter(SvgVisualElement element)
@@ -335,7 +337,8 @@ namespace Svg.Core
                 centerPosY -= childBounds.Y;
 
 
-            MergeSvgDefs(Document, element.OwnerDocument);
+            if (element.OwnerDocument != null)
+                MergeSvgDefs(Document, element.OwnerDocument);
 
             SvgTranslate tl = new SvgTranslate(centerPosX, centerPosY);
             element.Transforms.Add(tl);
