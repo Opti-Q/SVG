@@ -70,6 +70,7 @@
     <Compile Include="Tools\TextTool.cs" />
     <Compile Include="Tools\ToolBase.cs" />
     <Compile Include="Tools\ZoomTool.cs" />
+    <Compile Include="Utils\SvgProcessingUtil.cs" />
     <Compile Include="Utils\CanvasCalculationUtil.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,20 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Android;
+﻿using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
-using Android.Database;
-using Android.Graphics.Drawables;
-using Android.Provider;
 using Android.Views;
 using Android.Widget;
-using Java.Lang;
-using Svg.Core.Interfaces;
 using Svg.Core.Tools;
-using Svg.Interfaces;
-using Object = Java.Lang.Object;
 
 namespace Svg.Droid.Editor.Services
 {
@@ -36,10 +25,6 @@ namespace Svg.Droid.Editor.Services
             {
                 tcs.SetResult(args.Which);
             });
-            //builder.SetItems(items, (sender, args) =>
-            //{
-            //    tcs.SetResult(args.Which);
-            //});
             builder.Show();
 
             return tcs.Task;
@@ -61,7 +46,7 @@ namespace Svg.Droid.Editor.Services
             Context = context;
         }
 
-        public override Object GetItem(int position)
+        public override Java.Lang.Object GetItem(int position)
         {
             return new ColorItem { Title = Items[position], Color = Colors[position] };
         }
@@ -93,7 +78,7 @@ namespace Svg.Droid.Editor.Services
 
         public override int Count => Items.Length;
 
-        protected class ColorItem : Object
+        protected class ColorItem : Java.Lang.Object
         {
             public string Title { get; set; }
             public string Color { get; set; }

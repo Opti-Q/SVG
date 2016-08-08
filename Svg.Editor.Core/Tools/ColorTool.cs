@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Interfaces;
+using Svg.Core.Utils;
 using Svg.Interfaces;
 
 namespace Svg.Core.Tools
@@ -59,12 +60,7 @@ namespace Svg.Core.Tools
                 foreach (var selectableColor in selectableColors)
                 {
                     var color = Color.Create(selectableColor);
-                    Action<SvgDocument> action =
-                        document =>
-                        {
-                            document.Children.Single().Children.Last().Fill = new SvgColourServer(color);
-                        };
-                    cachingService.SaveAsPng(IconName, StringifyColor(color), action);
+                    cachingService.SaveAsPng(IconName, StringifyColor(color), SvgProcessingUtil.ColorAction(color));
                 }
             }
 

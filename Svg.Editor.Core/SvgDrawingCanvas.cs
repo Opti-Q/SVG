@@ -36,7 +36,7 @@ namespace Svg.Core
 
             _tools = new ObservableCollection<ITool>
             {
-                    new GridTool(angle:27.3f), // must be before movetool!
+                    new GridTool(), // must be before movetool!
                     new MoveTool(), // must be before pantool as it decides whether or not it is active based on selection
                     new PanTool(),
                     new RotationTool(),
@@ -363,7 +363,7 @@ namespace Svg.Core
             {
                 var docDefs = target.Children.FirstOrDefault(c => c.ElementName == "defs");
                 if (docDefs == null)
-                    target.Children.Insert(0, defs);
+                    target.Children.Add(defs);
                 else
                 {
                     foreach (var defChild in defs.Children)
