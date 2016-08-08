@@ -36,6 +36,13 @@ namespace Svg.Droid.Editor.Services
             }
         }
 
+        /// <summary>
+        /// This method is used to obtain the path where the cached PNG is saved.
+        /// </summary>
+        /// <param name="svgFilePath">The path to the SVG.</param>
+        /// <param name="nameModifier">A name modifier for identifying variations of the cached PNG.</param>
+        /// <param name="fs">Instance of the current filesystem.</param>
+        /// <returns></returns>
         public string GetCachedPngPath(string svgFilePath, string nameModifier, IFileSystem fs)
         {
             var fileName = System.IO.Path.GetFileNameWithoutExtension(svgFilePath);
