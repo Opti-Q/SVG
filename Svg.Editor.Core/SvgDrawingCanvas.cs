@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 using Svg.Core.Tools;
@@ -35,6 +36,20 @@ namespace Svg.Core
             _selectedElements = new ObservableCollection<SvgVisualElement>();
             _selectedElements.CollectionChanged += OnSelectionChanged;
 
+            //var colorToolProperties =
+            //    "{'selectablecolors':['#000000','#FF0000','#00FF00','#0000FF','#FFFF00','#FF00FF','#00FFFF']}";
+
+            var colorToolProperties = JsonConvert.SerializeObject(new[]
+            {
+                "#000000",
+                "#FF0000",
+                "#00FF00",
+                "#0000FF",
+                "#FFFF00",
+                "#FF00FF",
+                "#00FFFF"
+            });
+
             _tools = new ObservableCollection<ITool>
             {
                     new GridTool(), // must be before movetool!
@@ -45,7 +60,7 @@ namespace Svg.Core
                     new SelectionTool(),
                     new TextTool(),
                     new LineTool(),
-                    new ColorTool()
+                    new ColorTool(colorToolProperties)
             };
             _tools.CollectionChanged += OnToolsChanged;
         }

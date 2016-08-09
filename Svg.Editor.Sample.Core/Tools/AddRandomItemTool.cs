@@ -27,8 +27,11 @@ namespace Svg.Droid.SampleEditor.Core.Tools
             "svg/Blinds_6_gezoomtes_minibild.svg",
             "svg/Positions_13_kein_text_im_minibild_und_canvas.svg",
             "svg/ic_format_color_fill_white_48px.svg",
-            "svg/Spec_change_2.svg"
-        };
+            "svg/Spec_change_2.svg",
+            "svg/painting-marker-05-f.svg",
+            "svg/painting-marker-01-f.svg",
+            "svg/rect.svg",
+    };
 
         public AddRandomItemTool(SvgDrawingCanvas canvas, Func<string, ISvgSource> sourceProvider = null) : base("Add random item")
         {
@@ -56,8 +59,8 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     //var provider = SourceProvider("svg/Spec_change_2.svg");
                     //var provider = SourceProvider("svg/painting-marker-05-f.svg");
                     //var provider = SourceProvider("svg/painting-marker-01-f.svg");
-                    var provider = SourceProvider("svg/rect.svg");
-                    //var provider = SourceProvider(SvgPathStrings[new Random().Next(0, SvgPathStrings.Length - 1)]);
+                    //var provider = SourceProvider("svg/rect.svg");
+                    var provider = SourceProvider(SvgPathStrings[new Random().Next(0, SvgPathStrings.Length - 1)]);
                     var otherDoc = SvgDocument.Open<SvgDocument>(provider);
 
                     _canvas.AddItemInScreenCenter(otherDoc);

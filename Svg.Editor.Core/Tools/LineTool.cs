@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 using Svg.Core.Utils;
-using Svg.Droid.SampleEditor.Core;
 using Svg.Interfaces;
 using Svg.Pathing;
 
@@ -26,8 +24,11 @@ namespace Svg.Core.Tools
         private bool _multiplePointersRegistered;
         private Brush _brush;
         private Pen _pen;
-        private Brush BlueBrush => _brush ?? (_brush = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
-        private Pen BluePen => _pen ?? (_pen = Svg.Engine.Factory.CreatePen(BlueBrush, 5));
+        private Brush BlueBrush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
+        private Pen BluePen => _pen ?? (_pen = Engine.Factory.CreatePen(BlueBrush, 5));
+
+        public string DeleteIconName { get; set; } = "ic_delete_white_48dp.png";
+        public string LineStyleIconName { get; set; } = "ic_line_style_white_48dp.png";
 
         public LineTool() : base("Line")
         {
@@ -38,6 +39,26 @@ namespace Svg.Core.Tools
         public override Task Initialize(SvgDrawingCanvas ws)
         {
             IsActive = false;
+
+            Commands = new List<IToolCommand>
+            {
+                new ToolCommand(this, "Delete", o =>
+                {
+                    _currentLine.Parent.Children.Remove(_currentLine);
+                    _currentLine = null;
+                    ws.FireToolCommandsChanged();
+                    ws.FireInvalidateCanvas();
+                },
+                canExecute: o => _currentLine != null, iconName:DeleteIconName,
+                sortFunc: t => 500),
+
+                new ToolCommand(this, "Line style", o =>
+                {
+                    // TODO: open line style dialog
+                },
+                canExecute: o => _currentLine != null, iconName:LineStyleIconName,
+                sortFunc: t => 550)
+            };
 
             return Task.FromResult(true);
         }
@@ -50,10 +71,6 @@ namespace Svg.Core.Tools
             var p = @event as PointerEvent;
             if (p?.PointerCount == 1 && (p.EventType == EventType.PointerUp || p.EventType == EventType.Cancel))
             {
-                //ws.SelectedElements.Clear();
-                //ws.SelectedElements.Add(_currentLine);
-                //ws.ActiveTool = ws.Tools.OfType<SelectionTool>().Single();
-
                 if (_currentLine != null)
                     _currentLine = null;
                 else
@@ -61,11 +78,12 @@ namespace Svg.Core.Tools
                         ws.GetElementsUnder<SvgLine>(ws.GetPointerRectangle(p.Pointer1Position),
                             SelectionType.Intersect).FirstOrDefault();
 
+                ws.FireToolCommandsChanged();
                 ws.FireInvalidateCanvas();
-
-                if (p.EventType == EventType.PointerDown)
-                    _multiplePointersRegistered = p.PointerCount != 1;
             }
+
+            if (p?.EventType == EventType.PointerDown)
+                _multiplePointersRegistered = p.PointerCount != 1;
 
             if (_multiplePointersRegistered)
                 return Task.FromResult(true);
@@ -107,6 +125,8 @@ namespace Svg.Core.Tools
                     if (_currentLine == null)
                     {
 
+                        var markerId = "marker";
+
                         _currentLine = new SvgLine
                         {
                             Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
@@ -116,10 +136,10 @@ namespace Svg.Core.Tools
                             StartY = new SvgUnit(SvgUnitType.Pixel, relativeStartY),
                             EndX = new SvgUnit(SvgUnitType.Pixel, relativeEndX),
                             EndY = new SvgUnit(SvgUnitType.Pixel, relativeEndY),
-                            MarkerEnd = new Uri("#marker", UriKind.Relative)
+                            MarkerEnd = new Uri($"#{markerId}", UriKind.Relative)
                         };
 
-                        if (ws.Document.IdManager.GetElementById("marker") == null)
+                        if (ws.Document.IdManager.GetElementById(markerId) == null)
                         {
                             var definitions = ws.Document.Children.OfType<SvgDefinitionList>().FirstOrDefault();
                             if (definitions == null)
@@ -127,7 +147,7 @@ namespace Svg.Core.Tools
                                 definitions = new SvgDefinitionList();
                                 ws.Document.Children.Add(definitions);
                             }
-                            var marker = new SvgMarker { ID = "marker" };
+                            var marker = new SvgMarker { ID = markerId };
                             definitions.Children.Add(marker);
                             var markerPath = new SvgPath
                             {

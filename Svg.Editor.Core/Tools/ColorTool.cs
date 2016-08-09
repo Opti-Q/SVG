@@ -17,19 +17,19 @@ namespace Svg.Core.Tools
     {
         private static IColorInputService ColorInputServiceProxy => Engine.Resolve<IColorInputService>();
 
-        public ColorTool() : base("Color")
+        public ColorTool(string properties) : base("Color", properties)
         {
             IconName = "svg/ic_format_color_fill_white_48px.svg";
-            Properties.Add("selectablecolors", new[]
-            {
-                "#000000",
-                "#FF0000",
-                "#00FF00",
-                "#0000FF",
-                "#FFFF00",
-                "#FF00FF",
-                "#00FFFF"
-            });
+            //Properties.Add("selectablecolors", new[]
+            //{
+            //    "#000000",
+            //    "#FF0000",
+            //    "#00FF00",
+            //    "#0000FF",
+            //    "#FFFF00",
+            //    "#FF00FF",
+            //    "#00FFFF"
+            //});
         }
 
         public string[] SelectableColors
