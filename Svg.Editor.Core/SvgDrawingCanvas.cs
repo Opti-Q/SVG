@@ -36,19 +36,10 @@ namespace Svg.Core
             _selectedElements = new ObservableCollection<SvgVisualElement>();
             _selectedElements.CollectionChanged += OnSelectionChanged;
 
-            //var colorToolProperties =
-            //    "{'selectablecolors':['#000000','#FF0000','#00FF00','#0000FF','#FFFF00','#FF00FF','#00FFFF']}";
-
-            var colorToolProperties = JsonConvert.SerializeObject(new[]
-            {
-                "#000000",
-                "#FF0000",
-                "#00FF00",
-                "#0000FF",
-                "#FFFF00",
-                "#FF00FF",
-                "#00FFFF"
-            });
+            // this part should be in the designer, when the iCL is created
+            var colorToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object> {
+                    {"selectablecolors", new [] { "#000000","#FF0000","#00FF00","#0000FF","#FFFF00","#FF00FF","#00FFFF"}}
+                }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All});
 
             _tools = new ObservableCollection<ITool>
             {
@@ -133,7 +124,7 @@ namespace Svg.Core
             }
         }
 
-        public PointF RelativeTranslate => PointF.Create(Translate.X/ZoomFactor, Translate.Y/ZoomFactor);
+        public PointF RelativeTranslate => PointF.Create(Translate.X / ZoomFactor, Translate.Y / ZoomFactor);
 
         public PointF Translate { get; set; }
 
@@ -200,7 +191,7 @@ namespace Svg.Core
                 await tool.OnUserInput(ev, this);
             }
         }
-        
+
         /// <summary>
         /// Called by platform specific implementation to allow tools to draw something onto the canvas
         /// </summary>
@@ -219,7 +210,7 @@ namespace Svg.Core
 
             // draw default background
             renderer.FillEntireCanvasWithColor(Engine.Factory.Colors.White);
-            
+
             // prerender step (e.g. gridlines, etc.)
             foreach (var tool in Tools)
             {
@@ -248,7 +239,7 @@ namespace Svg.Core
                 ActiveTool = Tools.FirstOrDefault(t => t.ToolUsage == ToolUsage.Explicit);
 
                 _initialized = true;
-                
+
                 FireToolCommandsChanged();
             }
         }
@@ -407,7 +398,7 @@ namespace Svg.Core
         /// <param name="stream"></param>
         public void SaveDocument(Stream stream)
         {
-            
+
             var oldX = Document.X;
             var oldY = Document.Y;
             var oldWidth = Document.Width;
@@ -433,7 +424,7 @@ namespace Svg.Core
                 Document.Y = oldY;
             }
         }
-        
+
         private IList<IToolCommand> EnsureToolSelectors()
         {
             if (_toolSelectors == null)

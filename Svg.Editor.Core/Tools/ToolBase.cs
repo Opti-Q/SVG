@@ -16,7 +16,7 @@ namespace Svg.Core.Tools
 
         protected ToolBase(string name, string jsonProperties) : this(name)
         {
-            Properties = JsonConvert.DeserializeObject<IDictionary<string, object>>(jsonProperties);
+            Properties = JsonConvert.DeserializeObject<IDictionary<string, object>>(jsonProperties, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
         }
 
         public string Name { get; protected set; }
@@ -26,7 +26,6 @@ namespace Svg.Core.Tools
         /// <summary>
         /// Properties for the tool that can be configured in the designer. Key should be lower-case for consistency.
         /// </summary>
-        //[JsonProperty(TypeNameHandling = TypeNameHandling.All)]
         public IDictionary<string, object> Properties { get; } = new Dictionary<string, object>();
         public string IconName { get; set; }
 
