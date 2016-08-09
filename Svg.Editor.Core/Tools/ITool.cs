@@ -13,10 +13,18 @@ namespace Svg.Core.Tools
         Explicit
     }
 
+    public enum ToolType
+    {
+        Undefined,
+        Create,
+        Modify
+    }
+
     public interface ITool : IDisposable
     {
         string Name { get; }
         ToolUsage ToolUsage { get; }
+        ToolType ToolType { get; }
         bool IsActive { get; set; }
         IEnumerable<IToolCommand> Commands { get; }
         /// <summary>

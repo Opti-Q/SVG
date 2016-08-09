@@ -57,7 +57,7 @@ namespace Svg.Droid.SampleEditor.Views
 
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
-            var shownActions = 3;
+            var shownActions = 1;
 
             foreach (var commands in ViewModel.Canvas.ToolCommands)
             {
@@ -94,7 +94,7 @@ namespace Svg.Droid.SampleEditor.Views
                     var c = cmds.First();
 
                     var m = menu.AddSubMenu(c.Tool.GetHashCode(), c.Tool.GetHashCode(), 1, c.GroupName);
-                    m.SetIcon(GetIconIdFromName(c.GroupIconName));
+                    m.Item.SetIcon(GetIconIdFromName(c.GroupIconName));
 
                     foreach (var cmd in cmds)
                     {

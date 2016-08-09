@@ -21,6 +21,7 @@ namespace Svg.Core.Tools
 
         public string Name { get; protected set; }
         public ToolUsage ToolUsage { get; protected set; }
+        public ToolType ToolType { get; protected set; }
         public virtual bool IsActive { get; set; } = true;
         public IEnumerable<IToolCommand> Commands { get; protected set; } = Enumerable.Empty<IToolCommand>();
         /// <summary>

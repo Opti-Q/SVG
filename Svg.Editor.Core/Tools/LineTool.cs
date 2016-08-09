@@ -24,26 +24,119 @@ namespace Svg.Core.Tools
         private bool _multiplePointersRegistered;
         private Brush _brush;
         private Pen _pen;
+        private bool _isActive;
+        private SvgDrawingCanvas _canvas;
         private Brush BlueBrush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
         private Pen BluePen => _pen ?? (_pen = Engine.Factory.CreatePen(BlueBrush, 5));
+
+        private IEnumerable<SvgMarker> Markers { get; set; }
 
         public string DeleteIconName { get; set; } = "ic_delete_white_48dp.png";
         public string LineStyleIconName { get; set; } = "ic_line_style_white_48dp.png";
 
-        public LineTool() : base("Line")
+        public string[] MarkerIds
+        {
+            get
+            {
+                object markerIds;
+                Properties.TryGetValue("markerids", out markerIds);
+                if (markerIds == null) markerIds = Enumerable.Empty<string>();
+                return (string[])markerIds;
+            }
+        }
+
+        public string[] LineStyles
+        {
+            get
+            {
+                object lineStyles;
+                Properties.TryGetValue("linestyles", out lineStyles);
+                if (lineStyles == null) lineStyles = Enumerable.Empty<string>();
+                return (string[])lineStyles;
+            }
+        }
+
+        public override bool IsActive
+        {
+            get { return _isActive; }
+            set
+            {
+                _isActive = value;
+                if (_isActive || _currentLine == null) return;
+                _canvas.SelectedElements.Remove(_currentLine);
+                _currentLine = null;
+                _canvas.FireInvalidateCanvas();
+            }
+        }
+
+        public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
+        {
+            InitializeDefinitions(newDocument);
+        }
+
+        private void InitializeDefinitions(SvgDocument document)
+        {
+            var definitions = document.Children.OfType<SvgDefinitionList>().FirstOrDefault();
+            if (definitions == null)
+            {
+                definitions = new SvgDefinitionList();
+                document.Children.Add(definitions);
+            }
+
+
+            foreach (var marker in Markers)
+            {
+                if (document.GetElementById(marker.ID) != null) continue;
+
+                definitions.Children.Add(marker);
+            }
+        }
+
+        public string SelectedMarkerId { get; set; }
+
+        public LineTool(string properties) : base("Line", properties)
         {
             IconName = "ic_mode_edit_white_48dp.png";
             ToolUsage = ToolUsage.Explicit;
+            ToolType = ToolType.Create;
+
+            var markers = new List<SvgMarker>();
+            var marker = new SvgMarker { ID = "arrowMarker" };
+            marker.Children.Add(new SvgPath
+            {
+                PathData = new SvgPathSegmentList(new SvgPathSegment[]
+                {
+                    new SvgLineSegment(PointF.Create(0, -4), PointF.Create(2, 4)),
+                    new SvgLineSegment(PointF.Create(0, 4), PointF.Create(8, 0)),
+                    new SvgLineSegment(PointF.Create(8, 0), PointF.Create(0, -4)),
+                    new SvgClosePathSegment()
+                })
+            });
+            markers.Add(marker);
+            marker = new SvgMarker { ID = "ellipseMarker" };
+            marker.Children.Add(new SvgEllipse
+            {
+                RadiusX = 8,
+                RadiusY = 8
+            });
+            markers.Add(marker);
+
+            Markers = markers;
         }
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
+            _canvas = ws;
+
             IsActive = false;
+
+            SelectedMarkerId = MarkerIds.FirstOrDefault();
 
             Commands = new List<IToolCommand>
             {
                 new ToolCommand(this, "Delete", o =>
                 {
+                    ws.SelectedElements.Remove(_currentLine);
                     _currentLine.Parent.Children.Remove(_currentLine);
                     _currentLine = null;
                     ws.FireToolCommandsChanged();
@@ -66,17 +159,22 @@ namespace Svg.Core.Tools
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
             if (!IsActive)
+            {
                 return Task.FromResult(true);
+            }
 
             var p = @event as PointerEvent;
             if (p?.PointerCount == 1 && (p.EventType == EventType.PointerUp || p.EventType == EventType.Cancel))
             {
                 if (_currentLine != null)
+                {
+                    ws.SelectedElements.Remove(_currentLine);
                     _currentLine = null;
-                else
-                    _currentLine =
-                        ws.GetElementsUnder<SvgLine>(ws.GetPointerRectangle(p.Pointer1Position),
-                            SelectionType.Intersect).FirstOrDefault();
+                }
+                _currentLine =
+                    ws.GetElementsUnder<SvgLine>(ws.GetPointerRectangle(p.Pointer1Position),
+                        SelectionType.Intersect).FirstOrDefault();
+                if (_currentLine != null) ws.SelectedElements.Add(_currentLine);
 
                 ws.FireToolCommandsChanged();
                 ws.FireInvalidateCanvas();
@@ -125,8 +223,6 @@ namespace Svg.Core.Tools
                     if (_currentLine == null)
                     {
 
-                        var markerId = "marker";
-
                         _currentLine = new SvgLine
                         {
                             Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
@@ -136,31 +232,8 @@ namespace Svg.Core.Tools
                             StartY = new SvgUnit(SvgUnitType.Pixel, relativeStartY),
                             EndX = new SvgUnit(SvgUnitType.Pixel, relativeEndX),
                             EndY = new SvgUnit(SvgUnitType.Pixel, relativeEndY),
-                            MarkerEnd = new Uri($"#{markerId}", UriKind.Relative)
+                            MarkerEnd = new Uri($"#{SelectedMarkerId}", UriKind.Relative)
                         };
-
-                        if (ws.Document.IdManager.GetElementById(markerId) == null)
-                        {
-                            var definitions = ws.Document.Children.OfType<SvgDefinitionList>().FirstOrDefault();
-                            if (definitions == null)
-                            {
-                                definitions = new SvgDefinitionList();
-                                ws.Document.Children.Add(definitions);
-                            }
-                            var marker = new SvgMarker { ID = markerId };
-                            definitions.Children.Add(marker);
-                            var markerPath = new SvgPath
-                            {
-                                PathData = new SvgPathSegmentList(new SvgPathSegment[]
-                                {
-                                    new SvgLineSegment(PointF.Create(0, -4), PointF.Create(2, 4)),
-                                    new SvgLineSegment(PointF.Create(0, 4), PointF.Create(8, 0)),
-                                    new SvgLineSegment(PointF.Create(8, 0), PointF.Create(0, -4)),
-                                    new SvgClosePathSegment()
-                                })
-                            };
-                            marker.Children.Add(markerPath);
-                        }
 
                         ws.Document.Children.Add(_currentLine);
                     }
@@ -174,6 +247,7 @@ namespace Svg.Core.Tools
 
             return Task.FromResult(true);
         }
+
 
         public override async Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {

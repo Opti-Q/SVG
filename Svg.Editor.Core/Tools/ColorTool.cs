@@ -16,20 +16,13 @@ namespace Svg.Core.Tools
     public class ColorTool : ToolBase
     {
         private static IColorInputService ColorInputServiceProxy => Engine.Resolve<IColorInputService>();
+        private readonly IDictionary<Type, Color> _selectedColors = new Dictionary<Type, Color>();
+        private Color _defaultSelectedColor = Color.Create(0, 0, 0);
+        private SvgDrawingCanvas _canvas;
 
         public ColorTool(string properties) : base("Color", properties)
         {
             IconName = "svg/ic_format_color_fill_white_48px.svg";
-            //Properties.Add("selectablecolors", new[]
-            //{
-            //    "#000000",
-            //    "#FF0000",
-            //    "#00FF00",
-            //    "#0000FF",
-            //    "#FFFF00",
-            //    "#FF00FF",
-            //    "#00FFFF"
-            //});
         }
 
         public string[] SelectableColors
@@ -43,15 +36,36 @@ namespace Svg.Core.Tools
             }
         }
 
-        public Color SelectedColor { get; set; }
+        public Color SelectedColor
+        {
+            get
+            {
+                Color selectedColor;
+                _selectedColors.TryGetValue(_canvas.ActiveTool?.GetType(), out selectedColor);
+                return selectedColor ?? _defaultSelectedColor;
+            }
+            set
+            {
+                if (_canvas.ActiveTool != null && _canvas.ActiveTool.ToolType == ToolType.Create)
+                {
+                    _selectedColors[_canvas.ActiveTool.GetType()] = value;
+                }
+                else
+                {
+                    _defaultSelectedColor = value;
+                }
+            }
+        }
 
         public string ColorIconNameModifier => StringifyColor(SelectedColor);
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
+            _canvas = ws;
+
             var selectableColors = SelectableColors;
 
-            SelectedColor = Color.Create(SelectableColors?.FirstOrDefault());
+            SelectedColor = Color.Create(selectableColors.FirstOrDefault());
 
             // cache icons
             var cachingService = Engine.TryResolve<ISvgCachingService>();

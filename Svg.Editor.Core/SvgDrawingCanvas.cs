@@ -11,6 +11,7 @@ using Svg.Core.Interfaces;
 using Svg.Core.Tools;
 using Svg.Core.Utils;
 using Svg.Interfaces;
+using Svg.Pathing;
 using Svg.Transforms;
 
 namespace Svg.Core
@@ -37,9 +38,15 @@ namespace Svg.Core
             _selectedElements.CollectionChanged += OnSelectionChanged;
 
             // this part should be in the designer, when the iCL is created
-            var colorToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object> {
-                    {"selectablecolors", new [] { "#000000","#FF0000","#00FF00","#0000FF","#FFFF00","#FF00FF","#00FFFF"}}
-                }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All});
+            var colorToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
+            {
+                { "selectablecolors", new [] { "#000000","#FF0000","#00FF00","#0000FF","#FFFF00","#FF00FF","#00FFFF" } }
+            }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+
+            var lineToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
+            {
+                { "markerids", new [] { "arrowMarker", "ellipseMarker" } }
+            }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 
             _tools = new ObservableCollection<ITool>
             {
@@ -50,7 +57,7 @@ namespace Svg.Core
                     new ZoomTool(),
                     new SelectionTool(),
                     new TextTool(),
-                    new LineTool(),
+                    new LineTool(lineToolProperties),
                     new ColorTool(colorToolProperties)
             };
             _tools.CollectionChanged += OnToolsChanged;

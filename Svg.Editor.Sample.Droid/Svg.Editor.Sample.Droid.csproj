@@ -411,7 +411,7 @@
     <AndroidAsset Include="Assets\svg\rect.svg" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\drawable-xhdpi\ic_line_style_white_48dp.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_line_style_white_48dp.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
