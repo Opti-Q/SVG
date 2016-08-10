@@ -274,7 +274,7 @@ namespace Svg.Core.Tools
         }
 
         /// <summary>
-        /// This command changes the color of selected items, or the global selected color, if no items are selected.
+        /// This command changes the line style of selected items, or the global line style, if no items are selected.
         /// </summary>
         private class ChangeLineStyleCommand : ToolCommand
         {
