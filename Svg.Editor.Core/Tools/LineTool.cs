@@ -31,7 +31,6 @@ namespace Svg.Core.Tools
 
         private IEnumerable<SvgMarker> Markers { get; set; }
 
-        public string DeleteIconName { get; set; } = "ic_delete_white_48dp.png";
         public string LineStyleIconName { get; set; } = "ic_line_style_white_48dp.png";
 
         public string[] MarkerIds
@@ -115,9 +114,8 @@ namespace Svg.Core.Tools
             {
                 PathData = new SvgPathSegmentList(new SvgPathSegment[]
                 {
-                    new SvgLineSegment(PointF.Create(0, -4), PointF.Create(2, 4)),
-                    new SvgLineSegment(PointF.Create(0, 4), PointF.Create(8, 0)),
-                    new SvgLineSegment(PointF.Create(8, 0), PointF.Create(0, -4)),
+                    new SvgLineSegment(PointF.Create(-8, -4), PointF.Create(-8, 4)),
+                    new SvgLineSegment(PointF.Create(-8, 4), PointF.Create(0, 0)),
                     new SvgClosePathSegment()
                 })
             });
@@ -143,23 +141,7 @@ namespace Svg.Core.Tools
 
             Commands = new List<IToolCommand>
             {
-                new ToolCommand(this, "Delete", o =>
-                {
-                    ws.SelectedElements.Remove(_currentLine);
-                    _currentLine.Parent.Children.Remove(_currentLine);
-                    _currentLine = null;
-                    ws.FireToolCommandsChanged();
-                    ws.FireInvalidateCanvas();
-                },
-                canExecute: o => _currentLine != null, iconName:DeleteIconName,
-                sortFunc: t => 500),
-
-                new ToolCommand(this, "Line style", o =>
-                {
-                    // TODO: open line style dialog
-                },
-                canExecute: o => _currentLine != null, iconName:LineStyleIconName,
-                sortFunc: t => 550)
+                new ChangeLineStyleCommand(ws, this, "Line style")
             };
 
             return Task.FromResult(true);
@@ -180,10 +162,13 @@ namespace Svg.Core.Tools
                     ws.SelectedElements.Remove(_currentLine);
                     _currentLine = null;
                 }
-                _currentLine =
-                    ws.GetElementsUnder<SvgLine>(ws.GetPointerRectangle(p.Pointer1Position),
-                        SelectionType.Intersect).FirstOrDefault();
-                if (_currentLine != null) ws.SelectedElements.Add(_currentLine);
+                else
+                {
+                    _currentLine =
+                        ws.GetElementsUnder<SvgLine>(ws.GetPointerRectangle(p.Pointer1Position),
+                            SelectionType.Intersect).FirstOrDefault();
+                    if (_currentLine != null) ws.SelectedElements.Add(_currentLine);
+                }
 
                 ws.FireToolCommandsChanged();
                 ws.FireInvalidateCanvas();
@@ -285,6 +270,41 @@ namespace Svg.Core.Tools
                 renderer.DrawCircle(offsetX + _currentLine.EndX - radius, offsetY + _currentLine.EndY - radius, radius, BluePen);
 
                 renderer.Graphics.Restore();
+            }
+        }
+
+        /// <summary>
+        /// This command changes the color of selected items, or the global selected color, if no items are selected.
+        /// </summary>
+        private class ChangeLineStyleCommand : ToolCommand
+        {
+            private readonly SvgDrawingCanvas _canvas;
+
+            public ChangeLineStyleCommand(SvgDrawingCanvas canvas, LineTool tool, string name)
+                : base(tool, name, o => { }, iconName: tool.LineStyleIconName, sortFunc: tc => 500)
+            {
+                _canvas = canvas;
+            }
+
+            public override async void Execute(object parameter)
+            {
+                var t = (LineTool)Tool;
+
+                // TODO: bring up line style chooser
+
+                if (_canvas.SelectedElements.Any())
+                {
+                    // change the color of all selected items
+                    foreach (var selectedElement in _canvas.SelectedElements)
+                    {
+                        // TODO: change style for selected element
+                    }
+                    _canvas.FireInvalidateCanvas();
+                    // don't change the global color when items are selected
+                    return;
+                }
+
+                // TODO: change global line style
             }
         }
     }

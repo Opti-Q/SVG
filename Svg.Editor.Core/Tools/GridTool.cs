@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
@@ -29,7 +30,7 @@ namespace Svg.Core.Tools
         private bool _isSnappingInProgress = false;
         private bool _areElementsMoved = false;
         private PointF _generalTranslation = null;
-        
+
 
         public GridTool(float angle = 30f, int stepSizeY = 20, bool isSnappingEnabled = true)
             : base("Grid")
@@ -58,7 +59,7 @@ namespace Svg.Core.Tools
                     XX-------------------------------+
                               b = ?
              * */
-            A = StepSizeY/2;
+            A = StepSizeY / 2;
             Beta = 180f - (Alpha + Gamma);
             B = (A * SinDegree(Beta)) / SinDegree(Alpha);
             C = (A * SinDegree(Gamma)) / SinDegree(Alpha);
@@ -90,7 +91,7 @@ namespace Svg.Core.Tools
 
             return Task.FromResult(true);
         }
-        
+
         public override Task OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
             if (!IsVisible)
@@ -133,7 +134,7 @@ namespace Svg.Core.Tools
         }
 
         #region GridLines
-        
+
         private float DrawGridLines(IRenderer renderer, SvgDrawingCanvas ws)
         {
             var canvasx = -ws.RelativeTranslate.X;
@@ -162,15 +163,15 @@ namespace Svg.Core.Tools
             }
             return canvasx;
         }
-        
+
         // line looks like this -> /
         private void DrawLineLeftToTop(IRenderer renderer, float y, float canvasX, double lineLength)
         {
             var startX = canvasX;
-            var startY = y ;
+            var startY = y;
             var stopX = ((float)(lineLength * Math.Cos(Alpha * (Math.PI / 180)))) + canvasX;
-            var stopY = (y - (float)(lineLength * Math.Sin(Alpha * (Math.PI / 180)))) ;
-            
+            var stopY = (y - (float)(lineLength * Math.Sin(Alpha * (Math.PI / 180))));
+
 
             renderer.DrawLine(
                 startX,
@@ -257,7 +258,7 @@ namespace Svg.Core.Tools
         private void OnChildAdded(object sender, ChildAddedEventArgs e)
         {
             Subscribe(e.NewChild);
-            SnapToGrid(e.NewChild);
+            SnapElementToGrid(e.NewChild);
         }
 
         private void OnChildRemoved(object sender, ChildRemovedEventArgs e)
@@ -271,22 +272,30 @@ namespace Svg.Core.Tools
             if (_isSnappingInProgress)
                 return;
 
-            if (!string.Equals(e.Attribute, "transform"))
+            if (string.Equals(e.Attribute, "transform"))
+            {
+                var element = (SvgElement)sender;
+
+                // if transform was changed and rotation has been added, skip snapping
+                var oldRotation = (e.OldValue as SvgTransformCollection)?.GetMatrix()?.RotationDegrees;
+                var newRotation = (e.Value as SvgTransformCollection)?.GetMatrix()?.RotationDegrees;
+                if (oldRotation != newRotation)
+                    return;
+
+                // otherwise we need to reevaluate the translate of that particular element
+                SnapElementToGrid(element);
+
                 return;
+            }
 
-            var element = (SvgElement)sender;
-
-            // if transform was changed and rotation has been added, skip snapping
-            var oldRotation = (e.OldValue as SvgTransformCollection)?.GetMatrix()?.RotationDegrees;
-            var newRotation = (e.Value as SvgTransformCollection)?.GetMatrix()?.RotationDegrees;
-            if (oldRotation != newRotation)
-                return;
-
-            // otherwise we need to reevaluate the translate of that particular element
-            SnapToGrid(element);
+            var line = sender as SvgLine;
+            if (line != null && Regex.IsMatch(e.Attribute, @"^[xy][12]$"))
+            {
+                SnapElementToGrid(line);
+            }
         }
 
-        private void SnapToGrid(SvgElement element)
+        private void SnapElementToGrid(SvgElement element)
         {
             if (!IsSnappingEnabled)
                 return;
@@ -299,58 +308,18 @@ namespace Svg.Core.Tools
             {
                 _isSnappingInProgress = true;
 
+                var line = element as SvgLine;
+                if (line != null)
+                {
+                    SnapLineToGrid(line);
+                    return;
+                }
+
                 // snap to grid:
                 // get absolute point
                 var b = ve.GetBoundingBox();
 
-                // determine next intersection of gridlines
-                // so we determine which point P1, P2 is the nearest one
-                // afterwards, see if the intermediary points (Px, Pz) are even closer 
-                // and in that case transition to those.
-
-                // so when we have the ankle points (P1, P2), determine if an intermediate point (Px, Pz) is even nearer
-                /*
-                                                        Px
-                                                                                                  Px = P1 + Vx
-                                                     XXX+XX
-                                                  XXXX  | XXXX                                    Px = P1 + (P1.x + b)
-                                                XXX     |    XXXX                                           (P1.y - a)
-                                              XX   B = ?|       XXX
-                                           XXX          |         XXX
-                                         XXX            |            XXX
-                         c = ?         XXX              |               XXX
-                                    XXX                 |                 XXX
-                                  XXX                   |  a = 20            XXX
-                                XXX                     |                      XXX
-                              XXX                       |                         XXX
-                            XXX                         |                           XX
-                          XXX                    G = 90 |                            XXX
-                        XXX    A = 27.3                 |                              XXX
-                    P1 XX---------------------------------------------------------------+    P2
-                       XXX           b = ?              |                             XX
-                          XX                            |                           XXX
-                           XXX                          |                         XXX
-                              XXX                       |                       XXX
-                                XXX                     |                     XXX
-                                  XXX                   |                  XXXX
-                                    XXX                 |                XXX
-                                      XXXX              |              XXX
-                                         XX             |            XXX
-                                          XXX           |          XXX
-                                            XXX         |       XXXX
-                                              XXX       |     XXX
-                                                XXX     |   XXX
-                                                  XXX  ++ XXX
-                                                     XXX XX
-
-                                                       Pz
-
-                 * 
-                 * */
                 float absoluteDeltaX, absoluteDeltaY;
-
-                var diffX = b.X % StepSizeX;
-                var diffY = b.Y % StepSizeY;
 
                 // for the first moved element, store the translation and translate all other elements by the same translation
                 // so if multiple elements are moved, their position relative to each other stays the same
@@ -361,39 +330,8 @@ namespace Svg.Core.Tools
                 }
                 else
                 {
-                    var deltaX = 0f;
-                    if (diffX > StepSizeX/2)
-                        deltaX = StepSizeX;
+                    SnapPointToGrid(b.X, b.Y, out absoluteDeltaX, out absoluteDeltaY);
 
-                    var deltaY = 0f;
-                    if (diffY > StepSizeY/2)
-                        deltaY = StepSizeY;
-
-
-                    // see if intermediary point is even nearer but also take Y coordinate into consideration!!
-                    if (diffX > StepSizeX/2)
-                    {
-                        // transition to intermediary point
-                        deltaX = StepSizeX/2;
-
-                        if (diffY > StepSizeY/2)
-                            deltaY = StepSizeY/2;
-                        else
-                            deltaY = -StepSizeY/2;
-
-                    }
-                    else if (diffX < -(StepSizeX/2))
-                    {
-                        deltaX = -(StepSizeX/2);
-
-                        if (diffY > StepSizeY / 2)
-                            deltaY = StepSizeY / 2;
-                        else
-                            deltaY = -StepSizeY / 2;
-                    }
-
-                    absoluteDeltaX = 0 - diffX + deltaX;
-                    absoluteDeltaY = 0 - diffY + deltaY;
                     if (_generalTranslation == null)
                     {
                         _generalTranslation = PointF.Create(absoluteDeltaX, absoluteDeltaY);
@@ -407,6 +345,107 @@ namespace Svg.Core.Tools
             {
                 _isSnappingInProgress = false;
             }
+        }
+
+        private void SnapLineToGrid(SvgLine line)
+        {
+            //line.SetTransformationMatrix(Matrix.Create());
+
+            float absoluteDeltaX;
+            float absoluteDeltaY;
+
+            SnapPointToGrid(line.StartX, line.StartY, out absoluteDeltaX, out absoluteDeltaY);
+
+            line.StartX += absoluteDeltaX;
+            line.StartY += absoluteDeltaY;
+
+            SnapPointToGrid(line.EndX, line.EndY, out absoluteDeltaX, out absoluteDeltaY);
+
+            line.EndX += absoluteDeltaX;
+            line.EndY += absoluteDeltaY;
+        }
+
+        private void SnapPointToGrid(float x, float y, out float absoluteDeltaX, out float absoluteDeltaY)
+        {
+            // determine next intersection of gridlines
+            // so we determine which point P1, P2 is the nearest one
+            // afterwards, see if the intermediary points (Px, Pz) are even closer 
+            // and in that case transition to those.
+
+            // so when we have the ankle points (P1, P2), determine if an intermediate point (Px, Pz) is even nearer
+            /*
+                                                    Px
+                                                                                              Px = P1 + Vx
+                                                 XXX+XX
+                                              XXXX  | XXXX                                    Px = P1 + (P1.x + b)
+                                            XXX     |    XXXX                                           (P1.y - a)
+                                          XX   B = ?|       XXX
+                                       XXX          |         XXX
+                                     XXX            |            XXX
+                     c = ?         XXX              |               XXX
+                                XXX                 |                 XXX
+                              XXX                   |  a = 20            XXX
+                            XXX                     |                      XXX
+                          XXX                       |                         XXX
+                        XXX                         |                           XX
+                      XXX                    G = 90 |                            XXX
+                    XXX    A = 27.3                 |                              XXX
+                P1 XX---------------------------------------------------------------+    P2
+                   XXX           b = ?              |                             XX
+                      XX                            |                           XXX
+                       XXX                          |                         XXX
+                          XXX                       |                       XXX
+                            XXX                     |                     XXX
+                              XXX                   |                  XXXX
+                                XXX                 |                XXX
+                                  XXXX              |              XXX
+                                     XX             |            XXX
+                                      XXX           |          XXX
+                                        XXX         |       XXXX
+                                          XXX       |     XXX
+                                            XXX     |   XXX
+                                              XXX  ++ XXX
+                                                 XXX XX
+
+                                                   Pz
+
+             * 
+             * */
+
+            var diffX = x % StepSizeX;
+            var diffY = y % StepSizeY;
+
+            var deltaX = 0f;
+            //if (diffX > StepSizeX / 2)
+            //    deltaX = StepSizeX;
+
+            var deltaY = 0f;
+            if (diffY > StepSizeY / 2)
+                deltaY = StepSizeY;
+
+            // see if intermediary point is even nearer but also take Y coordinate into consideration!!
+            if (diffX > StepSizeX / 2)
+            {
+                // transition to intermediary point
+                deltaX = StepSizeX / 2;
+
+                if (diffY >= StepSizeY / 2)
+                    deltaY = StepSizeY / 2;
+                else
+                    deltaY = -StepSizeY / 2;
+            }
+            else if (diffX < -(StepSizeX / 2))
+            {
+                deltaX = -(StepSizeX / 2);
+
+                if (diffY >= StepSizeY / 2)
+                    deltaY = StepSizeY / 2;
+                else
+                    deltaY = -StepSizeY / 2;
+            }
+
+            absoluteDeltaX = deltaX - diffX;
+            absoluteDeltaY = deltaY - diffY;
         }
 
         #endregion
@@ -437,7 +476,7 @@ namespace Svg.Core.Tools
             private readonly SvgDrawingCanvas _canvas;
 
             public ToggleGridCommand(SvgDrawingCanvas canvas, GridTool tool, string name)
-                : base(tool, name, (o) => { }, iconName: tool.IconGridOff, sortFunc:(tc) => 2000)
+                : base(tool, name, (o) => { }, iconName: tool.IconGridOff, sortFunc: (tc) => 2000)
             {
                 _canvas = canvas;
             }
