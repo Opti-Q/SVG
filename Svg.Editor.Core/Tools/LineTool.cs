@@ -62,7 +62,16 @@ namespace Svg.Core.Tools
             set
             {
                 _isActive = value;
-                if (_isActive || _currentLine == null) return;
+                if (_isActive)
+                {
+                    _currentLine = _canvas.SelectedElements.OfType<SvgLine>().FirstOrDefault();
+                    _canvas.SelectedElements.Clear();
+                    if (_currentLine == null) return;
+                    _canvas.SelectedElements.Add(_currentLine);
+                    _canvas.FireInvalidateCanvas();
+                    return;
+                }
+                if (_currentLine == null) return;
                 _canvas.SelectedElements.Remove(_currentLine);
                 _currentLine = null;
                 _canvas.FireInvalidateCanvas();
@@ -215,10 +224,10 @@ namespace Svg.Core.Tools
                 {
 
                     var z = ws.ZoomFactor;
-                    var relativeStartX = CanvasCalculationUtil.GetRelativeDimension(ws.RelativeTranslate.X, e.Pointer1Down.X, z);
-                    var relativeStartY = CanvasCalculationUtil.GetRelativeDimension(ws.RelativeTranslate.Y, e.Pointer1Down.Y, z);
-                    var relativeEndX = CanvasCalculationUtil.GetRelativeDimension(ws.RelativeTranslate.X, e.Pointer1Position.X, z);
-                    var relativeEndY = CanvasCalculationUtil.GetRelativeDimension(ws.RelativeTranslate.Y, e.Pointer1Position.Y, z);
+                    var relativeStartX = CanvasCalculationUtil.GetCanvasDimension(ws.RelativeTranslate.X, e.Pointer1Down.X, z);
+                    var relativeStartY = CanvasCalculationUtil.GetCanvasDimension(ws.RelativeTranslate.Y, e.Pointer1Down.Y, z);
+                    var relativeEndX = CanvasCalculationUtil.GetCanvasDimension(ws.RelativeTranslate.X, e.Pointer1Position.X, z);
+                    var relativeEndY = CanvasCalculationUtil.GetCanvasDimension(ws.RelativeTranslate.Y, e.Pointer1Position.Y, z);
 
                     if (_currentLine == null)
                     {
@@ -238,8 +247,16 @@ namespace Svg.Core.Tools
                         ws.Document.Children.Add(_currentLine);
                     }
 
-                    _currentLine.EndX = new SvgUnit(SvgUnitType.Pixel, relativeEndX);
-                    _currentLine.EndY = new SvgUnit(SvgUnitType.Pixel, relativeEndY);
+                    var offsetX = 0.0f;
+                    var offsetY = 0.0f;
+                    foreach (var transform in _currentLine.Transforms)
+                    {
+                        offsetX += transform.Matrix.OffsetX;
+                        offsetY += transform.Matrix.OffsetY;
+                    }
+
+                    _currentLine.EndX = new SvgUnit(SvgUnitType.Pixel, relativeEndX - offsetX);
+                    _currentLine.EndY = new SvgUnit(SvgUnitType.Pixel, relativeEndY - offsetY);
 
                     ws.FireInvalidateCanvas();
                 }
@@ -258,7 +275,14 @@ namespace Svg.Core.Tools
                 renderer.Graphics.Save();
 
                 const int radius = 16;
-                renderer.DrawCircle(_currentLine.EndX - radius, _currentLine.EndY - radius, radius, BluePen);
+                var offsetX = 0.0f;
+                var offsetY = 0.0f;
+                foreach (var transform in _currentLine.Transforms)
+                {
+                    offsetX += transform.Matrix.OffsetX;
+                    offsetY += transform.Matrix.OffsetY;
+                }
+                renderer.DrawCircle(offsetX + _currentLine.EndX - radius, offsetY + _currentLine.EndY - radius, radius, BluePen);
 
                 renderer.Graphics.Restore();
             }

@@ -2,10 +2,10 @@
 {
     public static class CanvasCalculationUtil
     {
-        public static float GetRelativeDimension(float canvasDimension, float targetDimension, float zoomFactor = 1.0f)
+        public static float GetCanvasDimension(float canvasDimension, float targetDimension, float zoomFactor = 1.0f)
         {
             var relativeDimension = targetDimension / zoomFactor;
-            return -canvasDimension + relativeDimension;
+            return relativeDimension - canvasDimension;
         }
     }
 }

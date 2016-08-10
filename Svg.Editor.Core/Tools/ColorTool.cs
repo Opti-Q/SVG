@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,8 +15,8 @@ namespace Svg.Core.Tools
     public class ColorTool : ToolBase
     {
         private static IColorInputService ColorInputServiceProxy => Engine.Resolve<IColorInputService>();
-        private readonly IDictionary<Type, Color> _selectedColors = new Dictionary<Type, Color>();
-        private Color _defaultSelectedColor = Color.Create(0, 0, 0);
+        //private readonly IDictionary<Type, Color> _selectedColors = new Dictionary<Type, Color>();
+        private Color _defaultSelectedColor;
         private SvgDrawingCanvas _canvas;
 
         public ColorTool(string properties) : base("Color", properties)
@@ -36,25 +35,31 @@ namespace Svg.Core.Tools
             }
         }
 
+        //public Color SelectedColor
+        //{
+        //    get
+        //    {
+        //        Color selectedColor;
+        //        _selectedColors.TryGetValue(_canvas.ActiveTool?.GetType(), out selectedColor);
+        //        return selectedColor ?? _defaultSelectedColor;
+        //    }
+        //    set
+        //    {
+        //        if (_canvas.ActiveTool != null && _canvas.ActiveTool.ToolType == ToolType.Create)
+        //        {
+        //            _selectedColors[_canvas.ActiveTool.GetType()] = value;
+        //        }
+        //        else
+        //        {
+        //            _defaultSelectedColor = value;
+        //        }
+        //    }
+        //}
+
         public Color SelectedColor
         {
-            get
-            {
-                Color selectedColor;
-                _selectedColors.TryGetValue(_canvas.ActiveTool?.GetType(), out selectedColor);
-                return selectedColor ?? _defaultSelectedColor;
-            }
-            set
-            {
-                if (_canvas.ActiveTool != null && _canvas.ActiveTool.ToolType == ToolType.Create)
-                {
-                    _selectedColors[_canvas.ActiveTool.GetType()] = value;
-                }
-                else
-                {
-                    _defaultSelectedColor = value;
-                }
-            }
+            get { return _defaultSelectedColor; }
+            set { _defaultSelectedColor = value; }
         }
 
         public string ColorIconNameModifier => StringifyColor(SelectedColor);

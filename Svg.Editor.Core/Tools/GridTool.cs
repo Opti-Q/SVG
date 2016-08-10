@@ -66,7 +66,7 @@ namespace Svg.Core.Tools
         }
 
         public string IconGridOn { get; set; } = "ic_grid_on_white_48dp.png";
-        public string IconGridOFf { get; set; } = "ic_grid_off_white_48dp.png";
+        public string IconGridOff { get; set; } = "ic_grid_off_white_48dp.png";
         public bool IsSnappingEnabled { get; set; }
 
         public bool IsVisible { get; set; } = true;
@@ -81,7 +81,8 @@ namespace Svg.Core.Tools
             // add tool commands
             Commands = new List<IToolCommand>
             {
-                new ToggleGridCommand(ws, this, "Toggle Grid")
+                new ToggleGridCommand(ws, this, "Toggle Grid"),
+                new ToggleSnappingCommand(ws, this, "Toggle Snapping")
             };
 
             // initialize with callbacks
@@ -436,7 +437,7 @@ namespace Svg.Core.Tools
             private readonly SvgDrawingCanvas _canvas;
 
             public ToggleGridCommand(SvgDrawingCanvas canvas, GridTool tool, string name)
-                : base(tool, name, (o) => { }, iconName: tool.IconGridOFf, sortFunc:(tc) => 2000)
+                : base(tool, name, (o) => { }, iconName: tool.IconGridOff, sortFunc:(tc) => 2000)
             {
                 _canvas = canvas;
             }
@@ -445,8 +446,27 @@ namespace Svg.Core.Tools
             {
                 var t = (GridTool)Tool;
                 t.IsVisible = !t.IsVisible;
-                IconName = t.IsVisible ? t.IconGridOFf : t.IconGridOn;
+                IconName = t.IsVisible ? t.IconGridOff : t.IconGridOn;
                 _canvas.FireInvalidateCanvas();
+                _canvas.FireToolCommandsChanged();
+            }
+        }
+
+        private class ToggleSnappingCommand : ToolCommand
+        {
+            private readonly SvgDrawingCanvas _canvas;
+
+            public ToggleSnappingCommand(SvgDrawingCanvas canvas, GridTool tool, string name)
+                : base(tool, name, (o) => { }, iconName: tool.IconGridOff, sortFunc: (tc) => 2000)
+            {
+                _canvas = canvas;
+            }
+
+            public override void Execute(object parameter)
+            {
+                var t = (GridTool)Tool;
+                t.IsSnappingEnabled = !t.IsSnappingEnabled;
+                IconName = t.IsSnappingEnabled ? t.IconGridOff : t.IconGridOn;
                 _canvas.FireToolCommandsChanged();
             }
         }
