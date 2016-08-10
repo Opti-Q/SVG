@@ -294,13 +294,13 @@ namespace Svg.Core.Tools
 
                 if (_canvas.SelectedElements.Any())
                 {
-                    // change the color of all selected items
+                    // change the line style of all selected items
                     foreach (var selectedElement in _canvas.SelectedElements)
                     {
                         // TODO: change style for selected element
                     }
                     _canvas.FireInvalidateCanvas();
-                    // don't change the global color when items are selected
+                    // don't change the global line style when items are selected
                     return;
                 }
 
