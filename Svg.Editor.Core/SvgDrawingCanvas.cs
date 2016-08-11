@@ -336,9 +336,11 @@ namespace Svg.Core
 
             MergeSvgDefs(Document, element.OwnerDocument);
 
-            SvgTranslate tl = new SvgTranslate(centerPosX, centerPosY);
-            element.Transforms.Add(tl);
-            element.ID = $"{element.ElementName}_{Guid.NewGuid():N}";
+            //SvgTranslate tl = new SvgTranslate(centerPosX, centerPosY);
+            //element.Transforms.Add(tl);
+            //element.ID = $"{element.ElementName}_{Guid.NewGuid():N}";
+            var m = element.CreateTranslation(centerPosX, centerPosY);
+            element.SetTransformationMatrix(m);
 
             Document.Children.Add(element);
 
