@@ -79,6 +79,16 @@ namespace Svg
             set { this.Attributes["markerUnits"] = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the width of the stroke (if the <see cref="Stroke"/> property has a valid value specified.
+        /// </summary>
+        [SvgAttribute("stroke-width", true)]
+        public override SvgUnit StrokeWidth
+        {
+            get { return (this.Attributes["stroke-width"] == null) ? new SvgUnit(0f) : (SvgUnit)this.Attributes["stroke-width"]; }
+            set { this.Attributes["stroke-width"] = value; }
+        }
+
         public SvgMarker()
         {
             MarkerUnits = SvgMarkerUnits.StrokeWidth;
