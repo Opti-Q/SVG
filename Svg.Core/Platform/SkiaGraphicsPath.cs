@@ -11,8 +11,8 @@ namespace Svg.Platform
         private FillMode _fillmode;
         private readonly List<PointF> _points = new List<PointF>();
         private readonly List<byte> _pathTypes = new List<byte>();
+        private readonly List<TextInfo> _texts = new List<TextInfo>();
         private SKPath _path;
-        private List<TextInfo> _texts;
         private RectangleF _bounds;
 
         public SkiaGraphicsPath()
@@ -115,7 +115,7 @@ namespace Svg.Platform
 
         internal List<TextInfo> Texts
         {
-            get { return _texts ?? (_texts = new List<TextInfo>()); }
+            get { return _texts; }
         }
 
         public void AddEllipse(float x, float y, float width, float height)
