@@ -64,8 +64,8 @@
 
       <rect
         transform="matrix(-0.5, 0.8, 0.8, -0.5, 0, 0)"
-         y="0"
-         x="0"
+         y="100"
+         x="200"
          height="100"
          width="50"
          id="rect4420-3"
