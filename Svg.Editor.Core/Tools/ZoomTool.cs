@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Svg.Core.Events;
+using Svg.Core.Utils;
 
 namespace Svg.Core.Tools
 {
@@ -65,6 +66,8 @@ namespace Svg.Core.Tools
             if (se.Status == ScaleStatus.Scaling)
             {
                 // Don't let the object get too small or too large.
+                ws.ZoomFocusX = ws.GetCanvasX(se.FocusX);
+                ws.ZoomFocusY = ws.GetCanvasY(se.FocusY);
                 ws.ZoomFactor = GetBoundedZoomFactor(se, ws);
                 ws.FireInvalidateCanvas();
             }

@@ -27,7 +27,7 @@ namespace Svg.Editor.Tests
             await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, pt1, pt1, pt1, 1));
 
             // Assert
-            Assert.False(Canvas.Document.Descendants().Any());
+            Assert.False(Canvas.Document.Descendants().OfType<SvgLine>().Any());
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace Svg.Editor.Tests
             await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, end, end, end, 1));
 
             // Assert
-            Assert.False(Canvas.Document.Descendants().Any());
+            Assert.False(Canvas.Document.Descendants().OfType<SvgLine>().Any());
         }
 
         [Test]

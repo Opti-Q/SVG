@@ -25,10 +25,12 @@ namespace Svg.Droid.Editor.Services
             builder.SetTitle(title);
 
             // Set up the input
-            var input = new EditText(_context);
-            input.Text = textValue;
-            input.InputType = InputTypes.TextFlagMultiLine;
-            input.ImeOptions = ImeAction.None;
+            var input = new EditText(_context)
+            {
+                Text = textValue,
+                InputType = InputTypes.TextFlagMultiLine,
+                ImeOptions = ImeAction.None
+            };
             input.SetSingleLine(false);
             builder.SetView(input);
 

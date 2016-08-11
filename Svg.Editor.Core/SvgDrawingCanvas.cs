@@ -38,6 +38,13 @@ namespace Svg.Core
             _selectedElements.CollectionChanged += OnSelectionChanged;
 
             // this part should be in the designer, when the iCL is created
+            var gridToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
+            {
+                { "angle", 30.0f },
+                { "stepsizey", 20.0f },
+                { "issnappingenabled", true }
+            }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+
             var colorToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
             {
                 { "selectablecolors", new [] { "#000000","#FF0000","#00FF00","#0000FF","#FFFF00","#FF00FF","#00FFFF" } }
@@ -45,12 +52,14 @@ namespace Svg.Core
 
             var lineToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
             {
-                { "markerids", new [] { "arrowMarker", "ellipseMarker" } }
+                { "markerstartids", new [] { "none", "arrowMarkerStart", "ellipseMarker" } },
+                { "markerendids", new [] { "none", "arrowMarkerEnd", "ellipseMarker" } },
+                { "linestyles", new [] { "normal", "dashed" } }
             }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 
             _tools = new ObservableCollection<ITool>
             {
-                    new GridTool(), // must be before movetool!
+                    new GridTool(gridToolProperties), // must be before movetool!
                     new MoveTool(), // must be before pantool as it decides whether or not it is active based on selection
                     new PanTool(),
                     new RotationTool(),
@@ -137,6 +146,10 @@ namespace Svg.Core
 
         public float ZoomFactor { get; set; }
 
+        public float ZoomFocusX { get; set; }
+
+        public float ZoomFocusY { get; set; }
+
         public int ScreenWidth { get; set; }
 
         public int ScreenHeight { get; set; }
@@ -213,7 +226,8 @@ namespace Svg.Core
 
             // apply global panning and zooming
             renderer.Translate(Translate.X, Translate.Y);
-            renderer.Scale(ZoomFactor, 0f, 0f);
+            renderer.Scale(ZoomFactor, ZoomFocusX, ZoomFocusY);
+            ZoomFocusX = ZoomFocusY = 0;
 
             // draw default background
             renderer.FillEntireCanvasWithColor(Engine.Factory.Colors.White);
@@ -396,6 +410,26 @@ namespace Svg.Core
             m1.Translate(Translate.X, Translate.Y);
             m1.Scale(ZoomFactor, ZoomFactor);
             return m1;
+        }
+
+        public float GetScreenX(float canvasX)
+        {
+            return canvasX / ZoomFactor + Translate.X / ZoomFactor;
+        }
+
+        public float GetScreenY(float canvasY)
+        {
+            return canvasY / ZoomFactor + Translate.Y / ZoomFactor;
+        }
+
+        public float GetCanvasX(float screenX)
+        {
+            return screenX / ZoomFactor - Translate.X / ZoomFactor;
+        }
+
+        public float GetCanvasY(float screenY)
+        {
+            return screenY / ZoomFactor - Translate.Y / ZoomFactor;
         }
 
         /// <summary>

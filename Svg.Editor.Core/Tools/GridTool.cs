@@ -12,33 +12,46 @@ namespace Svg.Core.Tools
 {
     public class GridTool : ToolBase
     {
-        private SvgDrawingCanvas _canvas;
-        private float StepSizeY = 40;
-        private double A;
-        private double B;
-        private double C;
-        private float StepSizeX;
-        private double Alpha;
-        private double Gamma = 90f;
-        private double Beta;
+        private const double Gamma = 90f;
+
+        private float StepSizeY
+        {
+            get
+            {
+                object stepSizeY;
+                if (!Properties.TryGetValue("stepsizey", out stepSizeY))
+                    stepSizeY = 20.0f;
+                return Convert.ToSingle(stepSizeY);
+            }
+        }
+
+        private float StepSizeX { get; }
+
+        private double Alpha
+        {
+            get
+            {
+                object alpha;
+                if (!Properties.TryGetValue("alpha", out alpha))
+                    alpha = 30.0f;
+                return Convert.ToSingle(alpha);
+            }
+        }
+
         private Pen _pen;
 
         private Pen _pen2;
         private Brush _brush;
         private Brush _brush2;
 
-        private bool _isSnappingInProgress = false;
-        private bool _areElementsMoved = false;
-        private PointF _generalTranslation = null;
+        private bool _isSnappingInProgress;
+        private bool _areElementsMoved;
+        private PointF _generalTranslation;
 
 
-        public GridTool(float angle = 30f, int stepSizeY = 20, bool isSnappingEnabled = true)
-            : base("Grid")
+        public GridTool(string properties)
+            : base("Grid", properties)
         {
-            IsSnappingEnabled = isSnappingEnabled;
-            StepSizeY = stepSizeY;
-            Alpha = angle;
-
             // using triangle calculation to determine the x and y steps based on stepsize (y) and angle (alpha)
             // http://www.arndt-bruenner.de/mathe/scripts/Dreiecksberechnung.htm
             /*
@@ -59,26 +72,36 @@ namespace Svg.Core.Tools
                     XX-------------------------------+
                               b = ?
              * */
-            A = StepSizeY / 2;
-            Beta = 180f - (Alpha + Gamma);
-            B = (A * SinDegree(Beta)) / SinDegree(Alpha);
-            C = (A * SinDegree(Gamma)) / SinDegree(Alpha);
-            StepSizeX = (float)B * 2;
+            var a = StepSizeY / 2;
+            var beta = 180f - (Alpha + Gamma);
+            var b = a * SinDegree(beta) / SinDegree(Alpha);
+            //var c = a * SinDegree(Gamma) / SinDegree(Alpha);
+            StepSizeX = (float)b * 2;
         }
 
         public string IconGridOn { get; set; } = "ic_grid_on_white_48dp.png";
         public string IconGridOff { get; set; } = "ic_grid_off_white_48dp.png";
-        public bool IsSnappingEnabled { get; set; }
+
+        public bool IsSnappingEnabled
+        {
+            get
+            {
+                object isSnappingEnabled;
+                if (!Properties.TryGetValue("issnappingenabled", out isSnappingEnabled))
+                    isSnappingEnabled = true;
+                return (bool)isSnappingEnabled;
+            }
+            set { Properties["issnappingenabled"] = value; }
+        }
 
         public bool IsVisible { get; set; } = true;
-        private Brush Brush => _brush ?? (_brush = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 210, 210, 210)));
-        private Brush Brush2 => _brush2 ?? (_brush2 = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 255, 0, 0)));
-        private Pen Pen => _pen ?? (_pen = Svg.Engine.Factory.CreatePen(Brush, 1));
-        private Pen Pen2 => _pen2 ?? (_pen2 = Svg.Engine.Factory.CreatePen(Brush2, 2));
+        private Brush Brush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 210, 210, 210)));
+        private Brush Brush2 => _brush2 ?? (_brush2 = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 255, 0, 0)));
+        private Pen Pen => _pen ?? (_pen = Engine.Factory.CreatePen(Brush, 1));
+        private Pen Pen2 => _pen2 ?? (_pen2 = Engine.Factory.CreatePen(Brush2, 2));
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
-            _canvas = ws;
             // add tool commands
             Commands = new List<IToolCommand>
             {
@@ -87,7 +110,7 @@ namespace Svg.Core.Tools
             };
 
             // initialize with callbacks
-            this.WatchDocument(ws.Document);
+            WatchDocument(ws.Document);
 
             return Task.FromResult(true);
         }
@@ -95,7 +118,7 @@ namespace Svg.Core.Tools
         public override Task OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
             if (!IsVisible)
-                return Task.FromResult(true); ;
+                return Task.FromResult(true);
 
             // draw gridlines
             DrawGridLines(renderer, ws);
@@ -135,7 +158,7 @@ namespace Svg.Core.Tools
 
         #region GridLines
 
-        private float DrawGridLines(IRenderer renderer, SvgDrawingCanvas ws)
+        private void DrawGridLines(IRenderer renderer, SvgDrawingCanvas ws)
         {
             var canvasx = -ws.RelativeTranslate.X;
             var canvasy = -ws.RelativeTranslate.Y;
@@ -161,7 +184,6 @@ namespace Svg.Core.Tools
             {
                 DrawLineLeftToTop(renderer, i, x, lineLength); /* / */
             }
-            return canvasx;
         }
 
         // line looks like this -> /
@@ -291,7 +313,9 @@ namespace Svg.Core.Tools
             var line = sender as SvgLine;
             if (line != null && Regex.IsMatch(e.Attribute, @"^[xy][12]$"))
             {
-                SnapElementToGrid(line);
+                _isSnappingInProgress = true;
+                SnapLineToGrid(line);
+                _isSnappingInProgress = false;
             }
         }
 
@@ -307,13 +331,6 @@ namespace Svg.Core.Tools
             try
             {
                 _isSnappingInProgress = true;
-
-                var line = element as SvgLine;
-                if (line != null)
-                {
-                    SnapLineToGrid(line);
-                    return;
-                }
 
                 // snap to grid:
                 // get absolute point
@@ -340,6 +357,20 @@ namespace Svg.Core.Tools
 
                 var mx = ve.CreateTranslation(absoluteDeltaX, absoluteDeltaY);
                 ve.SetTransformationMatrix(mx);
+
+                var line = element as SvgLine;
+                if (line != null)
+                {
+                    var points = new[] { PointF.Create(0, 0) };
+                    line.Transforms.GetMatrix().TransformPoints(points);
+                    var transformedX = points[0].X;
+                    var transformedY = points[0].Y;
+                    line.StartX += transformedX;
+                    line.StartY += transformedY;
+                    line.EndX += transformedX;
+                    line.EndY += transformedY;
+                    line.SetTransformationMatrix(Matrix.Create());
+                }
             }
             finally
             {
@@ -349,8 +380,6 @@ namespace Svg.Core.Tools
 
         private void SnapLineToGrid(SvgLine line)
         {
-            //line.SetTransformationMatrix(Matrix.Create());
-
             float absoluteDeltaX;
             float absoluteDeltaY;
 
@@ -359,7 +388,8 @@ namespace Svg.Core.Tools
             line.StartX += absoluteDeltaX;
             line.StartY += absoluteDeltaY;
 
-            SnapPointToGrid(line.EndX, line.EndY, out absoluteDeltaX, out absoluteDeltaY);
+            if (Math.Abs(absoluteDeltaX) < StepSizeX && Math.Abs(absoluteDeltaY) < StepSizeY)
+                SnapPointToGrid(line.EndX, line.EndY, out absoluteDeltaX, out absoluteDeltaY);
 
             line.EndX += absoluteDeltaX;
             line.EndY += absoluteDeltaY;

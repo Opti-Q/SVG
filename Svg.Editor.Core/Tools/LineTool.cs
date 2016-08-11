@@ -12,12 +12,14 @@ namespace Svg.Core.Tools
 {
     public interface ILineOptionsInputService
     {
-        Task<int> GetUserInput(string title, IEnumerable<string> options);
+        Task<int[]> GetUserInput(string title, IEnumerable<string> markerStartOptions, int markerStartSelected, IEnumerable<string> lineStyleOptions, int dashSelected, IEnumerable<string> markerEndOptions, int markerEndSelected);
     }
 
     public class LineTool : ToolBase
     {
         private const double MIN_MOVED_DISTANCE = 30.0;
+
+        private static ILineOptionsInputService LineOptionsInputServiceProxy => Engine.Resolve<ILineOptionsInputService>();
 
         private double _movedDistance;
         private SvgLine _currentLine;
@@ -31,15 +33,31 @@ namespace Svg.Core.Tools
 
         private IEnumerable<SvgMarker> Markers { get; set; }
 
+        private static Uri CreateUriFromId(string markerEndId, string exception = "none")
+        {
+            return markerEndId != exception ? new Uri($"#{markerEndId}", UriKind.Relative) : null;
+        }
+
         public string LineStyleIconName { get; set; } = "ic_line_style_white_48dp.png";
 
-        public string[] MarkerIds
+        public string[] MarkerStartIds
         {
             get
             {
                 object markerIds;
-                Properties.TryGetValue("markerids", out markerIds);
-                if (markerIds == null) markerIds = Enumerable.Empty<string>();
+                if (!Properties.TryGetValue("markerstartids", out markerIds))
+                    markerIds = Enumerable.Empty<string>();
+                return (string[])markerIds;
+            }
+        }
+
+        public string[] MarkerEndIds
+        {
+            get
+            {
+                object markerIds;
+                if (!Properties.TryGetValue("markerendids", out markerIds))
+                    markerIds = Enumerable.Empty<string>();
                 return (string[])markerIds;
             }
         }
@@ -49,8 +67,8 @@ namespace Svg.Core.Tools
             get
             {
                 object lineStyles;
-                Properties.TryGetValue("linestyles", out lineStyles);
-                if (lineStyles == null) lineStyles = Enumerable.Empty<string>();
+                if (!Properties.TryGetValue("linestyles", out lineStyles))
+                    lineStyles = Enumerable.Empty<string>();
                 return (string[])lineStyles;
             }
         }
@@ -100,16 +118,31 @@ namespace Svg.Core.Tools
             }
         }
 
-        public string SelectedMarkerId { get; set; }
+        public string SelectedMarkerStartId { get; set; }
+
+        public string SelectedMarkerEndId { get; set; }
+
+        public string SelectedLineStyle { get; set; }
 
         public LineTool(string properties) : base("Line", properties)
         {
             IconName = "ic_mode_edit_white_48dp.png";
             ToolUsage = ToolUsage.Explicit;
-            ToolType = ToolType.Create;
+            //ToolType = ToolType.Create;
 
             var markers = new List<SvgMarker>();
-            var marker = new SvgMarker { ID = "arrowMarker" };
+            var marker = new SvgMarker { ID = "arrowMarkerStart" };
+            marker.Children.Add(new SvgPath
+            {
+                PathData = new SvgPathSegmentList(new SvgPathSegment[]
+                {
+                    new SvgLineSegment(PointF.Create(0, -4), PointF.Create(0, 4)),
+                    new SvgLineSegment(PointF.Create(0, 4), PointF.Create(-8, 0)),
+                    new SvgClosePathSegment()
+                })
+            });
+            markers.Add(marker);
+            marker = new SvgMarker { ID = "arrowMarkerEnd" };
             marker.Children.Add(new SvgPath
             {
                 PathData = new SvgPathSegmentList(new SvgPathSegment[]
@@ -137,7 +170,9 @@ namespace Svg.Core.Tools
 
             IsActive = false;
 
-            SelectedMarkerId = MarkerIds.FirstOrDefault();
+            SelectedMarkerStartId = MarkerStartIds.FirstOrDefault();
+            SelectedMarkerEndId = MarkerEndIds.FirstOrDefault();
+            SelectedLineStyle = LineStyles.FirstOrDefault();
 
             Commands = new List<IToolCommand>
             {
@@ -208,11 +243,10 @@ namespace Svg.Core.Tools
                 if (_movedDistance >= MIN_MOVED_DISTANCE)
                 {
 
-                    var z = ws.ZoomFactor;
-                    var relativeStartX = CanvasCalculationUtil.GetCanvasDimension(ws.RelativeTranslate.X, e.Pointer1Down.X, z);
-                    var relativeStartY = CanvasCalculationUtil.GetCanvasDimension(ws.RelativeTranslate.Y, e.Pointer1Down.Y, z);
-                    var relativeEndX = CanvasCalculationUtil.GetCanvasDimension(ws.RelativeTranslate.X, e.Pointer1Position.X, z);
-                    var relativeEndY = CanvasCalculationUtil.GetCanvasDimension(ws.RelativeTranslate.Y, e.Pointer1Position.Y, z);
+                    var relativeStartX = ws.GetCanvasX(e.Pointer1Down.X);
+                    var relativeStartY = ws.GetCanvasY(e.Pointer1Down.Y);
+                    var relativeEndX = ws.GetCanvasX(e.Pointer1Position.X);
+                    var relativeEndY = ws.GetCanvasY(e.Pointer1Position.Y);
 
                     if (_currentLine == null)
                     {
@@ -226,7 +260,8 @@ namespace Svg.Core.Tools
                             StartY = new SvgUnit(SvgUnitType.Pixel, relativeStartY),
                             EndX = new SvgUnit(SvgUnitType.Pixel, relativeEndX),
                             EndY = new SvgUnit(SvgUnitType.Pixel, relativeEndY),
-                            MarkerEnd = new Uri($"#{SelectedMarkerId}", UriKind.Relative)
+                            MarkerStart = CreateUriFromId(SelectedMarkerStartId),
+                            MarkerEnd = CreateUriFromId(SelectedMarkerEndId)
                         };
 
                         ws.Document.Children.Add(_currentLine);
@@ -290,21 +325,51 @@ namespace Svg.Core.Tools
             {
                 var t = (LineTool)Tool;
 
-                // TODO: bring up line style chooser
+                var selectedLines = _canvas.SelectedElements.OfType<SvgLine>().ToArray();
 
-                if (_canvas.SelectedElements.Any())
+                var markerStartId = selectedLines.Any() ? selectedLines.All(x => selectedLines.First().MarkerStart == x.MarkerStart) ? selectedLines.First().MarkerStart?.OriginalString.Substring(1) ?? "none" : "none" : t.SelectedMarkerStartId;
+                //var lineStyle = TODO: parse line style from attributes
+                var markerEndId = selectedLines.Any() ? selectedLines.All(x => selectedLines.First().MarkerEnd == x.MarkerEnd) ? selectedLines.First().MarkerEnd?.OriginalString.Substring(1) ?? "none" : "none" : t.SelectedMarkerEndId;
+
+                int markerStartIndex;
+                int lineStyleIndex;
+                int markerEndIndex;
+
+                markerStartIndex = Array.IndexOf(t.MarkerStartIds, markerStartId);
+                lineStyleIndex = 0;
+                markerEndIndex = Array.IndexOf(t.MarkerEndIds, markerEndId);
+
+                var selectedOptions = await LineOptionsInputServiceProxy.GetUserInput("Choose line options",
+                    t.MarkerStartIds, markerStartIndex,
+                    t.LineStyles, lineStyleIndex,
+                    t.MarkerEndIds, markerEndIndex);
+
+                var selectedMarkerStartId = t.MarkerStartIds[selectedOptions[0]];
+                var selectedLineStyle = t.LineStyles[selectedOptions[1]];
+                var selectedMarkerEndId = t.MarkerEndIds[selectedOptions[2]];
+
+                if (selectedLines.Length == 1)
                 {
                     // change the line style of all selected items
-                    foreach (var selectedElement in _canvas.SelectedElements)
+                    foreach (var selectedLine in selectedLines)
                     {
-                        // TODO: change style for selected element
+                        selectedLine.MarkerStart = CreateUriFromId(selectedMarkerStartId);
+                        selectedLine.MarkerEnd = CreateUriFromId(selectedMarkerEndId);
+                        // TODO: apply line style (dash array)
                     }
                     _canvas.FireInvalidateCanvas();
                     // don't change the global line style when items are selected
                     return;
                 }
 
-                // TODO: change global line style
+                t.SelectedMarkerStartId = selectedMarkerStartId;
+                t.SelectedMarkerEndId = selectedMarkerEndId;
+                t.SelectedLineStyle = selectedLineStyle;
+            }
+
+            public override bool CanExecute(object parameter)
+            {
+                return Tool.IsActive;
             }
         }
     }

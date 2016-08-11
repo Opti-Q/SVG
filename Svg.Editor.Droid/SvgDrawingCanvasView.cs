@@ -37,6 +37,7 @@ namespace Svg.Droid.Editor
 
             Engine.Register<ITextInputService, TextInputService>(() => new TextInputService(context));
             Engine.Register<IColorInputService, ColorInputService>(() => new ColorInputService(context));
+            Engine.Register<ILineOptionsInputService, LineOptionsInputService>(() => new LineOptionsInputService(context));
         }
 
         public override bool OnTouchEvent(MotionEvent ev)
