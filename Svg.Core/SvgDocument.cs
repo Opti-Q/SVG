@@ -445,7 +445,7 @@ namespace Svg
             //Trace.TraceInformation("Begin Render");
 
             var size = GetDimensions();
-            var bitmap = Engine.Factory.CreateBitmap((int)Math.Round(size.Width), (int)Math.Round(size.Height));
+            var bitmap = Bitmap.Create((int)Math.Round(size.Width), (int)Math.Round(size.Height));
             // 	bitmap.SetResolution(300, 300);
             try
             {
@@ -513,7 +513,7 @@ namespace Svg
             Bitmap bitmap = null;
             try
             {
-                bitmap = Engine.Factory.CreateBitmap(width, height);
+                bitmap = Bitmap.Create(width, height);
                 DrawAllContents(bitmap, backgroundColor);
                 return bitmap;
             }

@@ -94,7 +94,7 @@ namespace Svg.FilterEffects
             {
                 imageAttrs.SetColorMatrix(colorMatrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
 
-                var result = Engine.Factory.CreateBitmap(inputImage.Width, inputImage.Height);
+                var result = Bitmap.Create(inputImage.Width, inputImage.Height);
                 using (var g = Engine.Factory.CreateGraphicsFromImage(result))
                 {
                     g.DrawImage(inputImage, RectangleF.Create(0, 0, inputImage.Width, inputImage.Height),

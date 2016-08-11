@@ -129,7 +129,7 @@ namespace Svg.FilterEffects
 
         private Bitmap CreateSourceGraphic()
         {
-            var graphic = Engine.Factory.CreateBitmap((int)(_bounds.Width + 2 * _inflate * _bounds.Width + _bounds.X),
+            var graphic = Bitmap.Create((int)(_bounds.Width + 2 * _inflate * _bounds.Width + _bounds.X),
                                      (int)(_bounds.Height + 2 * _inflate * _bounds.Height + _bounds.Y));
             using (var renderer = SvgRenderer.FromImage(graphic))
             {
@@ -160,7 +160,7 @@ namespace Svg.FilterEffects
             ImageAttributes attributes = Engine.Factory.CreateImageAttributes();
             attributes.SetColorMatrix(matrix);
 
-            var sourceAlpha = Engine.Factory.CreateBitmap(source.Width, source.Height);
+            var sourceAlpha = Bitmap.Create(source.Width, source.Height);
 
             using (var graphics = Engine.Factory.CreateGraphicsFromImage(sourceAlpha))
             {

@@ -15,7 +15,7 @@ namespace Svg.Platform
             Width = width;
             Height = height;
             
-            _image = new SKBitmap(width, height, SKColorType.Rgba8888, SKAlphaType.Premul);
+            _image = new SKBitmap(width, height, SKImageInfo.PlatformColorType, SKAlphaType.Premul);
         }
 
         public SkiaBitmap(Image inputImage)
@@ -39,22 +39,22 @@ namespace Svg.Platform
             get { return _image; }
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             _image.Dispose();
         }
 
-        public BitmapData LockBits(RectangleF rectangle, ImageLockMode lockmode, PixelFormat pixelFormat)
+        public override BitmapData LockBits(RectangleF rectangle, ImageLockMode lockmode, PixelFormat pixelFormat)
         {
             throw new NotImplementedException();
         }
 
-        public void UnlockBits(BitmapData bitmapData)
+        public override void UnlockBits(BitmapData bitmapData)
         {
             _image.UnlockPixels();
         }
 
-        public void SavePng(Stream stream, int quality = 100)
+        public override void SavePng(Stream stream, int quality = 100)
         {
             using (var img = SKImage.FromBitmap(_image))
             {
@@ -63,7 +63,7 @@ namespace Svg.Platform
             }
         }
 
-        public int Width { get; private set; }
-        public int Height { get; private set; }
+        public override int Width { get; protected set; }
+        public override int Height { get; protected set; }
     }
 }

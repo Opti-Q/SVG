@@ -108,6 +108,7 @@ namespace Svg.Platform
                     float width = 0f;
                     float height = 0f;
 
+                    bool isFirstLineRect = true;
                     SKRect firstLineRect = default(SKRect);
                     var lines = txt.Text.Split('\n');
                     var lineCount = lines.Length;
@@ -119,8 +120,11 @@ namespace Svg.Platform
                         SKRect rect = new SKRect();
                         pen.Paint.MeasureText(line, ref rect);
 
-                        if (IsEmpty(rect))
+                        if (isFirstLineRect)
+                        {
                             firstLineRect = rect;
+                            isFirstLineRect = false;
+                        }
 
                         var w = rect.Right - rect.Left;
                         if (width < w)
@@ -131,8 +135,34 @@ namespace Svg.Platform
                             height = h;
                     }
 
+                    var x1 = x + firstLineRect.Left;
+                    var y1 = y + firstLineRect.Top;
 
-                    return RectangleF.Create(x + firstLineRect.Left, y + firstLineRect.Top, width,
+                    SvgTextBase t = txt;
+                    var anchor = t.TextAnchor;
+                    while (t != null && anchor == SvgTextAnchor.Inherit)
+                    {
+                        t = t.Parent as SvgTextBase;
+                        if (t == null)
+                            anchor = SvgTextAnchor.Start;
+                        else
+                            anchor = t.TextAnchor;
+                    }
+
+                    // textanchor affects boundingbox:
+                    // if "Middle" (aka Align.Center) then x is the center of the rectangle
+                    if (anchor == SvgTextAnchor.Middle)
+                    {
+                        x1 -= width/2;
+                    }
+                    // if "End" (aka Align.Right) then x is at the very right end of the text
+                    else if (anchor == SvgTextAnchor.End)
+                    {
+                        x1 -= width;
+                    }
+
+
+                    return RectangleF.Create(x1, y1, width,
                         height*lineCount);
                 }
             }
@@ -156,12 +186,7 @@ namespace Svg.Platform
 
             return RectangleF.Create(0f, 0f, 0f, 0f);
         }
-
-        private bool IsEmpty(SKRect rect)
-        {
-            return rect.Top == 0f && rect.Left == 0f && rect.Bottom == 0f && rect.Right == 0f;
-        }
-
+        
         private SKTextAlign FromAnchor(SvgTextAnchor textAnchor)
         {
             switch (textAnchor)

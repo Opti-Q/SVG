@@ -35,7 +35,7 @@ namespace Svg.FilterEffects
         public override void Process(ImageBuffer buffer)
 		{
             var inputImage = buffer[this.Input];
-            var result = Engine.Factory.CreateBitmap(inputImage.Width, inputImage.Height);
+            var result = Bitmap.Create(inputImage.Width, inputImage.Height);
 
             var pts = new PointF[] { PointF.Create(this.Dx.ToDeviceValue(null, UnitRenderingType.Horizontal, null), 
                                                 this.Dy.ToDeviceValue(null, UnitRenderingType.Vertical, null)) };

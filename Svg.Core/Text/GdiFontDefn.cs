@@ -76,7 +76,7 @@ namespace Svg
             {
                 if (_graphics == null)
                 {
-                    var bmp = Engine.Factory.CreateBitmap(1, 1);
+                    var bmp = Bitmap.Create(1, 1);
                     _graphics = Engine.Factory.CreateGraphicsFromImage(bmp);
                 }
                 return _graphics;
