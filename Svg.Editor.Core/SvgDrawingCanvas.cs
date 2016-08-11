@@ -243,7 +243,7 @@ namespace Svg.Core
 
         public Bitmap CreateBitmap(int width, int height)
         {
-            return Engine.Factory.CreateBitmap(width, height);
+            return Bitmap.Create(width, height);
         }
 
         /// <summary>
@@ -348,7 +348,9 @@ namespace Svg.Core
         private static void MergeSvgDefs(SvgDocument target, SvgDocument source)
         {
             if (target == null) throw new ArgumentNullException(nameof(target));
-            if (source == null) throw new ArgumentNullException(nameof(source));
+
+            if (source == null)
+                return;
 
             if (target == source)
                 return;

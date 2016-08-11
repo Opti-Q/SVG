@@ -137,7 +137,7 @@ namespace Svg
 
         public static ISvgRenderer FromNull()
         {
-            var img = Engine.Factory.CreateBitmap(1, 1);
+            var img = Bitmap.Create(1, 1);
             return SvgRenderer.FromImage(img);
         }
     }

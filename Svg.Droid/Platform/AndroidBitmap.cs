@@ -38,22 +38,22 @@ namespace Svg.Platform
             get { return _image; }
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             _image.Dispose();
         }
 
-        public BitmapData LockBits(RectangleF rectangle, ImageLockMode lockmode, PixelFormat pixelFormat)
+        public override BitmapData LockBits(RectangleF rectangle, ImageLockMode lockmode, PixelFormat pixelFormat)
         {
             throw new NotImplementedException();
         }
 
-        public void UnlockBits(BitmapData bitmapData)
+        public override void UnlockBits(BitmapData bitmapData)
         {
             _image.UnlockPixels();
         }
 
-        public void SavePng(Stream stream, int quality = 100)
+        public override void SavePng(Stream stream, int quality = 100)
         {
             Image.Compress(Android.Graphics.Bitmap.CompressFormat.Png, quality, stream);
         }
@@ -65,7 +65,7 @@ namespace Svg.Platform
         //    // PNG is a lossless format, the compression factor (100) is ignored
         //}
 
-        public int Width { get; set; }
-        public int Height { get; set; }
+        public override int Width { get; protected set; }
+        public override int Height { get; protected set; }
     }
 }

@@ -219,7 +219,7 @@ namespace Svg
                                         (patternContentUnits == SvgCoordinateUnits.ObjectBoundingBox ? bounds.Height : 1) * 
                                         (viewBox.Height > 0 ? height / viewBox.Height : 1), MatrixOrder.Prepend);
 
-                    Bitmap image = Engine.Factory.CreateBitmap((int)width, (int)height);
+                    Bitmap image = Bitmap.Create((int)width, (int)height);
                     using (var iRenderer = SvgRenderer.FromImage(image))
                     {
                         iRenderer.SetBoundable((_patternContentUnits == SvgCoordinateUnits.ObjectBoundingBox) ? new GenericBoundable(0, 0, width, height) : renderer.GetBoundable());
