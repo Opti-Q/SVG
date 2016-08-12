@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Android.App;
 using Android.OS;
 using Android.Views;
@@ -69,20 +70,7 @@ namespace Svg.Droid.SampleEditor.Views
                 {
                     var cmd = cmds.Single();
                     var mi = menu.Add(cmd.GetHashCode(), cmd.GetHashCode(), 1, cmd.Name);
-
-                    var colorTool = cmd.Tool as ColorTool;
-                    if (colorTool != null)
-                    {
-                        var fs = Engine.Resolve<IFileSystem>();
-                        var svgCachingService = Engine.Resolve<ISvgCachingService>();
-                        var path = svgCachingService.GetCachedPngPath(colorTool.IconName,
-                            colorTool.ColorIconNameModifier, fs);
-                        var drawable = Drawable.CreateFromPath(path);
-
-                        mi.SetIcon(drawable);
-                    }
-                    else
-                        mi.SetIcon(GetIconIdFromName(cmd.IconName));
+                    SetIcon(mi, cmd.IconName);
 
                     if (shownActions > 0)
                         mi.SetShowAsAction(ShowAsAction.IfRoom);
@@ -94,12 +82,12 @@ namespace Svg.Droid.SampleEditor.Views
                     var c = cmds.First();
 
                     var m = menu.AddSubMenu(c.Tool.GetHashCode(), c.Tool.GetHashCode(), 1, c.GroupName);
-                    m.Item.SetIcon(GetIconIdFromName(c.GroupIconName));
+                    SetIcon(m.Item, c.GroupIconName);
 
                     foreach (var cmd in cmds)
                     {
                         var mi = m.Add(cmd.GetHashCode(), cmd.GetHashCode(), 1, cmd.Name);
-                        mi.SetIcon(GetIconIdFromName(cmd.IconName));
+                        SetIcon(mi, cmd.IconName);
                     }
 
                     if (shownActions > 0)
@@ -115,21 +103,25 @@ namespace Svg.Droid.SampleEditor.Views
             return true;
         }
 
-        private int GetIconIdFromName(string name)
+        private void SetIcon(IMenuItem item, string name)
         {
             if (string.IsNullOrWhiteSpace(name))
-                return 0;
+                return;
 
             var n = Path.GetFileNameWithoutExtension(name);
 
             if (string.IsNullOrWhiteSpace(n))
-                return 0;
+                return;
 
             int value;
             if (_iconCache.TryGetValue(n, out value))
-                return value;
-
-            return 0;
+            {
+                item.SetIcon(value);
+            }
+            else if(File.Exists(name))
+            {
+                item.SetIcon(Drawable.CreateFromPath(name));
+            }
         }
 
         public new EditorViewModel ViewModel
