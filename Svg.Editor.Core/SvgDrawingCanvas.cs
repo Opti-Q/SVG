@@ -423,18 +423,6 @@ namespace Svg.Core
             return m1;
         }
 
-        public float GetScreenX(float canvasX)
-        {
-            var point = PointF.Create(canvasX, 0);
-            return CanvasToScreen(point).X;
-        }
-
-        public float GetScreenY(float canvasY)
-        {
-            var point = PointF.Create(0, canvasY);
-            return CanvasToScreen(point).Y;
-        }
-
         public PointF CanvasToScreen(float x, float y)
         {
             return CanvasToScreen(PointF.Create(x, y));
@@ -446,18 +434,6 @@ namespace Svg.Core
             var m = GetCanvasTransformationMatrix();
             m.TransformPoints(new[] { point });
             return point;
-        }
-
-        public float GetCanvasX(float screenX)
-        {
-            var point = PointF.Create(screenX, 0);
-            return ScreenToCanvas(point).X;
-        }
-
-        public float GetCanvasY(float screenY)
-        {
-            var point = PointF.Create(0, screenY);
-            return ScreenToCanvas(point).Y;
         }
 
         public PointF ScreenToCanvas(float x, float y)
