@@ -52,7 +52,7 @@ namespace Svg.Core.Tools
                     ws.FireInvalidateCanvas();
                 }, 
                 (o) => ws.SelectedElements.Any(), iconName:DeleteIconName, 
-                sortFunc: (t) => ws.SelectedElements.Any() ? 0 : 500)
+                sortFunc: (t) => 550)
             };
 
             return Task.FromResult(true);

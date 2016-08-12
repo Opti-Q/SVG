@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Svg
@@ -31,6 +32,14 @@ namespace Svg
         {
             foreach (var unit in this)
                 yield return func(unit);
+        }
+
+        public SvgUnitCollection Clone()
+        {
+            var values = this.Select(u => u.Clone());
+            var c = new SvgUnitCollection();
+            c.AddRange(values);
+            return c;
         }
     }
     

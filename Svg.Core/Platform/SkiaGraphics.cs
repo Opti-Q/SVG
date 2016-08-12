@@ -33,7 +33,7 @@ namespace Svg.Platform
         {
             get
             {
-                return 240;
+                return 96;
                 //throw new NotSupportedException("SKiaSharp does not support DpiY or Density");
             }
         }

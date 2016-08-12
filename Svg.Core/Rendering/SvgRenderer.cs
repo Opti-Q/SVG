@@ -12,6 +12,7 @@ namespace Svg
     {
         private Graphics _innerGraphics;
         private Stack<ISvgBoundable> _boundables = new Stack<ISvgBoundable>();
+        private readonly IDictionary<string, object> _context = new Dictionary<string, object>();
 
         public void SetBoundable(ISvgBoundable boundable)
         {
@@ -82,6 +83,12 @@ namespace Svg
             this._innerGraphics.FillBackground(color);
         }
 
+        public IDictionary<string, object> Context => _context;
+        public IDisposable UsingContextVariable(string key, object variable)
+        {
+            return new TemporaryContextVariable(key, variable, _context);
+        }
+        
         public void DrawText(string text, float x, float y, Pen pen)
         {
             this._innerGraphics.DrawText(text, x, y, pen);
@@ -139,6 +146,29 @@ namespace Svg
         {
             var img = Bitmap.Create(1, 1);
             return SvgRenderer.FromImage(img);
+        }
+
+        private class TemporaryContextVariable : IDisposable
+        {
+            private readonly string _key;
+            private readonly object _variable;
+            private IDictionary<string, object> _context;
+
+            public TemporaryContextVariable(string key, object variable, IDictionary<string, object> context)
+            {
+                this._key = key;
+                this._variable = variable;
+                this._context = context;
+
+                context[key] = variable;
+            }
+
+
+            public void Dispose()
+            {
+                _context.Remove(_key);
+                (this._variable as IDisposable)?.Dispose();
+            }
         }
     }
 }
