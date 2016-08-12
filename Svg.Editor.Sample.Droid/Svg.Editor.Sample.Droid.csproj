@@ -399,6 +399,21 @@
     <AndroidAsset Include="Assets\svg\Spec_change_2.svg" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_mode_edit_white_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\svg\painting-marker-05-f.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\svg\painting-marker-01-f.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\svg\rect.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_line_style_white_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidAsset Include="Assets\svg\positions_05.svg" />
   </ItemGroup>
   <ItemGroup>

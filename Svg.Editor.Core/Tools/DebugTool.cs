@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Svg.Core.Events;
 using Svg.Core.Interfaces;
 
 namespace Svg.Core.Tools
@@ -82,6 +83,13 @@ namespace Svg.Core.Tools
             }
 
             return Task.FromResult(true);
+        }
+
+        public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
+        {
+            System.Diagnostics.Debug.WriteLine(@event.DebuggerDisplay);
+
+            return base.OnUserInput(@event, ws);
         }
     }
 }

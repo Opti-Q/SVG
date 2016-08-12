@@ -25,6 +25,6 @@ namespace Svg.Core.Events
         public float AbsoluteRotationDegrees { get; private set; }
         public RotateStatus Status { get; private set; }
 
-        public string DebuggerDisplay => $"Rotate '{Enum.GetName(typeof(RotateStatus), Status)}' relative delta {RelativeRotationDegrees}, absolute delta {AbsoluteRotationDegrees}";
+        public override string DebuggerDisplay => $"Rotate '{Enum.GetName(typeof(RotateStatus), Status)}' relative delta {RelativeRotationDegrees}, absolute delta {AbsoluteRotationDegrees}";
     }
 }

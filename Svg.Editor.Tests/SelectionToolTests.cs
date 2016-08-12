@@ -28,8 +28,8 @@ namespace Svg.Editor.Tests
 
             // Act
             var pt1 = PointF.Create(370, 260);
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, pt1, pt1, pt1));
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, pt1, pt1, pt1));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, pt1, pt1, pt1, 1));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, pt1, pt1, pt1, 1));
 
             // Assert
             Assert.AreEqual(1, Canvas.SelectedElements.Count);
@@ -51,13 +51,13 @@ namespace Svg.Editor.Tests
             Canvas.AddItemInScreenCenter(child);
 
             var pt1 = PointF.Create(370, 260);
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, pt1, pt1, pt1));
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, pt1, pt1, pt1));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, pt1, pt1, pt1, 1));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, pt1, pt1, pt1, 1));
 
             // Act
             var pt2 = PointF.Create(0, 0);
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, pt2, pt2, pt2));
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, pt2, pt2, pt2));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, pt2, pt2, pt2, 1));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, pt2, pt2, pt2, 1));
 
             // Assert
             Assert.AreEqual(0, Canvas.SelectedElements.Count);
@@ -94,9 +94,9 @@ namespace Svg.Editor.Tests
             // Act
             var start = PointF.Create(b1.Left - 1, b1.Top - 1);
             var end = PointF.Create(b2.Right + 1, b2.Bottom + 1);
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, start, start, start));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, start, start, start, 1));
             await Canvas.OnEvent(new MoveEvent(start, start, end, end - start));
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, end, end, end));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, end, end, end, 1));
 
             // Assert
             Assert.AreEqual(2, Canvas.SelectedElements.Count);
@@ -135,9 +135,9 @@ namespace Svg.Editor.Tests
             // Act
             var start = PointF.Create(b1.Left + 1, b1.Top + 1);
             var end = PointF.Create(b2.Right - 1, b2.Bottom - 1);
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, start, start, start));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, start, start, start, 1));
             await Canvas.OnEvent(new MoveEvent(start, start, end, end - start));
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, end, end, end));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, end, end, end, 1));
 
             // Assert
             Assert.AreEqual(0, Canvas.SelectedElements.Count);

@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)RotationToolTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TransformationTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ColorToolTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LineToolTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SelectionToolTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgDrawingCanvasTestBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgDrawingCanvasTests.cs" />

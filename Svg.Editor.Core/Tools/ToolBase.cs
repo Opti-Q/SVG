@@ -16,15 +16,16 @@ namespace Svg.Core.Tools
 
         protected ToolBase(string name, string jsonProperties) : this(name)
         {
-            Properties = JsonConvert.DeserializeObject<IDictionary<string, object>>(jsonProperties);
+            Properties = JsonConvert.DeserializeObject<IDictionary<string, object>>(jsonProperties, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
         }
 
         public string Name { get; protected set; }
         public ToolUsage ToolUsage { get; protected set; }
+        //public ToolType ToolType { get; protected set; }
         public virtual bool IsActive { get; set; } = true;
         public IEnumerable<IToolCommand> Commands { get; protected set; } = Enumerable.Empty<IToolCommand>();
         /// <summary>
-        /// Properties for the tool that can be configured in the designer. Key should be lower-case for consistency.
+        /// Properties for the tool which can be configured in the designer. Key should be lower-case for consistency.
         /// </summary>
         public IDictionary<string, object> Properties { get; } = new Dictionary<string, object>();
         public string IconName { get; set; }

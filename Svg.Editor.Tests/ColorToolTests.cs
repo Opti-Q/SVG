@@ -116,7 +116,7 @@ namespace Svg.Editor.Tests
             changeColorCommand.Execute(null);
 
             // Assert
-            var texts = Canvas.Document.Children.First().Children.OfType<SvgTextBase>().ToList(); 
+            var texts = parent.Children.OfType<SvgTextBase>().ToList();
             var txt = texts.First();
             Assert.AreEqual(color.A, ((SvgColourServer)txt.Stroke).Colour.A);
             Assert.AreEqual(color.R, ((SvgColourServer)txt.Stroke).Colour.R);

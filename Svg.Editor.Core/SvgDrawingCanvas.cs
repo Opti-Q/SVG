@@ -5,10 +5,13 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 using Svg.Core.Tools;
+using Svg.Core.Utils;
 using Svg.Interfaces;
+using Svg.Pathing;
 using Svg.Transforms;
 
 namespace Svg.Core
@@ -34,16 +37,37 @@ namespace Svg.Core
             _selectedElements = new ObservableCollection<SvgVisualElement>();
             _selectedElements.CollectionChanged += OnSelectionChanged;
 
+            // this part should be in the designer, when the iCL is created
+            var gridToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
+            {
+                { "angle", 30.0f },
+                { "stepsizey", 20.0f },
+                { "issnappingenabled", true }
+            }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+
+            var colorToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
+            {
+                { "selectablecolors", new [] { "#000000","#FF0000","#00FF00","#0000FF","#FFFF00","#FF00FF","#00FFFF" } }
+            }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+
+            var lineToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
+            {
+                { "markerstartids", new [] { "none", "arrowMarkerStart", "ellipseMarker" } },
+                { "markerendids", new [] { "none", "arrowMarkerEnd", "ellipseMarker" } },
+                { "linestyles", new [] { "normal", "dashed" } }
+            }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+
             _tools = new ObservableCollection<ITool>
             {
-                    new GridTool(), // must be before movetool!
+                    new GridTool(gridToolProperties), // must be before movetool!
                     new MoveTool(), // must be before pantool as it decides whether or not it is active based on selection
                     new PanTool(),
                     new RotationTool(),
                     new ZoomTool(),
                     new SelectionTool(),
                     new TextTool(),
-                    new ColorTool()
+                    new LineTool(lineToolProperties),
+                    new ColorTool(colorToolProperties)
             };
             _tools.CollectionChanged += OnToolsChanged;
         }
@@ -116,11 +140,15 @@ namespace Svg.Core
             }
         }
 
-        public PointF RelativeTranslate => PointF.Create(Translate.X/ZoomFactor, Translate.Y/ZoomFactor);
+        public PointF RelativeTranslate => PointF.Create(Translate.X / ZoomFactor, Translate.Y / ZoomFactor);
 
         public PointF Translate { get; set; }
 
         public float ZoomFactor { get; set; }
+
+        public float ZoomFocusX { get; set; }
+
+        public float ZoomFocusY { get; set; }
 
         public int ScreenWidth { get; set; }
 
@@ -183,7 +211,7 @@ namespace Svg.Core
                 await tool.OnUserInput(ev, this);
             }
         }
-        
+
         /// <summary>
         /// Called by platform specific implementation to allow tools to draw something onto the canvas
         /// </summary>
@@ -198,11 +226,12 @@ namespace Svg.Core
 
             // apply global panning and zooming
             renderer.Translate(Translate.X, Translate.Y);
-            renderer.Scale(ZoomFactor, 0f, 0f);
+            renderer.Scale(ZoomFactor, ZoomFocusX, ZoomFocusY);
+            ZoomFocusX = ZoomFocusY = 0;
 
             // draw default background
             renderer.FillEntireCanvasWithColor(Engine.Factory.Colors.White);
-            
+
             // prerender step (e.g. gridlines, etc.)
             foreach (var tool in Tools)
             {
@@ -231,7 +260,7 @@ namespace Svg.Core
                 ActiveTool = Tools.FirstOrDefault(t => t.ToolUsage == ToolUsage.Explicit);
 
                 _initialized = true;
-                
+
                 FireToolCommandsChanged();
             }
         }
@@ -314,6 +343,8 @@ namespace Svg.Core
             }
 
             AddItemInScreenCenter(element);
+
+            MergeSvgDefs(Document, document);
         }
 
         public void AddItemInScreenCenter(SvgVisualElement element)
@@ -334,7 +365,8 @@ namespace Svg.Core
                 centerPosY -= childBounds.Y;
 
 
-            MergeSvgDefs(Document, element.OwnerDocument);
+            if (element.OwnerDocument != null)
+                MergeSvgDefs(Document, element.OwnerDocument);
 
             //SvgTranslate tl = new SvgTranslate(centerPosX, centerPosY);
             //element.Transforms.Add(tl);
@@ -384,6 +416,26 @@ namespace Svg.Core
             return m1;
         }
 
+        public float GetScreenX(float canvasX)
+        {
+            return canvasX / ZoomFactor + Translate.X / ZoomFactor;
+        }
+
+        public float GetScreenY(float canvasY)
+        {
+            return canvasY / ZoomFactor + Translate.Y / ZoomFactor;
+        }
+
+        public float GetCanvasX(float screenX)
+        {
+            return screenX / ZoomFactor - Translate.X / ZoomFactor;
+        }
+
+        public float GetCanvasY(float screenY)
+        {
+            return screenY / ZoomFactor - Translate.Y / ZoomFactor;
+        }
+
         /// <summary>
         /// Stores the document with a viewbox that surrounds all contained visual elements
         /// then resets the viewbox
@@ -391,7 +443,7 @@ namespace Svg.Core
         /// <param name="stream"></param>
         public void SaveDocument(Stream stream)
         {
-            
+
             var oldX = Document.X;
             var oldY = Document.Y;
             var oldWidth = Document.Width;
@@ -417,7 +469,7 @@ namespace Svg.Core
                 Document.Y = oldY;
             }
         }
-        
+
         private IList<IToolCommand> EnsureToolSelectors()
         {
             if (_toolSelectors == null)

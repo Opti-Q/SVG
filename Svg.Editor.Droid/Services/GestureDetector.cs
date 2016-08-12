@@ -43,13 +43,15 @@ namespace Svg.Droid.Editor.Services
             var y = ev.GetY();
 
             int action = (int) ev.Action;
-            switch (action & (int) MotionEventActions.Mask)
+            int maskedAction = action & (int) MotionEventActions.Mask;
+            switch (maskedAction)
             {
                 case (int) MotionEventActions.Down:
+                case (int) MotionEventActions.Pointer1Down:
                     uie = new PointerEvent(EventType.PointerDown,
                         Svg.Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
                         Svg.Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY),
-                        Svg.Factory.Instance.CreatePointF(x, y));
+                        Svg.Factory.Instance.CreatePointF(x, y), ev.PointerCount);
                     _lastTouchX = x;
                     _lastTouchY = y;
                     _pointerDownX = x;
@@ -62,7 +64,7 @@ namespace Svg.Droid.Editor.Services
                     uie = new PointerEvent(EventType.PointerUp,
                         Svg.Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
                         Svg.Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY),
-                        Svg.Factory.Instance.CreatePointF(x, y));
+                        Svg.Factory.Instance.CreatePointF(x, y), ev.PointerCount);
                     break;
 
                 case (int) MotionEventActions.Cancel:
@@ -70,7 +72,7 @@ namespace Svg.Droid.Editor.Services
                     uie = new PointerEvent(EventType.Cancel,
                         Svg.Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
                         Svg.Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY),
-                        Svg.Factory.Instance.CreatePointF(x, y));
+                        Svg.Factory.Instance.CreatePointF(x, y), 1);
                     break;
 
                 case (int) MotionEventActions.Move:
@@ -109,7 +111,7 @@ namespace Svg.Droid.Editor.Services
                         uie = new PointerEvent(EventType.PointerUp,
                             Svg.Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
                             Svg.Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY),
-                            Svg.Factory.Instance.CreatePointF(x, y));
+                            Svg.Factory.Instance.CreatePointF(x, y), 1);
 
                         _lastTouchX = x;
                         _lastTouchY = y;
@@ -123,7 +125,7 @@ namespace Svg.Droid.Editor.Services
                         uie = new PointerEvent(EventType.PointerUp,
                             Svg.Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
                             Svg.Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY),
-                            Svg.Factory.Instance.CreatePointF(x, y));
+                            Svg.Factory.Instance.CreatePointF(x, y), 1);
 
                         _lastTouchX = ev.GetX(tempPointerIndex);
                         _lastTouchY = ev.GetY(tempPointerIndex);

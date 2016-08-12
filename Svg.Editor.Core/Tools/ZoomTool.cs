@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Svg.Core.Events;
+using Svg.Core.Utils;
 
 namespace Svg.Core.Tools
 {
