@@ -10,12 +10,12 @@ namespace Svg
 	//[TypeConverter(typeof(SvgOrientConverter))]
 	public class SvgOrient
     {
-        private bool _isAuto = true;
+        private bool _isAuto = false;
         private float _angle;
   
 		public SvgOrient()
 		{
-			IsAuto = true;
+			IsAuto = false;
 		}
 
 		public SvgOrient(float angle)
