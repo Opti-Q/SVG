@@ -123,6 +123,12 @@ namespace Svg.Core.Tools
 
         public string SelectedLineStyle { get; set; }
 
+        private SvgUnitCollection StrokeDashArray { get; set; } = new SvgUnitCollection()
+                            {
+                                new SvgUnit(SvgUnitType.Pixel, 10),
+                                new SvgUnit(SvgUnitType.Pixel, 10)
+                            };
+
         public LineTool(string properties) : base("Line", properties)
         {
             IconName = "ic_mode_edit_white_48dp.png";
@@ -262,6 +268,11 @@ namespace Svg.Core.Tools
                             MarkerEnd = CreateUriFromId(SelectedMarkerEndId)
                         };
 
+                        if (SelectedLineStyle == "dashed")
+                        {
+                            _currentLine.StrokeDashArray = StrokeDashArray.Clone();
+                        }
+
                         ws.Document.Children.Add(_currentLine);
                     }
 
@@ -318,6 +329,8 @@ namespace Svg.Core.Tools
                 _canvas = canvas;
             }
 
+            private new LineTool Tool => (LineTool) base.Tool;
+
             public override async void Execute(object parameter)
             {
                 var t = (LineTool)Tool;
@@ -354,11 +367,7 @@ namespace Svg.Core.Tools
                         selectedLine.MarkerEnd = CreateUriFromId(selectedMarkerEndId);
                         if (selectedLineStyle == "dashed")
                         {
-                            selectedLine.StrokeDashArray = new SvgUnitCollection()
-                            {
-                                new SvgUnit(SvgUnitType.Pixel, 10),
-                                new SvgUnit(SvgUnitType.Pixel, 10)
-                            };
+                            selectedLine.StrokeDashArray = Tool.StrokeDashArray.Clone();
                         }
                         else
                         {
