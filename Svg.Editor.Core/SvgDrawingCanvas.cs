@@ -52,8 +52,8 @@ namespace Svg.Core
 
             var lineToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
             {
-                { "markerstartids", new [] { "none", "arrowMarkerStart", "ellipseMarker" } },
-                { "markerendids", new [] { "none", "arrowMarkerEnd", "ellipseMarker" } },
+                { "markerstartids", new [] { "none", "arrowStart", "circle" } },
+                { "markerendids", new [] { "none", "arrowEnd", "circle" } },
                 { "linestyles", new [] { "normal", "dashed" } }
             }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 

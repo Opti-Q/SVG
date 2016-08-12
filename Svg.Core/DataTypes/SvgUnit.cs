@@ -336,6 +336,11 @@ namespace Svg
             return SizeF.Create(width.ToDeviceValue(renderer, UnitRenderingType.HorizontalOffset, owner),
                                             height.ToDeviceValue(renderer, UnitRenderingType.VerticalOffset, owner));
         }
+
+        public SvgUnit Clone()
+        {
+            return new SvgUnit(this.Type, this.Value);
+        }
     }
 
     public enum UnitRenderingType

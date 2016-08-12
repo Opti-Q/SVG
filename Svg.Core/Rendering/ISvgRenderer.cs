@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Svg.Interfaces;
 
@@ -24,5 +25,7 @@ namespace Svg
         void DrawText(string text, float x, float y, Pen pen);
         Graphics Graphics { get; }
         void FillBackground(Color color);
+        IDictionary<string, object> Context { get; }
+        IDisposable UsingContextVariable(string key, object variable);
     }
 }
