@@ -154,6 +154,8 @@ namespace Svg.Core
 
         public int ScreenHeight { get; set; }
 
+        public PointF ScreenCenter => PointF.Create((float)ScreenWidth / 2, (float)ScreenHeight / 2);
+
         /// <summary>
         /// If enabled, adds a DebugTool that brings some helpful visualizations
         /// </summary>
@@ -223,10 +225,10 @@ namespace Svg.Core
             ScreenWidth = renderer.Width;
             ScreenHeight = renderer.Height;
 
-            ZoomFocus = ScreenToCanvas((float)ScreenWidth / 2, (float)ScreenHeight / 2);
+            //ZoomFocus = ScreenToCanvas(ScreenCenter);
 
             // apply global panning and zooming
-            renderer.Translate(Translate.X, Translate.Y);
+            //renderer.Translate(Translate.X, Translate.Y);
             //renderer.Scale(ZoomFactor, 0, 0);
             renderer.Scale(ZoomFactor, ZoomFocus.X, ZoomFocus.Y);
             //ZoomFocusX = ZoomFocusY = 0;

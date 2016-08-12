@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 using Svg.Core.Utils;
+using Svg.Interfaces;
 
 namespace Svg.Core.Tools
 {
@@ -82,6 +83,7 @@ namespace Svg.Core.Tools
                 ws.ZoomFactor = GetBoundedZoomFactor(se, ws);
                 CurrentFocusX = se.FocusX;
                 CurrentFocusY = se.FocusY;
+                ws.ZoomFocus = ws.ScreenToCanvas(CurrentFocusX, CurrentFocusY);
                 ws.FireInvalidateCanvas();
             }
 
