@@ -42,8 +42,8 @@ namespace Svg
         private ISortedList<object, Delegate> _eventHandlers;
         private SvgElementCollection _children;
         private static readonly object _loadEventKey = new object();
-        private Region _graphicsClip;
-        private Matrix _graphicsMatrix;
+        protected Region _graphicsClip;
+        protected Matrix _graphicsMatrix;
         private SvgCustomAttributeCollection _customAttributes;
         private List<ISvgNode> _nodes = new List<ISvgNode>();
 
