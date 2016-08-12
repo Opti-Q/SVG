@@ -9,10 +9,7 @@ using Newtonsoft.Json;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 using Svg.Core.Tools;
-using Svg.Core.Utils;
 using Svg.Interfaces;
-using Svg.Pathing;
-using Svg.Transforms;
 
 namespace Svg.Core
 {
@@ -20,9 +17,9 @@ namespace Svg.Core
     {
         private readonly ObservableCollection<SvgVisualElement> _selectedElements;
         private readonly ObservableCollection<ITool> _tools;
-        private List<IToolCommand> _toolSelectors = null;
+        private List<IToolCommand> _toolSelectors;
         private SvgDocument _document;
-        private bool _initialized = false;
+        private bool _initialized;
         private ITool _activeTool;
         private bool _isDebugEnabled;
         private PointF _zoomFocus;
@@ -299,6 +296,8 @@ namespace Svg.Core
         /// </summary>
         /// <param name="selectionRectangle"></param>
         /// <param name="selectionType"></param>
+        /// <param name="maxItems"></param>
+        /// <param name="recursionLevel"></param>
         /// <returns></returns>
         public IList<TElement> GetElementsUnder<TElement>(RectangleF selectionRectangle, SelectionType selectionType, int maxItems = int.MaxValue, int recursionLevel = 1)
             where TElement : SvgVisualElement
@@ -323,6 +322,7 @@ namespace Svg.Core
         /// gets all visual elements under the given pointer (a 20px rectangle surrounding the given point to simulate thick finger)
         /// </summary>
         /// <param name="pointer1Position"></param>
+        /// <param name="recursionLevel"></param>
         /// <returns></returns>
         public IList<TElement> GetElementsUnderPointer<TElement>(PointF pointer1Position, int recursionLevel = 1)
             where TElement : SvgVisualElement

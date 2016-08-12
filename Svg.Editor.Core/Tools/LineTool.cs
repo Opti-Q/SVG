@@ -310,26 +310,21 @@ namespace Svg.Core.Tools
 
                 if (_movedDistance >= MIN_MOVED_DISTANCE)
                 {
-                    var canvasEndPosition = ws.ScreenToCanvas(e.Pointer1Position);
-
-                    var relativeEndX = canvasEndPosition.X;
-                    var relativeEndY = canvasEndPosition.Y;
+                    var relativeStart = ws.ScreenToCanvas(e.Pointer1Down);
+                    var relativeEnd = ws.ScreenToCanvas(e.Pointer1Position);
 
                     if (_currentLine == null)
                     {
-                        var canvasStartPosition = ws.ScreenToCanvas(e.Pointer1Down);
-                        var relativeStartX = canvasStartPosition.X;
-                        var relativeStartY = canvasStartPosition.Y;
 
                         _currentLine = new SvgLine
                         {
                             Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
                             Fill = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
                             StrokeWidth = new SvgUnit(SvgUnitType.Pixel, 3),
-                            StartX = new SvgUnit(SvgUnitType.Pixel, relativeStartX),
-                            StartY = new SvgUnit(SvgUnitType.Pixel, relativeStartY),
-                            EndX = new SvgUnit(SvgUnitType.Pixel, relativeEndX),
-                            EndY = new SvgUnit(SvgUnitType.Pixel, relativeEndY),
+                            StartX = new SvgUnit(SvgUnitType.Pixel, relativeStart.X),
+                            StartY = new SvgUnit(SvgUnitType.Pixel, relativeStart.Y),
+                            EndX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X),
+                            EndY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y),
                             MarkerStart = CreateUriFromId(SelectedMarkerStartId),
                             MarkerEnd = CreateUriFromId(SelectedMarkerEndId)
                         };
