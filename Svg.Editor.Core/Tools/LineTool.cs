@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
+using Svg.Core.Utils;
 using Svg.Interfaces;
 using Svg.Pathing;
 
@@ -241,8 +242,11 @@ namespace Svg.Core.Tools
 
                 if (_movedDistance >= MIN_MOVED_DISTANCE)
                 {
-                    var relativeStart = ws.ScreenToCanvas(e.Pointer1Down);
-                    var relativeEnd = ws.ScreenToCanvas(e.Pointer1Position);
+
+                    var relativeStartX = ws.GetCanvasX(e.Pointer1Down.X);
+                    var relativeStartY = ws.GetCanvasY(e.Pointer1Down.Y);
+                    var relativeEndX = ws.GetCanvasX(e.Pointer1Position.X);
+                    var relativeEndY = ws.GetCanvasY(e.Pointer1Position.Y);
 
                     if (_currentLine == null)
                     {
@@ -252,10 +256,10 @@ namespace Svg.Core.Tools
                             Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
                             Fill = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
                             StrokeWidth = new SvgUnit(SvgUnitType.Pixel, 3),
-                            StartX = new SvgUnit(SvgUnitType.Pixel, relativeStart.X),
-                            StartY = new SvgUnit(SvgUnitType.Pixel, relativeStart.Y),
-                            EndX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X),
-                            EndY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y),
+                            StartX = new SvgUnit(SvgUnitType.Pixel, relativeStartX),
+                            StartY = new SvgUnit(SvgUnitType.Pixel, relativeStartY),
+                            EndX = new SvgUnit(SvgUnitType.Pixel, relativeEndX),
+                            EndY = new SvgUnit(SvgUnitType.Pixel, relativeEndY),
                             MarkerStart = CreateUriFromId(SelectedMarkerStartId),
                             MarkerEnd = CreateUriFromId(SelectedMarkerEndId)
                         };
@@ -271,8 +275,8 @@ namespace Svg.Core.Tools
                         offsetY += transform.Matrix.OffsetY;
                     }
 
-                    _currentLine.EndX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X - offsetX);
-                    _currentLine.EndY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y - offsetY);
+                    _currentLine.EndX = new SvgUnit(SvgUnitType.Pixel, relativeEndX - offsetX);
+                    _currentLine.EndY = new SvgUnit(SvgUnitType.Pixel, relativeEndY - offsetY);
 
                     ws.FireInvalidateCanvas();
                 }

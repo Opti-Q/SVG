@@ -9,7 +9,10 @@ using Newtonsoft.Json;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 using Svg.Core.Tools;
+using Svg.Core.Utils;
 using Svg.Interfaces;
+using Svg.Pathing;
+using Svg.Transforms;
 
 namespace Svg.Core
 {
@@ -17,12 +20,11 @@ namespace Svg.Core
     {
         private readonly ObservableCollection<SvgVisualElement> _selectedElements;
         private readonly ObservableCollection<ITool> _tools;
-        private List<IToolCommand> _toolSelectors;
+        private List<IToolCommand> _toolSelectors = null;
         private SvgDocument _document;
-        private bool _initialized;
+        private bool _initialized = false;
         private ITool _activeTool;
         private bool _isDebugEnabled;
-        private PointF _zoomFocus;
 
         public event EventHandler CanvasInvalidated;
         public event EventHandler ToolCommandsChanged;
@@ -144,11 +146,9 @@ namespace Svg.Core
 
         public float ZoomFactor { get; set; }
 
-        public PointF ZoomFocus
-        {
-            get { return _zoomFocus ?? (_zoomFocus = PointF.Create(0, 0)); }
-            set { _zoomFocus = value; }
-        }
+        public float ZoomFocusX { get; set; }
+
+        public float ZoomFocusY { get; set; }
 
         public int ScreenWidth { get; set; }
 
@@ -201,6 +201,7 @@ namespace Svg.Core
         /// Called by the platform specific input event detector whenever the user interacts with the model
         /// </summary>
         /// <param name="ev"></param>
+        /// <param name="view"></param>
         public async Task OnEvent(UserInputEvent ev)
         {
             await EnsureInitialized();
@@ -220,16 +221,13 @@ namespace Svg.Core
             // make sure all tools have been initialized successfully
             await EnsureInitialized();
 
-            ScreenWidth = renderer.Width;
-            ScreenHeight = renderer.Height;
-
-            ZoomFocus = ScreenToCanvas((float)ScreenWidth / 2, (float)ScreenHeight / 2);
+            this.ScreenWidth = renderer.Width;
+            this.ScreenHeight = renderer.Height;
 
             // apply global panning and zooming
             renderer.Translate(Translate.X, Translate.Y);
-            //renderer.Scale(ZoomFactor, 0, 0);
-            renderer.Scale(ZoomFactor, ZoomFocus.X, ZoomFocus.Y);
-            //ZoomFocusX = ZoomFocusY = 0;
+            renderer.Scale(ZoomFactor, ZoomFocusX, ZoomFocusY);
+            ZoomFocusX = ZoomFocusY = 0;
 
             // draw default background
             renderer.FillEntireCanvasWithColor(Engine.Factory.Colors.White);
@@ -293,8 +291,6 @@ namespace Svg.Core
         /// </summary>
         /// <param name="selectionRectangle"></param>
         /// <param name="selectionType"></param>
-        /// <param name="maxItems"></param>
-        /// <param name="recursionLevel"></param>
         /// <returns></returns>
         public IList<TElement> GetElementsUnder<TElement>(RectangleF selectionRectangle, SelectionType selectionType, int maxItems = int.MaxValue, int recursionLevel = 1)
             where TElement : SvgVisualElement
@@ -319,7 +315,6 @@ namespace Svg.Core
         /// gets all visual elements under the given pointer (a 20px rectangle surrounding the given point to simulate thick finger)
         /// </summary>
         /// <param name="pointer1Position"></param>
-        /// <param name="recursionLevel"></param>
         /// <returns></returns>
         public IList<TElement> GetElementsUnderPointer<TElement>(PointF pointer1Position, int recursionLevel = 1)
             where TElement : SvgVisualElement
@@ -354,17 +349,19 @@ namespace Svg.Core
 
         public void AddItemInScreenCenter(SvgVisualElement element)
         {
+            var z = ZoomFactor;
+            var halfRelWidth = ScreenWidth / z / 2;
+            var halfRelHeight = ScreenHeight / z / 2;
             var childBounds = element.GetBoundingBox();
             var halfRelChildWidth = childBounds.Width / 2;
             var halfRelChildHeight = childBounds.Height / 2;
-            var centerPos = ScreenToCanvas((float)ScreenWidth / 2, (float)ScreenHeight / 2);
-            var centerPosX = centerPos.X - halfRelChildWidth;
-            var centerPosY = centerPos.Y - halfRelChildHeight;
+            var centerPosX = -RelativeTranslate.X + halfRelWidth - halfRelChildWidth;
+            var centerPosY = -RelativeTranslate.Y + halfRelHeight - halfRelChildHeight;
 
             // make sure it is centered
-            if (Math.Abs(childBounds.X) > float.Epsilon)
+            if (childBounds.X != 0)
                 centerPosX -= childBounds.X;
-            if (Math.Abs(childBounds.Y) > float.Epsilon)
+            if (childBounds.Y != 0)
                 centerPosY -= childBounds.Y;
 
 
@@ -415,37 +412,28 @@ namespace Svg.Core
         {
             var m1 = Engine.Factory.CreateMatrix();
             m1.Translate(Translate.X, Translate.Y);
-            m1.Translate(ZoomFocus.X, ZoomFocus.Y);
             m1.Scale(ZoomFactor, ZoomFactor);
-            m1.Translate(-ZoomFocus.X, -ZoomFocus.Y);
             return m1;
         }
 
-        public PointF CanvasToScreen(float x, float y)
+        public float GetScreenX(float canvasX)
         {
-            return CanvasToScreen(PointF.Create(x, y));
+            return canvasX / ZoomFactor + Translate.X / ZoomFactor;
         }
 
-        public PointF CanvasToScreen(PointF canvasPointF)
+        public float GetScreenY(float canvasY)
         {
-            var point = canvasPointF.Clone();
-            var m = GetCanvasTransformationMatrix();
-            m.TransformPoints(new[] { point });
-            return point;
+            return canvasY / ZoomFactor + Translate.Y / ZoomFactor;
         }
 
-        public PointF ScreenToCanvas(float x, float y)
+        public float GetCanvasX(float screenX)
         {
-            return ScreenToCanvas(PointF.Create(x, y));
+            return screenX / ZoomFactor - Translate.X / ZoomFactor;
         }
 
-        public PointF ScreenToCanvas(PointF screenPointF)
+        public float GetCanvasY(float screenY)
         {
-            var point = screenPointF.Clone();
-            var m = GetCanvasTransformationMatrix();
-            m.Invert();
-            m.TransformPoints(new[] { point });
-            return point;
+            return screenY / ZoomFactor - Translate.Y / ZoomFactor;
         }
 
         /// <summary>

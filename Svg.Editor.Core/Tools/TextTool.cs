@@ -99,20 +99,20 @@ namespace Svg.Core.Tools
                         // only add if user really entered text.
                         if (!string.IsNullOrWhiteSpace(txt))
                         {
-                            var t = new SvgText(txt)
-                            {
-                                FontSize = new SvgUnit(SvgUnitType.Pixel, 20),
-                                Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
-                                Fill = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0))
-                            };
-
-                            var relativePointer = ws.ScreenToCanvas(pe.Pointer1Position);
+                            var t = new SvgText(txt);
+                            t.FontSize = new SvgUnit(SvgUnitType.Pixel, 20);
+                            t.Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0));
+                            t.Fill = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0));
+                            
+                            var z = ws.ZoomFactor;
+                            var halfRelWidth = pe.Pointer1Position.X / z;
+                            var halfRelHeight = pe.Pointer1Position.Y / z;
                             var childBounds = t.Bounds;
                             var halfRelChildWidth = childBounds.Width / 2;
                             var halfRelChildHeight = childBounds.Height / 2;
 
-                            var x = relativePointer.X - halfRelChildWidth;
-                            var y = relativePointer.Y - halfRelChildHeight;
+                            var x = -ws.RelativeTranslate.X + halfRelWidth - halfRelChildWidth;
+                            var y = -ws.RelativeTranslate.Y + halfRelHeight - halfRelChildHeight;
                             //t.X = new SvgUnitCollection {new SvgUnit(SvgUnitType.Pixel, x)};
                             //t.Y = new SvgUnitCollection { new SvgUnit(SvgUnitType.Pixel, y) };
                             t.Transforms.Add(new SvgTranslate(x, y));
