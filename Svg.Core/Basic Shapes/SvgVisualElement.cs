@@ -411,14 +411,12 @@ namespace Svg
                             {
                                 if (this.StrokeDashArray != null && this.StrokeDashArray.Count > 0)
                                 {
-                                    /* divide by stroke width - GDI behaviour that I don't quite understand yet.*/
                                     pen.DashPattern =
                                         this.StrokeDashArray.ConvertAll(
                                             u =>
                                                 ((u.ToDeviceValue(renderer, UnitRenderingType.Other, this) <= 0)
                                                     ? 1
-                                                    : u.ToDeviceValue(renderer, UnitRenderingType.Other, this))/
-                                                ((strokeWidth <= 0) ? 1 : strokeWidth)).ToArray();
+                                                    : u.ToDeviceValue(renderer, UnitRenderingType.Other, this))).ToArray();
                                 }
                                 switch (this.StrokeLineJoin)
                                 {

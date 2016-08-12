@@ -108,8 +108,7 @@ namespace Svg.Core.Tools
                 definitions = new SvgDefinitionList();
                 document.Children.Add(definitions);
             }
-
-
+            
             foreach (var marker in Markers)
             {
                 if (document.GetElementById(marker.ID) != null) continue;
@@ -128,10 +127,9 @@ namespace Svg.Core.Tools
         {
             IconName = "ic_mode_edit_white_48dp.png";
             ToolUsage = ToolUsage.Explicit;
-            //ToolType = ToolType.Create;
 
             var markers = new List<SvgMarker>();
-            var marker = new SvgMarker { ID = "arrowMarkerStart", Orient = new SvgOrient() {IsAuto = true} };
+            var marker = new SvgMarker { ID = "arrowStart", Orient = new SvgOrient() {IsAuto = true} };
             marker.Children.Add(new SvgPath
             {
                 PathData = new SvgPathSegmentList(new SvgPathSegment[]
@@ -142,7 +140,7 @@ namespace Svg.Core.Tools
                 })
             });
             markers.Add(marker);
-            marker = new SvgMarker { ID = "arrowMarkerEnd", Orient = new SvgOrient() { IsAuto = true } };
+            marker = new SvgMarker { ID = "arrowEnd", Orient = new SvgOrient() { IsAuto = true } };
             marker.Children.Add(new SvgPath
             {
                 PathData = new SvgPathSegmentList(new SvgPathSegment[]
@@ -153,7 +151,7 @@ namespace Svg.Core.Tools
                 })
             });
             markers.Add(marker);
-            marker = new SvgMarker { ID = "ellipseMarker", Orient = new SvgOrient() { IsAuto = true } };
+            marker = new SvgMarker { ID = "circle", Orient = new SvgOrient() { IsAuto = true } };
             marker.Children.Add(new SvgEllipse
             {
                 RadiusX = 8,
@@ -284,8 +282,7 @@ namespace Svg.Core.Tools
 
             return Task.FromResult(true);
         }
-
-
+        
         public override async Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
             await base.OnDraw(renderer, ws);
@@ -355,7 +352,18 @@ namespace Svg.Core.Tools
                     {
                         selectedLine.MarkerStart = CreateUriFromId(selectedMarkerStartId);
                         selectedLine.MarkerEnd = CreateUriFromId(selectedMarkerEndId);
-                        // TODO: apply line style (dash array)
+                        if (selectedLineStyle == "dashed")
+                        {
+                            selectedLine.StrokeDashArray = new SvgUnitCollection()
+                            {
+                                new SvgUnit(SvgUnitType.Pixel, 10),
+                                new SvgUnit(SvgUnitType.Pixel, 10)
+                            };
+                        }
+                        else
+                        {
+                            selectedLine.StrokeDashArray = null;
+                        }
                     }
                     _canvas.FireInvalidateCanvas();
                     // don't change the global line style when items are selected
