@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
-using Svg.Core.Utils;
 using Svg.Interfaces;
 using Svg.Pathing;
 
@@ -97,7 +96,29 @@ namespace Svg.Core.Tools
 
         public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
         {
+            if (oldDocument != null) UnWatchDocument(oldDocument);
+            WatchDocument(newDocument);
             InitializeDefinitions(newDocument);
+        }
+
+        private void UnWatchDocument(SvgDocument svgDocument)
+        {
+            svgDocument.ChildRemoved -= SvgDocumentOnChildRemoved;
+        }
+
+        private void WatchDocument(SvgDocument svgDocument)
+        {
+            svgDocument.ChildRemoved -= SvgDocumentOnChildRemoved;
+            svgDocument.ChildRemoved += SvgDocumentOnChildRemoved;
+        }
+
+        private void SvgDocumentOnChildRemoved(object sender, ChildRemovedEventArgs args)
+        {
+            if (IsActive && args.RemovedChild == _currentLine)
+            {
+                _currentLine = null;
+                _canvas.FireInvalidateCanvas();
+            }
         }
 
         private void InitializeDefinitions(SvgDocument document)
@@ -243,13 +264,13 @@ namespace Svg.Core.Tools
                 if (_movedDistance >= MIN_MOVED_DISTANCE)
                 {
 
-                    var relativeStartX = ws.GetCanvasX(e.Pointer1Down.X);
-                    var relativeStartY = ws.GetCanvasY(e.Pointer1Down.Y);
                     var relativeEndX = ws.GetCanvasX(e.Pointer1Position.X);
                     var relativeEndY = ws.GetCanvasY(e.Pointer1Position.Y);
 
                     if (_currentLine == null)
                     {
+                        var relativeStartX = ws.GetCanvasX(e.Pointer1Down.X);
+                        var relativeStartY = ws.GetCanvasY(e.Pointer1Down.Y);
 
                         _currentLine = new SvgLine
                         {
@@ -267,16 +288,8 @@ namespace Svg.Core.Tools
                         ws.Document.Children.Add(_currentLine);
                     }
 
-                    var offsetX = 0.0f;
-                    var offsetY = 0.0f;
-                    foreach (var transform in _currentLine.Transforms)
-                    {
-                        offsetX += transform.Matrix.OffsetX;
-                        offsetY += transform.Matrix.OffsetY;
-                    }
-
-                    _currentLine.EndX = new SvgUnit(SvgUnitType.Pixel, relativeEndX - offsetX);
-                    _currentLine.EndY = new SvgUnit(SvgUnitType.Pixel, relativeEndY - offsetY);
+                    _currentLine.EndX = new SvgUnit(SvgUnitType.Pixel, relativeEndX);
+                    _currentLine.EndY = new SvgUnit(SvgUnitType.Pixel, relativeEndY);
 
                     ws.FireInvalidateCanvas();
                 }
@@ -295,14 +308,7 @@ namespace Svg.Core.Tools
                 renderer.Graphics.Save();
 
                 const int radius = 16;
-                var offsetX = 0.0f;
-                var offsetY = 0.0f;
-                foreach (var transform in _currentLine.Transforms)
-                {
-                    offsetX += transform.Matrix.OffsetX;
-                    offsetY += transform.Matrix.OffsetY;
-                }
-                renderer.DrawCircle(offsetX + _currentLine.EndX - radius, offsetY + _currentLine.EndY - radius, radius, BluePen);
+                renderer.DrawCircle(_currentLine.EndX - (radius >> 1), _currentLine.EndY - (radius >> 1), radius, BluePen);
 
                 renderer.Graphics.Restore();
             }
