@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
+using System.Reflection;
 using Svg.Interfaces;
 
 namespace Svg
@@ -12,11 +14,13 @@ namespace Svg
         private static ISvgTypeDescriptor _typeDescriptor = null;
         private static ISvgElementAttributeProvider _attributeProvider = null;
         private static ILogger _logger = null;
+        private static bool _initialized = false;
 
         public static IFactory Factory
         {
             get
             {
+                EnsureInitialized();
                 return _factory;
             }
         }
@@ -25,6 +29,7 @@ namespace Svg
         {
             get
             {
+                EnsureInitialized();
                 return _typeDescriptor;
             }
         }
@@ -33,19 +38,24 @@ namespace Svg
         {
             get
             {
+                EnsureInitialized();
                 return _attributeProvider;
             }
         }
 
         public static ILogger Logger
         {
-            get { return _logger; }
+            get
+            {
+                EnsureInitialized(); return _logger; }
         }
 
         public static void Register<TInterface, TImplementation>(Func<TImplementation> factory)
             where TInterface : class
             where TImplementation : class, TInterface
         {
+            EnsureInitialized();
+
             lock (_lock)
             {
                 _serviceRegistry[typeof(TInterface)] = factory;
@@ -65,6 +75,8 @@ namespace Svg
         public static TInterface Resolve<TInterface>()
             where TInterface : class
         {
+            EnsureInitialized();
+
             lock (_lock)
             {
                 Func<object> result;
@@ -79,6 +91,8 @@ namespace Svg
         public static TInterface TryResolve<TInterface>()
             where TInterface : class
         {
+            EnsureInitialized();
+
             lock (_lock)
             {
                 Func<object> result;
@@ -87,6 +101,29 @@ namespace Svg
                     return (TInterface)result();
                 }
                 return null;
+            }
+        }
+
+        private static void EnsureInitialized()
+        {
+            if (_initialized)
+                return;
+
+            lock (_lock)
+            {
+                var currentdomain = typeof(string).GetTypeInfo().Assembly.GetType("AppDomain").GetRuntimeProperty("CurrentDomain").GetMethod.Invoke(null, new object[] { });
+                var getassemblies = currentdomain.GetType().GetRuntimeMethod("GetAssemblies", new Type[] { });
+                var assemblies = getassemblies.Invoke(currentdomain, new object[] { }) as Assembly[];
+
+                var platformSetupAttribute =
+                    assemblies.SelectMany(a => a.CustomAttributes.OfType<SvgPlatformAttribute>()).FirstOrDefault();
+
+                if (platformSetupAttribute == null)
+                    throw new InvalidCastException("No platform specific SVG setup seems to exist");
+
+                // create instance and call "init"
+
+                _initialized = true;
             }
         }
     }
