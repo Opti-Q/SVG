@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using MvvmCross.Core.ViewModels;
 using Svg.Core;
+using Svg.Core.Interfaces;
 using Svg.Core.Tools;
 using Svg.Droid.SampleEditor.Core.Tools;
 using Svg.Interfaces;

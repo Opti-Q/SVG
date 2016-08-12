@@ -1,6 +1,6 @@
 ﻿using Svg.Interfaces;
 
-namespace Svg.Droid.SampleEditor.Core
+namespace Svg.Core.Interfaces
 {
     public interface ISvgSourceFactory
     {

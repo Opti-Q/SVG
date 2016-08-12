@@ -27,10 +27,8 @@ namespace Svg.Droid.SampleEditor.Views
         protected override void OnCreate(Bundle bundle)
         {
             // register first
-            SvgPlatformSetup.Init(new SvgSkiaPlatformOptions() { EnableFastTextRendering = true });
-            Engine.Register<ISvgSourceFactory, SvgSourceFactory>(() => new SvgSourceFactory(Assets));
-            Func<string, ISvgSource> svgSourceProvider = source => Engine.Resolve<ISvgSourceFactory>().Create(source);
-            Engine.Register<ISvgCachingService, SvgCachingService>(() => new SvgCachingService(svgSourceProvider));
+            // Initialize SVG Platform and tie together PCL and platform specific modules
+            SvgEditor.Init(this);
 
             SetupIconCache();
 
