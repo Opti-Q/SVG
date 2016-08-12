@@ -27,6 +27,7 @@ namespace Svg.Core.Tools
         private Pen _pen;
         private bool _isActive;
         private SvgDrawingCanvas _canvas;
+        private bool _validMove;
         private Brush BlueBrush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
         private Pen BluePen => _pen ?? (_pen = Engine.Factory.CreatePen(BlueBrush, 5));
 
@@ -250,6 +251,7 @@ namespace Svg.Core.Tools
             var p = @event as PointerEvent;
             if (p?.PointerCount == 1 && (p.EventType == EventType.PointerUp || p.EventType == EventType.Cancel))
             {
+                _validMove = false;
                 if (_currentLine != null)
                 {
                     ws.SelectedElements.Remove(_currentLine);
@@ -268,7 +270,15 @@ namespace Svg.Core.Tools
             }
 
             if (p?.EventType == EventType.PointerDown)
+            {
                 _multiplePointersRegistered = p.PointerCount != 1;
+
+                if (_currentLine != null)
+                {
+                    _validMove = Math.Abs(p.Pointer1Position.X - _currentLine.EndX) <= MIN_MOVED_DISTANCE &&
+                                 Math.Abs(p.Pointer1Position.Y - _currentLine.EndY) <= MIN_MOVED_DISTANCE;
+                }
+            }
 
             if (_multiplePointersRegistered)
                 return Task.FromResult(true);
@@ -322,6 +332,8 @@ namespace Svg.Core.Tools
                             MarkerEnd = CreateUriFromId(SelectedMarkerEndId)
                         };
 
+                        _validMove = true;
+
                         if (SelectedLineStyle == "dashed")
                         {
                             _currentLine.StrokeDashArray = StrokeDashArray.Clone();
@@ -329,9 +341,15 @@ namespace Svg.Core.Tools
 
                         ws.Document.Children.Add(_currentLine);
                     }
-
-                    _currentLine.EndX = new SvgUnit(SvgUnitType.Pixel, relativeEndX);
-                    _currentLine.EndY = new SvgUnit(SvgUnitType.Pixel, relativeEndY);
+                    //else if (Math.Abs(relativeEndX - e.RelativeDelta.X - _currentLine.EndX) <= MIN_MOVED_DISTANCE &&
+                    //         Math.Abs(relativeEndY - e.RelativeDelta.Y - _currentLine.EndY) <= MIN_MOVED_DISTANCE)
+                    //{
+                    if (_validMove)
+                    {
+                        _currentLine.EndX = new SvgUnit(SvgUnitType.Pixel, relativeEndX);
+                        _currentLine.EndY = new SvgUnit(SvgUnitType.Pixel, relativeEndY);
+                    }
+                    //}
 
                     ws.FireInvalidateCanvas();
                 }
