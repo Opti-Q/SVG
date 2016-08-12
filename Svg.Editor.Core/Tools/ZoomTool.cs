@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Svg.Core.Events;
+using Svg.Core.Interfaces;
 using Svg.Core.Utils;
 
 namespace Svg.Core.Tools
@@ -8,7 +9,17 @@ namespace Svg.Core.Tools
     public class ZoomTool : ToolBase
     {
         private SvgDrawingCanvas _owner;
-       
+        private Brush _purpleBrush;
+        private Pen _purplePen;
+        private Brush _orangeBrush;
+        private Pen _orangePen;
+        private float CurrentFocusX { get; set; }
+        private float CurrentFocusY { get; set; }
+        private Brush PurpleBrush => _purpleBrush ?? (_purpleBrush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 210, 80, 210)));
+        private Pen PurplePen => _purplePen ?? (_purplePen = Engine.Factory.CreatePen(PurpleBrush, 5));
+        private Brush OrangeBrush => _orangeBrush ?? (_orangeBrush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 220, 160, 60)));
+        private Pen OrangePen => _orangePen ?? (_orangePen = Engine.Factory.CreatePen(OrangeBrush, 5));
+
         public ZoomTool(float minScale = 0.5f, float maxScale = 5f)
             :base("Zoom")
         {
@@ -56,6 +67,8 @@ namespace Svg.Core.Tools
         
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
+            //CurrentFocusX = CurrentFocusY = 0;
+
             if (!IsActive)
                 return Task.FromResult(true);
 
@@ -67,6 +80,8 @@ namespace Svg.Core.Tools
             {
                 // Don't let the object get too small or too large.
                 ws.ZoomFactor = GetBoundedZoomFactor(se, ws);
+                CurrentFocusX = se.FocusX;
+                CurrentFocusY = se.FocusY;
                 ws.FireInvalidateCanvas();
             }
 
@@ -78,5 +93,17 @@ namespace Svg.Core.Tools
             var newZoomFactor = ws.ZoomFactor * se.ScaleFactor;
             return Math.Max(MinScale, Math.Min(newZoomFactor, MaxScale));
         }
+
+        //public override async Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
+        //{
+        //    await base.OnDraw(renderer, ws);
+
+        //    renderer.Graphics.Save();
+
+        //    renderer.DrawCircle(CurrentFocusX, CurrentFocusY, 18, PurplePen);
+        //    renderer.DrawCircle(ws.GetCanvasX(CurrentFocusX), ws.GetCanvasY(CurrentFocusY), 22, OrangePen);
+
+        //    renderer.Graphics.Restore();
+        //}
     }
 }
