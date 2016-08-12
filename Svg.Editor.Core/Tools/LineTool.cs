@@ -50,6 +50,17 @@ namespace Svg.Core.Tools
             }
         }
 
+        public string[] MarkerStartNames
+        {
+            get
+            {
+                object markerNames;
+                if (!Properties.TryGetValue("markerstartnames", out markerNames))
+                    markerNames = Enumerable.Empty<string>();
+                return (string[])markerNames;
+            }
+        }
+
         public string[] MarkerEndIds
         {
             get
@@ -61,6 +72,17 @@ namespace Svg.Core.Tools
             }
         }
 
+        public string[] MarkerEndNames
+        {
+            get
+            {
+                object markerNames;
+                if (!Properties.TryGetValue("markerendnames", out markerNames))
+                    markerNames = Enumerable.Empty<string>();
+                return (string[])markerNames;
+            }
+        }
+
         public string[] LineStyles
         {
             get
@@ -69,6 +91,17 @@ namespace Svg.Core.Tools
                 if (!Properties.TryGetValue("linestyles", out lineStyles))
                     lineStyles = Enumerable.Empty<string>();
                 return (string[])lineStyles;
+            }
+        }
+
+        public string[] LineStyleNames
+        {
+            get
+            {
+                object lineStyleNames;
+                if (!Properties.TryGetValue("linestylenames", out lineStyleNames))
+                    lineStyleNames = Enumerable.Empty<string>();
+                return (string[])lineStyleNames;
             }
         }
 
@@ -129,7 +162,7 @@ namespace Svg.Core.Tools
                 definitions = new SvgDefinitionList();
                 document.Children.Add(definitions);
             }
-            
+
             foreach (var marker in Markers)
             {
                 if (document.GetElementById(marker.ID) != null) continue;
@@ -156,13 +189,13 @@ namespace Svg.Core.Tools
             ToolUsage = ToolUsage.Explicit;
 
             var markers = new List<SvgMarker>();
-            var marker = new SvgMarker { ID = "arrowStart", Orient = new SvgOrient() {IsAuto = true} };
+            var marker = new SvgMarker { ID = "arrowStart", Orient = new SvgOrient() { IsAuto = true } };
             marker.Children.Add(new SvgPath
             {
                 PathData = new SvgPathSegmentList(new SvgPathSegment[]
                 {
-                    new SvgLineSegment(PointF.Create(0, -4), PointF.Create(0, 4)),
-                    new SvgLineSegment(PointF.Create(0, 4), PointF.Create(-8, 0)),
+                    new SvgLineSegment(PointF.Create(0, -2.0f), PointF.Create(0, 2f)),
+                    new SvgLineSegment(PointF.Create(0, 2.0f), PointF.Create(-4.0f, 0)),
                     new SvgClosePathSegment()
                 })
             });
@@ -172,8 +205,8 @@ namespace Svg.Core.Tools
             {
                 PathData = new SvgPathSegmentList(new SvgPathSegment[]
                 {
-                    new SvgLineSegment(PointF.Create(-8, -4), PointF.Create(-8, 4)),
-                    new SvgLineSegment(PointF.Create(-8, 4), PointF.Create(0, 0)),
+                    new SvgLineSegment(PointF.Create(0, -2.0f), PointF.Create(0, 2.0f)),
+                    new SvgLineSegment(PointF.Create(0, 2.0f), PointF.Create(4.0f, 0)),
                     new SvgClosePathSegment()
                 })
             });
@@ -181,8 +214,8 @@ namespace Svg.Core.Tools
             marker = new SvgMarker { ID = "circle", Orient = new SvgOrient() { IsAuto = true } };
             marker.Children.Add(new SvgEllipse
             {
-                RadiusX = 8,
-                RadiusY = 8
+                RadiusX = 1.5f,
+                RadiusY = 1.5f
             });
             markers.Add(marker);
 
@@ -306,7 +339,7 @@ namespace Svg.Core.Tools
 
             return Task.FromResult(true);
         }
-        
+
         public override async Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
             await base.OnDraw(renderer, ws);
@@ -335,30 +368,42 @@ namespace Svg.Core.Tools
                 _canvas = canvas;
             }
 
-            private new LineTool Tool => (LineTool) base.Tool;
+            private new LineTool Tool => (LineTool)base.Tool;
 
             public override async void Execute(object parameter)
             {
-                var t = (LineTool)Tool;
+                var t = Tool;
 
                 var selectedLines = _canvas.SelectedElements.OfType<SvgLine>().ToArray();
 
-                var markerStartId = selectedLines.Any() ? selectedLines.All(x => selectedLines.First().MarkerStart == x.MarkerStart) ? selectedLines.First().MarkerStart?.OriginalString.Substring(1) ?? "none" : "none" : t.SelectedMarkerStartId;
-                //var lineStyle = TODO: parse line style from attributes
-                var markerEndId = selectedLines.Any() ? selectedLines.All(x => selectedLines.First().MarkerEnd == x.MarkerEnd) ? selectedLines.First().MarkerEnd?.OriginalString.Substring(1) ?? "none" : "none" : t.SelectedMarkerEndId;
+                var markerStartId = selectedLines.Any()
+                    ? selectedLines.All(x => selectedLines.First().MarkerStart == x.MarkerStart)
+                        ? selectedLines.First().MarkerStart?.OriginalString.Substring(1) ?? "none"
+                        : "none"
+                    : t.SelectedMarkerStartId;
+                var lineStyle = selectedLines.Any()
+                    ? selectedLines.All(x => selectedLines.First().StrokeDashArray?.ToString() == x.StrokeDashArray?.ToString())
+                        ? string.IsNullOrEmpty(selectedLines.First().StrokeDashArray?.ToString()) ? "normal" : "dashed"
+                        : "normal"
+                    : t.SelectedLineStyle;
+                var markerEndId = selectedLines.Any()
+                    ? selectedLines.All(x => selectedLines.First().MarkerEnd == x.MarkerEnd)
+                        ? selectedLines.First().MarkerEnd?.OriginalString.Substring(1) ?? "none"
+                        : "none"
+                    : t.SelectedMarkerEndId;
 
                 int markerStartIndex;
                 int lineStyleIndex;
                 int markerEndIndex;
 
                 markerStartIndex = Array.IndexOf(t.MarkerStartIds, markerStartId);
-                lineStyleIndex = 0;
+                lineStyleIndex = Array.IndexOf(t.LineStyles, lineStyle);
                 markerEndIndex = Array.IndexOf(t.MarkerEndIds, markerEndId);
 
                 var selectedOptions = await LineOptionsInputServiceProxy.GetUserInput("Choose line options",
-                    t.MarkerStartIds, markerStartIndex,
-                    t.LineStyles, lineStyleIndex,
-                    t.MarkerEndIds, markerEndIndex);
+                    t.MarkerStartNames, markerStartIndex,
+                    t.LineStyleNames, lineStyleIndex,
+                    t.MarkerEndNames, markerEndIndex);
 
                 var selectedMarkerStartId = t.MarkerStartIds[selectedOptions[0]];
                 var selectedLineStyle = t.LineStyles[selectedOptions[1]];
