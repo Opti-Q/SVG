@@ -197,9 +197,11 @@ namespace Svg
                         {
                             case SvgMarkerUnits.StrokeWidth:
                                 transMatrix.Translate(AdjustForViewBoxWidth(-RefX.ToDeviceValue(pRenderer, UnitRenderingType.Horizontal, this) *
-                                                        pOwner.StrokeWidth.ToDeviceValue(pRenderer, UnitRenderingType.Other, this)),
+                                                        pOwner.StrokeWidth.ToDeviceValue(pRenderer, UnitRenderingType.Other, this) * 
+                                                        MarkerWidth.ToDeviceValue(pRenderer, UnitRenderingType.Other, this)),
                                                       AdjustForViewBoxHeight(-RefY.ToDeviceValue(pRenderer, UnitRenderingType.Vertical, this) *
-                                                        pOwner.StrokeWidth.ToDeviceValue(pRenderer, UnitRenderingType.Other, this)));
+                                                        pOwner.StrokeWidth.ToDeviceValue(pRenderer, UnitRenderingType.Other, this) *
+                                                        MarkerHeight.ToDeviceValue(pRenderer, UnitRenderingType.Other, this)));
                                 break;
                             case SvgMarkerUnits.UserSpaceOnUse:
                                 transMatrix.Translate(-RefX.ToDeviceValue(pRenderer, UnitRenderingType.Horizontal, this),
@@ -257,7 +259,7 @@ namespace Svg
                 case SvgMarkerUnits.StrokeWidth:
                     using (var transMatrix = Engine.Factory.CreateMatrix())
                     {
-                        transMatrix.Scale(AdjustForViewBoxWidth(pPath.StrokeWidth), AdjustForViewBoxHeight(pPath.StrokeWidth));
+                        transMatrix.Scale(AdjustForViewBoxWidth(pPath.StrokeWidth * MarkerWidth), AdjustForViewBoxHeight(pPath.StrokeWidth * MarkerHeight));
                         pRet.Transform(transMatrix);
                     }
                     break;
