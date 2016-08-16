@@ -124,8 +124,9 @@ namespace Svg.Core.Tools
             DrawGridLines(renderer, ws);
 
             // draw debug stuff
-            var screenTopLeft = ws.ScreenToCanvas(0, 0);
-            renderer.DrawCircle(screenTopLeft.X, screenTopLeft.Y, 50, Pen); // point should remain in top left corner on screen
+            var canvasx = -ws.RelativeTranslate.X;
+            var canvasy = -ws.RelativeTranslate.Y;
+            renderer.DrawCircle(canvasx, canvasy, 50, Pen); // point should remain in top left corner on screen
             renderer.DrawCircle(0, 0, 20, Pen2); // point on canvas - should move along
             renderer.DrawLine(1f, 1f, 200f, 1f, Pen2);
 
@@ -159,19 +160,20 @@ namespace Svg.Core.Tools
 
         private void DrawGridLines(IRenderer renderer, SvgDrawingCanvas ws)
         {
-            var screenTopLeft = ws.ScreenToCanvas(0, 0);
+            var canvasx = -ws.RelativeTranslate.X;
+            var canvasy = -ws.RelativeTranslate.Y;
 
-            var relativeCanvasTranslationX = screenTopLeft.X % StepSizeX;
-            var relativeCanvasTranslationY = screenTopLeft.Y % StepSizeY;
+            var relativeCanvasTranslationX = (canvasx) % StepSizeX;
+            var relativeCanvasTranslationY = (canvasy) % StepSizeY;
 
             var height = renderer.Height / ws.ZoomFactor;
-            var yPosition = height - height % StepSizeY + StepSizeY * 2;
+            var yPosition = (height - (height % StepSizeY) + (StepSizeY * 2));
             var stepSize = (int)Math.Round(StepSizeY, 0);
 
-            var x = screenTopLeft.X - relativeCanvasTranslationX - stepSize * 2;
+            var x = canvasx - relativeCanvasTranslationX - (stepSize * 2);
             // subtract 2x stepsize so gridlines always start from "out of sight" and lines do not start from a visible x-border
-            var y = screenTopLeft.Y - relativeCanvasTranslationY;
-            var lineLength = Math.Sqrt(Math.Pow(renderer.Width, 2) + Math.Pow(renderer.Height, 2)) / ws.ZoomFactor + stepSize * 4;
+            var y = canvasy - relativeCanvasTranslationY;
+            var lineLength = Math.Sqrt(Math.Pow(renderer.Width, 2) + Math.Pow(renderer.Height, 2)) / ws.ZoomFactor + (stepSize * 4);
 
             for (var i = y - yPosition; i <= y + yPosition; i += stepSize)
             {
@@ -189,8 +191,8 @@ namespace Svg.Core.Tools
         {
             var startX = canvasX;
             var startY = y;
-            var stopX = (float)(lineLength * Math.Cos(Alpha * (Math.PI / 180))) + canvasX;
-            var stopY = y - (float)(lineLength * Math.Sin(Alpha * (Math.PI / 180)));
+            var stopX = ((float)(lineLength * Math.Cos(Alpha * (Math.PI / 180)))) + canvasX;
+            var stopY = (y - (float)(lineLength * Math.Sin(Alpha * (Math.PI / 180))));
 
 
             renderer.DrawLine(
@@ -206,8 +208,8 @@ namespace Svg.Core.Tools
         {
             var startX = canvasX;
             var startY = y;
-            var endX = (float)(lineLength * Math.Cos(Alpha * (Math.PI / 180))) + canvasX;
-            var endY = y + (float)(lineLength * Math.Sin(Alpha * (Math.PI / 180)));
+            var endX = ((float)(lineLength * Math.Cos(Alpha * (Math.PI / 180)))) + canvasX;
+            var endY = (y + (float)(lineLength * Math.Sin(Alpha * (Math.PI / 180))));
 
             renderer.DrawLine(
                 startX,

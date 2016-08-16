@@ -15,7 +15,6 @@ namespace Svg.Core.Tools
     public class ColorTool : ToolBase
     {
         private static IColorInputService ColorInputServiceProxy => Engine.Resolve<IColorInputService>();
-        //private readonly IDictionary<Type, Color> _selectedColors = new Dictionary<Type, Color>();
         private Color _defaultSelectedColor;
         private SvgDrawingCanvas _canvas;
 
@@ -61,8 +60,6 @@ namespace Svg.Core.Tools
             get { return _defaultSelectedColor; }
             set { _defaultSelectedColor = value; }
         }
-
-        public string ColorIconNameModifier => StringifyColor(SelectedColor);
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
@@ -168,6 +165,8 @@ namespace Svg.Core.Tools
                 _canvas = canvas;
             }
 
+            private new ColorTool Tool => (ColorTool) base.Tool;
+
             public override async void Execute(object parameter)
             {
                 var t = (ColorTool)Tool;
@@ -189,6 +188,18 @@ namespace Svg.Core.Tools
 
                 t.SelectedColor = color;
                 _canvas.FireToolCommandsChanged();
+            }
+
+            public override string IconName
+            {
+                get
+                {
+                    var fs = Engine.Resolve<IFileSystem>();
+                    var svgCachingService = Engine.Resolve<ISvgCachingService>();
+                    var path = svgCachingService.GetCachedPngPath(Tool.IconName, StringifyColor(Tool.SelectedColor), fs);
+                    return path;
+                }
+                set { }
             }
         }
     }

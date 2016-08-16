@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using MvvmCross.Core.ViewModels;
 using Svg.Core;
+using Svg.Core.Interfaces;
 using Svg.Core.Tools;
 using Svg.Droid.SampleEditor.Core.Tools;
 using Svg.Interfaces;
@@ -27,6 +28,7 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
             
             Canvas.Tools.Add(new SaveTool(false));
             Canvas.Document = SvgDocument.Open<SvgDocument>(GetSource("svg/large_svg_01.svg"));
+            //Canvas.Document = SvgDocument.Open<SvgDocument>(GetSource("svg/ground_floor_plan.svg"));
             Canvas.IsDebugEnabled = true;
 
             //// only allow to rotate text elements

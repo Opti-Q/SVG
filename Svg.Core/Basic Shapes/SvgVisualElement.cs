@@ -20,9 +20,7 @@ namespace Svg
     {
         private bool _requiresSmoothRendering;
         private Region _previousClip;
-        private Pen _strokePen;
-        private Brush _strokeBrush;
-        private Brush _fillBrush;
+        public const string STROKE = "STROKE";
 
         /// <summary>
         /// Gets the <see cref="GraphicsPath"/> for this element.
@@ -367,11 +365,20 @@ namespace Svg
         /// <param name="renderer">The <see cref="ISvgRenderer"/> object to render to.</param>
         protected internal virtual bool RenderStroke(ISvgRenderer renderer)
         {
-            if (this.Stroke != null && this.Stroke != SvgColourServer.None)
+            // allow to override stroke using context variable (used by marker to have same stoke color as owning path)
+            object strokeTemp;
+            SvgPaintServer stroke = this.Stroke;
+            if ((this.Stroke == SvgColourServer.Inherit || this.Stroke == SvgColourServer.NotSet) &&
+                renderer.Context.TryGetValue(STROKE, out strokeTemp))
+            {
+                stroke = (SvgPaintServer)strokeTemp;
+            }
+
+            if (stroke != null && stroke != SvgColourServer.None)
             {
                 float strokeWidth = this.StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, this);
                 //using (var brush = GetStrokeBrush(renderer))
-                using(var brush = this.Stroke.GetBrush(this, renderer, Math.Min(Math.Max(this.StrokeOpacity * this.Opacity, 0), 1), true))
+                using(var brush = stroke.GetBrush(this, renderer, Math.Min(Math.Max(this.StrokeOpacity * this.Opacity, 0), 1), true))
                 {
                     if (brush != null)
                     {
@@ -400,15 +407,16 @@ namespace Svg
                         }
                         else
                         {
-                            /*using (*/
-                            //var pen = CreateStrokePen(brush, strokeWidth);/*)*/
                             using (var pen = Engine.Factory.CreatePen(brush, strokeWidth))
                             {
                                 if (this.StrokeDashArray != null && this.StrokeDashArray.Count > 0)
                                 {
-                                    /* divide by stroke width - GDI behaviour that I don't quite understand yet.*/
-                                    pen.DashPattern = this.StrokeDashArray.ConvertAll(u => ((u.ToDeviceValue(renderer, UnitRenderingType.Other, this) <= 0) ? 1 : u.ToDeviceValue(renderer, UnitRenderingType.Other, this)) /
-                                        ((strokeWidth <= 0) ? 1 : strokeWidth)).ToArray();
+                                    pen.DashPattern =
+                                        this.StrokeDashArray.ConvertAll(
+                                            u =>
+                                                ((u.ToDeviceValue(renderer, UnitRenderingType.Other, this) <= 0)
+                                                    ? 1
+                                                    : u.ToDeviceValue(renderer, UnitRenderingType.Other, this))).ToArray();
                                 }
                                 switch (this.StrokeLineJoin)
                                 {
@@ -533,29 +541,6 @@ namespace Svg
             newObj.Opacity = this.Opacity;
 
             return newObj;
-        }
-        
-        private Pen CreateStrokePen(Brush brush, float strokeWidth)
-        {
-            return _strokePen ?? (_strokePen = Engine.Factory.CreatePen(brush, strokeWidth));
-        }
-
-        private Brush GetStrokeBrush(ISvgRenderer renderer)
-        {
-            return _strokeBrush ?? (_strokeBrush = this.Stroke.GetBrush(this, renderer, Math.Min(Math.Max(this.StrokeOpacity * this.Opacity, 0), 1), true));
-        }
-
-        private Brush GetFillBrush(ISvgRenderer renderer)
-        {
-            return _fillBrush ?? (_fillBrush = this.Fill.GetBrush(this, renderer, Math.Min(Math.Max(this.FillOpacity * this.Opacity, 0), 1)));
-        }
-
-        public override void Dispose()
-        {
-            _strokePen?.Dispose();
-            _strokeBrush?.Dispose();
-            _fillBrush?.Dispose();
-            base.Dispose();
         }
     }
 }

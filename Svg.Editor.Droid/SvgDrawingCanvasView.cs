@@ -9,6 +9,7 @@ using Svg.Core;
 using Svg.Core.Interfaces;
 using Svg.Core.Tools;
 using Svg.Droid.Editor.Services;
+using Svg.Interfaces;
 using GestureDetector = Svg.Droid.Editor.Services.GestureDetector;
 
 namespace Svg.Droid.Editor
@@ -29,15 +30,10 @@ namespace Svg.Droid.Editor
 
         public SvgDrawingCanvasView(Context context, IAttributeSet attr) : base(context, attr)
         {
-            // Initialize SVG Platform and tie together PCL and platform specific modules
-            SvgPlatformSetup.Init(new SvgSkiaPlatformOptions() {EnableFastTextRendering = true});
+            SvgEditor.Init(context);
 
             _drawingCanvas = new SvgDrawingCanvas();
             _detector = new GestureDetector(this.Context, (e) => DrawingCanvas.OnEvent(e));
-
-            Engine.Register<ITextInputService, TextInputService>(() => new TextInputService(context));
-            Engine.Register<IColorInputService, ColorInputService>(() => new ColorInputService(context));
-            Engine.Register<ILineOptionsInputService, LineOptionsInputService>(() => new LineOptionsInputService(context));
         }
 
         public override bool OnTouchEvent(MotionEvent ev)

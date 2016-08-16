@@ -68,8 +68,6 @@ namespace Svg.Core.Tools
         
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
-            //CurrentFocusX = CurrentFocusY = 0;
-
             if (!IsActive)
                 return Task.FromResult(true);
 
@@ -95,17 +93,5 @@ namespace Svg.Core.Tools
             var newZoomFactor = ws.ZoomFactor * se.ScaleFactor;
             return Math.Max(MinScale, Math.Min(newZoomFactor, MaxScale));
         }
-
-        //public override async Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
-        //{
-        //    await base.OnDraw(renderer, ws);
-
-        //    renderer.Graphics.Save();
-
-        //    renderer.DrawCircle(CurrentFocusX, CurrentFocusY, 18, PurplePen);
-        //    renderer.DrawCircle(ws.GetCanvasX(CurrentFocusX), ws.GetCanvasY(CurrentFocusY), 22, OrangePen);
-
-        //    renderer.Graphics.Restore();
-        //}
     }
 }

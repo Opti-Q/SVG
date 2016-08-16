@@ -1,9 +1,9 @@
 using Android.Content.Res;
-using Svg.Droid.SampleEditor.Core;
+using Svg.Core.Interfaces;
 using Svg.Interfaces;
 using Svg.Platform;
 
-namespace Svg.Droid.SampleEditor
+namespace Svg.Droid.Editor.Services
 {
     public class SvgSourceFactory : ISvgSourceFactory
     {

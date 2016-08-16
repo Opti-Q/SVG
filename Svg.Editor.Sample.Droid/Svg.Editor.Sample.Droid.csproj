@@ -115,7 +115,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Setup.cs" />
     <Compile Include="SplashScreen.cs" />
-    <Compile Include="SvgSourceFactory.cs" />
     <Compile Include="Views\EditorView.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -415,6 +414,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\svg\positions_05.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\svg\ground_floor_plan.svg" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
