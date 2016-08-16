@@ -11,11 +11,11 @@ namespace Svg
                 throw new ArgumentNullException(nameof(e));
 
             var m = e.Transforms.GetMatrix();
-            //var inv = m.Clone();
-            //inv.Invert();
-            //var b = inv.TransformRectangle(e.GetBoundingBox());
-            var b = e.Bounds;
-            m.RotateAt(angleDegrees, PointF.Create(b.Width/2, b.Height/2), MatrixOrder.Prepend);
+            var inv = m.Clone();
+            inv.Invert();
+            var b = inv.TransformRectangle(e.GetBoundingBox());
+
+            m.RotateAt(angleDegrees, PointF.Create(b.X + b.Width/2, b.Y + b.Height/2), MatrixOrder.Prepend);
 
             return m;
         }

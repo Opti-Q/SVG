@@ -4,28 +4,28 @@ using Android.Content;
 using Android.Text;
 using Android.Views.InputMethods;
 using Android.Widget;
+using Svg;
 using Svg.Core.Tools;
+using Svg.Droid.Editor.Services;
 
+[assembly: SvgService(typeof(ITextInputService), typeof(TextInputService))]
 namespace Svg.Droid.Editor.Services
 {
     public class TextInputService : ITextInputService
     {
-        private readonly Context _context;
-
-        public TextInputService(Context context)
-        {
-            _context = context;
-        }
 
         public Task<string> GetUserInput(string title, string textValue)
         {
             var tcs = new TaskCompletionSource<string>();
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(_context);
+            var cp = Engine.Resolve<IContextProvider>();
+            var context = cp.Context;
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.SetTitle(title);
 
             // Set up the input
-            var input = new EditText(_context)
+            var input = new EditText(context)
             {
                 Text = textValue,
                 InputType = InputTypes.TextFlagMultiLine,

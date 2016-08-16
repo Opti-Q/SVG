@@ -1,6 +1,10 @@
 using System;
+using Svg;
 using Svg.Core.Interfaces;
+using Svg.Droid.Editor.Services;
 using Svg.Interfaces;
+
+[assembly: SvgService(typeof(ISvgCachingService), typeof(SvgCachingService))]
 
 namespace Svg.Droid.Editor.Services
 {
@@ -8,9 +12,9 @@ namespace Svg.Droid.Editor.Services
     {
         private readonly Func<string, ISvgSource> _sourceProvider;
 
-        public SvgCachingService(Func<string, ISvgSource> sourceProvider)
+        public SvgCachingService()
         {
-            _sourceProvider = sourceProvider;
+            _sourceProvider = (src) => Engine.Resolve<ISvgSourceFactory>().Create(src);
         }
 
         public void SaveAsPng(string svgFilePath, string nameModifier, Action<SvgDocument> preprocessAction)

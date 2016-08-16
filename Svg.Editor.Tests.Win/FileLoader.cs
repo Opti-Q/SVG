@@ -1,5 +1,8 @@
 ﻿using NUnit.Framework;
+using Svg;
+using Svg.Editor.Tests;
 
+[assembly:SvgService(typeof(IFileLoader), typeof(FileLoader))]
 namespace Svg.Editor.Tests
 {
     public class FileLoader : IFileLoader

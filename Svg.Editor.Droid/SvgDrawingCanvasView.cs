@@ -4,17 +4,13 @@ using Android.Content;
 using Android.Graphics;
 using Android.Util;
 using Android.Views;
-using Android.Widget;
 using Svg.Core;
-using Svg.Core.Interfaces;
-using Svg.Core.Tools;
 using Svg.Droid.Editor.Services;
-using Svg.Interfaces;
 using GestureDetector = Svg.Droid.Editor.Services.GestureDetector;
 
 namespace Svg.Droid.Editor
 {
-    public class SvgDrawingCanvasView : ImageView
+    public class SvgDrawingCanvasView : View
     {
 #if !ANDROID
         private Android.Graphics.Bitmap _bitmap;
@@ -30,8 +26,6 @@ namespace Svg.Droid.Editor
 
         public SvgDrawingCanvasView(Context context, IAttributeSet attr) : base(context, attr)
         {
-            SvgEditor.Init(context);
-
             _drawingCanvas = new SvgDrawingCanvas();
             _detector = new GestureDetector(this.Context, (e) => DrawingCanvas.OnEvent(e));
         }
@@ -81,6 +75,8 @@ namespace Svg.Droid.Editor
 #endif
         protected override void OnAttachedToWindow()
         {
+            ContextProvider._context = this.Context;
+
             base.OnAttachedToWindow();
             _drawingCanvas.CanvasInvalidated -= OnCanvasInvalidated;
             _drawingCanvas.CanvasInvalidated += OnCanvasInvalidated;
@@ -93,6 +89,8 @@ namespace Svg.Droid.Editor
             _drawingCanvas.CanvasInvalidated -= OnCanvasInvalidated;
             _drawingCanvas.ToolCommandsChanged -= OnToolCommandsChanged;
             base.OnDetachedFromWindow();
+
+            ContextProvider._context = null;
         }
 
         private void OnCanvasInvalidated(object sender, EventArgs e)

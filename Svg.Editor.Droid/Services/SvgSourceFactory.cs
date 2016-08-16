@@ -1,7 +1,11 @@
 using Android.Content.Res;
+using Svg;
 using Svg.Core.Interfaces;
+using Svg.Droid.Editor.Services;
 using Svg.Interfaces;
 using Svg.Platform;
+
+[assembly: SvgService(typeof(ISvgSourceFactory), typeof(SvgSourceFactory))]
 
 namespace Svg.Droid.Editor.Services
 {
@@ -9,9 +13,9 @@ namespace Svg.Droid.Editor.Services
     {
         private readonly AssetManager _assets;
 
-        public SvgSourceFactory(AssetManager assets)
+        public SvgSourceFactory()
         {
-            _assets = assets;
+            _assets = Android.App.Application.Context.Assets;
         }
 
         public ISvgSource Create(string path)
