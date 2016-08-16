@@ -41,8 +41,10 @@ namespace Svg.Core.Tools
             if (ev == null)
                 return Task.FromResult(true);
 
-            ws.Translate.X += ev.RelativeDelta.X / ws.ZoomFactor;
-            ws.Translate.Y += ev.RelativeDelta.Y / ws.ZoomFactor;
+            //ws.Translate.X += ev.RelativeDelta.X / ws.ZoomFactor;
+            //ws.Translate.Y += ev.RelativeDelta.Y / ws.ZoomFactor;
+            ws.Translate.X += ev.RelativeDelta.X;
+            ws.Translate.Y += ev.RelativeDelta.Y;
             ws.FireInvalidateCanvas();
 
             return Task.FromResult(true);

@@ -25,6 +25,7 @@ namespace Svg.Core
         private bool _initialized = false;
         private ITool _activeTool;
         private bool _isDebugEnabled;
+        private PointF _zoomFocus;
 
         public event EventHandler CanvasInvalidated;
         public event EventHandler ToolCommandsChanged;
@@ -234,8 +235,7 @@ namespace Svg.Core
 
             // apply global panning and zooming
             renderer.Translate(Translate.X, Translate.Y);
-            renderer.Scale(ZoomFactor, ZoomFocusX, ZoomFocusY);
-            ZoomFocusX = ZoomFocusY = 0;
+            renderer.Scale(ZoomFactor, ZoomFocus.X, ZoomFocus.Y);
 
             // draw default background
             renderer.FillEntireCanvasWithColor(Engine.Factory.Colors.White);
