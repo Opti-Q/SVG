@@ -343,8 +343,8 @@ namespace Svg.Core.Tools
                     //{
                     if (_validMove)
                     {
-                        _currentLine.EndX = new SvgUnit(SvgUnitType.Pixel, relativeEndX);
-                        _currentLine.EndY = new SvgUnit(SvgUnitType.Pixel, relativeEndY);
+                        _currentLine.EndX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X);
+                        _currentLine.EndY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y);
                     }
                     //}
 
