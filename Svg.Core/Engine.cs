@@ -178,14 +178,13 @@ namespace Svg
             var platformSetupAttributeTypes =
                 assemblies.SelectMany(a => a.CustomAttributes.Where(ca => ca.AttributeType == typeof(T)))
                     .ToList();
-
-            if (!platformSetupAttributeTypes.Any())
-                return null;
-
-            return platformSetupAttributeTypes.Select(pt => pt.AttributeType.GetTypeInfo()
-                                    .DeclaredConstructors.First()
-                                    .Invoke(pt.ConstructorArguments.Select(carg => carg.Value).ToArray()))
-                    .Cast<T>();
+            
+            foreach (var pt in platformSetupAttributeTypes)
+            {
+                var ctor = pt.AttributeType.GetTypeInfo().DeclaredConstructors.First();
+                var parameters = pt.ConstructorArguments?.Select(carg => carg.Value).ToArray();
+                yield return (T) ctor.Invoke(parameters);
+            }
         }
         
         private static Assembly[] GetAppDomainAssemblies()
