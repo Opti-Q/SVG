@@ -275,8 +275,8 @@ namespace Svg.Core.Tools
 
                 if (_currentLine != null)
                 {
-                    _validMove = Math.Abs(p.Pointer1Position.X - _currentLine.EndX) <= MIN_MOVED_DISTANCE &&
-                                 Math.Abs(p.Pointer1Position.Y - _currentLine.EndY) <= MIN_MOVED_DISTANCE;
+                    _validMove = Math.Abs(ws.GetCanvasX(p.Pointer1Position.X) - _currentLine.EndX) <= MIN_MOVED_DISTANCE &&
+                                 Math.Abs(ws.GetCanvasY(p.Pointer1Position.Y) - _currentLine.EndY) <= MIN_MOVED_DISTANCE;
                 }
             }
 
