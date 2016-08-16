@@ -114,6 +114,7 @@ namespace Svg.Core.Tools
                 _isActive = value;
                 if (_isActive)
                 {
+                    // if tool was activated, reduce selection to a single line and set it as current line
                     _currentLine = _canvas.SelectedElements.OfType<SvgLine>().FirstOrDefault();
                     _canvas.SelectedElements.Clear();
                     if (_currentLine == null) return;
@@ -121,6 +122,7 @@ namespace Svg.Core.Tools
                     _canvas.FireInvalidateCanvas();
                     return;
                 }
+                // if tool was deactivated, reset current line
                 if (_currentLine == null) return;
                 _canvas.SelectedElements.Remove(_currentLine);
                 _currentLine = null;
@@ -275,8 +277,8 @@ namespace Svg.Core.Tools
 
                 if (_currentLine != null)
                 {
-                    _validMove = Math.Abs(p.Pointer1Position.X - _currentLine.EndX) <= MIN_MOVED_DISTANCE &&
-                                 Math.Abs(p.Pointer1Position.Y - _currentLine.EndY) <= MIN_MOVED_DISTANCE;
+                    _validMove = Math.Abs(ws.GetCanvasX(p.Pointer1Position.X) - _currentLine.EndX) <= MIN_MOVED_DISTANCE &&
+                                 Math.Abs(ws.GetCanvasY(p.Pointer1Position.Y) - _currentLine.EndY) <= MIN_MOVED_DISTANCE;
                 }
             }
 
@@ -338,15 +340,11 @@ namespace Svg.Core.Tools
 
                         ws.Document.Children.Add(_currentLine);
                     }
-                    //else if (Math.Abs(relativeEndX - e.RelativeDelta.X - _currentLine.EndX) <= MIN_MOVED_DISTANCE &&
-                    //         Math.Abs(relativeEndY - e.RelativeDelta.Y - _currentLine.EndY) <= MIN_MOVED_DISTANCE)
-                    //{
                     if (_validMove)
                     {
                         _currentLine.EndX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X);
                         _currentLine.EndY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y);
                     }
-                    //}
 
                     ws.FireInvalidateCanvas();
                 }
@@ -424,7 +422,7 @@ namespace Svg.Core.Tools
                 var selectedLineStyle = t.LineStyles[selectedOptions[1]];
                 var selectedMarkerEndId = t.MarkerEndIds[selectedOptions[2]];
 
-                if (selectedLines.Length == 1)
+                if (selectedLines.Any())
                 {
                     // change the line style of all selected items
                     foreach (var selectedLine in selectedLines)

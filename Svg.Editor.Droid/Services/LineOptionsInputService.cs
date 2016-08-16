@@ -5,22 +5,21 @@ using Android.App;
 using Android.Content;
 using Android.Views;
 using Android.Widget;
+using Svg;
 using Svg.Core.Tools;
+using Svg.Droid.Editor.Services;
 
+[assembly: SvgService(typeof(ILineOptionsInputService), typeof(LineOptionsInputService))]
 namespace Svg.Droid.Editor.Services
 {
     public class LineOptionsInputService : ILineOptionsInputService
     {
-        private Context Context { get; }
-
-        public LineOptionsInputService(Context context)
-        {
-            Context = context;
-        }
-
         public Task<int[]> GetUserInput(string title, IEnumerable<string> markerStartOptions, int markerStartSelected, IEnumerable<string> lineStyleOptions, int dashSelected, IEnumerable<string> markerEndOptions, int markerEndSelected)
         {
-            var builder = new AlertDialog.Builder(Context);
+            var cp = Engine.Resolve<IContextProvider>();
+            var context = cp.Context;
+
+            var builder = new AlertDialog.Builder(context);
             var tcs = new TaskCompletionSource<int[]>();
             var result = new int[3];
             AlertDialog dialog = null;
@@ -29,11 +28,11 @@ namespace Svg.Droid.Editor.Services
             builder.SetTitle(title);
 
             // setup spinner for start marker
-            var view = new LinearLayout(Context) { Orientation = Orientation.Horizontal };
-            var spinner1 = new Spinner(Context)
+            var view = new LinearLayout(context) { Orientation = Orientation.Horizontal };
+            var spinner1 = new Spinner(context)
             {
                 Adapter =
-                    new ArrayAdapter(Context, Android.Resource.Layout.SimpleSpinnerDropDownItem,
+                    new ArrayAdapter(context, Android.Resource.Layout.SimpleSpinnerDropDownItem,
                         markerStartOptions.ToArray()),
                 LayoutParameters = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WrapContent) { Weight = 1 }
             };
@@ -42,10 +41,10 @@ namespace Svg.Droid.Editor.Services
             view.AddView(spinner1);
 
             // setup spinner for dash style
-            var spinner2 = new Spinner(Context)
+            var spinner2 = new Spinner(context)
             {
                 Adapter =
-                    new ArrayAdapter(Context, Android.Resource.Layout.SimpleSpinnerDropDownItem, lineStyleOptions.ToArray()),
+                    new ArrayAdapter(context, Android.Resource.Layout.SimpleSpinnerDropDownItem, lineStyleOptions.ToArray()),
                 LayoutParameters = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WrapContent) { Weight = 1 }
             };
             spinner2.ItemSelected += (sender, args) => result[1] = args.Position;
@@ -53,10 +52,10 @@ namespace Svg.Droid.Editor.Services
             view.AddView(spinner2);
 
             // setup spinner for end marker
-            var spinner3 = new Spinner(Context)
+            var spinner3 = new Spinner(context)
             {
                 Adapter =
-                    new ArrayAdapter(Context, Android.Resource.Layout.SimpleSpinnerDropDownItem,
+                    new ArrayAdapter(context, Android.Resource.Layout.SimpleSpinnerDropDownItem,
                         markerEndOptions.ToArray()),
                 LayoutParameters = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WrapContent) { Weight = 1 }
             };
@@ -64,7 +63,7 @@ namespace Svg.Droid.Editor.Services
             spinner3.SetSelection(markerEndSelected);
             view.AddView(spinner3);
 
-            var okButton = new Button(Context) { Text = "OK" };
+            var okButton = new Button(context) { Text = "OK" };
             view.AddView(okButton);
 
             builder.SetView(view);

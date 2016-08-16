@@ -7,11 +7,6 @@ using Svg.Transforms;
 
 namespace Svg
 {
-    public class SvgPlatformOptions
-    {
-        
-    }
-
     public abstract class SvgPlatformSetupBase
     {
         private static readonly FileSystem FileSystem = new FileSystem();
@@ -24,7 +19,7 @@ namespace Svg
         private static readonly CultureHelper CultureHelper = new CultureHelper();
         private bool _isInitialized = false;
 
-        protected virtual void Initialize(SvgPlatformOptions options)
+        public virtual void Initialize()
         {
             if (_isInitialized)
                 return;

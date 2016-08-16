@@ -12,16 +12,6 @@ namespace Svg.Editor.Tests
 
         protected SvgDrawingCanvas Canvas => _canvas;
 
-        static SvgDrawingCanvasTestBase()
-        {
-            SvgPlatformSetup.Init(new SvgSkiaPlatformOptions() { EnableFastTextRendering = true });
-#if WIN
-            // register dummy factory for windows builds (only used in unittests)
-            Engine.Register<IFactory, WinSKFactory>(() => new WinSKFactory());
-            Engine.Register<IFileLoader, FileLoader>(() => new FileLoader());
-#endif
-        }
-
         [SetUp]
         public virtual void SetUp()
         {
