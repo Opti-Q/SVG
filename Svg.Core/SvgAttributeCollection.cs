@@ -61,20 +61,17 @@ namespace Svg
         /// <returns>The attribute value if available; otherwise the ancestors value for the same attribute; otherwise the default value of <typeparamref name="TAttributeType"/>.</returns>
         public TAttributeType GetInheritedAttribute<TAttributeType>(string attributeName)
         {
-            if (this.ContainsKey(attributeName) && !IsInheritValue(base[attributeName]))
+            if (ContainsKey(attributeName) && !IsInheritValue(base[attributeName]))
             {
                 var result = (TAttributeType)base[attributeName];
                 var deferred = result as SvgDeferredPaintServer;
-                if (deferred != null) deferred.EnsureServer(_owner);
+                deferred?.EnsureServer(_owner);
                 return result;
             }
 
-            if (this._owner.Parent != null)
+            if (_owner.Parent?.Attributes[attributeName] != null)
             {
-                if (this._owner.Parent.Attributes[attributeName] != null)
-                {
-                    return (TAttributeType)this._owner.Parent.Attributes[attributeName];
-                }
+                return _owner.Parent.Attributes.GetInheritedAttribute<TAttributeType>(attributeName);
             }
 
             return default(TAttributeType);
@@ -82,16 +79,16 @@ namespace Svg
 
         private bool IsInheritValue(object value)
         {
-            return (value == null ||
-                    (value is SvgFontWeight && (SvgFontWeight)value == SvgFontWeight.Inherit) ||
-                    (value is SvgTextAnchor && (SvgTextAnchor)value == SvgTextAnchor.Inherit) ||
-                    (value is SvgFontVariant && (SvgFontVariant)value == SvgFontVariant.Inherit) || 
-                    (value is SvgTextDecoration && (SvgTextDecoration)value == SvgTextDecoration.Inherit) ||
-                    (value is XmlSpaceHandling && (XmlSpaceHandling)value == XmlSpaceHandling.inherit) ||
-                    (value is SvgOverflow && (SvgOverflow)value == SvgOverflow.Inherit) ||
-                    (value == SvgColourServer.Inherit) || 
-                    (value is string && (string)value == "inherit")
-                   );
+            return value == null ||
+                   value is SvgFontWeight && (SvgFontWeight)value == SvgFontWeight.Inherit ||
+                   value is SvgTextAnchor && (SvgTextAnchor)value == SvgTextAnchor.Inherit ||
+                   value is SvgFontVariant && (SvgFontVariant)value == SvgFontVariant.Inherit || 
+                   value is SvgTextDecoration && (SvgTextDecoration)value == SvgTextDecoration.Inherit ||
+                   value is XmlSpaceHandling && (XmlSpaceHandling)value == XmlSpaceHandling.inherit ||
+                   value is SvgOverflow && (SvgOverflow)value == SvgOverflow.Inherit ||
+                   value == SvgColourServer.Inherit ||
+                   value == SvgUnitCollection.Inherit ||
+                   value is string && (string)value == "inherit";
         }
 
         /// <summary>

@@ -150,6 +150,8 @@ namespace Svg
 
         public virtual Color CreateColorFromHexString(string hex)
         {
+            if (hex == null) throw new ArgumentException("Hex string cannot be null.", nameof(hex));
+
             if (Regex.IsMatch(hex.ToLowerInvariant(), @"^#[a-f0-9]{8}$"))
             {
                 var a = int.Parse(hex.Substring(1, 2), NumberStyles.HexNumber);
