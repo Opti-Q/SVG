@@ -1,4 +1,8 @@
-﻿using Svg.Interfaces;
+﻿using Svg;
+using Svg.Editor.Tests;
+using Svg.Interfaces;
+
+[assembly: SvgService(typeof(IFactory), typeof(WinSKFactory))]
 
 namespace Svg.Editor.Tests
 {

@@ -318,6 +318,8 @@
     <Compile Include="SvgElementIdManager.cs" />
     <Compile Include="SvgElementStyle.cs" />
     <Compile Include="SvgExtentions.cs" />
+    <Compile Include="SvgPlatformAttribute.cs" />
+    <Compile Include="SvgServiceAttribute.cs" />
     <Compile Include="SvgUnknownElement.cs" />
     <Compile Include="Text\FontFamily.cs" />
     <Compile Include="Text\GdiFontDefn.cs" />
