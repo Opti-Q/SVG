@@ -8,7 +8,7 @@ namespace Svg.Core.Tools
     {
         public StrokeStyleTool() : base("Stroke style")
         {
-            IconName = "ic_line_style_white_48dp.png";
+            IconName = "ic_border_style_white_48dp.png";
         }
 
         public override Task Initialize(SvgDrawingCanvas ws)
@@ -19,43 +19,7 @@ namespace Svg.Core.Tools
                 new ChangeStrokeStyleCommand(ws, this, "Change stroke")
             };
 
-            // initialize with callbacks
-            WatchDocument(ws.Document);
-
             return Task.FromResult(true);
-        }
-
-        public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
-        {
-            // add watch for global colorizing
-            WatchDocument(newDocument);
-            UnWatchDocument(oldDocument);
-        }
-
-        /// <summary>
-        /// Subscribes to the documentss "Add/RemoveChild" handlers.
-        /// </summary>
-        /// <param name="document"></param>
-        private void WatchDocument(SvgDocument document)
-        {
-            if (document == null)
-                return;
-
-            document.ChildAdded -= OnChildAdded;
-            document.ChildAdded += OnChildAdded;
-        }
-
-        private void UnWatchDocument(SvgDocument document)
-        {
-            if (document == null)
-                return;
-
-            document.ChildAdded -= OnChildAdded;
-        }
-
-        private void OnChildAdded(object sender, ChildAddedEventArgs e)
-        {
-            // TODO: change stroke style of added child
         }
 
         /// <summary>
