@@ -68,7 +68,8 @@ namespace Svg.Core
                     new SelectionTool(),
                     new TextTool(),
                     new LineTool(lineToolProperties),
-                    new ColorTool(colorToolProperties)
+                    new ColorTool(colorToolProperties),
+                    new StrokeStyleTool()
             };
             _tools.CollectionChanged += OnToolsChanged;
         }

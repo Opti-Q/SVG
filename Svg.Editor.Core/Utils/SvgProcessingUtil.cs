@@ -10,7 +10,7 @@ namespace Svg.Core.Utils
         {
             return document =>
             {
-                document.Children.Single().Children.Last().Fill = new SvgColourServer(color);
+                document.Children.First(x => x is SvgVisualElement).Fill = new SvgColourServer(color);
             };
         }
     }

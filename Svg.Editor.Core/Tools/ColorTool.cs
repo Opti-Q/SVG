@@ -16,7 +16,6 @@ namespace Svg.Core.Tools
     {
         private static IColorInputService ColorInputServiceProxy => Engine.Resolve<IColorInputService>();
         private Color _defaultSelectedColor;
-        private SvgDrawingCanvas _canvas;
 
         public ColorTool(string properties) : base("Color", properties)
         {
@@ -29,11 +28,12 @@ namespace Svg.Core.Tools
             {
                 object selectableColors;
                 Properties.TryGetValue("selectablecolors", out selectableColors);
-                if (selectableColors == null) selectableColors = Enumerable.Empty<Color>();
+                if (selectableColors == null) selectableColors = Enumerable.Empty<string>();
                 return (string[])selectableColors;
             }
         }
 
+        // implementaition for per-tool selected color
         //public Color SelectedColor
         //{
         //    get
@@ -63,11 +63,9 @@ namespace Svg.Core.Tools
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
-            _canvas = ws;
-
             var selectableColors = SelectableColors;
 
-            SelectedColor = Color.Create(selectableColors.FirstOrDefault());
+            SelectedColor = Color.Create(selectableColors.FirstOrDefault() ?? "#000000");
 
             // cache icons
             var cachingService = Engine.TryResolve<ISvgCachingService>();
@@ -101,10 +99,10 @@ namespace Svg.Core.Tools
         {
             var colourServer = new SvgColourServer(color);
 
-            foreach (var child in element.Children)
-            {
-                ColorizeElement(child, color);
-            }
+            //foreach (var child in element.Children)
+            //{
+            //    ColorizeElement(child, color);
+            //}
 
             // only colorize visual elements
             if (!(element is SvgVisualElement)) return;
@@ -169,7 +167,7 @@ namespace Svg.Core.Tools
 
             public override async void Execute(object parameter)
             {
-                var t = (ColorTool)Tool;
+                var t = Tool;
 
                 var colorNames = new[] { "Black", "Red", "Green", "Blue", "Yellow", "Magenta", "Cyan" };
                 var color = Color.Create(t.SelectableColors[await ColorInputServiceProxy.GetIndexFromUserInput("Choose color", colorNames, t.SelectableColors)]);

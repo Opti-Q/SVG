@@ -409,16 +409,16 @@ namespace Svg
                         {
                             using (var pen = Engine.Factory.CreatePen(brush, strokeWidth))
                             {
-                                if (this.StrokeDashArray != null && this.StrokeDashArray.Count > 0)
+                                var strokeDashArray = StrokeDashArray;
+                                if (!SvgUnitCollection.IsNullOrEmpty(strokeDashArray))
                                 {
-                                    pen.DashPattern =
-                                        this.StrokeDashArray.ConvertAll(
-                                            u =>
-                                                ((u.ToDeviceValue(renderer, UnitRenderingType.Other, this) <= 0)
-                                                    ? 1
-                                                    : u.ToDeviceValue(renderer, UnitRenderingType.Other, this))).ToArray();
+                                    var dashPattern = strokeDashArray.ConvertAll(u => u.ToDeviceValue(renderer, UnitRenderingType.Other, this)).ToArray();
+                                    pen.DashPattern = dashPattern.Length % 2 == 0 ? dashPattern : dashPattern.Concat(dashPattern).ToArray();
                                 }
-                                switch (this.StrokeLineJoin)
+
+                                pen.DashOffset = StrokeDashOffset;
+
+                                switch (StrokeLineJoin)
                                 {
                                     case SvgStrokeLineJoin.Bevel:
                                         pen.LineJoin = LineJoin.Bevel;
@@ -430,8 +430,8 @@ namespace Svg
                                         pen.LineJoin = LineJoin.Miter;
                                         break;
                                 }
-                                pen.MiterLimit = this.StrokeMiterLimit;
-                                switch (this.StrokeLineCap)
+                                pen.MiterLimit = StrokeMiterLimit;
+                                switch (StrokeLineCap)
                                 {
                                     case SvgStrokeLineCap.Round:
                                         pen.StartCap = LineCap.Round;

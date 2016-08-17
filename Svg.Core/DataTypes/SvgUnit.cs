@@ -29,6 +29,11 @@ namespace Svg
         public static readonly SvgUnit None = new SvgUnit(SvgUnitType.None, 0f);
 
         /// <summary>
+        /// Gets an <see cref="SvgUnit"/> that should inherit from its parent.
+        /// </summary>
+        public static readonly SvgUnit Inherit = new SvgUnit(SvgUnitType.None, 0f);
+
+        /// <summary>
         /// Gets a value to determine whether the unit is empty.
         /// </summary>
         public bool IsEmpty

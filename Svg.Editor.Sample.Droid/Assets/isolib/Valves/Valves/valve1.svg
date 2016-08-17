@@ -114,7 +114,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="6.8809604"
-     inkscape:cx="30.383953"
+     inkscape:cx="-15.685197"
      inkscape:cy="11.407335"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -156,9 +156,10 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-0.26657798,11.872388)">
+     transform="translate(-0.26657798,11.872388)"
+     style="stroke:#000000">
     <rect
-       style="fill:#000000;fill-opacity:0"
+       style="fill:none;fill-opacity:0;stroke:none"
        id="rect4159"
        width="77.498581"
        height="40.871971"
@@ -169,22 +170,22 @@
        id="g4021">
       <path
          id="path3780"
-         style="fill:none;stroke:#000000;stroke-width:0.9375;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:none"
          d="m 40.917525,5.3341823 0,14.5499997"
          inkscape:connector-curvature="0" />
       <path
          id="path3782"
-         style="fill:none;stroke:#000000;stroke-width:0.9375;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:none"
          d="m 17.217525,-8.3158174 0,14.5499997"
          inkscape:connector-curvature="0" />
       <path
          id="path3784"
-         style="fill:none;stroke:#000000;stroke-width:0.9375;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:none"
          d="m 17.217525,-8.3158174 23.7,28.1999994"
          inkscape:connector-curvature="0" />
       <path
          id="path3786"
-         style="fill:none;stroke:#000000;stroke-width:0.9375;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:none"
          d="m 17.217525,7.1466823 23.7,-2.725"
          inkscape:connector-curvature="0" />
       <g

@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
-using System.Reflection;
-using System.ComponentModel;
-using Svg.DataTypes;
-using System.Text.RegularExpressions;
 using System.Linq;
 using Svg.Interfaces;
 
@@ -16,7 +10,7 @@ namespace Svg
         private bool _dirty;
         
         /// <summary>
-        /// Gets or sets a value indicating whether this element's <see cref="Path"/> is dirty.
+        /// Gets or sets a value indicating whether this element's <see cref="System.IO.Path"/> is dirty.
         /// </summary>
         /// <value>
         /// 	<c>true</c> if the path is dirty; otherwise, <c>false</c>.
@@ -50,8 +44,8 @@ namespace Svg
         [SvgAttribute("stroke", true)]
         public virtual SvgPaintServer Stroke
         {
-            get { return (this.Attributes["stroke"] == null) ? null : (SvgPaintServer)this.Attributes["stroke"]; }
-            set { this.Attributes["stroke"] = value; }
+            get { return Attributes.GetInheritedAttribute<SvgPaintServer>("stroke"); }
+            set { Attributes["stroke"] = value; }
         }
 
         [SvgAttribute("fill-rule", true)]
@@ -105,8 +99,8 @@ namespace Svg
         [SvgAttribute("stroke-dasharray", true)]
         public virtual SvgUnitCollection StrokeDashArray
         {
-            get { return this.Attributes["stroke-dasharray"] as SvgUnitCollection; }
-            set { this.Attributes["stroke-dasharray"] = value; }
+            get { return Attributes.GetInheritedAttribute<SvgUnitCollection>("stroke-dasharray") ?? SvgUnitCollection.Inherit; }
+            set { Attributes["stroke-dasharray"] = value; }
         }
 
         [SvgAttribute("stroke-dashoffset", true)]
