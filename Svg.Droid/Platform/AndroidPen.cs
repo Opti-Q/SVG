@@ -48,6 +48,8 @@ namespace Svg.Platform
             }
         }
 
+        public override float DashOffset { get; set; }
+
         public override LineJoin LineJoin
         {
             get { return _lineJoin; }

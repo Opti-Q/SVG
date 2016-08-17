@@ -1,4 +1,5 @@
 
+using System;
 using SkiaSharp;
 
 namespace Svg.Platform
@@ -11,6 +12,9 @@ namespace Svg.Platform
         private LineJoin _lineJoin;
         private float _miterLimit;
         private LineCap _cap;
+        private float _dashOffset;
+
+        private event EventHandler DashesChanged;
 
         public SkiaPen(Brush brush, float strokeWidth)
         {
@@ -18,6 +22,8 @@ namespace Svg.Platform
 
             _brush.Paint.StrokeWidth = strokeWidth;
             _brush.Paint.IsStroke = true;
+
+            DashesChanged += OnDashesChanged;
         }
 
         public override void Dispose()
@@ -38,15 +44,29 @@ namespace Svg.Platform
                     _dashes = null;
                 }
 
-                if (_dashPattern != null)
-                {
-                    if (_dashes != null)
-                        _dashes.Dispose();
-
-                    _dashes = SKPathEffect.CreateDash(_dashPattern, 0f);
-                    _brush.Paint.PathEffect = _dashes;
-                }
+                DashesChanged?.Invoke(this, EventArgs.Empty);
             }
+        }
+
+        public override float DashOffset
+        {
+            get { return _dashOffset; }
+            set
+            {
+                _dashOffset = value;
+
+                DashesChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        private void OnDashesChanged(object sender, EventArgs eventArgs)
+        {
+            if (_dashPattern == null) return;
+
+            _dashes?.Dispose();
+
+            _dashes = SKPathEffect.CreateDash(_dashPattern, _dashOffset);
+            _brush.Paint.PathEffect = _dashes;
         }
 
         public override LineJoin LineJoin

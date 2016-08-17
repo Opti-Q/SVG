@@ -47,8 +47,8 @@
      id="namedview423"
      showgrid="false"
      inkscape:zoom="1.3037281"
-     inkscape:cx="464.22387"
-     inkscape:cy="161.10819"
+     inkscape:cx="694.71672"
+     inkscape:cy="171.84663"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
@@ -954,7 +954,8 @@
      id="layer1#21"
      xml:space="default"
      label="Ebene 1"
-     groupmode="layer">
+     groupmode="layer"
+     style="stroke:#000000">
     <rect
        x="38.686588"
        y="972.61432"
@@ -963,7 +964,7 @@
        id="rect4202"
        xml:space="default"
        stroke-miterlimit="10"
-       style="fill:#000000;fill-opacity:0;stroke-miterlimit:10;stroke-dasharray:8, 3, 0;stroke:none" />
+       style="fill:#000000;fill-opacity:0;stroke:none;stroke-miterlimit:10;stroke-dasharray:8, 3, 0" />
     <g
        transform="translate(-257.0511,397.6936)"
        id="g5533"
@@ -975,7 +976,7 @@
          xml:space="default"
          stroke-miterlimit="10"
          connector-curvature="0"
-         style="fill:#000000;fill-opacity:0;"
+         style="fill:#000000;fill-opacity:0;stroke-miterlimit:10"
          inkscape:connector-curvature="0" />
       <path
          d="m 334.6279,594.8618 -14.2561,-7.1761"
@@ -983,7 +984,7 @@
          xml:space="default"
          stroke-miterlimit="10"
          connector-curvature="0"
-         style="fill:#000000;fill-opacity:0;"
+         style="fill:#000000;fill-opacity:0;stroke-miterlimit:10"
          inkscape:connector-curvature="0" />
     </g>
   </g>
@@ -992,7 +993,8 @@
      id="layer1#22"
      xml:space="default"
      label="Ebene 1"
-     groupmode="layer">
+     groupmode="layer"
+     style="stroke:#000000">
     <rect
        x="58.13102"
        y="962.32843"
@@ -1001,7 +1003,7 @@
        id="rect4200#2"
        xml:space="default"
        stroke-miterlimit="10"
-       style="fill:#000000;fill-opacity:0;stroke-miterlimit:10;stroke-dasharray:8, 3, 0;stroke:none" />
+       style="fill:#000000;fill-opacity:0;stroke:none;stroke-miterlimit:10;stroke-dasharray:8, 3, 0" />
     <g
        transform="translate(-350.2683,391.8362)"
        id="g5537"
@@ -1012,7 +1014,7 @@
          xml:space="default"
          stroke-miterlimit="10"
          connector-curvature="0"
-         style="fill:none;"
+         style="fill:none;stroke-miterlimit:10"
          inkscape:connector-curvature="0" />
       <path
          d="m 408.5235,590.6826 12.8872,-6.8434"
@@ -1020,7 +1022,7 @@
          xml:space="default"
          stroke-miterlimit="10"
          connector-curvature="0"
-         style="fill:none;"
+         style="fill:none;stroke-miterlimit:10"
          inkscape:connector-curvature="0" />
     </g>
   </g>
@@ -1029,7 +1031,8 @@
      id="layer1#23"
      xml:space="default"
      label="Ebene 1"
-     groupmode="layer">
+     groupmode="layer"
+     style="stroke:#000000">
     <rect
        x="58.12394"
        y="962.12689"
@@ -1038,7 +1041,7 @@
        id="rect4200#3"
        xml:space="default"
        stroke-miterlimit="10"
-       style="fill:#000000;fill-opacity:0;stroke-miterlimit:10;stroke-dasharray:8, 3, 0;stroke:none" />
+       style="fill:#000000;fill-opacity:0;stroke:none;stroke-miterlimit:10;stroke-dasharray:8, 3, 0" />
     <g
        transform="matrix(1.026041,0,0,0.9924328,-55.12864,400.3387)"
        id="g5525"
@@ -1049,7 +1052,7 @@
          xml:space="default"
          stroke-miterlimit="10"
          connector-curvature="0"
-         style="fill:none;"
+         style="fill:none;stroke-miterlimit:10"
          inkscape:connector-curvature="0" />
       <path
          d="m 133.5418,574.3342 14.7625,-8.1624"
@@ -1057,7 +1060,7 @@
          xml:space="default"
          stroke-miterlimit="10"
          connector-curvature="0"
-         style="fill:none;"
+         style="fill:none;stroke-miterlimit:10"
          inkscape:connector-curvature="0" />
     </g>
   </g>
@@ -1066,7 +1069,8 @@
      id="layer1#24"
      xml:space="default"
      label="Ebene 1"
-     groupmode="layer">
+     groupmode="layer"
+     style="stroke:#000000">
     <rect
        x="58.124729"
        y="962.17133"
@@ -1075,7 +1079,7 @@
        id="rect4200#4"
        xml:space="default"
        stroke-miterlimit="10"
-       style="fill:#000000;fill-opacity:0;stroke-miterlimit:10;stroke-dasharray:8, 3, 0;stroke:none" />
+       style="fill:#000000;fill-opacity:0;stroke:none;stroke-miterlimit:10;stroke-dasharray:8, 3, 0" />
     <g
        transform="translate(-145.3074,396.1962)"
        id="g5529"
@@ -1086,7 +1090,7 @@
          xml:space="default"
          stroke-miterlimit="10"
          connector-curvature="0"
-         style="fill:none;"
+         style="fill:none;stroke-miterlimit:10"
          inkscape:connector-curvature="0" />
       <path
          d="m 218.2668,574.3342 -14.7625,-8.1624"
@@ -1094,7 +1098,7 @@
          xml:space="default"
          stroke-miterlimit="10"
          connector-curvature="0"
-         style="fill:none;"
+         style="fill:none;stroke-miterlimit:10"
          inkscape:connector-curvature="0" />
     </g>
   </g>
@@ -1513,10 +1517,10 @@
        height="60.87197"
        id="rect4163"
        xml:space="default"
-       fill-opacity="0"
        stroke-miterlimit="10"
+       style="fill:#000000;stroke:none"
        stroke-dasharray="8 3 "
-       style="fill:#000000;stroke:none" />
+       fill-opacity="0" />
     <g
        transform="matrix(1.025863, 0, 0, 0.9951032, -394.2296, 443.1017)"
        id="g3092"
@@ -1525,122 +1529,122 @@
          d="M435.6125 535.1247 L435.6125 560.6622"
          id="path2995"
          xml:space="default"
-         stroke="#000000"
-         stroke-width="0.625"
-         stroke-linejoin="round"
          stroke-miterlimit="10"
          connector-curvature="0"
-         style="fill:none;" />
+         style="fill:none;"
+         stroke-linejoin="round"
+         stroke-width="0.625"
+         stroke="#000000" />
       <path
          d="M454.8 518.9997 L454.8 550.7622"
          id="path2997"
          xml:space="default"
-         stroke="#000000"
-         stroke-width="0.625"
-         stroke-linejoin="round"
          stroke-miterlimit="10"
          connector-curvature="0"
-         style="fill:none;" />
+         style="fill:none;"
+         stroke-linejoin="round"
+         stroke-width="0.625"
+         stroke="#000000" />
       <path
          d="M459.45 531.8622 L490.85 515.4372"
          id="path2999"
          xml:space="default"
-         stroke="#000000"
-         stroke-width="0.625"
-         stroke-linejoin="round"
          stroke-miterlimit="10"
          connector-curvature="0"
-         style="fill:none;" />
+         style="fill:none;"
+         stroke-linejoin="round"
+         stroke-width="0.625"
+         stroke="#000000" />
       <path
          d="M403.775 562.0622 L431.25 547.6747"
          id="path3001"
          xml:space="default"
-         stroke="#000000"
-         stroke-width="0.625"
-         stroke-linejoin="round"
          stroke-miterlimit="10"
          connector-curvature="0"
-         style="fill:none;" />
+         style="fill:none;"
+         stroke-linejoin="round"
+         stroke-width="0.625"
+         stroke="#000000" />
       <path
          d="M432.35 562.3622 L438.4 559.1872"
          id="path3003"
          xml:space="default"
-         stroke="#000000"
-         stroke-width="0.625"
-         stroke-linejoin="round"
          stroke-miterlimit="10"
          connector-curvature="0"
-         style="fill:none;" />
+         style="fill:none;"
+         stroke-linejoin="round"
+         stroke-width="0.625"
+         stroke="#000000" />
       <path
          d="M516.125 502.3622 L491.1375 511.4872"
          id="path3005"
          xml:space="default"
-         stroke="#000000"
-         stroke-width="0.625"
-         stroke-linejoin="round"
          stroke-miterlimit="10"
          connector-curvature="0"
-         style="fill:none;" />
+         style="fill:none;"
+         stroke-linejoin="round"
+         stroke-width="0.625"
+         stroke="#000000" />
       <path
          d="M516.075 502.5747 L491.2375 518.7872"
          id="path3007"
          xml:space="default"
-         stroke="#000000"
-         stroke-width="0.625"
-         stroke-linejoin="round"
          stroke-miterlimit="10"
          connector-curvature="0"
-         style="fill:none;" />
+         style="fill:none;"
+         stroke-linejoin="round"
+         stroke-width="0.625"
+         stroke="#000000" />
       <path
          d="M431.35 531.9122 L454.55 550.2872"
          id="path3009"
          xml:space="default"
-         stroke="#000000"
-         stroke-width="0.625"
-         stroke-linejoin="round"
          stroke-miterlimit="10"
          connector-curvature="0"
-         style="fill:none;" />
+         style="fill:none;"
+         stroke-linejoin="round"
+         stroke-width="0.625"
+         stroke="#000000" />
       <path
          d="M454.9875 544.0747 L436.3875 529.1747"
          id="path3011"
          xml:space="default"
-         stroke="#000000"
-         stroke-width="0.625"
-         stroke-linejoin="round"
          stroke-miterlimit="10"
          connector-curvature="0"
-         style="fill:none;" />
+         style="fill:none;"
+         stroke-linejoin="round"
+         stroke-width="0.625"
+         stroke="#000000" />
       <path
          d="M491.3375 511.4872 L491.3375 519.0497"
          id="path3013"
          xml:space="default"
-         stroke="#000000"
-         stroke-width="0.625"
-         stroke-linejoin="round"
          stroke-miterlimit="10"
          connector-curvature="0"
-         style="fill:none;" />
+         style="fill:none;"
+         stroke-linejoin="round"
+         stroke-width="0.625"
+         stroke="#000000" />
       <path
          d="M451.2 521.0497 L457.9625 517.4872"
          id="path3015"
          xml:space="default"
-         stroke="#000000"
-         stroke-width="0.625"
-         stroke-linejoin="round"
          stroke-miterlimit="10"
          connector-curvature="0"
-         style="fill:none;" />
+         style="fill:none;"
+         stroke-linejoin="round"
+         stroke-width="0.625"
+         stroke="#000000" />
       <path
          d="M431.2 531.6872 L436.3875 528.9497"
          id="path3017"
          xml:space="default"
-         stroke="#000000"
-         stroke-width="0.625"
-         stroke-linejoin="round"
          stroke-miterlimit="10"
          connector-curvature="0"
-         style="fill:none;" />
+         style="fill:none;"
+         stroke-linejoin="round"
+         stroke-width="0.625"
+         stroke="#000000" />
     </g>
   </g>
   <g
@@ -1883,7 +1887,6 @@
              clip-path="url(#clipPath5155)"
              id="path5159"
              xml:space="default"
-             stroke=""
              stroke-miterlimit="10"
              connector-curvature="0"
              style="fill:none;stroke-linejoin:round;stroke-miterlimit:10"
@@ -2076,7 +2079,6 @@
          d="m 109.1731,553.0785 0,16.3375"
          id="path5203"
          xml:space="default"
-         stroke=""
          stroke-miterlimit="10"
          connector-curvature="0"
          style="fill:none;stroke-width:1.25;stroke-linejoin:round;stroke-miterlimit:10"
@@ -2085,7 +2087,6 @@
          d="m 112.1731,554.891 0,16.3375"
          id="path5205"
          xml:space="default"
-         stroke=""
          stroke-miterlimit="10"
          connector-curvature="0"
          style="fill:none;stroke-width:1.25;stroke-linejoin:round;stroke-miterlimit:10"
@@ -2145,7 +2146,6 @@
          stroke-miterlimit="10"
          connector-curvature="0"
          style="fill:none;stroke-width:1.25;stroke-linejoin:round;stroke-miterlimit:10"
-         stroke=""
          inkscape:connector-curvature="0" />
       <path
          d="m 206.8231,554.891 0,16.3375"
@@ -2154,7 +2154,6 @@
          stroke-miterlimit="10"
          connector-curvature="0"
          style="fill:none;stroke-width:1.25;stroke-linejoin:round;stroke-miterlimit:10"
-         stroke=""
          inkscape:connector-curvature="0" />
     </g>
   </g>

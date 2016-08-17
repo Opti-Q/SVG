@@ -87,6 +87,7 @@ namespace Svg
                    value is XmlSpaceHandling && (XmlSpaceHandling)value == XmlSpaceHandling.inherit ||
                    value is SvgOverflow && (SvgOverflow)value == SvgOverflow.Inherit ||
                    value == SvgColourServer.Inherit ||
+                   value == SvgColourServer.NotSet ||
                    value == SvgUnitCollection.Inherit ||
                    value is string && (string)value == "inherit";
         }

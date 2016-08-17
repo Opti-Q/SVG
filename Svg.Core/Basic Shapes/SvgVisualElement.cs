@@ -412,13 +412,12 @@ namespace Svg
                                 var strokeDashArray = StrokeDashArray;
                                 if (!SvgUnitCollection.IsNullOrEmpty(strokeDashArray))
                                 {
-                                    pen.DashPattern =
-                                        strokeDashArray.ConvertAll(
-                                            u =>
-                                                u.ToDeviceValue(renderer, UnitRenderingType.Other, this) <= 0
-                                                    ? 1
-                                                    : u.ToDeviceValue(renderer, UnitRenderingType.Other, this)).ToArray();
+                                    var dashPattern = strokeDashArray.ConvertAll(u => u.ToDeviceValue(renderer, UnitRenderingType.Other, this)).ToArray();
+                                    pen.DashPattern = dashPattern.Length % 2 == 0 ? dashPattern : dashPattern.Concat(dashPattern).ToArray();
                                 }
+
+                                pen.DashOffset = StrokeDashOffset;
+
                                 switch (StrokeLineJoin)
                                 {
                                     case SvgStrokeLineJoin.Bevel:
