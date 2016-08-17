@@ -3,25 +3,26 @@ using Android.App;
 using Android.Content;
 using Android.Views;
 using Android.Widget;
+using Svg;
 using Svg.Core.Tools;
+using Svg.Droid.Editor.Services;
+
+[assembly:SvgService(typeof(IColorInputService), typeof(ColorInputService))]
 
 namespace Svg.Droid.Editor.Services
 {
     public class ColorInputService : IColorInputService
     {
-        private Context Context { get; }
-
-        public ColorInputService(Context context)
-        {
-            Context = context;
-        }
-
         public Task<int> GetIndexFromUserInput(string title, string[] items, string[] colors)
         {
-            var builder = new AlertDialog.Builder(Context);
+
+            var cp = Engine.Resolve<IContextProvider>();
+            var context = cp.Context;
+
+            var builder = new AlertDialog.Builder(context);
             var tcs = new TaskCompletionSource<int>();
             builder.SetTitle(title);
-            builder.SetAdapter(new ColorListAdapter(items, colors, Context), (sender, args) =>
+            builder.SetAdapter(new ColorListAdapter(items, colors, context), (sender, args) =>
             {
                 tcs.SetResult(args.Which);
             });

@@ -26,10 +26,6 @@ namespace Svg.Droid.SampleEditor.Views
 
         protected override void OnCreate(Bundle bundle)
         {
-            // register first
-            // Initialize SVG Platform and tie together PCL and platform specific modules
-            SvgEditor.Init(this);
-
             SetupIconCache();
 
             base.OnCreate(bundle);

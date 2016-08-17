@@ -69,7 +69,7 @@ namespace Svg
                 return result;
             }
 
-            if (_owner.Parent?.Attributes[attributeName] != null)
+            if (_owner.Parent != null)
             {
                 return _owner.Parent.Attributes.GetInheritedAttribute<TAttributeType>(attributeName);
             }
@@ -99,74 +99,74 @@ namespace Svg
         public new object this[string attributeName]
         {
             get { return this.GetInheritedAttribute<object>(attributeName); }
-            set 
+            set
             {
-            	if(base.ContainsKey(attributeName))
-            	{
-	            	var oldVal = base[attributeName];	            	
-	            	if(TryUnboxedCheck(oldVal, value))
-	            	{
-	            		base[attributeName] = value;
-	            		OnAttributeChanged(attributeName, value, oldVal);
-	            	}
-            	}
-            	else
-            	{
-            		base[attributeName] = value;
-	            	OnAttributeChanged(attributeName, value, null);
-            	}
+                if (base.ContainsKey(attributeName))
+                {
+                    var oldVal = base[attributeName];
+                    if (TryUnboxedCheck(oldVal, value))
+                    {
+                        base[attributeName] = value;
+                        OnAttributeChanged(attributeName, value, oldVal);
+                    }
+                }
+                else
+                {
+                    base[attributeName] = value;
+                    OnAttributeChanged(attributeName, value, null);
+                }
             }
         }
-        
+
         private bool TryUnboxedCheck(object a, object b)
         {
-        	if(IsValueType(a))
-        	{
-        		if(a is SvgUnit)
-        			return UnboxAndCheck<SvgUnit>(a, b);
-        		else if(a is bool)
-        			return UnboxAndCheck<bool>(a, b);
-        		else if(a is int)
-        			return UnboxAndCheck<int>(a, b);
-        		else if(a is float)
-        			return UnboxAndCheck<float>(a, b);
-        		else if(a is SvgViewBox)
-        			return UnboxAndCheck<SvgViewBox>(a, b);
-        		else
-        			return true;
-        	}
-        	else
-        	{
-        		return a != b;
-        	}
+            if (IsValueType(a))
+            {
+                if (a is SvgUnit)
+                    return UnboxAndCheck<SvgUnit>(a, b);
+                else if (a is bool)
+                    return UnboxAndCheck<bool>(a, b);
+                else if (a is int)
+                    return UnboxAndCheck<int>(a, b);
+                else if (a is float)
+                    return UnboxAndCheck<float>(a, b);
+                else if (a is SvgViewBox)
+                    return UnboxAndCheck<SvgViewBox>(a, b);
+                else
+                    return true;
+            }
+            else
+            {
+                return a != b;
+            }
         }
-        
+
         private bool UnboxAndCheck<T>(object a, object b)
         {
-        	return !((T)a).Equals((T)b);
+            return !((T)a).Equals((T)b);
         }
-        
-        private bool IsValueType(object obj) 
+
+        private bool IsValueType(object obj)
         {
-        	return obj != null && obj.GetType().GetTypeInfo().IsValueType;
+            return obj != null && obj.GetType().GetTypeInfo().IsValueType;
         }
-        
+
         /// <summary>
         /// Fired when an Atrribute has changed
         /// </summary>
         public event EventHandler<AttributeEventArgs> AttributeChanged;
-        
+
         private void OnAttributeChanged(string attribute, object value, object oldValue)
         {
-        	var handler = AttributeChanged;
-        	if(handler != null)
-        	{
-        		handler(this._owner, new AttributeEventArgs(attribute, value, oldValue));
-        	}
+            var handler = AttributeChanged;
+            if (handler != null)
+            {
+                handler(this._owner, new AttributeEventArgs(attribute, value, oldValue));
+            }
         }
     }
-    
-    
+
+
     /// <summary>
     /// A collection of Custom Attributes
     /// </summary>
@@ -190,35 +190,35 @@ namespace Svg
         /// <returns>The attribute value associated with the specified name; If there is no attribute the parent's value will be inherited.</returns>
         public new string this[string attributeName]
         {
-        	get { return base[attributeName]; }
-            set 
+            get { return base[attributeName]; }
+            set
             {
-            	if(base.ContainsKey(attributeName))
-            	{
-	            	var oldVal = base[attributeName];
-	            	base[attributeName] = value;
-	            	if(oldVal != value) OnAttributeChanged(attributeName, value, oldVal);
-            	}
-            	else
-            	{
-            		base[attributeName] = value;
-	            	OnAttributeChanged(attributeName, value, null);
-            	}
+                if (base.ContainsKey(attributeName))
+                {
+                    var oldVal = base[attributeName];
+                    base[attributeName] = value;
+                    if (oldVal != value) OnAttributeChanged(attributeName, value, oldVal);
+                }
+                else
+                {
+                    base[attributeName] = value;
+                    OnAttributeChanged(attributeName, value, null);
+                }
             }
         }
-        
+
         /// <summary>
         /// Fired when an Atrribute has changed
         /// </summary>
         public event EventHandler<AttributeEventArgs> AttributeChanged;
-        
+
         private void OnAttributeChanged(string attribute, object value, object oldValue)
         {
-        	var handler = AttributeChanged;
-        	if(handler != null)
-        	{
-        		handler(this._owner, new AttributeEventArgs(attribute, value, oldValue));
-        	}
+            var handler = AttributeChanged;
+            if (handler != null)
+            {
+                handler(this._owner, new AttributeEventArgs(attribute, value, oldValue));
+            }
         }
     }
 }

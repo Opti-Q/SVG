@@ -8,7 +8,7 @@ namespace Svg.Transforms
         public abstract Matrix Matrix { get; }
         public abstract string WriteToString();
 
-    	public abstract object Clone();
+        public abstract object Clone();
 
         public virtual void ApplyTo(Matrix other)
         {
@@ -22,44 +22,42 @@ namespace Svg.Transforms
 
         #region Equals implementation
         public override bool Equals(object obj)
-		{
-			SvgTransform other = obj as SvgTransform;
-			if (other == null)
-				return false;
-			
-			var thisMatrix = this.Matrix.Elements;
-			var otherMatrix = other.Matrix.Elements;
-			
-			for (int i = 0; i < 6; i++) 
-			{
-				if(object.Equals(thisMatrix[i], otherMatrix[i]))
-					return false;
-			}
-			
-			return true;
-		}
-    	
-    	public override int GetHashCode()
-		{
-    		int hashCode = this.Matrix.GetHashCode();
-			return hashCode;
-		}
+        {
+            SvgTransform other = obj as SvgTransform;
+            if (ReferenceEquals(other, null))
+                return false;
 
-    	
-		public static bool operator ==(SvgTransform lhs, SvgTransform rhs)
-		{
-			if (ReferenceEquals(lhs, rhs))
-				return true;
-			if (ReferenceEquals(lhs, null) || ReferenceEquals(rhs, null))
-				return false;
-			return lhs.Equals(rhs);
-		}
-    	
-		public static bool operator !=(SvgTransform lhs, SvgTransform rhs)
-		{
-			return !(lhs == rhs);
-		}
-    	#endregion
+            var thisMatrix = Matrix.Elements;
+            var otherMatrix = other.Matrix.Elements;
+
+            for (int i = 0; i < 6; i++)
+            {
+                if (!Equals(thisMatrix[i], otherMatrix[i]))
+                    return false;
+            }
+
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = Matrix.GetHashCode();
+            return hashCode;
+        }
+
+
+        public static bool operator ==(SvgTransform lhs, SvgTransform rhs)
+        {
+            if (ReferenceEquals(lhs, null))
+                return ReferenceEquals(rhs, null);
+            return ReferenceEquals(lhs, rhs) || lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(SvgTransform lhs, SvgTransform rhs)
+        {
+            return !(lhs == rhs);
+        }
+        #endregion
 
         public override string ToString()
         {

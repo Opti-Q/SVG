@@ -44,8 +44,8 @@ namespace Svg
         [SvgAttribute("stroke", true)]
         public virtual SvgPaintServer Stroke
         {
-            get { return (this.Attributes["stroke"] == null) ? null : (SvgPaintServer)this.Attributes["stroke"]; }
-            set { this.Attributes["stroke"] = value; }
+            get { return Attributes.GetInheritedAttribute<SvgPaintServer>("stroke"); }
+            set { Attributes["stroke"] = value; }
         }
 
         [SvgAttribute("fill-rule", true)]
