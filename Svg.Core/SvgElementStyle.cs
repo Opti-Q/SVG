@@ -16,7 +16,7 @@ namespace Svg
         private bool _dirty;
         
         /// <summary>
-        /// Gets or sets a value indicating whether this element's <see cref="Path"/> is dirty.
+        /// Gets or sets a value indicating whether this element's <see cref="System.IO.Path"/> is dirty.
         /// </summary>
         /// <value>
         /// 	<c>true</c> if the path is dirty; otherwise, <c>false</c>.
@@ -50,8 +50,8 @@ namespace Svg
         [SvgAttribute("stroke", true)]
         public virtual SvgPaintServer Stroke
         {
-            get { return (this.Attributes["stroke"] == null) ? null : (SvgPaintServer)this.Attributes["stroke"]; }
-            set { this.Attributes["stroke"] = value; }
+            get { return Attributes.GetInheritedAttribute<SvgPaintServer>("stroke"); }
+            set { Attributes["stroke"] = value; }
         }
 
         [SvgAttribute("fill-rule", true)]

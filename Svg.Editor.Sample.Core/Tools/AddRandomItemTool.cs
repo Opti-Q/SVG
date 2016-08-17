@@ -15,22 +15,22 @@ namespace Svg.Droid.SampleEditor.Core.Tools
 
         private string[] SvgPathStrings =
         {
-            "isolib/Welds/solid/weld1.svg",
+            //"isolib/Welds/solid/weld1.svg",
             "isolib/Valves/Valves/valve1.svg",
-            "isolib/Valves/Valves/valve2.svg",
-            "isolib/Valves/Valves/valve3.svg",
-            "isolib/Reducers/solid/reducer1.svg",
-            "isolib/Straights/solid and broken/solid1.svg",
-            "svg/painting-control-01-f.svg",
-            "svg/blind01.svg",
-            "svg/Blinds_6.svg",
-            "svg/Blinds_6_gezoomtes_minibild.svg",
-            "svg/Positions_13_kein_text_im_minibild_und_canvas.svg",
-            "svg/ic_format_color_fill_white_48px.svg",
-            "svg/Spec_change_2.svg",
-            "svg/painting-marker-05-f.svg",
-            "svg/painting-marker-01-f.svg",
-            "svg/rect.svg",
+            //"isolib/Valves/Valves/valve2.svg",
+            //"isolib/Valves/Valves/valve3.svg",
+            //"isolib/Reducers/solid/reducer1.svg",
+            //"isolib/Straights/solid and broken/solid1.svg",
+            //"svg/painting-control-01-f.svg",
+            //"svg/blind01.svg",
+            //"svg/Blinds_6.svg",
+            //"svg/Blinds_6_gezoomtes_minibild.svg",
+            //"svg/Positions_13_kein_text_im_minibild_und_canvas.svg",
+            //"svg/ic_format_color_fill_white_48px.svg",
+            //"svg/Spec_change_2.svg",
+            //"svg/painting-marker-05-f.svg",
+            //"svg/painting-marker-01-f.svg",
+            //"svg/rect.svg",
     };
 
         public AddRandomItemTool(SvgDrawingCanvas canvas, Func<string, ISvgSource> sourceProvider = null) : base("Add random item")
