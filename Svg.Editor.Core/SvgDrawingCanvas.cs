@@ -531,11 +531,11 @@ namespace Svg.Core
         private void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
         {
             if(oldDocument != null) 
-                oldDocument.ContentModified -= this.OnDocumentContentModified;
+                oldDocument.ContentModified -= OnDocumentContentModified;
             if (newDocument != null)
             {
-                newDocument.ContentModified -= this.OnDocumentContentModified;
-                newDocument.ContentModified += this.OnDocumentContentModified;
+                newDocument.ContentModified -= OnDocumentContentModified;
+                newDocument.ContentModified += OnDocumentContentModified;
             }
             DocumentIsDirty = false;
 
