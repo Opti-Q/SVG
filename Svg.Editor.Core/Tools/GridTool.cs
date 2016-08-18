@@ -171,7 +171,7 @@ namespace Svg.Core.Tools
             var yPosition = height - height % StepSizeY + StepSizeY * 2;
             var stepSize = (int)Math.Round(StepSizeY, 0);
 
-            var x = screenTopLeft.X - relativeCanvasTranslationX - stepSize * 2;
+            var x = screenTopLeft.X - relativeCanvasTranslationX - (StepSizeX * 2);
             // subtract 2x stepsize so gridlines always start from "out of sight" and lines do not start from a visible x-border
             var y = screenTopLeft.Y - relativeCanvasTranslationY;
             var lineLength = Math.Sqrt(Math.Pow(renderer.Width, 2) + Math.Pow(renderer.Height, 2)) / ws.ZoomFactor + stepSize * 4;
