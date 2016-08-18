@@ -40,9 +40,9 @@ namespace Svg.Core.Tools
 
         private Pen _pen;
 
-        private Pen _pen2;
+        //private Pen _pen2;
         private Brush _brush;
-        private Brush _brush2;
+        //private Brush _brush2;
 
         private bool _isSnappingInProgress;
         private bool _areElementsMoved;
@@ -96,9 +96,9 @@ namespace Svg.Core.Tools
 
         public bool IsVisible { get; set; } = true;
         private Brush Brush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 210, 210, 210)));
-        private Brush Brush2 => _brush2 ?? (_brush2 = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(180, 0, 0, 0)));
+        //private Brush Brush2 => _brush2 ?? (_brush2 = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(180, 0, 0, 0)));
         private Pen Pen => _pen ?? (_pen = Engine.Factory.CreatePen(Brush, 1));
-        private Pen Pen2 => _pen2 ?? (_pen2 = Engine.Factory.CreatePen(Brush2, 1));
+        //private Pen Pen2 => _pen2 ?? (_pen2 = Engine.Factory.CreatePen(Brush2, 1));
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
@@ -484,9 +484,9 @@ namespace Svg.Core.Tools
         public override void Dispose()
         {
             _pen?.Dispose();
-            _pen2?.Dispose();
+            //_pen2?.Dispose();
             _brush?.Dispose();
-            _brush2?.Dispose();
+            //_brush2?.Dispose();
         }
 
         private static double SinDegree(double value)

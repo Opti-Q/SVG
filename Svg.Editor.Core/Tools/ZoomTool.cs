@@ -1,26 +1,23 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Svg.Core.Events;
-using Svg.Core.Interfaces;
-using Svg.Core.Utils;
-using Svg.Interfaces;
 
 namespace Svg.Core.Tools
 {
     public class ZoomTool : ToolBase
     {
         private SvgDrawingCanvas _owner;
-        private Brush _purpleBrush;
-        private Pen _purplePen;
-        private Brush _orangeBrush;
-        private Pen _orangePen;
         private bool _focused;
         private float CurrentFocusX { get; set; }
         private float CurrentFocusY { get; set; }
-        private Brush PurpleBrush => _purpleBrush ?? (_purpleBrush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 210, 80, 210)));
-        private Pen PurplePen => _purplePen ?? (_purplePen = Engine.Factory.CreatePen(PurpleBrush, 5));
-        private Brush OrangeBrush => _orangeBrush ?? (_orangeBrush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 220, 160, 60)));
-        private Pen OrangePen => _orangePen ?? (_orangePen = Engine.Factory.CreatePen(OrangeBrush, 5));
+        //private Brush _purpleBrush;
+        //private Pen _purplePen;
+        //private Brush _orangeBrush;
+        //private Pen _orangePen;
+        //private Brush PurpleBrush => _purpleBrush ?? (_purpleBrush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 210, 80, 210)));
+        //private Pen PurplePen => _purplePen ?? (_purplePen = Engine.Factory.CreatePen(PurpleBrush, 5));
+        //private Brush OrangeBrush => _orangeBrush ?? (_orangeBrush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 220, 160, 60)));
+        //private Pen OrangePen => _orangePen ?? (_orangePen = Engine.Factory.CreatePen(OrangeBrush, 5));
 
         public ZoomTool(float minScale = 0.5f, float maxScale = 5.0f)
             : base("Zoom")
