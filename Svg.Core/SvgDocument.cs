@@ -36,6 +36,8 @@ namespace Svg
             return _fontDefns;
         }
 
+        public event EventHandler<SvgElement> ContentModified;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SvgDocument"/> class.
         /// </summary>
@@ -646,6 +648,11 @@ namespace Svg
 
             this.X += new SvgUnit(SvgUnitType.Pixel, x);
             this.Y += new SvgUnit(SvgUnitType.Pixel, y);
+        }
+
+        protected override void OnSubTreeChanged(SvgElement svgElement)
+        {
+            ContentModified?.Invoke(this, svgElement);
         }
 
         public override void Dispose()

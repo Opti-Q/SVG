@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Svg.Core.Annotations;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 using Svg.Core.Tools;
@@ -16,7 +19,7 @@ using Svg.Transforms;
 
 namespace Svg.Core
 {
-    public class SvgDrawingCanvas : IDisposable, ICanInvalidateCanvas
+    public class SvgDrawingCanvas : IDisposable, ICanInvalidateCanvas, INotifyPropertyChanged
     {
         private readonly ObservableCollection<SvgVisualElement> _selectedElements;
         private readonly ObservableCollection<ITool> _tools;
@@ -25,6 +28,7 @@ namespace Svg.Core
         private bool _initialized = false;
         private ITool _activeTool;
         private bool _isDebugEnabled;
+        private bool _documentIsDirty;
 
         public event EventHandler CanvasInvalidated;
         public event EventHandler ToolCommandsChanged;
@@ -102,23 +106,17 @@ namespace Svg.Core
             }
         }
 
-        private void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
+        public bool DocumentIsDirty
         {
-            // fire document changed
-            foreach (var tool in Tools)
-                tool.OnDocumentChanged(oldDocument, newDocument);
-
-            oldDocument?.Dispose();
-
-            // selection is not valid anymore
-            SelectedElements.Clear();
-
-            // also reset translate and zoomfactor
-            Translate = PointF.Create(0f, 0f);
-            ZoomFactor = 1f;
-
-            // re-render
-            FireInvalidateCanvas();
+            get { return _documentIsDirty; }
+            private set
+            {
+                if (_documentIsDirty != value)
+                {
+                    _documentIsDirty = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         public ObservableCollection<SvgVisualElement> SelectedElements => _selectedElements;
@@ -461,7 +459,7 @@ namespace Svg.Core
                 Document.Height = new SvgUnit(SvgUnitType.Pixel, documentSize.Height);
                 Document.ViewBox = new SvgViewBox(documentSize.X, documentSize.Y, documentSize.Width, documentSize.Height);
                 Document.Write(stream);
-
+                
                 FireToolCommandsChanged();
             }
             finally
@@ -472,6 +470,26 @@ namespace Svg.Core
                 Document.X = oldX;
                 Document.Y = oldY;
             }
+
+            DocumentIsDirty = false;
+        }
+
+        public void FireInvalidateCanvas()
+        {
+            CanvasInvalidated?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void FireToolCommandsChanged()
+        {
+            ToolCommandsChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void Dispose()
+        {
+            foreach (var tool in Tools)
+                tool.Dispose();
+
+            _document?.Dispose();
         }
 
         private IList<IToolCommand> EnsureToolSelectors()
@@ -487,16 +505,6 @@ namespace Svg.Core
             return _toolSelectors;
         }
 
-        public void FireInvalidateCanvas()
-        {
-            CanvasInvalidated?.Invoke(this, EventArgs.Empty);
-        }
-
-        public void FireToolCommandsChanged()
-        {
-            ToolCommandsChanged?.Invoke(this, EventArgs.Empty);
-        }
-
         private void OnSelectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             FireToolCommandsChanged();
@@ -507,13 +515,38 @@ namespace Svg.Core
             _toolSelectors = null;
             FireToolCommandsChanged();
         }
-
-        public void Dispose()
+        
+        private void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
         {
-            foreach (var tool in Tools)
-                tool.Dispose();
+            if(oldDocument != null) 
+                oldDocument.ContentModified -= this.OnDocumentContentModified;
+            if (newDocument != null)
+            {
+                newDocument.ContentModified -= this.OnDocumentContentModified;
+                newDocument.ContentModified += this.OnDocumentContentModified;
+            }
+            DocumentIsDirty = false;
 
-            _document?.Dispose();
+            // fire document changed
+            foreach (var tool in Tools)
+                tool.OnDocumentChanged(oldDocument, newDocument);
+
+            oldDocument?.Dispose();
+
+            // selection is not valid anymore
+            SelectedElements.Clear();
+
+            // also reset translate and zoomfactor
+            Translate = PointF.Create(0f, 0f);
+            ZoomFactor = 1f;
+
+            // re-render
+            FireInvalidateCanvas();
+        }
+
+        private void OnDocumentContentModified(object sender, SvgElement e)
+        {
+            DocumentIsDirty = true;
         }
 
         private class SelectToolCommand : ToolCommand
@@ -549,6 +582,14 @@ namespace Svg.Core
                 get { return _canvas.ActiveTool?.Name; }
                 set { }
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
