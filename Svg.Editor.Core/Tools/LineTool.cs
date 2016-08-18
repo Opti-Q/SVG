@@ -276,11 +276,12 @@ namespace Svg.Core.Tools
 
                 if (_currentLine != null)
                 {
-                    _movementType = Math.Abs(p.Pointer1Position.X - _currentLine.EndX) <= MIN_MOVED_DISTANCE &&
-                                 Math.Abs(p.Pointer1Position.Y - _currentLine.EndY) <= MIN_MOVED_DISTANCE ? MovementType.End :
-                                 Math.Abs(p.Pointer1Position.X - _currentLine.StartX) <= MIN_MOVED_DISTANCE &&
-                                 Math.Abs(p.Pointer1Position.Y - _currentLine.StartY) <= MIN_MOVED_DISTANCE ? MovementType.Start :
-                                 _currentLine.GetBoundingBox().Contains(ws.ScreenToCanvas(p.Pointer1Position)) ? MovementType.StartEnd : MovementType.None;
+                    var canvasPointer1Position = ws.ScreenToCanvas(p.Pointer1Position);
+                    _movementType = Math.Abs(canvasPointer1Position.X - _currentLine.EndX) <= MIN_MOVED_DISTANCE &&
+                                 Math.Abs(canvasPointer1Position.Y - _currentLine.EndY) <= MIN_MOVED_DISTANCE ? MovementType.End :
+                                 Math.Abs(canvasPointer1Position.X - _currentLine.StartX) <= MIN_MOVED_DISTANCE &&
+                                 Math.Abs(canvasPointer1Position.Y - _currentLine.StartY) <= MIN_MOVED_DISTANCE ? MovementType.Start :
+                                 _currentLine.GetBoundingBox().Contains(canvasPointer1Position) ? MovementType.StartEnd : MovementType.None;
                 }
             }
 
