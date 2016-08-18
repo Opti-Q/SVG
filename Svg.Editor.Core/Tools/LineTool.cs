@@ -280,7 +280,7 @@ namespace Svg.Core.Tools
                                  Math.Abs(p.Pointer1Position.Y - _currentLine.EndY) <= MIN_MOVED_DISTANCE ? MovementType.End :
                                  Math.Abs(p.Pointer1Position.X - _currentLine.StartX) <= MIN_MOVED_DISTANCE &&
                                  Math.Abs(p.Pointer1Position.Y - _currentLine.StartY) <= MIN_MOVED_DISTANCE ? MovementType.Start :
-                                 _currentLine.GetBoundingBox().Contains(ws.GetScreenX(p.Pointer1Position.X), ws.GetScreenY(p.Pointer1Position.Y)) ? MovementType.StartEnd : MovementType.None;
+                                 _currentLine.GetBoundingBox().Contains(ws.ScreenToCanvas(p.Pointer1Position)) ? MovementType.StartEnd : MovementType.None;
                 }
             }
 
@@ -346,12 +346,12 @@ namespace Svg.Core.Tools
                     switch (_movementType)
                     {
                         case MovementType.End:
-                            _currentLine.EndX = new SvgUnit(SvgUnitType.Pixel, relativeEndX);
-                            _currentLine.EndY = new SvgUnit(SvgUnitType.Pixel, relativeEndY);
+                            _currentLine.EndX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X);
+                            _currentLine.EndY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y);
                             break;
                         case MovementType.Start:
-                            _currentLine.StartX = new SvgUnit(SvgUnitType.Pixel, relativeEndX);
-                            _currentLine.StartY = new SvgUnit(SvgUnitType.Pixel, relativeEndY);
+                            _currentLine.StartX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X);
+                            _currentLine.StartY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y);
                             break;
                         case MovementType.StartEnd:
                             // TODO: move both start and end points
