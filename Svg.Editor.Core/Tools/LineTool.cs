@@ -27,7 +27,7 @@ namespace Svg.Core.Tools
         private Pen _pen;
         private bool _isActive;
         private SvgDrawingCanvas _canvas;
-        private bool _validMove;
+        private MovementType _movementType;
         private Brush BlueBrush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
         private Pen BluePen => _pen ?? (_pen = Engine.Factory.CreatePen(BlueBrush, 5));
 
@@ -253,7 +253,6 @@ namespace Svg.Core.Tools
             var p = @event as PointerEvent;
             if (p?.PointerCount == 1 && (p.EventType == EventType.PointerUp || p.EventType == EventType.Cancel))
             {
-                _validMove = false;
                 if (_currentLine != null)
                 {
                     ws.SelectedElements.Remove(_currentLine);
@@ -277,9 +276,11 @@ namespace Svg.Core.Tools
 
                 if (_currentLine != null)
                 {
-                    var relativePointerPosition = ws.ScreenToCanvas(p.Pointer1Position);
-                    _validMove = Math.Abs(relativePointerPosition.X - _currentLine.EndX) <= MIN_MOVED_DISTANCE &&
-                                 Math.Abs(relativePointerPosition.Y - _currentLine.EndY) <= MIN_MOVED_DISTANCE;
+                    _movementType = Math.Abs(p.Pointer1Position.X - _currentLine.EndX) <= MIN_MOVED_DISTANCE &&
+                                 Math.Abs(p.Pointer1Position.Y - _currentLine.EndY) <= MIN_MOVED_DISTANCE ? MovementType.End :
+                                 Math.Abs(p.Pointer1Position.X - _currentLine.StartX) <= MIN_MOVED_DISTANCE &&
+                                 Math.Abs(p.Pointer1Position.Y - _currentLine.StartY) <= MIN_MOVED_DISTANCE ? MovementType.Start :
+                                 _currentLine.GetBoundingBox().Contains(ws.GetScreenX(p.Pointer1Position.X), ws.GetScreenY(p.Pointer1Position.Y)) ? MovementType.StartEnd : MovementType.None;
                 }
             }
 
@@ -322,7 +323,7 @@ namespace Svg.Core.Tools
                         _currentLine = new SvgLine
                         {
                             Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
-                            Fill = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
+                            Fill = SvgPaintServer.None,
                             StrokeWidth = new SvgUnit(SvgUnitType.Pixel, 3),
                             StartX = new SvgUnit(SvgUnitType.Pixel, relativeStart.X),
                             StartY = new SvgUnit(SvgUnitType.Pixel, relativeStart.Y),
@@ -332,7 +333,7 @@ namespace Svg.Core.Tools
                             MarkerEnd = CreateUriFromId(SelectedMarkerEndId)
                         };
 
-                        _validMove = true;
+                        _movementType = MovementType.End;
 
                         if (SelectedLineStyle == "dashed")
                         {
@@ -341,10 +342,20 @@ namespace Svg.Core.Tools
 
                         ws.Document.Children.Add(_currentLine);
                     }
-                    if (_validMove)
+
+                    switch (_movementType)
                     {
-                        _currentLine.EndX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X);
-                        _currentLine.EndY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y);
+                        case MovementType.End:
+                            _currentLine.EndX = new SvgUnit(SvgUnitType.Pixel, relativeEndX);
+                            _currentLine.EndY = new SvgUnit(SvgUnitType.Pixel, relativeEndY);
+                            break;
+                        case MovementType.Start:
+                            _currentLine.StartX = new SvgUnit(SvgUnitType.Pixel, relativeEndX);
+                            _currentLine.StartY = new SvgUnit(SvgUnitType.Pixel, relativeEndY);
+                            break;
+                        case MovementType.StartEnd:
+                            // TODO: move both start and end points
+                            break;
                     }
 
                     ws.FireInvalidateCanvas();
@@ -363,6 +374,7 @@ namespace Svg.Core.Tools
                 renderer.Graphics.Save();
 
                 const int radius = 16;
+                renderer.DrawCircle(_currentLine.StartX - (radius >> 1), _currentLine.StartY - (radius >> 1), radius, BluePen);
                 renderer.DrawCircle(_currentLine.EndX - (radius >> 1), _currentLine.EndY - (radius >> 1), radius, BluePen);
 
                 renderer.Graphics.Restore();
@@ -454,5 +466,7 @@ namespace Svg.Core.Tools
                 return Tool.IsActive;
             }
         }
+
+        private enum MovementType { None, Start, End, StartEnd }
     }
 }
