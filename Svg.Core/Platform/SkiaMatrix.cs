@@ -10,6 +10,9 @@ namespace Svg.Platform
     {
         private SKMatrix _m;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="SkiaMatrix"/>, the initial value is an identity matrix.
+        /// </summary>
         public SkiaMatrix()
         {
             _m = SKMatrix.MakeIdentity();

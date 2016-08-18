@@ -14,6 +14,7 @@ namespace Svg.Core.Tools
         private Pen _purplePen;
         private Brush _orangeBrush;
         private Pen _orangePen;
+        private bool _focused;
         private float CurrentFocusX { get; set; }
         private float CurrentFocusY { get; set; }
         private Brush PurpleBrush => _purpleBrush ?? (_purpleBrush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 210, 80, 210)));
@@ -21,8 +22,8 @@ namespace Svg.Core.Tools
         private Brush OrangeBrush => _orangeBrush ?? (_orangeBrush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 220, 160, 60)));
         private Pen OrangePen => _orangePen ?? (_orangePen = Engine.Factory.CreatePen(OrangeBrush, 5));
 
-        public ZoomTool(float minScale = 0.5f, float maxScale = 5f)
-            :base("Zoom")
+        public ZoomTool(float minScale = 0.5f, float maxScale = 5.0f)
+            : base("Zoom")
         {
             MinScale = minScale;
             MaxScale = maxScale;
@@ -37,7 +38,7 @@ namespace Svg.Core.Tools
         {
             _owner = ws;
 
-            Commands = new []
+            Commands = new[]
             {
                 new ToolCommand(this, "Zoom in +", (x) =>
                 {
@@ -65,11 +66,9 @@ namespace Svg.Core.Tools
 
             return Task.FromResult(true);
         }
-        
+
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
-            //CurrentFocusX = CurrentFocusY = 0;
-
             if (!IsActive)
                 return Task.FromResult(true);
 
@@ -77,14 +76,23 @@ namespace Svg.Core.Tools
             if (se == null)
                 return Task.FromResult(true);
 
-            if (se.Status == ScaleStatus.Scaling)
+            switch (se.Status)
             {
-                // Don't let the object get too small or too large.
-                ws.ZoomFactor = GetBoundedZoomFactor(se, ws);
-                CurrentFocusX = se.FocusX;
-                CurrentFocusY = se.FocusY;
-                ws.ZoomFocus = ws.ScreenToCanvas(CurrentFocusX, CurrentFocusY);
-                ws.FireInvalidateCanvas();
+                case ScaleStatus.Scaling:
+                    CurrentFocusX = se.FocusX;
+                    CurrentFocusY = se.FocusY;
+                    if (!_focused)
+                    {
+                        ws.ZoomFocus = ws.ScreenToCanvas(CurrentFocusX, CurrentFocusY);
+                        _focused = true;
+                    }
+                    // Don't let the object get too small or too large.
+                    ws.ZoomFactor = GetBoundedZoomFactor(se, ws);
+                    ws.FireInvalidateCanvas();
+                    break;
+                case ScaleStatus.Start:
+                    _focused = false;
+                    break;
             }
 
             return Task.FromResult(true);
@@ -96,16 +104,17 @@ namespace Svg.Core.Tools
             return Math.Max(MinScale, Math.Min(newZoomFactor, MaxScale));
         }
 
-        //public override async Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
-        //{
-        //    await base.OnDraw(renderer, ws);
+        public override async Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
+        {
+            await base.OnDraw(renderer, ws);
 
-        //    renderer.Graphics.Save();
+            renderer.Graphics.Save();
 
-        //    renderer.DrawCircle(CurrentFocusX, CurrentFocusY, 18, PurplePen);
-        //    renderer.DrawCircle(ws.GetCanvasX(CurrentFocusX), ws.GetCanvasY(CurrentFocusY), 22, OrangePen);
+            var canvasCurrentFocus = ws.ScreenToCanvas(CurrentFocusX, CurrentFocusY);
+            renderer.DrawCircle(canvasCurrentFocus.X, canvasCurrentFocus.Y, 18, PurplePen);
+            renderer.DrawCircle(ws.ZoomFocus.X, ws.ZoomFocus.Y, 22, OrangePen);
 
-        //    renderer.Graphics.Restore();
-        //}
+            renderer.Graphics.Restore();
+        }
     }
 }

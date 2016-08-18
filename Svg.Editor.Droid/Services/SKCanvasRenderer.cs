@@ -1,4 +1,3 @@
-using Android.Graphics;
 using SkiaSharp;
 using Svg.Core.Interfaces;
 using Svg.Interfaces;

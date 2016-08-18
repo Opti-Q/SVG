@@ -31,11 +31,6 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
             Canvas.Document = SvgDocument.Open<SvgDocument>(GetSource("svg/large_svg_01.svg"));
             //Canvas.Document = SvgDocument.Open<SvgDocument>(GetSource("svg/ground_floor_plan.svg"));
             Canvas.IsDebugEnabled = true;
-
-            //// only allow to rotate text elements
-            var rt = Canvas.Tools.OfType<RotationTool>().Single();
-            //rt.Filter = (ve => ve is SvgTextBase);
-            rt.RotationStep = 30; // rotate in 30 degree steps
         }
 
         private ISvgSource GetSource(string source)
