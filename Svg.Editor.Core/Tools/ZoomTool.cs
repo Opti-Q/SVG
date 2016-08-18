@@ -106,17 +106,17 @@ namespace Svg.Core.Tools
             return Math.Max(MinScale, Math.Min(newZoomFactor, MaxScale));
         }
 
-        public override async Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
-        {
-            await base.OnDraw(renderer, ws);
+        //public override async Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
+        //{
+        //    await base.OnDraw(renderer, ws);
 
-            renderer.Graphics.Save();
+        //    renderer.Graphics.Save();
 
-            var canvasCurrentFocus = ws.ScreenToCanvas(CurrentFocusX, CurrentFocusY);
-            renderer.DrawCircle(canvasCurrentFocus.X, canvasCurrentFocus.Y, 18, PurplePen);
-            renderer.DrawCircle(ws.ZoomFocus.X, ws.ZoomFocus.Y, 22, OrangePen);
+        //    var canvasCurrentFocus = ws.ScreenToCanvas(CurrentFocusX, CurrentFocusY);
+        //    renderer.DrawCircle(canvasCurrentFocus.X, canvasCurrentFocus.Y, 18, PurplePen);
+        //    renderer.DrawCircle(ws.ZoomFocus.X, ws.ZoomFocus.Y, 22, OrangePen);
 
-            renderer.Graphics.Restore();
-        }
+        //    renderer.Graphics.Restore();
+        //}
     }
 }
