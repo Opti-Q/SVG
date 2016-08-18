@@ -96,9 +96,9 @@ namespace Svg.Core.Tools
 
         public bool IsVisible { get; set; } = true;
         private Brush Brush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 210, 210, 210)));
-        private Brush Brush2 => _brush2 ?? (_brush2 = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 255, 0, 0)));
+        private Brush Brush2 => _brush2 ?? (_brush2 = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(180, 0, 0, 0)));
         private Pen Pen => _pen ?? (_pen = Engine.Factory.CreatePen(Brush, 1));
-        private Pen Pen2 => _pen2 ?? (_pen2 = Engine.Factory.CreatePen(Brush2, 2));
+        private Pen Pen2 => _pen2 ?? (_pen2 = Engine.Factory.CreatePen(Brush2, 1));
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
@@ -124,10 +124,13 @@ namespace Svg.Core.Tools
             DrawGridLines(renderer, ws);
 
             // draw debug stuff
-            var screenTopLeft = ws.ScreenToCanvas(0, 0);
-            renderer.DrawCircle(screenTopLeft.X, screenTopLeft.Y, 50, Pen); // point should remain in top left corner on screen
-            renderer.DrawCircle(0, 0, 20, Pen2); // point on canvas - should move along
-            renderer.DrawLine(1f, 1f, 200f, 1f, Pen2);
+            //var canvasx = -ws.RelativeTranslate.X;
+            //var canvasy = -ws.RelativeTranslate.Y;
+            //renderer.DrawCircle(canvasx, canvasy, 50, Pen); // point should remain in top left corner on screen
+            //renderer.DrawCircle(0, 0, 20, Pen2); // point on canvas - should move along
+            const float originLength = 50f;
+            renderer.DrawLine(0f, -originLength, 0f, originLength, Pen);
+            renderer.DrawLine(-originLength, 0f, originLength, 0f, Pen);
 
             return Task.FromResult(true);
         }

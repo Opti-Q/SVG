@@ -28,3 +28,4 @@ Tests/SvgW3CTestRunner.Droid/Assets
 Svg.Editor.Tests.Droid/Assets
 Svg.Editor.Tests.Win/Assets
 *.user
+/Svg.Droid.sln.DotSettings
