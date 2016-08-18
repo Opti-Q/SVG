@@ -83,7 +83,9 @@ namespace Svg.Core.Tools
                     CurrentFocusY = se.FocusY;
                     if (!_focused)
                     {
-                        ws.ZoomFocus = ws.ScreenToCanvas(CurrentFocusX, CurrentFocusY);
+                        var canvasFocus = ws.ScreenToCanvas(CurrentFocusX, CurrentFocusY);
+                        ws.Translate -= (ws.ZoomFocus - canvasFocus) * (ws.ZoomFactor - 1); 
+                        ws.ZoomFocus = canvasFocus;
                         _focused = true;
                     }
                     // Don't let the object get too small or too large.

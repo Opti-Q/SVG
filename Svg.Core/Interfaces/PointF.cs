@@ -30,7 +30,7 @@ namespace Svg.Interfaces
 
         protected PointF()
         {
-            
+
         }
 
         /// <summary>
@@ -52,9 +52,9 @@ namespace Svg.Interfaces
         ///	properties of the given Size.
         /// </remarks>
 
-		public static PointF operator + (PointF pt, SizeF sz)
-		{
-			return PointF.Create(pt.X + sz.Width, pt.Y + sz.Height);
+        public static PointF operator +(PointF pt, SizeF sz)
+        {
+            return PointF.Create(pt.X + sz.Width, pt.Y + sz.Height);
         }
 
         public static PointF operator +(PointF pt, PointF sz)
@@ -92,6 +92,21 @@ namespace Svg.Interfaces
             return ((left?.X != right?.X) || (left?.Y != right?.Y));
         }
 
+        public static PointF operator /(PointF pt, float k)
+        {
+            return Create(pt.X / k, pt.Y / k);
+        }
+
+        public static PointF operator *(PointF pt, float k)
+        {
+            return Create(pt.X * k, pt.Y * k);
+        }
+
+        public static PointF operator -(PointF pt)
+        {
+            return Create(-pt.X, -pt.Y);
+        }
+
         /// <summary>
         ///	Subtraction Operator
         /// </summary>
@@ -101,9 +116,9 @@ namespace Svg.Interfaces
         ///	and Height properties of the given Size.
         /// </remarks>
 
-		public static PointF operator - (PointF pt, SizeF sz)
-		{
-			return PointF.Create(pt.X - sz.Width, pt.Y - sz.Height);
+        public static PointF operator -(PointF pt, SizeF sz)
+        {
+            return PointF.Create(pt.X - sz.Width, pt.Y - sz.Height);
         }
         /// <summary>
         ///	Subtraction Operator
