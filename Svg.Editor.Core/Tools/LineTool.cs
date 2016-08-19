@@ -197,6 +197,7 @@ namespace Svg.Core.Tools
             {
                 PathData = new SvgPathSegmentList(new SvgPathSegment[]
                 {
+                    new SvgMoveToSegment(PointF.Create(0, -2.0f)),
                     new SvgLineSegment(PointF.Create(0, -2.0f), PointF.Create(0, 2f)),
                     new SvgLineSegment(PointF.Create(0, 2.0f), PointF.Create(-4.0f, 0)),
                     new SvgClosePathSegment()
@@ -208,6 +209,7 @@ namespace Svg.Core.Tools
             {
                 PathData = new SvgPathSegmentList(new SvgPathSegment[]
                 {
+                    new SvgMoveToSegment(PointF.Create(0, -2.0f)),
                     new SvgLineSegment(PointF.Create(0, -2.0f), PointF.Create(0, 2.0f)),
                     new SvgLineSegment(PointF.Create(0, 2.0f), PointF.Create(4.0f, 0)),
                     new SvgClosePathSegment()
