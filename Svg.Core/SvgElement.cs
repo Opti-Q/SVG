@@ -558,13 +558,22 @@ namespace Svg
             bool writeStyle;
             bool forceWrite;
 
+            string[] inheritedProperties = new[] {"stroke", "stroke-dasharray", "stroke-dashoffset"};
+
             //properties
             foreach (var attr in _svgPropertyAttributes)
             {
                 if (attr.Property.Converter.CanConvertTo(typeof(string)) && 
                     (!attr.Attribute.InAttributeDictionary || _attributes.ContainsKey(attr.Attribute.Name)))
                 {
-                   object propertyValue = _attributes.GetAttribute<object>(attr.Attribute.Name);
+                    object propertyValue = null;
+                    if (inheritedProperties.Any(p => string.Equals(p, attr.Attribute.Name, StringComparison.CurrentCultureIgnoreCase)))
+                        // only take inherited properties
+                        propertyValue = _attributes.GetAttribute<object>(attr.Attribute.Name);
+                    else
+                        // also take inherited properites (see SvgAttributeCollection.this[string key])
+                        propertyValue = _attributes[attr.Attribute.Name];
+
                     if (propertyValue == null)
                         continue;
 
