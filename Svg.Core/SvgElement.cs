@@ -572,7 +572,7 @@ namespace Svg
                         propertyValue = _attributes.GetAttribute<object>(attr.Attribute.Name);
                     else
                         // also take inherited properites (see SvgAttributeCollection.this[string key])
-                        propertyValue = _attributes[attr.Attribute.Name];
+                        propertyValue = attr.Property.GetValue(this);
 
                     if (propertyValue == null)
                         continue;
