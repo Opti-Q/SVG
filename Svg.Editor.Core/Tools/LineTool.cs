@@ -35,7 +35,7 @@ namespace Svg.Core.Tools
 
         private static Uri CreateUriFromId(string markerEndId, string exception = "none")
         {
-            return markerEndId != exception ? new Uri($"#{markerEndId}", UriKind.Relative) : null;
+            return markerEndId != exception ? new Uri($"url(#{markerEndId})", UriKind.Relative) : null;
         }
 
         public string LineStyleIconName { get; set; } = "ic_line_style_white_48dp.png";
