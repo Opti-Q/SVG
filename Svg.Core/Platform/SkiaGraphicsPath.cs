@@ -138,7 +138,7 @@ namespace Svg.Platform
                 _bounds = null;
                 Path.MoveTo(start.X, start.Y);
                 _points.Add(start);
-                _pathTypes.Add(1); // start point of line
+                _pathTypes.Add(0); // start of a figure ??
             }
         }
         

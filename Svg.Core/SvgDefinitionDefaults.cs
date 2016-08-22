@@ -33,7 +33,7 @@ namespace Svg
             _defaults["fill-opacity"] = "1";
             _defaults["fill-rule"] = "nonzero";
 
-            _defaults["stroke"] = "none";
+            _defaults["stroke"] = "";
             _defaults["stroke-opacity"] = "1";
             _defaults["stroke-width"] = "1";
             _defaults["stroke-miterlimit"] = "4";

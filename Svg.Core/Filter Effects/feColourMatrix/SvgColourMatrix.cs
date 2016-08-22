@@ -20,17 +20,25 @@ namespace Svg.FilterEffects
 		/// Note: this is not used in calculations to bitmap - used only to allow for svg xml output
 		/// </summary>
 		[SvgAttribute("type")]
-		public SvgColourMatrixType Type { get; set; }
-        
+		public SvgColourMatrixType Type
+        {
+            get { return this.Attributes.GetAttribute<SvgColourMatrixType>("type"); }
+            set { this.Attributes["type"] = value; }
+        }
 
-		/// <summary>
-		/// list of <number>s
-		/// The contents of ‘values’ depends on the value of attribute ‘type’: 
-		/// Note: this is not used in calculations to bitmap - used only to allow for svg xml output
-		/// </summary>
-		[SvgAttribute("values")]
-		public string Values { get; set; }
-        
+
+        /// <summary>
+        /// list of <number>s
+        /// The contents of ‘values’ depends on the value of attribute ‘type’: 
+        /// Note: this is not used in calculations to bitmap - used only to allow for svg xml output
+        /// </summary>
+        [SvgAttribute("values")]
+		public string Values
+        {
+            get { return this.Attributes.GetAttribute<string>("values"); }
+            set { this.Attributes["values"] = value; }
+        }
+
 
         public override void Process(ImageBuffer buffer)
 		{

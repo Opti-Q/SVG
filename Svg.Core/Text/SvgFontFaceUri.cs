@@ -14,7 +14,11 @@ namespace Svg
         public virtual Uri ReferencedElement
         {
             get { return this._referencedElement; }
-            set { this._referencedElement = value; }
+            set
+            {
+                this._referencedElement = value;
+                this.Attributes["href"] = value;
+            }
         }
 
         public override SvgElement DeepCopy()

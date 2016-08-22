@@ -34,7 +34,11 @@ namespace Svg
         public virtual SvgOrient Orient
         {
             get { return _svgOrient; }
-            set { _svgOrient = value; }
+            set
+            {
+                _svgOrient = value;
+                this.Attributes["orient"] = value;
+            }
         }
 
 

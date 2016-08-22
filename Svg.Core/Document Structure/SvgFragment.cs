@@ -59,6 +59,7 @@ namespace Svg
                 {
                     var oldValue = _x;
                     _x = value;
+                    this.Attributes["x"] = value;
                     OnAttributeChanged(new AttributeEventArgs("x", value, oldValue));
                 }
             }
@@ -77,6 +78,7 @@ namespace Svg
                 {
                     var oldValue = _y;
                     _y = value;
+                    this.Attributes["y"] = value;
                     OnAttributeChanged(new AttributeEventArgs("y", value, oldValue));
                 }
             }
@@ -160,8 +162,15 @@ namespace Svg
         protected internal override bool PushTransforms(ISvgRenderer renderer)
         {
             if (!base.PushTransforms(renderer)) return false;
+            renderer.Graphics.Save();
             this.ViewBox.AddViewBoxTransform(this.AspectRatio, renderer, this);
             return true;
+        }
+
+        protected internal override void PopTransforms(ISvgRenderer renderer)
+        {
+            renderer.Graphics.Restore();
+            base.PopTransforms(renderer);
         }
 
         protected override void Render(ISvgRenderer renderer)

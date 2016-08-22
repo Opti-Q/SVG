@@ -50,6 +50,7 @@ namespace Svg
                 }
 
                 this._offset = unit.ToPercentage();
+                this.Attributes["offset"] = this._offset;
             }
         }
 

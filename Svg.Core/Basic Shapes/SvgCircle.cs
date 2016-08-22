@@ -40,6 +40,7 @@ namespace Svg
                     var oldValue = _centerX;
                     this._centerX = value;
             		this.IsPathDirty = true;
+                    this.Attributes["cx"] = value;
             		OnAttributeChanged(new AttributeEventArgs("cx", value, oldValue));
             	}
             }

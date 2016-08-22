@@ -73,7 +73,11 @@ namespace Svg
         public SvgGradientSpreadMethod SpreadMethod
         {
             get { return this._spreadMethod; }
-            set { this._spreadMethod = value; }
+            set
+            {
+                this._spreadMethod = value;
+                this.Attributes["spreadMethod"] = value;
+            }
         }
 
         /// <summary>
@@ -83,7 +87,11 @@ namespace Svg
         public SvgCoordinateUnits GradientUnits
         {
             get { return this._gradientUnits; }
-            set { this._gradientUnits = value; }
+            set
+            {
+                this._gradientUnits = value;
+                this.Attributes["gradientUnits"] = value;
+            }
         }
 
         /// <summary>
@@ -96,6 +104,7 @@ namespace Svg
             set 
             { 
                 this._inheritGradient = value;
+                this.Attributes["href"] = value;
             }
         }
 

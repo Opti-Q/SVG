@@ -53,7 +53,9 @@ namespace Svg
         		return "none";
         	else if(this == SvgColourServer.NotSet)
         		return "";
-        	
+            else if (this == SvgColourServer.Inherit)
+                return "inherit";
+
             Color c = this.Colour;
 
             // Return the name if it exists

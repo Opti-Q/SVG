@@ -21,8 +21,9 @@ namespace Svg
         private SvgViewBox _viewBox;
         private SvgCoordinateUnits _patternUnits = SvgCoordinateUnits.Inherit;
         private SvgCoordinateUnits _patternContentUnits = SvgCoordinateUnits.Inherit;
+        private SvgAspectRatio _aspectRatio;
 
-		[SvgAttribute("overflow")]
+        [SvgAttribute("overflow")]
 		public SvgOverflow Overflow
 		{
 			get { return this.Attributes.GetAttribute<SvgOverflow>("overflow"); }
@@ -38,19 +39,27 @@ namespace Svg
         public SvgViewBox ViewBox
         {
             get { return this._viewBox; }
-            set { this._viewBox = value; }
+            set
+            {
+                this._viewBox = value;
+                this.Attributes["viewBox"] = value;
+            }
         }
-        
+
         /// <summary>
         /// Gets or sets the aspect of the viewport.
         /// </summary>
         /// <value></value>
         [SvgAttribute("preserveAspectRatio")]
-        public SvgAspectRatio AspectRatio 
-		{
-			get;
-			set;
-		}
+        public SvgAspectRatio AspectRatio
+        {
+            get { return _aspectRatio; }
+            set
+            {
+                _aspectRatio = value;
+                this.Attributes["preserveAspectRatio"] = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the width of the pattern.
@@ -59,7 +68,11 @@ namespace Svg
         public SvgUnit Width
         {
             get { return this._width; }
-            set { this._width = value; }
+            set
+            {
+                this._width = value;
+                this.Attributes["width"] = value;
+            }
         }
 
         /// <summary>
@@ -69,7 +82,11 @@ namespace Svg
         public SvgCoordinateUnits PatternUnits
         {
             get { return this._patternUnits; }
-            set { this._patternUnits = value; }
+            set
+            {
+                this._patternUnits = value;
+                this.Attributes["patternUnits"] = value;
+            }
         }
 
         /// <summary>
@@ -79,7 +96,11 @@ namespace Svg
         public SvgCoordinateUnits PatternContentUnits
         {
             get { return this._patternContentUnits; }
-            set { this._patternContentUnits = value; }
+            set
+            {
+                this._patternContentUnits = value;
+                this.Attributes["patternContentUnits"] = value;
+            }
         }
 
         /// <summary>
@@ -89,7 +110,11 @@ namespace Svg
         public SvgUnit Height
         {
             get { return this._height; }
-            set { this._height = value; }
+            set
+            {
+                this._height = value;
+                this.Attributes["height"] = value;
+            }
         }
 
         /// <summary>
@@ -99,7 +124,11 @@ namespace Svg
         public SvgUnit X
         {
             get { return this._x; }
-            set { this._x = value; }
+            set
+            {
+                this._x = value;
+                this.Attributes["x"] = value;
+            }
         }
 
         /// <summary>
@@ -109,7 +138,11 @@ namespace Svg
         public SvgUnit Y
         {
             get { return this._y; }
-            set { this._y = value; }
+            set
+            {
+                this._y = value;
+                this.Attributes["y"] = value;
+            }
         }
 
         /// <summary>
@@ -122,6 +155,7 @@ namespace Svg
             set
             {
                 this._inheritGradient = value;
+                this.Attributes["href"] = value;
             }
         }
 

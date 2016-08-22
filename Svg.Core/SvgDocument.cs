@@ -510,12 +510,70 @@ namespace Svg
             return DrawAllContents((int)bounds.Width, (int)bounds.Height, backgroundColor);
         }
 
-        public Bitmap DrawAllContents(int width, int height, Color backgroundColor = null)
+        public Bitmap DrawAllContents(int maxWidth, int maxHeight, Color backgroundColor = null)
         {
             Bitmap bitmap = null;
             try
             {
-                bitmap = Bitmap.Create(width, height);
+                var bounds = CalculateDocumentBounds();
+                var width = bounds.Width;
+                var height = bounds.Height;
+                
+                if (width > maxWidth)
+                {
+                    var factor = maxWidth / width;
+                    height = height * factor;
+                    width = maxWidth;
+                }
+                if (height > maxHeight)
+                {
+                    var factor = maxHeight / height;
+                    width = width * factor;
+                    height = maxHeight;
+                }
+                
+                bitmap = Bitmap.Create((int)width, (int)height);
+                DrawAllContents(bitmap, backgroundColor);
+                return bitmap;
+            }
+            catch
+            {
+                bitmap?.Dispose();
+                throw;
+            }
+        }
+
+
+        public Bitmap DrawAllContents(int maxWidthHeight, Color backgroundColor = null)
+        {
+            Bitmap bitmap = null;
+            try
+            {
+
+                var bounds = CalculateDocumentBounds();
+                var width = bounds.Width;
+                var height = bounds.Height;
+
+                var isPanorama = bounds.Width >= bounds.Height;
+                if (isPanorama)
+                {
+                    if (bounds.Width> maxWidthHeight)
+                    {
+                        var factor = maxWidthHeight / bounds.Width;
+                        height = height * factor;
+                        width = maxWidthHeight;
+                    }
+                }
+                else
+                {
+                    if (bounds.Height > maxWidthHeight)
+                    {
+                        var factor = maxWidthHeight / bounds.Height;
+                        width = width * factor;
+                        height = maxWidthHeight;
+                    }   
+                }
+                bitmap = Bitmap.Create((int)width, (int)height);
                 DrawAllContents(bitmap, backgroundColor);
                 return bitmap;
             }
