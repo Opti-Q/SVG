@@ -325,7 +325,7 @@ namespace Svg.Core.Tools
                         {
                             Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
                             Fill = SvgPaintServer.None,
-                            StrokeWidth = new SvgUnit(SvgUnitType.Pixel, 3),
+                            StrokeWidth = new SvgUnit(SvgUnitType.Pixel, 2),
                             StartX = new SvgUnit(SvgUnitType.Pixel, relativeStart.X),
                             StartY = new SvgUnit(SvgUnitType.Pixel, relativeStart.Y),
                             EndX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X),
