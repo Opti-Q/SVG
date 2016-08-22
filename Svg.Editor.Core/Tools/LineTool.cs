@@ -382,7 +382,7 @@ namespace Svg.Core.Tools
             {
                 renderer.Graphics.Save();
 
-                const int radius = 16;
+                var radius = (int)(16/ws.ZoomFactor);
                 renderer.DrawCircle(_currentLine.StartX - (radius >> 1), _currentLine.StartY - (radius >> 1), radius, BluePen);
                 renderer.DrawCircle(_currentLine.EndX - (radius >> 1), _currentLine.EndY - (radius >> 1), radius, BluePen);
 
