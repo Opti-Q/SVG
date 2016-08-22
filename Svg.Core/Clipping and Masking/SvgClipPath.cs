@@ -18,7 +18,11 @@ namespace Svg
         /// Specifies the coordinate system for the clipping path.
         /// </summary>
         [SvgAttribute("clipPathUnits")]
-        public SvgCoordinateUnits ClipPathUnits { get; set; }
+        public SvgCoordinateUnits ClipPathUnits
+        {
+            get { return this.Attributes.GetAttribute<SvgCoordinateUnits>("clipPathUnits"); }
+            set { this.Attributes["clipPathUnits"] = value; }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SvgClipPath"/> class.

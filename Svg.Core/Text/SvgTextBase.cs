@@ -73,6 +73,7 @@ namespace Svg
                 {
                     var oldValue = _x;
                     this._x = value;
+                    this.Attributes["x"] = value;
                     this.IsPathDirty = true;
                     OnAttributeChanged(new AttributeEventArgs("x", value, oldValue));
                 }
@@ -93,6 +94,7 @@ namespace Svg
                 {
                     var oldValue = _dx;
                     this._dx = value;
+                    this.Attributes["dx"] = value;
                     this.IsPathDirty = true;
                     OnAttributeChanged(new AttributeEventArgs("dx", value, oldValue));
                 }
@@ -113,6 +115,7 @@ namespace Svg
                 {
                     var oldValue = _y;
                     this._y = value;
+                    this.Attributes["y"] = value;
                     this.IsPathDirty = true;
                     OnAttributeChanged(new AttributeEventArgs("y", value, oldValue));
                 }
@@ -133,6 +136,7 @@ namespace Svg
                 {
                     var oldValue = _dy;
                     this._dy = value;
+                    this.Attributes["dy"] = value;
                     this.IsPathDirty = true;
                     OnAttributeChanged(new AttributeEventArgs("dy", value, oldValue));
                 }
@@ -153,6 +157,7 @@ namespace Svg
                 {
                     var oldValue = _rotate;
                     this._rotate = value;
+                    this.Attributes["rotate"] = value;
                     this._rotations.Clear();
                     this._rotations.AddRange(from r in _rotate.Split(new char[] { ',', ' ', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries) select float.Parse(r));
                     this.IsPathDirty = true;

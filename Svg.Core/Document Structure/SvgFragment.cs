@@ -59,6 +59,7 @@ namespace Svg
                 {
                     var oldValue = _x;
                     _x = value;
+                    this.Attributes["x"] = value;
                     OnAttributeChanged(new AttributeEventArgs("x", value, oldValue));
                 }
             }
@@ -77,6 +78,7 @@ namespace Svg
                 {
                     var oldValue = _y;
                     _y = value;
+                    this.Attributes["y"] = value;
                     OnAttributeChanged(new AttributeEventArgs("y", value, oldValue));
                 }
             }
