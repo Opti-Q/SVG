@@ -192,7 +192,7 @@ namespace Svg.Core.Tools
             ToolUsage = ToolUsage.Explicit;
 
             var markers = new List<SvgMarker>();
-            var marker = new SvgMarker { ID = "arrowStart", Orient = new SvgOrient() { IsAuto = true }, RefX = new SvgUnit(SvgUnitType.Pixel,-3.5f)};
+            var marker = new SvgMarker { ID = "arrowStart", Orient = new SvgOrient() { IsAuto = true }, RefX = new SvgUnit(SvgUnitType.Pixel,-2.5f), ViewBox=new SvgViewBox(0,0,3,3), MarkerWidth=2};
             marker.Children.Add(new SvgPath
             {
                 PathData = new SvgPathSegmentList(new SvgPathSegment[]
@@ -204,7 +204,7 @@ namespace Svg.Core.Tools
                 })
             });
             markers.Add(marker);
-            marker = new SvgMarker { ID = "arrowEnd", Orient = new SvgOrient() { IsAuto = true }, RefX = new SvgUnit(SvgUnitType.Pixel, 3.5f) };
+            marker = new SvgMarker { ID = "arrowEnd", Orient = new SvgOrient() { IsAuto = true }, RefX = new SvgUnit(SvgUnitType.Pixel, 2.5f), ViewBox = new SvgViewBox(0, 0, 3, 3), MarkerWidth = 2 };
             marker.Children.Add(new SvgPath
             {
                 PathData = new SvgPathSegmentList(new SvgPathSegment[]
@@ -216,7 +216,7 @@ namespace Svg.Core.Tools
                 })
             });
             markers.Add(marker);
-            marker = new SvgMarker { ID = "circle", Orient = new SvgOrient() { IsAuto = true }/*, RefX = new SvgUnit(SvgUnitType.Pixel, -1.5f)*/ };
+            marker = new SvgMarker { ID = "circle", Orient = new SvgOrient() { IsAuto = true }/*, RefX = new SvgUnit(SvgUnitType.Pixel, -1.5f)*/, ViewBox = new SvgViewBox(0, 0, 3, 3), MarkerWidth = 2 };
             marker.Children.Add(new SvgEllipse
             {
                 RadiusX = 1.5f,
@@ -327,7 +327,7 @@ namespace Svg.Core.Tools
                         {
                             Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
                             Fill = SvgPaintServer.None,
-                            StrokeWidth = new SvgUnit(SvgUnitType.Pixel, 3),
+                            StrokeWidth = new SvgUnit(SvgUnitType.Pixel, 2),
                             StartX = new SvgUnit(SvgUnitType.Pixel, relativeStart.X),
                             StartY = new SvgUnit(SvgUnitType.Pixel, relativeStart.Y),
                             EndX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X),
@@ -407,7 +407,7 @@ namespace Svg.Core.Tools
 
                 var markerStartId = selectedLines.Any()
                     ? selectedLines.All(x => selectedLines.First().MarkerStart == x.MarkerStart)
-                        ? selectedLines.First().MarkerStart?.OriginalString.Substring(1) ?? "none"
+                        ? selectedLines.First().MarkerStart?.OriginalString?.Replace("url(#", null)?.TrimEnd(')') ?? "none"
                         : "none"
                     : t.SelectedMarkerStartId;
                 var lineStyle = selectedLines.Any()
@@ -417,7 +417,7 @@ namespace Svg.Core.Tools
                     : t.SelectedLineStyle;
                 var markerEndId = selectedLines.Any()
                     ? selectedLines.All(x => selectedLines.First().MarkerEnd == x.MarkerEnd)
-                        ? selectedLines.First().MarkerEnd?.OriginalString.Substring(1) ?? "none"
+                        ? selectedLines.First().MarkerEnd?.OriginalString?.Replace("url(#", null)?.TrimEnd(')') ?? "none"
                         : "none"
                     : t.SelectedMarkerEndId;
 
