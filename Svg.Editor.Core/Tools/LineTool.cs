@@ -192,7 +192,7 @@ namespace Svg.Core.Tools
             ToolUsage = ToolUsage.Explicit;
 
             var markers = new List<SvgMarker>();
-            var marker = new SvgMarker { ID = "arrowStart", Orient = new SvgOrient() { IsAuto = true } };
+            var marker = new SvgMarker { ID = "arrowStart", Orient = new SvgOrient() { IsAuto = true }, RefX = new SvgUnit(SvgUnitType.Pixel,-3.5f)};
             marker.Children.Add(new SvgPath
             {
                 PathData = new SvgPathSegmentList(new SvgPathSegment[]
@@ -204,7 +204,7 @@ namespace Svg.Core.Tools
                 })
             });
             markers.Add(marker);
-            marker = new SvgMarker { ID = "arrowEnd", Orient = new SvgOrient() { IsAuto = true } };
+            marker = new SvgMarker { ID = "arrowEnd", Orient = new SvgOrient() { IsAuto = true }, RefX = new SvgUnit(SvgUnitType.Pixel, 3.5f) };
             marker.Children.Add(new SvgPath
             {
                 PathData = new SvgPathSegmentList(new SvgPathSegment[]
@@ -216,7 +216,7 @@ namespace Svg.Core.Tools
                 })
             });
             markers.Add(marker);
-            marker = new SvgMarker { ID = "circle", Orient = new SvgOrient() { IsAuto = true } };
+            marker = new SvgMarker { ID = "circle", Orient = new SvgOrient() { IsAuto = true }/*, RefX = new SvgUnit(SvgUnitType.Pixel, -1.5f)*/ };
             marker.Children.Add(new SvgEllipse
             {
                 RadiusX = 1.5f,

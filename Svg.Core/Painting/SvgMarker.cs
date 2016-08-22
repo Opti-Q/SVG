@@ -223,7 +223,18 @@ namespace Svg
                 // apply marker transformations as well
                 var transMatrix = Matrix.Create();
 
+                // marker point has to be 0,0 of markers coordinate system, so translate there
                 transMatrix.Translate(pMarkerPoint.X, pMarkerPoint.Y);
+
+                // apply viewbox transform
+                var vb = ViewBox;
+                if (vb != null)
+                {
+                    //transMatrix.Translate(ViewBox.MinX, ViewBox.MinY);
+                    transMatrix.Scale(1 / ViewBox.Width, 1 / ViewBox.Height);
+                    //vb.AddViewBoxTransform(new SvgAspectRatio(SvgPreserveAspectRatio.xMinYMin), renderer, GetBoundingBox());
+                }
+
                 if (Orient.IsAuto)
                     transMatrix.Rotate(fAngle);
                 else
@@ -234,25 +245,18 @@ namespace Svg
                         var swDv = pOwner.StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, this);
                         var mwDv = MarkerWidth.ToDeviceValue(renderer, UnitRenderingType.Other, this);
                         var mhDv = MarkerHeight.ToDeviceValue(renderer, UnitRenderingType.Other, this);
-                        var tx =
-                            AdjustForViewBoxWidth(-RefX.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this)*
-                                                  swDv*
-                                                  mwDv);
-                        var ty = AdjustForViewBoxHeight(-RefY.ToDeviceValue(renderer, UnitRenderingType.Vertical, this)*
-                                                        swDv*
-                                                        mhDv);
+                        
+                        var sx = swDv * mwDv;
+                        var sy = swDv * mhDv;
+
+                        var scale = Math.Min(sx, sy);
+                        
+                        var tx = -RefX.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this) * scale;
+                        var ty = -RefY.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this) * scale;
                         
                         transMatrix.Translate(tx, ty);
-                        var sx = AdjustForViewBoxWidth(pOwner.StrokeWidth * mwDv);
-                        var sy = AdjustForViewBoxHeight(pOwner.StrokeWidth * mhDv);
 
-                        if (sx == 1f && sy == 1f)
-                        {
-                            sx = pOwner.StrokeWidth;
-                            sy = pOwner.StrokeWidth;
-                        }
-
-                        transMatrix.Scale(sx, sy);
+                        transMatrix.Scale(scale, scale);
 
                         break;
                     case SvgMarkerUnits.UserSpaceOnUse:
@@ -268,27 +272,5 @@ namespace Svg
         }
 
         protected override bool Renderable => false;
-
-        /// <summary>
-        /// Adjust the given value to account for the width of the viewbox in the viewport
-        /// </summary>
-        /// <param name="fWidth"></param>
-        /// <returns></returns>
-        private float AdjustForViewBoxWidth(float fWidth)
-        {
-            //	TODO: We know this isn't correct
-            return (ViewBox.Width <= 0 ? 1 : fWidth / ViewBox.Width);
-        }
-
-        /// <summary>
-        /// Adjust the given value to account for the height of the viewbox in the viewport
-        /// </summary>
-        /// <param name="fWidth"></param>
-        /// <returns></returns>
-        private float AdjustForViewBoxHeight(float fHeight)
-        {
-            //	TODO: We know this isn't correct
-            return (ViewBox.Height <= 0 ? 1 : fHeight / ViewBox.Height);
-        }
     }
 }
