@@ -249,6 +249,18 @@ namespace Svg.Platform
             _pathTypes.Add(3); // endpoint of cubic bezier spline
         }
 
+        public void AddQuad(PointF start, PointF control, PointF end)
+        {
+            _bounds = null;
+            MoveTo(start);
+            Path.QuadTo(control.X, control.Y, end.X, end.Y);
+
+            _points.AddRange(new[] { start, control, end });
+            _pathTypes.Add(1); // start point of line
+            _pathTypes.Add(3); // control point of cubic bezier spline
+            _pathTypes.Add(3); // endpoint of cubic bezier spline
+        }
+
         public bool IsVisible(PointF pointF)
         {
             RectF rect = new RectF();

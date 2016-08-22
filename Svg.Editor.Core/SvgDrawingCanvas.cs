@@ -72,6 +72,7 @@ namespace Svg.Core
                     new SelectionTool(),
                     new TextTool(),
                     new LineTool(lineToolProperties),
+                    new FreeDrawingTool(""),
                     new ColorTool(colorToolProperties),
                     new StrokeStyleTool()
             };

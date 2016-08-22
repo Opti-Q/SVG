@@ -27,13 +27,14 @@ namespace Svg.Core.Tools
             get
             {
                 object selectableColors;
-                Properties.TryGetValue("selectablecolors", out selectableColors);
-                if (selectableColors == null) selectableColors = Enumerable.Empty<string>();
+                if(!Properties.TryGetValue("selectablecolors", out selectableColors))
+                    selectableColors = Enumerable.Empty<string>();
                 return (string[])selectableColors;
             }
         }
 
         // implementaition for per-tool selected color
+        
         //public Color SelectedColor
         //{
         //    get

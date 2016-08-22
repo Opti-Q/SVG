@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Events;
-using Svg.Core.Interfaces;
 using Svg.Interfaces;
 using Svg.Pathing;
 
@@ -11,27 +10,25 @@ namespace Svg.Core.Tools
 {
     public class FreeDrawingTool : ToolBase
     {
-        private const double MIN_MOVED_DISTANCE = 30.0;
+        private const double MIN_MOVED_DISTANCE = 0.0;
+        private const double MIN_QUAD_MOVED_DISTANCE = 120.0;
 
-        private static ILineOptionsInputService LineOptionsInputServiceProxy => Engine.Resolve<ILineOptionsInputService>();
+        //private static ILineOptionsInputService LineOptionsInputServiceProxy => Engine.Resolve<ILineOptionsInputService>();
 
         private double _movedDistance;
-        private SvgLine _currentLine;
+        private SvgPath _currentLine;
         private bool _multiplePointersRegistered;
-        private Brush _brush;
-        private Pen _pen;
         private bool _isActive;
         private SvgDrawingCanvas _canvas;
         private bool _validMove;
-        private Brush BlueBrush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
-        private Pen BluePen => _pen ?? (_pen = Engine.Factory.CreatePen(BlueBrush, 5));
+        private PointF _lastPointerPosition;
 
         private IEnumerable<SvgMarker> Markers { get; set; }
 
-        private static Uri CreateUriFromId(string markerEndId, string exception = "none")
-        {
-            return markerEndId != exception ? new Uri($"#{markerEndId}", UriKind.Relative) : null;
-        }
+        //private static Uri CreateUriFromId(string markerEndId, string exception = "none")
+        //{
+        //    return markerEndId != exception ? new Uri($"#{markerEndId}", UriKind.Relative) : null;
+        //}
 
         public string LineStyleIconName { get; set; } = "ic_line_style_white_48dp.png";
 
@@ -110,7 +107,7 @@ namespace Svg.Core.Tools
                 if (_isActive)
                 {
                     // if tool was activated, reduce selection to a single line and set it as current line
-                    _currentLine = _canvas.SelectedElements.OfType<SvgLine>().FirstOrDefault();
+                    _currentLine = _canvas.SelectedElements.OfType<SvgPath>().FirstOrDefault();
                     _canvas.SelectedElements.Clear();
                     if (_currentLine == null) return;
                     _canvas.SelectedElements.Add(_currentLine);
@@ -175,19 +172,19 @@ namespace Svg.Core.Tools
 
         public string SelectedLineStyle { get; set; }
 
-        private SvgUnitCollection StrokeDashArray { get; set; } = new SvgUnitCollection()
-                            {
-                                new SvgUnit(SvgUnitType.Pixel, 10),
-                                new SvgUnit(SvgUnitType.Pixel, 10)
-                            };
+        //private SvgUnitCollection StrokeDashArray { get; set; } = new SvgUnitCollection
+        //{
+        //                        new SvgUnit(SvgUnitType.Pixel, 10),
+        //                        new SvgUnit(SvgUnitType.Pixel, 10)
+        //                    };
 
-        public FreeDrawingTool(string properties) : base("Line", properties)
+        public FreeDrawingTool(string properties) : base("Free draw", properties)
         {
-            IconName = "ic_mode_edit_white_48dp.png";
+            IconName = "ic_brush_white_48dp.png";
             ToolUsage = ToolUsage.Explicit;
 
             var markers = new List<SvgMarker>();
-            var marker = new SvgMarker { ID = "arrowStart", Orient = new SvgOrient() { IsAuto = true } };
+            var marker = new SvgMarker { ID = "arrowStart", Orient = new SvgOrient { IsAuto = true } };
             marker.Children.Add(new SvgPath
             {
                 PathData = new SvgPathSegmentList(new SvgPathSegment[]
@@ -198,7 +195,7 @@ namespace Svg.Core.Tools
                 })
             });
             markers.Add(marker);
-            marker = new SvgMarker { ID = "arrowEnd", Orient = new SvgOrient() { IsAuto = true } };
+            marker = new SvgMarker { ID = "arrowEnd", Orient = new SvgOrient { IsAuto = true } };
             marker.Children.Add(new SvgPath
             {
                 PathData = new SvgPathSegmentList(new SvgPathSegment[]
@@ -209,7 +206,7 @@ namespace Svg.Core.Tools
                 })
             });
             markers.Add(marker);
-            marker = new SvgMarker { ID = "circle", Orient = new SvgOrient() { IsAuto = true } };
+            marker = new SvgMarker { ID = "circle", Orient = new SvgOrient { IsAuto = true } };
             marker.Children.Add(new SvgEllipse
             {
                 RadiusX = 1.5f,
@@ -248,6 +245,7 @@ namespace Svg.Core.Tools
             var p = @event as PointerEvent;
             if (p?.PointerCount == 1 && (p.EventType == EventType.PointerUp || p.EventType == EventType.Cancel))
             {
+                _validMove = false;
                 if (_currentLine != null)
                 {
                     ws.SelectedElements.Remove(_currentLine);
@@ -256,7 +254,7 @@ namespace Svg.Core.Tools
                 else
                 {
                     _currentLine =
-                        ws.GetElementsUnder<SvgLine>(ws.GetPointerRectangle(p.Pointer1Position),
+                        ws.GetElementsUnder<SvgPath>(ws.GetPointerRectangle(p.Pointer1Position),
                             SelectionType.Intersect).FirstOrDefault();
                     if (_currentLine != null) ws.SelectedElements.Add(_currentLine);
                 }
@@ -268,12 +266,6 @@ namespace Svg.Core.Tools
             if (p?.EventType == EventType.PointerDown)
             {
                 _multiplePointersRegistered = p.PointerCount != 1;
-
-                if (_currentLine != null)
-                {
-                    var canvasPointer1Position = ws.ScreenToCanvas(p.Pointer1Position);
-                    // TODO: set valid move
-                }
             }
 
             if (_multiplePointersRegistered)
@@ -282,8 +274,8 @@ namespace Svg.Core.Tools
             var e = @event as MoveEvent;
             if (e != null)
             {
-                var startX = e.Pointer1Down.X;
-                var startY = e.Pointer1Down.Y;
+                var startX = _lastPointerPosition?.X ?? e.Pointer1Down.X;
+                var startY = _lastPointerPosition?.Y ?? e.Pointer1Down.Y;
                 var endX = e.Pointer1Position.X;
                 var endY = e.Pointer1Position.Y;
 
@@ -302,62 +294,70 @@ namespace Svg.Core.Tools
                 var rect = RectangleF.Create(startX, startY, endX - startX, endY - startY);
 
                 // drawing only counts if length is not too small
-                _movedDistance = Math.Sqrt(Math.Pow(rect.Width, 2) + Math.Pow(rect.Height, 2));
+                _movedDistance = Math.Sqrt(Math.Pow(rect.Width, 2) + Math.Pow(rect.Height, 2)) / ws.ZoomFactor;
 
                 if (_movedDistance >= MIN_MOVED_DISTANCE)
                 {
                     var relativeStart = ws.ScreenToCanvas(e.Pointer1Down);
-                    var relativeEnd = ws.ScreenToCanvas(e.Pointer1Position);
+                    var relativePointerPosition = ws.ScreenToCanvas(e.Pointer1Position);
 
                     if (_currentLine == null)
                     {
 
-                        _currentLine = new SvgLine
+                        _currentLine = new SvgPath
                         {
                             Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
                             Fill = SvgPaintServer.None,
-                            StrokeWidth = new SvgUnit(SvgUnitType.Pixel, 3),
-                            StartX = new SvgUnit(SvgUnitType.Pixel, relativeStart.X),
-                            StartY = new SvgUnit(SvgUnitType.Pixel, relativeStart.Y),
-                            EndX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X),
-                            EndY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y),
-                            MarkerStart = CreateUriFromId(SelectedMarkerStartId),
-                            MarkerEnd = CreateUriFromId(SelectedMarkerEndId)
+                            StrokeWidth = new SvgUnit(SvgUnitType.Pixel, 5),
+                            PathData = new SvgPathSegmentList(new List<SvgPathSegment> { new SvgMoveToSegment(relativeStart) }),
+                            StrokeLineCap = SvgStrokeLineCap.Round,
+                            StrokeLineJoin = SvgStrokeLineJoin.Round
+                            //MarkerStart = CreateUriFromId(SelectedMarkerStartId),
+                            //MarkerEnd = CreateUriFromId(SelectedMarkerEndId)
                         };
 
                         _validMove = true;
 
-                        if (SelectedLineStyle == "dashed")
-                        {
-                            _currentLine.StrokeDashArray = StrokeDashArray.Clone();
-                        }
+                        //if (SelectedLineStyle == "dashed")
+                        //{
+                        //    _currentLine.StrokeDashArray = StrokeDashArray.Clone();
+                        //}
 
                         ws.Document.Children.Add(_currentLine);
                     }
 
-                   if (_validMove) { }
+                    if (_validMove)
+                    {
+                        // Calculate the control point
+                        var lastSegment = _currentLine.PathData.Last;
+                        var lastEndPoint = lastSegment.End;
+                        //if (_movedDistance >= MIN_QUAD_MOVED_DISTANCE)
+                        //{
+                            // quadratic bezier
+                            //var lastControlPoint = (lastSegment as SvgQuadraticCurveSegment)?.ControlPoint ??
+                            //                       lastSegment.Start;
+                            var nextControlPoint = lastSegment.End;
+                            var nextEndPoint = (lastEndPoint + relativePointerPosition)/2;
+                            _currentLine.PathData.Add(new SvgQuadraticCurveSegment(lastEndPoint, nextControlPoint, nextEndPoint));
+                        // cubic bezier
+                        //var firstControlPoint = (lastEndPoint + relativePointerPosition) / 2;
+                        //var secondControlPoint = relativePointerPosition * 2 - firstControlPoint;
+                        //_currentLine.PathData.Add(new SvgCubicCurveSegment(lastEndPoint, firstControlPoint, secondControlPoint, relativePointerPosition));
+                        //}
+                        //else
+                        //{
+                        //    // straight line
+                        //    _currentLine.PathData.Add(new SvgLineSegment(lastEndPoint, relativePointerPosition));
+                        //}
+                    }
+
+                    _lastPointerPosition = p.Pointer1Position;
 
                     ws.FireInvalidateCanvas();
                 }
             }
 
             return Task.FromResult(true);
-        }
-
-        public override async Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
-        {
-            await base.OnDraw(renderer, ws);
-
-            if (_currentLine != null)
-            {
-                renderer.Graphics.Save();
-
-                const int radius = 16;
-                renderer.DrawCircle(_currentLine.StartX - (radius >> 1), _currentLine.StartY - (radius >> 1), radius, BluePen);
-                renderer.DrawCircle(_currentLine.EndX - (radius >> 1), _currentLine.EndY - (radius >> 1), radius, BluePen);
-
-                renderer.Graphics.Restore();
-            }
         }
 
         ///// <summary>
