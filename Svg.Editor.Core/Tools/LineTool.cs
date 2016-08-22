@@ -35,7 +35,7 @@ namespace Svg.Core.Tools
 
         private static Uri CreateUriFromId(string markerEndId, string exception = "none")
         {
-            return markerEndId != exception ? new Uri($"#{markerEndId}", UriKind.Relative) : null;
+            return markerEndId != exception ? new Uri($"url(#{markerEndId})", UriKind.Relative) : null;
         }
 
         public string LineStyleIconName { get; set; } = "ic_line_style_white_48dp.png";
@@ -192,7 +192,7 @@ namespace Svg.Core.Tools
             ToolUsage = ToolUsage.Explicit;
 
             var markers = new List<SvgMarker>();
-            var marker = new SvgMarker { ID = "arrowStart", Orient = new SvgOrient() { IsAuto = true } };
+            var marker = new SvgMarker { ID = "arrowStart", Orient = new SvgOrient() { IsAuto = true }, RefX = new SvgUnit(SvgUnitType.Pixel,-2.5f), ViewBox=new SvgViewBox(0,0,3,3), MarkerWidth=2};
             marker.Children.Add(new SvgPath
             {
                 PathData = new SvgPathSegmentList(new SvgPathSegment[]
@@ -201,10 +201,12 @@ namespace Svg.Core.Tools
                     new SvgLineSegment(PointF.Create(0, -2.0f), PointF.Create(0, 2f)),
                     new SvgLineSegment(PointF.Create(0, 2.0f), PointF.Create(-4.0f, 0)),
                     new SvgClosePathSegment()
-                })
+                }),
+                Stroke = SvgColourServer.ContextStroke, // inherit stroke color from parent/aka context
+                Fill = SvgColourServer.ContextFill, // inherit stroke color from parent/aka context
             });
             markers.Add(marker);
-            marker = new SvgMarker { ID = "arrowEnd", Orient = new SvgOrient() { IsAuto = true } };
+            marker = new SvgMarker { ID = "arrowEnd", Orient = new SvgOrient() { IsAuto = true }, RefX = new SvgUnit(SvgUnitType.Pixel, 2.5f), ViewBox = new SvgViewBox(0, 0, 3, 3), MarkerWidth = 2 };
             marker.Children.Add(new SvgPath
             {
                 PathData = new SvgPathSegmentList(new SvgPathSegment[]
@@ -213,14 +215,18 @@ namespace Svg.Core.Tools
                     new SvgLineSegment(PointF.Create(0, -2.0f), PointF.Create(0, 2.0f)),
                     new SvgLineSegment(PointF.Create(0, 2.0f), PointF.Create(4.0f, 0)),
                     new SvgClosePathSegment()
-                })
+                }),
+                Stroke = SvgColourServer.ContextStroke, // inherit stroke color from parent/aka context
+                Fill = SvgColourServer.ContextFill, // inherit stroke color from parent/aka context
             });
             markers.Add(marker);
-            marker = new SvgMarker { ID = "circle", Orient = new SvgOrient() { IsAuto = true } };
+            marker = new SvgMarker { ID = "circle", Orient = new SvgOrient() { IsAuto = true }/*, RefX = new SvgUnit(SvgUnitType.Pixel, -1.5f)*/, ViewBox = new SvgViewBox(0, 0, 3, 3), MarkerWidth = 2 };
             marker.Children.Add(new SvgEllipse
             {
                 RadiusX = 1.5f,
-                RadiusY = 1.5f
+                RadiusY = 1.5f,
+                Stroke = SvgColourServer.ContextStroke, // inherit stroke color from parent/aka context
+                Fill = SvgColourServer.ContextFill, // inherit stroke color from parent/aka context
             });
             markers.Add(marker);
 
@@ -383,7 +389,7 @@ namespace Svg.Core.Tools
             {
                 renderer.Graphics.Save();
 
-                const int radius = 16;
+                const int radius = (int) (16/ws.ZoomFactor);
                 var points = _currentLine.GetTransformedLinePoints();
                 renderer.DrawCircle(points[0].X - (radius >> 1), points[0].Y - (radius >> 1), radius, BluePen);
                 renderer.DrawCircle(points[1].X - (radius >> 1), points[1].Y - (radius >> 1), radius, BluePen);
@@ -415,7 +421,7 @@ namespace Svg.Core.Tools
 
                 var markerStartId = selectedLines.Any()
                     ? selectedLines.All(x => selectedLines.First().MarkerStart == x.MarkerStart)
-                        ? selectedLines.First().MarkerStart?.OriginalString.Substring(1) ?? "none"
+                        ? selectedLines.First().MarkerStart?.OriginalString?.Replace("url(#", null)?.TrimEnd(')') ?? "none"
                         : "none"
                     : t.SelectedMarkerStartId;
                 var lineStyle = selectedLines.Any()
@@ -425,7 +431,7 @@ namespace Svg.Core.Tools
                     : t.SelectedLineStyle;
                 var markerEndId = selectedLines.Any()
                     ? selectedLines.All(x => selectedLines.First().MarkerEnd == x.MarkerEnd)
-                        ? selectedLines.First().MarkerEnd?.OriginalString.Substring(1) ?? "none"
+                        ? selectedLines.First().MarkerEnd?.OriginalString?.Replace("url(#", null)?.TrimEnd(')') ?? "none"
                         : "none"
                     : t.SelectedMarkerEndId;
 

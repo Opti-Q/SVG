@@ -116,19 +116,6 @@ namespace Svg
             set { this.Attributes["marker-start"] = value; }
         }
 
-        public override SvgPaintServer Fill
-        {
-            get { return null; /* Line can't have a fill */ }
-            set
-            {
-                // Do nothing
-            }
-        }
-
-        public SvgLine()
-        {
-        }
-
         public override GraphicsPath Path(ISvgRenderer renderer)
         {
             if (this._path == null || this.IsPathDirty)

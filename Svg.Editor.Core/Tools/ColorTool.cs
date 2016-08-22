@@ -107,6 +107,11 @@ namespace Svg.Core.Tools
                 element.Fill?.Dispose();
                 element.Fill = colourServer;
             }
+            if (element is SvgLine)
+            {
+                element.Fill?.Dispose();
+                element.Fill = colourServer;
+            }
 
             element.Stroke?.Dispose();
             element.Stroke = colourServer;

@@ -91,13 +91,13 @@ namespace SvgW3CTestRunner.Droid
 
                 var watch = Stopwatch.StartNew();
 
-                //  var filter = "painting-";
+                var filter = "painting-marker";
                 //  var filter = "text-";
                 //  var filter = "paths-";
                 //  var filter = "coords-trans-09-t";
                 //  var filter = "coords-transformattr-05-f";
                 //  var filter = "imp-";
-                var filter = "paths-";
+                //var filter = "paths-";
 
                 var assetManager = Assets;
                 var svgs = assetManager.List("svg")
