@@ -312,12 +312,35 @@ namespace Svg.Core.Tools
             }
 
             var line = sender as SvgLine;
-            if (line != null && Regex.IsMatch(e.Attribute, @"^[xy][12]$"))
+            if (line != null)
             {
+                float absoluteDeltaX, absoluteDeltaY;
                 _isSnappingInProgress = true;
-                SnapLineToGrid(line);
+                if (Regex.IsMatch(e.Attribute, @"^[xy]1$"))
+                {
+                    SnapPointToGrid(line.StartX, line.StartY, out absoluteDeltaX, out absoluteDeltaY);
+                    line.StartX += absoluteDeltaX;
+                    line.StartY += absoluteDeltaY;
+                }
+                else if (Regex.IsMatch(e.Attribute, @"^[xy]2$"))
+                {
+                    SnapPointToGrid(line.EndX, line.EndY, out absoluteDeltaX, out absoluteDeltaY);
+                    line.EndX += absoluteDeltaX;
+                    line.EndY += absoluteDeltaY;
+                }
                 _isSnappingInProgress = false;
             }
+        }
+
+        private PointF GetSnappingPoint(SvgElement element)
+        {
+            var line = element as SvgLine;
+            if (line != null)
+            {
+                return line.GetTransformedLinePoints()[0];
+            }
+
+            return (element as SvgVisualElement)?.GetBoundingBox().Location ?? PointF.Create(0, 0);
         }
 
         private void SnapElementToGrid(SvgElement element)
@@ -335,7 +358,7 @@ namespace Svg.Core.Tools
 
                 // snap to grid:
                 // get absolute point
-                var b = ve.GetBoundingBox();
+                var snap = GetSnappingPoint(element);
 
                 float absoluteDeltaX, absoluteDeltaY;
 
@@ -348,7 +371,7 @@ namespace Svg.Core.Tools
                 }
                 else
                 {
-                    SnapPointToGrid(b.X, b.Y, out absoluteDeltaX, out absoluteDeltaY);
+                    SnapPointToGrid(snap.X, snap.Y, out absoluteDeltaX, out absoluteDeltaY);
 
                     if (_generalTranslation == null)
                     {
@@ -359,41 +382,11 @@ namespace Svg.Core.Tools
                 var mx = ve.CreateTranslation(absoluteDeltaX, absoluteDeltaY);
                 ve.SetTransformationMatrix(mx);
 
-                var line = element as SvgLine;
-                if (line != null)
-                {
-                    var points = new[] { PointF.Create(0, 0) };
-                    line.Transforms.GetMatrix().TransformPoints(points);
-                    var transformedX = points[0].X;
-                    var transformedY = points[0].Y;
-                    line.StartX += transformedX;
-                    line.StartY += transformedY;
-                    line.EndX += transformedX;
-                    line.EndY += transformedY;
-                    line.SetTransformationMatrix(Matrix.Create());
-                }
             }
             finally
             {
                 _isSnappingInProgress = false;
             }
-        }
-
-        private void SnapLineToGrid(SvgLine line)
-        {
-            float absoluteDeltaX;
-            float absoluteDeltaY;
-
-            SnapPointToGrid(line.StartX, line.StartY, out absoluteDeltaX, out absoluteDeltaY);
-
-            line.StartX += absoluteDeltaX;
-            line.StartY += absoluteDeltaY;
-
-            if (Math.Abs(absoluteDeltaX) < StepSizeX && Math.Abs(absoluteDeltaY) < StepSizeY)
-                SnapPointToGrid(line.EndX, line.EndY, out absoluteDeltaX, out absoluteDeltaY);
-
-            line.EndX += absoluteDeltaX;
-            line.EndY += absoluteDeltaY;
         }
 
         private void SnapPointToGrid(float x, float y, out float absoluteDeltaX, out float absoluteDeltaY)
@@ -447,15 +440,13 @@ namespace Svg.Core.Tools
             var diffY = y % StepSizeY;
 
             var deltaX = 0f;
-            //if (diffX > StepSizeX / 2)
-            //    deltaX = StepSizeX;
 
             var deltaY = 0f;
             if (diffY > StepSizeY / 2)
                 deltaY = StepSizeY;
 
             // see if intermediary point is even nearer but also take Y coordinate into consideration!!
-            if (diffX > StepSizeX / 2)
+            if (diffX - StepSizeX / 2 > .0001f)
             {
                 // transition to intermediary point
                 deltaX = StepSizeX / 2;
@@ -465,7 +456,7 @@ namespace Svg.Core.Tools
                 else
                     deltaY = -StepSizeY / 2;
             }
-            else if (diffX < -(StepSizeX / 2))
+            else if (diffX + StepSizeX / 2 < .0001f)
             {
                 deltaX = -(StepSizeX / 2);
 
