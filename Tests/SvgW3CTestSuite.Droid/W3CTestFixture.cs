@@ -121,7 +121,7 @@ namespace SvgW3CTestSuite.Droid
                 var message = $"{svgPath} succeeded ({_succeededCount}/ {_testCount})";
                 System.Diagnostics.Debug.Write(message);
                 var notificator = DependencyService.Get<IToastNotificator>();
-                await notificator.Notify(ToastNotificationType.Success, "Finished test", message, TimeSpan.FromMilliseconds(500));
+                await notificator.Notify(ToastNotificationType.Success, "Finished test", message, TimeSpan.FromMilliseconds(200));
             });
         }
 
@@ -132,7 +132,7 @@ namespace SvgW3CTestSuite.Droid
                 var message = $"{svgPath} failed ({_succeededCount} / {_testCount})";
                 System.Diagnostics.Debug.Write(message);
                 var notificator = DependencyService.Get<IToastNotificator>();
-                await notificator.Notify(ToastNotificationType.Error, "Failed test", message, TimeSpan.FromMilliseconds(500));
+                await notificator.Notify(ToastNotificationType.Error, "Failed test", message, TimeSpan.FromMilliseconds(200));
             });
         }
 
