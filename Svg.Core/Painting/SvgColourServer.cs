@@ -17,6 +17,14 @@ namespace Svg
         /// A <see cref="SvgPaintServer"/> that should inherit from its parent.
         /// </summary>
         public static readonly SvgPaintServer Inherit = new SvgColourServer(Engine.Factory.Colors.Black);
+        /// <summary>
+        /// A <see cref="SvgPaintServer"/> that should get the stroke color from its context object (e.g. marker or svg use)
+        /// </summary>
+        public static readonly SvgPaintServer ContextStroke = new SvgColourServer(Engine.Factory.Colors.Black);
+        /// <summary>
+        /// A <see cref="SvgPaintServer"/> that should get the fill color from its context object (e.g. marker or svg use)
+        /// </summary>
+        public static readonly SvgPaintServer ContextFill = new SvgColourServer(Engine.Factory.Colors.Black);
 
         public SvgColourServer()
             : this(Engine.Factory.Colors.Black)
@@ -55,6 +63,10 @@ namespace Svg
         		return "";
             else if (this == SvgColourServer.Inherit)
                 return "inherit";
+            else if (this == SvgColourServer.ContextFill)
+                return "context-fill";
+            else if (this == SvgColourServer.ContextStroke)
+                return "context-stroke";
 
             Color c = this.Colour;
 

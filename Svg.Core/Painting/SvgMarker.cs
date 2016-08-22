@@ -193,7 +193,8 @@ namespace Svg
             using (pRenderer.UsingContextVariable(MARKER_POINT, pMarkerPoint))
             using (pRenderer.UsingContextVariable(MARKER_ANGLE, fAngle))
             using (pRenderer.UsingContextVariable(MARKER_OWNER, pOwner))
-            using (pRenderer.UsingContextVariable(STROKE, pOwner.Stroke))
+            using (pRenderer.UsingContextVariable(CONTEXT_STROKE, pOwner.Stroke))
+            using (pRenderer.UsingContextVariable(CONTEXT_FILL, pOwner.Fill))
             {
                 Render(pRenderer);
             }

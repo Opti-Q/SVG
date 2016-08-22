@@ -201,7 +201,9 @@ namespace Svg.Core.Tools
                     new SvgLineSegment(PointF.Create(0, -2.0f), PointF.Create(0, 2f)),
                     new SvgLineSegment(PointF.Create(0, 2.0f), PointF.Create(-4.0f, 0)),
                     new SvgClosePathSegment()
-                })
+                }),
+                Stroke = SvgColourServer.ContextStroke, // inherit stroke color from parent/aka context
+                Fill = SvgColourServer.ContextFill, // inherit stroke color from parent/aka context
             });
             markers.Add(marker);
             marker = new SvgMarker { ID = "arrowEnd", Orient = new SvgOrient() { IsAuto = true }, RefX = new SvgUnit(SvgUnitType.Pixel, 2.5f), ViewBox = new SvgViewBox(0, 0, 3, 3), MarkerWidth = 2 };
@@ -213,14 +215,18 @@ namespace Svg.Core.Tools
                     new SvgLineSegment(PointF.Create(0, -2.0f), PointF.Create(0, 2.0f)),
                     new SvgLineSegment(PointF.Create(0, 2.0f), PointF.Create(4.0f, 0)),
                     new SvgClosePathSegment()
-                })
+                }),
+                Stroke = SvgColourServer.ContextStroke, // inherit stroke color from parent/aka context
+                Fill = SvgColourServer.ContextFill, // inherit stroke color from parent/aka context
             });
             markers.Add(marker);
             marker = new SvgMarker { ID = "circle", Orient = new SvgOrient() { IsAuto = true }/*, RefX = new SvgUnit(SvgUnitType.Pixel, -1.5f)*/, ViewBox = new SvgViewBox(0, 0, 3, 3), MarkerWidth = 2 };
             marker.Children.Add(new SvgEllipse
             {
                 RadiusX = 1.5f,
-                RadiusY = 1.5f
+                RadiusY = 1.5f,
+                Stroke = SvgColourServer.ContextStroke, // inherit stroke color from parent/aka context
+                Fill = SvgColourServer.ContextFill, // inherit stroke color from parent/aka context
             });
             markers.Add(marker);
 
