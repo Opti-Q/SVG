@@ -16,7 +16,7 @@ namespace Svg.Core.Tools
 
     public class LineTool : ToolBase
     {
-        private const double MIN_MOVED_DISTANCE = 30.0;
+        private const double MIN_MOVED_DISTANCE = 10.0;
 
         private static ILineOptionsInputService LineOptionsInputServiceProxy => Engine.Resolve<ILineOptionsInputService>();
 
@@ -331,6 +331,8 @@ namespace Svg.Core.Tools
                             StrokeWidth = new SvgUnit(SvgUnitType.Pixel, 2),
                             StartX = new SvgUnit(SvgUnitType.Pixel, relativeStart.X),
                             StartY = new SvgUnit(SvgUnitType.Pixel, relativeStart.Y),
+                            EndX = new SvgUnit(SvgUnitType.Pixel, relativeStart.X),
+                            EndY = new SvgUnit(SvgUnitType.Pixel, relativeStart.Y),
                             MarkerStart = CreateUriFromId(SelectedMarkerStartId),
                             MarkerEnd = CreateUriFromId(SelectedMarkerEndId)
                         };

@@ -316,13 +316,13 @@ namespace Svg.Core.Tools
             {
                 float absoluteDeltaX, absoluteDeltaY;
                 _isSnappingInProgress = true;
-                if (Regex.IsMatch(e.Attribute, @"^[xy]1$"))
+                if (Regex.IsMatch(e.Attribute, @"^y1$"))
                 {
                     SnapPointToGrid(line.StartX, line.StartY, out absoluteDeltaX, out absoluteDeltaY);
                     line.StartX += absoluteDeltaX;
                     line.StartY += absoluteDeltaY;
                 }
-                else if (Regex.IsMatch(e.Attribute, @"^[xy]2$"))
+                else if (Regex.IsMatch(e.Attribute, @"^y2$"))
                 {
                     SnapPointToGrid(line.EndX, line.EndY, out absoluteDeltaX, out absoluteDeltaY);
                     line.EndX += absoluteDeltaX;
@@ -446,7 +446,7 @@ namespace Svg.Core.Tools
                 deltaY = StepSizeY;
 
             // see if intermediary point is even nearer but also take Y coordinate into consideration!!
-            if (diffX - StepSizeX / 2 > .0001f)
+            if (diffX - StepSizeX / 2 > 0.001f)
             {
                 // transition to intermediary point
                 deltaX = StepSizeX / 2;
@@ -456,7 +456,7 @@ namespace Svg.Core.Tools
                 else
                     deltaY = -StepSizeY / 2;
             }
-            else if (diffX + StepSizeX / 2 < .0001f)
+            else if (diffX + StepSizeX / 2 < 0.001f)
             {
                 deltaX = -(StepSizeX / 2);
 
@@ -464,6 +464,11 @@ namespace Svg.Core.Tools
                     deltaY = StepSizeY / 2;
                 else
                     deltaY = -StepSizeY / 2;
+            }
+            else if (Math.Abs(diffX - StepSizeX / 2) < 0.001f && Math.Abs(diffY - StepSizeY / 2) < 0.001f)
+            {
+                absoluteDeltaX = absoluteDeltaY = 0;
+                return;
             }
 
             absoluteDeltaX = deltaX - diffX;
