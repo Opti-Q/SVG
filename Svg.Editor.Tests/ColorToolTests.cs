@@ -99,14 +99,13 @@ namespace Svg.Editor.Tests
         }
 
         [Test]
-        public async Task WhenUserSelectsParentAndSelectsColor_ChildHasSelectedColor()
+        public async Task ChildStrokeSetToNone_WhenUserSelectsParentAndSelectsColor_ChildStrokeIsStillNone()
         {
             // Arrange
             await Canvas.EnsureInitialized();
-            var color = Color.Create(Canvas.Tools.OfType<ColorTool>().Single().SelectableColors[1]);
             _colorMock.F = () => 1;
             var parent = new SvgGroup();
-            var child = new SvgText("hello");
+            var child = new SvgRectangle { X = 10, Y = 10, Width = 60, Height = 40, Stroke = SvgPaintServer.None };
             parent.Children.Add(child);
             Canvas.AddItemInScreenCenter(parent);
             var changeColorCommand = Canvas.ToolCommands.Single(x => x.FirstOrDefault()?.Name == "Change color").First();
@@ -116,16 +115,47 @@ namespace Svg.Editor.Tests
             changeColorCommand.Execute(null);
 
             // Assert
-            var texts = parent.Children.OfType<SvgTextBase>().ToList();
-            var txt = texts.First();
-            Assert.AreEqual(color.A, ((SvgColourServer)txt.Stroke).Colour.A);
-            Assert.AreEqual(color.R, ((SvgColourServer)txt.Stroke).Colour.R);
-            Assert.AreEqual(color.G, ((SvgColourServer)txt.Stroke).Colour.G);
-            Assert.AreEqual(color.B, ((SvgColourServer)txt.Stroke).Colour.B);
-            Assert.AreEqual(color.A, ((SvgColourServer)txt.Fill).Colour.A);
-            Assert.AreEqual(color.R, ((SvgColourServer)txt.Fill).Colour.R);
-            Assert.AreEqual(color.G, ((SvgColourServer)txt.Fill).Colour.G);
-            Assert.AreEqual(color.B, ((SvgColourServer)txt.Fill).Colour.B);
+            Assert.True(child.Stroke == SvgPaintServer.None);
+        }
+
+        [Test]
+        public async Task ChildStrokeNotSet_WhenUserSelectsParentAndSelectsColor_ChildStrokeEqualsParentStroke()
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            _colorMock.F = () => 1;
+            var parent = new SvgGroup();
+            var child = new SvgRectangle { X = 10, Y = 10, Width = 60, Height = 40, Stroke = SvgColourServer.NotSet };
+            parent.Children.Add(child);
+            Canvas.AddItemInScreenCenter(parent);
+            var changeColorCommand = Canvas.ToolCommands.Single(x => x.FirstOrDefault()?.Name == "Change color").First();
+
+            // Act
+            Canvas.SelectedElements.Add(parent);
+            changeColorCommand.Execute(null);
+
+            // Assert
+            Assert.True(child.Stroke.Equals(parent.Stroke));
+        }
+
+        [Test]
+        public async Task ChildStrokeInherit_WhenUserSelectsParentAndSelectsColor_ChildStrokeEqualsParentStroke()
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            _colorMock.F = () => 1;
+            var parent = new SvgGroup();
+            var child = new SvgRectangle { X = 10, Y = 10, Width = 60, Height = 40, Stroke = SvgColourServer.Inherit };
+            parent.Children.Add(child);
+            Canvas.AddItemInScreenCenter(parent);
+            var changeColorCommand = Canvas.ToolCommands.Single(x => x.FirstOrDefault()?.Name == "Change color").First();
+
+            // Act
+            Canvas.SelectedElements.Add(parent);
+            changeColorCommand.Execute(null);
+
+            // Assert
+            Assert.True(child.Stroke.Equals(parent.Stroke));
         }
 
         private class MockTextInputService : ITextInputService

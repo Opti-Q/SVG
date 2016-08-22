@@ -99,11 +99,6 @@ namespace Svg.Core.Tools
         {
             var colourServer = new SvgColourServer(color);
 
-            //foreach (var child in element.Children)
-            //{
-            //    ColorizeElement(child, color);
-            //}
-
             // only colorize visual elements
             if (!(element is SvgVisualElement)) return;
 

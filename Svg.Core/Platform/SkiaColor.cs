@@ -61,6 +61,11 @@ namespace Svg.Platform
             return B + G * 0x100 + R * 0x10000 + A * 0x1000000;
         }
 
+        public override int GetHashCode()
+        {
+            return ToArgb();
+        }
+
         public static implicit operator SkiaColor(SKColor other)
         {
             return new SkiaColor(other);
