@@ -26,76 +26,110 @@ namespace Svg.Editor.Tests
         }
 
         [Test]
-        public async Task WhenUserCreatesText_HasSelectedColor()
+        public async Task WhenUserCreatesText_FillAndStrokeHasSelectedColor()
         {
             // Arrange
             await Canvas.EnsureInitialized();
             var colorTool = Canvas.Tools.OfType<ColorTool>().Single();
+            var text = new SvgText("hello");
 
             // Act
-            Canvas.AddItemInScreenCenter(new SvgText("hello"));
+            Canvas.AddItemInScreenCenter(text);
 
             // Assert
-            var texts = Canvas.Document.Children.OfType<SvgTextBase>().ToList();
-            var txt = texts.First();
             var color = colorTool.SelectedColor;
-            Assert.AreEqual(color.A, ((SvgColourServer)txt.Fill).Colour.A);
-            Assert.AreEqual(color.R, ((SvgColourServer)txt.Fill).Colour.R);
-            Assert.AreEqual(color.G, ((SvgColourServer)txt.Fill).Colour.G);
-            Assert.AreEqual(color.B, ((SvgColourServer)txt.Fill).Colour.B);
+            Assert.True(color.Equals(((SvgColourServer)text.Fill).Colour));
+            Assert.True(color.Equals(((SvgColourServer)text.Stroke).Colour));
         }
 
         [Test]
-        public async Task WhenUserSelectsColorAndCreatesText_HasSelectedColor()
+        public async Task WhenUserCreatesRectangle_StrokeHasSelectedColor()
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            var colorTool = Canvas.Tools.OfType<ColorTool>().Single();
+            var rectangle = new SvgRectangle();
+
+            // Act
+            Canvas.AddItemInScreenCenter(rectangle);
+
+            // Assert
+            var color = colorTool.SelectedColor;
+            Assert.True(color.Equals(((SvgColourServer)rectangle.Stroke).Colour));
+        }
+
+        [Test]
+        public async Task WhenUserSelectsColorAndCreatesText_StrokeAndFillHasSelectedColor()
         {
             // Arrange
             await Canvas.EnsureInitialized();
             var colorTool = Canvas.Tools.OfType<ColorTool>().Single();
             var color = Color.Create(0, 255, 0);
+            var text = new SvgText("hello");
 
             // Act
             colorTool.SelectedColor = color;
-            Canvas.AddItemInScreenCenter(new SvgText("hello"));
+            Canvas.AddItemInScreenCenter(text);
 
             // Assert
-            var texts = Canvas.Document.Children.OfType<SvgTextBase>().ToList();
-            var txt = texts.First();
-            Assert.AreEqual(color.A, ((SvgColourServer)txt.Stroke).Colour.A);
-            Assert.AreEqual(color.R, ((SvgColourServer)txt.Stroke).Colour.R);
-            Assert.AreEqual(color.G, ((SvgColourServer)txt.Stroke).Colour.G);
-            Assert.AreEqual(color.B, ((SvgColourServer)txt.Stroke).Colour.B);
-            Assert.AreEqual(color.A, ((SvgColourServer)txt.Fill).Colour.A);
-            Assert.AreEqual(color.R, ((SvgColourServer)txt.Fill).Colour.R);
-            Assert.AreEqual(color.G, ((SvgColourServer)txt.Fill).Colour.G);
-            Assert.AreEqual(color.B, ((SvgColourServer)txt.Fill).Colour.B);
+            Assert.True(colorTool.SelectedColor.Equals(((SvgColourServer)text.Stroke).Colour));
+            Assert.True(colorTool.SelectedColor.Equals(((SvgColourServer)text.Fill).Colour));
         }
 
         [Test]
-        public async Task WhenUserSelectsTextAndSelectsColor_HasSelectedColor()
+        public async Task WhenUserSelectsColorAndCreatesRectangle_StrokeHasSelectedColor()
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            var colorTool = Canvas.Tools.OfType<ColorTool>().Single();
+            var color = Color.Create(0, 255, 0);
+            var rectangle = new SvgRectangle();
+
+            // Act
+            colorTool.SelectedColor = color;
+            Canvas.AddItemInScreenCenter(rectangle);
+
+            // Assert
+            Assert.True(colorTool.SelectedColor.Equals(((SvgColourServer)rectangle.Stroke).Colour));
+        }
+
+        [Test]
+        public async Task WhenUserSelectsTextAndSelectsColor_StrokeAndFillHasSelectedColor()
         {
             // Arrange
             await Canvas.EnsureInitialized();
             var color = Color.Create(Canvas.Tools.OfType<ColorTool>().Single().SelectableColors[1]);
             _colorMock.F = () => 1;
-            var element = new SvgText("hello");
-            Canvas.AddItemInScreenCenter(element);
+            var text = new SvgText("hello");
+            Canvas.AddItemInScreenCenter(text);
             var changeColorCommand = Canvas.ToolCommands.Single(x => x.FirstOrDefault()?.Name == "Change color").First();
 
             // Act
-            Canvas.SelectedElements.Add(element);
+            Canvas.SelectedElements.Add(text);
             changeColorCommand.Execute(null);
 
             // Assert
-            var texts = Canvas.Document.Children.OfType<SvgTextBase>().ToList();
-            var txt = texts.First();
-            Assert.AreEqual(color.A, ((SvgColourServer)txt.Stroke).Colour.A);
-            Assert.AreEqual(color.R, ((SvgColourServer)txt.Stroke).Colour.R);
-            Assert.AreEqual(color.G, ((SvgColourServer)txt.Stroke).Colour.G);
-            Assert.AreEqual(color.B, ((SvgColourServer)txt.Stroke).Colour.B);
-            Assert.AreEqual(color.A, ((SvgColourServer)txt.Fill).Colour.A);
-            Assert.AreEqual(color.R, ((SvgColourServer)txt.Fill).Colour.R);
-            Assert.AreEqual(color.G, ((SvgColourServer)txt.Fill).Colour.G);
-            Assert.AreEqual(color.B, ((SvgColourServer)txt.Fill).Colour.B);
+            Assert.True(color.Equals(((SvgColourServer)text.Stroke).Colour));
+            Assert.True(color.Equals(((SvgColourServer)text.Fill).Colour));
+        }
+
+        [Test]
+        public async Task WhenUserSelectsRectangleAndSelectsColor_StrokeHasSelectedColor()
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            var color = Color.Create(Canvas.Tools.OfType<ColorTool>().Single().SelectableColors[1]);
+            _colorMock.F = () => 1;
+            var rectangle = new SvgRectangle();
+            Canvas.AddItemInScreenCenter(rectangle);
+            var changeColorCommand = Canvas.ToolCommands.Single(x => x.FirstOrDefault()?.Name == "Change color").First();
+
+            // Act
+            Canvas.SelectedElements.Add(rectangle);
+            changeColorCommand.Execute(null);
+
+            // Assert
+            Assert.True(color.Equals(((SvgColourServer)rectangle.Stroke).Colour));
         }
 
         [Test]

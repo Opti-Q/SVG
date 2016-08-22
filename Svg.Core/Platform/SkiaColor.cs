@@ -61,6 +61,11 @@ namespace Svg.Platform
             return B + G * 0x100 + R * 0x10000 + A * 0x1000000;
         }
 
+        public override bool Equals(object obj)
+        {
+            return GetHashCode() == obj.GetHashCode();
+        }
+
         public override int GetHashCode()
         {
             return ToArgb();
