@@ -13,6 +13,7 @@ namespace Svg.Core.Tools
     public class GridTool : ToolBase
     {
         private const double Gamma = 90f;
+        private const float FloatError = 0.01f;
 
         private float StepSizeY
         {
@@ -312,41 +313,41 @@ namespace Svg.Core.Tools
             }
 
             var line = sender as SvgLine;
-            if (line != null)
+            if (line != null && Regex.IsMatch(e.Attribute, @"^y[12]$"))
             {
-                float absoluteDeltaX, absoluteDeltaY;
                 _isSnappingInProgress = true;
-                if (Regex.IsMatch(e.Attribute, @"^y1$"))
+
+                float absoluteDeltaX, absoluteDeltaY;
+
+                // Get start and end points from line in canvas space
+                var points = line.GetTransformedLinePoints();
+
+                // Matrix for transforming the calculated delta back to line space
+                var m = line.Transforms.GetMatrix();
+                m.Invert();
+
+                switch (e.Attribute)
                 {
-                    var points = line.GetTransformedLinePoints();
-                    SnapPointToGrid(points[0].X, points[0].Y, out absoluteDeltaX, out absoluteDeltaY);
-                    points[0].X += absoluteDeltaX;
-                    points[0].Y += absoluteDeltaY;
-                    var m = line.Transforms.GetMatrix();
-                    m.Invert();
-                    m.TransformPoints(points);
-                    line.StartX = points[0].X;
-                    line.StartY = points[0].Y;
-                    //var rotation = line.Transforms.GetMatrix().Rotation;
-                    //line.StartX += absoluteDeltaX * (float)Math.Cos(rotation);
-                    //line.StartY += absoluteDeltaY * (float)Math.Cos(rotation);
+                    case "y1":
+                        SnapPointToGrid(points[0].X, points[0].Y, out absoluteDeltaX, out absoluteDeltaY);
+                        points[0].X += absoluteDeltaX;
+                        points[0].Y += absoluteDeltaY;
+                        m.TransformPoints(points);
+                        line.StartX = points[0].X;
+                        line.StartY = points[0].Y;
+                        break;
+                    case "y2":
+                        SnapPointToGrid(points[1].X, points[1].Y, out absoluteDeltaX, out absoluteDeltaY);
+                        points[1].X += absoluteDeltaX;
+                        points[1].Y += absoluteDeltaY;
+                        m.TransformPoints(points);
+                        line.EndX = points[1].X;
+                        line.EndY = points[1].Y;
+                        break;
                 }
-                else if (Regex.IsMatch(e.Attribute, @"^y2$"))
-                {
-                    var points = line.GetTransformedLinePoints();
-                    SnapPointToGrid(points[1].X, points[1].Y, out absoluteDeltaX, out absoluteDeltaY);
-                    points[1].X += absoluteDeltaX;
-                    points[1].Y += absoluteDeltaY;
-                    var m = line.Transforms.GetMatrix();
-                    m.Invert();
-                    m.TransformPoints(points);
-                    line.EndX = points[1].X;
-                    line.EndY = points[1].Y;
-                    //var rotation = line.Transforms.GetMatrix().Rotation;
-                    //line.EndX += absoluteDeltaX * (float)Math.Cos(rotation);
-                    //line.EndY += absoluteDeltaY * (float)Math.Cos(rotation);
-                }
+
                 _isSnappingInProgress = false;
+
             }
         }
 
@@ -460,12 +461,14 @@ namespace Svg.Core.Tools
             var diffX = x % StepSizeX;
             var diffY = y % StepSizeY;
 
-            if (Math.Abs(diffX - StepSizeX) < 0.01)
+            // if x is already snapped, just correct the floating point error by substracting StepSizeX
+            if (Math.Abs(diffX - StepSizeX) < FloatError)
             {
                 diffX -= StepSizeX;
             }
 
-            if (Math.Abs(diffY - StepSizeY) < 0.01)
+            // if y is already snapped, just correct the floating point error by substracting StepSizeY
+            if (Math.Abs(diffY - StepSizeY) < FloatError)
             {
                 diffY -= StepSizeY;
             }
@@ -473,23 +476,23 @@ namespace Svg.Core.Tools
             float deltaX = 0, deltaY = 0;
 
             // see if intermediary point is even nearer but also take Y coordinate into consideration!!
-            if (diffX >= halfStepSizeX - 0.001f)
+            if (diffX >= halfStepSizeX - FloatError)
             {
                 // transition to intermediary point
                 deltaX = halfStepSizeX;
                 deltaY = diffY >= halfStepSizeY ? halfStepSizeY : -halfStepSizeY;
             }
-            else if (diffX <= -halfStepSizeX + 0.001f)
+            else if (diffX <= -halfStepSizeX + FloatError)
             {
                 deltaX = -halfStepSizeX;
                 deltaY = diffY >= halfStepSizeY ? halfStepSizeY : -halfStepSizeY;
             }
-            else if (diffY >= halfStepSizeY - 0.001f)
+            else if (diffY >= halfStepSizeY - FloatError)
             {
                 deltaY = halfStepSizeY;
                 deltaX = diffX >= halfStepSizeX ? halfStepSizeX : -halfStepSizeX;
             }
-            else if (diffY <= -halfStepSizeY + 0.001f)
+            else if (diffY <= -halfStepSizeY + FloatError)
             {
                 deltaY = -halfStepSizeY;
                 deltaX = diffX >= halfStepSizeX ? halfStepSizeX : -halfStepSizeX;
