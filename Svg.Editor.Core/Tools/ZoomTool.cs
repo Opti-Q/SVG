@@ -40,7 +40,7 @@ namespace Svg.Core.Tools
             {
                 new ToolCommand(this, "Show all", x =>
                 {
-                    var worldBounds = _owner.GetWorldBounds();
+                    var worldBounds = _owner.Document.CalculateDocumentBounds();
                     if (worldBounds.IsEmpty)
                     {
                         _owner.ZoomFactor = 1;
@@ -144,7 +144,7 @@ namespace Svg.Core.Tools
 
         //    renderer.Graphics.Save();
 
-        //    renderer.DrawRectangle(ws.GetWorldBounds(), PurplePen);
+        //    renderer.DrawRectangle(ws.Document.CalculateDocumentBounds(), PurplePen);
 
         //    renderer.Graphics.Restore();
         //}
