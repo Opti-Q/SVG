@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Svg.Core.Events;
+using Svg.Interfaces;
 
 namespace Svg.Core.Tools
 {
@@ -37,6 +38,27 @@ namespace Svg.Core.Tools
 
             Commands = new[]
             {
+                new ToolCommand(this, "Show all", x =>
+                {
+                    var worldBounds = _owner.GetWorldBounds();
+                    if (worldBounds.IsEmpty)
+                    {
+                        _owner.ZoomFactor = 1;
+                        _owner.ZoomFocus = PointF.Create(0, 0);
+                        _owner.Translate = PointF.Create(0, 0);
+                        _owner.FireInvalidateCanvas();
+                        return;
+                    }
+                    _owner.ZoomFactor = Math.Min(_owner.ScreenWidth / worldBounds.Width,
+                        _owner.ScreenHeight / worldBounds.Height);
+                    _owner.ZoomFocus = PointF.Create(0, 0);
+                    var offsetX = -worldBounds.Left * _owner.ZoomFactor;
+                    var marginX = (_owner.ScreenWidth - worldBounds.Width * _owner.ZoomFactor) / 2;
+                    var offsetY = -worldBounds.Top*_owner.ZoomFactor;
+                    var marginY = (_owner.ScreenHeight - worldBounds.Height * _owner.ZoomFactor) / 2;
+                    _owner.Translate = PointF.Create(offsetX + marginX, offsetY + marginY);
+                    _owner.FireInvalidateCanvas();
+                }, iconName:"ic_aspect_ratio_white_48dp.png", sortFunc:x => 1450),
                 new ToolCommand(this, "Zoom in +", (x) =>
                 {
                     var f =_owner.ZoomFactor + 0.25f;
@@ -81,7 +103,7 @@ namespace Svg.Core.Tools
                     if (!_focused)
                     {
                         var canvasFocus = ws.ScreenToCanvas(CurrentFocusX, CurrentFocusY);
-                        ws.Translate -= (ws.ZoomFocus - canvasFocus) * (ws.ZoomFactor - 1); 
+                        ws.Translate -= (ws.ZoomFocus - canvasFocus) * (ws.ZoomFactor - 1);
                         ws.ZoomFocus = canvasFocus;
                         _focused = true;
                     }
@@ -112,6 +134,17 @@ namespace Svg.Core.Tools
         //    var canvasCurrentFocus = ws.ScreenToCanvas(CurrentFocusX, CurrentFocusY);
         //    renderer.DrawCircle(canvasCurrentFocus.X, canvasCurrentFocus.Y, 18, PurplePen);
         //    renderer.DrawCircle(ws.ZoomFocus.X, ws.ZoomFocus.Y, 22, OrangePen);
+
+        //    renderer.Graphics.Restore();
+        //}
+
+        //public override async Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
+        //{
+        //    await base.OnDraw(renderer, ws);
+
+        //    renderer.Graphics.Save();
+
+        //    renderer.DrawRectangle(ws.GetWorldBounds(), PurplePen);
 
         //    renderer.Graphics.Restore();
         //}

@@ -450,6 +450,19 @@ namespace Svg.Core
             return point;
         }
 
+        public RectangleF GetWorldBounds()
+        {
+            var visualChildren = Document.Children.OfType<SvgVisualElement>().ToList();
+            var worldBounds = visualChildren.FirstOrDefault()?.GetBoundingBox() ?? RectangleF.Empty;
+
+            for (var i = 1; i < visualChildren.Count; i++)
+            {
+                worldBounds = worldBounds.UnionAndCopy(visualChildren[i].GetBoundingBox());
+            }
+
+            return worldBounds;
+        }
+
         /// <summary>
         /// Stores the document with a viewbox that surrounds all contained visual elements
         /// then resets the viewbox

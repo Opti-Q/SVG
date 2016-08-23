@@ -39,7 +39,7 @@ namespace Svg.Editor.Tests
             // Arrange
             await Canvas.EnsureInitialized();
             var txtTool = Canvas.Tools.OfType<TextTool>().Single();
-        
+
             // Act
             Canvas.ActiveTool = txtTool;
 
@@ -63,7 +63,7 @@ namespace Svg.Editor.Tests
             Canvas.ScreenHeight = 500;
             var gt = Canvas.Tools.OfType<GridTool>().Single();
             gt.IsSnappingEnabled = false; // disable snapping in this case
-            
+
             // Act
             Canvas.AddItemInScreenCenter(element);
 
@@ -83,6 +83,72 @@ namespace Svg.Editor.Tests
             Assert.AreEqual(Math.Round(expected.Y, 2), Math.Round(actual.Y, 2), $"{expected} \nvs {actual}");
             Assert.AreEqual(Math.Round(expected.Width, 2), Math.Round(actual.Width, 2), $"{expected} \nvs {actual}");
             Assert.AreEqual(Math.Round(expected.Height, 2), Math.Round(actual.Height, 2), $"{expected} \nvs {actual}");
+        }
+
+        [Test]
+        [TestCase(0, 0, 0, 0, 1, 0, 0, 0, 0)]
+        [TestCase(0, 0, 100, 100, 1, 0, 0, -100, -100)]
+        [TestCase(0, 0, -100, 100, 1, 0, 0, 100, -100)]
+        [TestCase(0, 0, -100, -100, 1, 0, 0, 100, 100)]
+        [TestCase(0, 0, 100, -100, 1, 0, 0, -100, 100)]
+        [TestCase(0, 0, 100, 100, 2, 0, 0, -50, -50)]
+        [TestCase(0, 0, 100, 100, 0.5f, 0, 0, -200, -200)]
+        [TestCase(0, 0, 0, 0, 0.5f, 200, 200, -200, -200)]
+        [TestCase(0, 0, 0, 0, 0.5f, -200, 200, 200, -200)]
+        [TestCase(0, 0, 0, 0, 0.5f, -200, -200, 200, 200)]
+        [TestCase(0, 0, 0, 0, 0.5f, 200, -200, -200, 200)]
+        [TestCase(0, 0, 0, 0, 2, 200, 200, 100, 100)]
+        [TestCase(0, 0, 0, 0, 2, -200, 200, -100, 100)]
+        [TestCase(0, 0, 0, 0, 2, -200, -200, -100, -100)]
+        [TestCase(0, 0, 0, 0, 2, 200, -200, 100, -100)]
+        public async Task ScreenToCanvasReturnsTransformedPoint(float screenX, float screenY, float translateX, float translateY, float zoomFactor,
+            float zoomFocusX, float zoomFocusY, float expectedCanvasX, float expectedCanvasY)
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            Canvas.Translate = PointF.Create(translateX, translateY);
+            Canvas.ZoomFactor = zoomFactor;
+            Canvas.ZoomFocus = PointF.Create(zoomFocusX, zoomFocusY);
+
+            // Act
+            var canvasPoint = Canvas.ScreenToCanvas(PointF.Create(screenX, screenY));
+
+            // Assert
+            Assert.AreEqual(expectedCanvasX, canvasPoint.X);
+            Assert.AreEqual(expectedCanvasY, canvasPoint.Y);
+        }
+
+        [Test]
+        [TestCase(0, 0, 0, 0, 1, 0, 0, 0, 0)]
+        [TestCase(0, 0, 100, 100, 1, 0, 0, 100, 100)]
+        [TestCase(0, 0, -100, 100, 1, 0, 0, -100, 100)]
+        [TestCase(0, 0, -100, -100, 1, 0, 0, -100, -100)]
+        [TestCase(0, 0, 100, -100, 1, 0, 0, 100, -100)]
+        [TestCase(0, 0, 100, 100, 2, 0, 0, 100, 100)]
+        [TestCase(0, 0, 100, 100, 0.5f, 0, 0, 100, 100)]
+        [TestCase(0, 0, 0, 0, 0.5f, 200, 200, 100, 100)]
+        [TestCase(0, 0, 0, 0, 0.5f, -200, 200, -100, 100)]
+        [TestCase(0, 0, 0, 0, 0.5f, -200, -200, -100, -100)]
+        [TestCase(0, 0, 0, 0, 0.5f, 200, -200, 100, -100)]
+        [TestCase(0, 0, 0, 0, 2, 200, 200, -200, -200)]
+        [TestCase(0, 0, 0, 0, 2, -200, 200, 200, -200)]
+        [TestCase(0, 0, 0, 0, 2, -200, -200, 200, 200)]
+        [TestCase(0, 0, 0, 0, 2, 200, -200, -200, 200)]
+        public async Task CanvasToScreenReturnsRetransformedPoint(float canvasX, float canvasY, float translateX, float translateY, float zoomFactor,
+            float zoomFocusX, float zoomFocusY, float expectedScreenX, float expectedScreenY)
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            Canvas.Translate = PointF.Create(translateX, translateY);
+            Canvas.ZoomFactor = zoomFactor;
+            Canvas.ZoomFocus = PointF.Create(zoomFocusX, zoomFocusY);
+
+            // Act
+            var screenPoint = Canvas.CanvasToScreen(PointF.Create(canvasX, canvasY));
+
+            // Assert
+            Assert.AreEqual(expectedScreenX, screenPoint.X);
+            Assert.AreEqual(expectedScreenY, screenPoint.Y);
         }
     }
 }
