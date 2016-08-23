@@ -17,6 +17,7 @@ namespace Svg.Core.Tools
     public class LineTool : ToolBase
     {
         private const double MIN_MOVED_DISTANCE = 10.0;
+        private const double MAX_POINTER_DISTANCE = 30.0;
 
         private static ILineOptionsInputService LineOptionsInputServiceProxy => Engine.Resolve<ILineOptionsInputService>();
 
@@ -286,10 +287,10 @@ namespace Svg.Core.Tools
                 {
                     var canvasPointer1Position = ws.ScreenToCanvas(p.Pointer1Position);
                     var points = _currentLine.GetTransformedLinePoints();
-                    _movementType = Math.Abs(canvasPointer1Position.X - points[1].X) <= MIN_MOVED_DISTANCE &&
-                                 Math.Abs(canvasPointer1Position.Y - points[1].Y) <= MIN_MOVED_DISTANCE ? MovementType.End :
-                                 Math.Abs(canvasPointer1Position.X - points[0].X) <= MIN_MOVED_DISTANCE &&
-                                 Math.Abs(canvasPointer1Position.Y - points[0].Y) <= MIN_MOVED_DISTANCE ? MovementType.Start :
+                    _movementType = Math.Abs(canvasPointer1Position.X - points[1].X) <= MAX_POINTER_DISTANCE &&
+                                 Math.Abs(canvasPointer1Position.Y - points[1].Y) <= MAX_POINTER_DISTANCE ? MovementType.End :
+                                 Math.Abs(canvasPointer1Position.X - points[0].X) <= MAX_POINTER_DISTANCE &&
+                                 Math.Abs(canvasPointer1Position.Y - points[0].Y) <= MAX_POINTER_DISTANCE ? MovementType.Start :
                                  _currentLine.GetBoundingBox().Contains(canvasPointer1Position) ? MovementType.StartEnd : MovementType.None;
                 }
             }
@@ -389,7 +390,7 @@ namespace Svg.Core.Tools
             {
                 renderer.Graphics.Save();
 
-                const int radius = (int) (16/ws.ZoomFactor);
+                var radius = (int) (16/ws.ZoomFactor);
                 var points = _currentLine.GetTransformedLinePoints();
                 renderer.DrawCircle(points[0].X - (radius >> 1), points[0].Y - (radius >> 1), radius, BluePen);
                 renderer.DrawCircle(points[1].X - (radius >> 1), points[1].Y - (radius >> 1), radius, BluePen);

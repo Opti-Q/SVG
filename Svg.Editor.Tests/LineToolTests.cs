@@ -74,6 +74,9 @@ namespace Svg.Editor.Tests
         [TestCase(0.0f, 0.0f, 34.64098f, 20.0f, 34.64098f, 20.0f, 65.0f, 20.0f, 0.0f, 0.0f, 51.96147f, 10.0f)]
         [TestCase(0.0f, 0.0f, 51.96147f, 10.0f, 51.96147f, 10.0f, 70.0f, 20.0f, 0.0f, 0.0f, 69.28196f, 20.0f)]
         [TestCase(0.0f, 0.0f, 34.64098f, 20.0f, 34.64098f, 20.0f, 52.0f, 31.0f, 0.0f, 0.0f, 51.96147f, 30.0f)]
+        [TestCase(0.0f, 0.0f, 34.64098f, 20.0f, 34.64098f, 20.0f, 46.0f, 33.0f, 0.0f, 0.0f, 17.32051f, 30.0f)]
+        [TestCase(0.0f, 0.0f, 51.96147f, 10.0f, 51.96147f, 10.0f, 70.0f, 21.0f, 0.0f, 0.0f, 69.28196f, 20.0f)]
+        [TestCase(0.0f, 0.0f, 86.60254f, 50.0f, 86.60254f, 50.0f, 104.0f, 60.0f, 0.0f, 0.0f, 103.92304f, 60.0f)]
         public async Task IfUserEditLine_LineSnapsToGrid(float lineStartX, float lineStartY, float lineEndX, float lineEndY, float pointerDownX, float pointerDownY, float pointerPositionX, float pointerPositionY, float assertLineStartX, float assertLineStartY, float assertLineEndX, float assertLineEndY)
         {
             // Arrange

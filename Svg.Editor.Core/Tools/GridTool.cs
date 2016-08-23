@@ -292,7 +292,7 @@ namespace Svg.Core.Tools
         private void OnAttributeChanged(object sender, AttributeEventArgs e)
         {
             // if snapping is currently in progress, just skip (otherwise we might cause stackoverflowexception!
-            if (_isSnappingInProgress)
+            if (_isSnappingInProgress || !IsSnappingEnabled)
                 return;
 
             if (string.Equals(e.Attribute, "transform"))
@@ -318,13 +318,15 @@ namespace Svg.Core.Tools
                 _isSnappingInProgress = true;
                 if (Regex.IsMatch(e.Attribute, @"^y1$"))
                 {
-                    SnapPointToGrid(line.StartX, line.StartY, out absoluteDeltaX, out absoluteDeltaY);
+                    var points = line.GetTransformedLinePoints();
+                    SnapPointToGrid(points[0].X, points[0].Y, out absoluteDeltaX, out absoluteDeltaY);
                     line.StartX += absoluteDeltaX;
                     line.StartY += absoluteDeltaY;
                 }
                 else if (Regex.IsMatch(e.Attribute, @"^y2$"))
                 {
-                    SnapPointToGrid(line.EndX, line.EndY, out absoluteDeltaX, out absoluteDeltaY);
+                    var points = line.GetTransformedLinePoints();
+                    SnapPointToGrid(points[1].X, points[1].Y, out absoluteDeltaX, out absoluteDeltaY);
                     line.EndX += absoluteDeltaX;
                     line.EndY += absoluteDeltaY;
                 }
@@ -436,39 +438,45 @@ namespace Svg.Core.Tools
              * 
              * */
 
+            var halfStepSizeX = StepSizeX / 2;
+            var halfStepSizeY = StepSizeY / 2;
+
             var diffX = x % StepSizeX;
             var diffY = y % StepSizeY;
 
-            var deltaX = 0f;
+            if (Math.Abs(diffX - StepSizeX) < 0.01)
+            {
+                diffX -= StepSizeX;
+            }
 
-            var deltaY = 0f;
-            if (diffY > StepSizeY / 2)
-                deltaY = StepSizeY;
+            if (Math.Abs(diffY - StepSizeY) < 0.01)
+            {
+                diffY -= StepSizeY;
+            }
+
+            float deltaX = 0, deltaY = 0;
 
             // see if intermediary point is even nearer but also take Y coordinate into consideration!!
-            if (diffX - StepSizeX / 2 > 0.001f)
+            if (diffX >= halfStepSizeX - 0.001f)
             {
                 // transition to intermediary point
-                deltaX = StepSizeX / 2;
-
-                if (diffY >= StepSizeY / 2)
-                    deltaY = StepSizeY / 2;
-                else
-                    deltaY = -StepSizeY / 2;
+                deltaX = halfStepSizeX;
+                deltaY = diffY >= halfStepSizeY ? halfStepSizeY : -halfStepSizeY;
             }
-            else if (diffX + StepSizeX / 2 < 0.001f)
+            else if (diffX <= -halfStepSizeX + 0.001f)
             {
-                deltaX = -(StepSizeX / 2);
-
-                if (diffY >= StepSizeY / 2)
-                    deltaY = StepSizeY / 2;
-                else
-                    deltaY = -StepSizeY / 2;
+                deltaX = -halfStepSizeX;
+                deltaY = diffY >= halfStepSizeY ? halfStepSizeY : -halfStepSizeY;
             }
-            else if (Math.Abs(diffX - StepSizeX / 2) < 0.001f && Math.Abs(diffY - StepSizeY / 2) < 0.001f)
+            else if (diffY >= halfStepSizeY - 0.001f)
             {
-                absoluteDeltaX = absoluteDeltaY = 0;
-                return;
+                deltaY = halfStepSizeY;
+                deltaX = diffX >= halfStepSizeX ? halfStepSizeX : -halfStepSizeX;
+            }
+            else if (diffY <= -halfStepSizeY + 0.001f)
+            {
+                deltaY = -halfStepSizeY;
+                deltaX = diffX >= halfStepSizeX ? halfStepSizeX : -halfStepSizeX;
             }
 
             absoluteDeltaX = deltaX - diffX;
