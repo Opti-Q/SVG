@@ -124,20 +124,35 @@ namespace Svg
 			return !(lhs == rhs);
 		}
         #endregion
+        
+        public void AddViewBoxTransform(SvgAspectRatio aspectRatio, ISvgRenderer renderer)
+        {
+            AddViewBoxTransform(aspectRatio, renderer, RectangleF.Create(0, 0, this.Width, this.Height));
+        }
 
         public void AddViewBoxTransform(SvgAspectRatio aspectRatio, ISvgRenderer renderer, SvgFragment frag)
         {
             var x = (frag == null ? 0 : frag.X.ToDeviceValue(renderer, UnitRenderingType.Horizontal, frag));
             var y = (frag == null ? 0 : frag.Y.ToDeviceValue(renderer, UnitRenderingType.Vertical, frag));
 
+            var width = (frag == null ? this.Width : frag.Width.ToDeviceValue(renderer, UnitRenderingType.Horizontal, frag));
+            var height = (frag == null ? this.Height : frag.Height.ToDeviceValue(renderer, UnitRenderingType.Vertical, frag));
+
+            AddViewBoxTransform(aspectRatio, renderer, RectangleF.Create(x, y, width, height));
+        }
+
+        public void AddViewBoxTransform(SvgAspectRatio aspectRatio, ISvgRenderer renderer, RectangleF bounds)
+        {
+            var x = bounds.X;
+            var y = bounds.Y;
+            var width = bounds.Width;
+            var height = bounds.Height;
+
             if (this.Equals(SvgViewBox.Empty))
             {
                 renderer.TranslateTransform(x, y);
                 return;
             }
-
-            var width = (frag == null ? this.Width : frag.Width.ToDeviceValue(renderer, UnitRenderingType.Horizontal, frag));
-            var height = (frag == null ? this.Height : frag.Height.ToDeviceValue(renderer, UnitRenderingType.Vertical, frag));
 
             var fScaleX = width > this.Width ? this.Width / width : width / this.Width;
             var fScaleY = height > this.Height ? this.Height / height : height / this.Height; //(this.MinY < 0 ? -1 : 1) * 
