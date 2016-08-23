@@ -16,7 +16,8 @@ namespace Svg.Core.Tools
 
     public class LineTool : ToolBase
     {
-        private const double MIN_MOVED_DISTANCE = 30.0;
+        private const double MIN_MOVED_DISTANCE = 10.0;
+        private const double MAX_POINTER_DISTANCE = 30.0;
 
         private static ILineOptionsInputService LineOptionsInputServiceProxy => Engine.Resolve<ILineOptionsInputService>();
 
@@ -285,10 +286,11 @@ namespace Svg.Core.Tools
                 if (_currentLine != null)
                 {
                     var canvasPointer1Position = ws.ScreenToCanvas(p.Pointer1Position);
-                    _movementType = Math.Abs(canvasPointer1Position.X - _currentLine.EndX) <= MIN_MOVED_DISTANCE &&
-                                 Math.Abs(canvasPointer1Position.Y - _currentLine.EndY) <= MIN_MOVED_DISTANCE ? MovementType.End :
-                                 Math.Abs(canvasPointer1Position.X - _currentLine.StartX) <= MIN_MOVED_DISTANCE &&
-                                 Math.Abs(canvasPointer1Position.Y - _currentLine.StartY) <= MIN_MOVED_DISTANCE ? MovementType.Start :
+                    var points = _currentLine.GetTransformedLinePoints();
+                    _movementType = Math.Abs(canvasPointer1Position.X - points[1].X) <= MAX_POINTER_DISTANCE &&
+                                 Math.Abs(canvasPointer1Position.Y - points[1].Y) <= MAX_POINTER_DISTANCE ? MovementType.End :
+                                 Math.Abs(canvasPointer1Position.X - points[0].X) <= MAX_POINTER_DISTANCE &&
+                                 Math.Abs(canvasPointer1Position.Y - points[0].Y) <= MAX_POINTER_DISTANCE ? MovementType.Start :
                                  _currentLine.GetBoundingBox().Contains(canvasPointer1Position) ? MovementType.StartEnd : MovementType.None;
                 }
             }
@@ -336,13 +338,11 @@ namespace Svg.Core.Tools
                             StrokeWidth = new SvgUnit(SvgUnitType.Pixel, 2),
                             StartX = new SvgUnit(SvgUnitType.Pixel, relativeStart.X),
                             StartY = new SvgUnit(SvgUnitType.Pixel, relativeStart.Y),
-                            EndX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X),
-                            EndY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y),
+                            EndX = new SvgUnit(SvgUnitType.Pixel, relativeStart.X),
+                            EndY = new SvgUnit(SvgUnitType.Pixel, relativeStart.Y),
                             MarkerStart = CreateUriFromId(SelectedMarkerStartId),
                             MarkerEnd = CreateUriFromId(SelectedMarkerEndId)
                         };
-
-                        _movementType = MovementType.End;
 
                         if (SelectedLineStyle == "dashed")
                         {
@@ -350,21 +350,29 @@ namespace Svg.Core.Tools
                         }
 
                         ws.Document.Children.Add(_currentLine);
-                    }
 
-                    switch (_movementType)
+                        _movementType = MovementType.End;
+                    }
+                    else
                     {
-                        case MovementType.End:
-                            _currentLine.EndX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X);
-                            _currentLine.EndY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y);
-                            break;
-                        case MovementType.Start:
-                            _currentLine.StartX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X);
-                            _currentLine.StartY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y);
-                            break;
-                        case MovementType.StartEnd:
-                            // TODO: move both start and end points
-                            break;
+                        var m = _currentLine.Transforms.GetMatrix();
+                        m.Invert();
+                        m.TransformPoints(new[] { relativeEnd });
+
+                        switch (_movementType)
+                        {
+                            case MovementType.End:
+                                _currentLine.EndX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X);
+                                _currentLine.EndY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y);
+                                break;
+                            case MovementType.Start:
+                                _currentLine.StartX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X);
+                                _currentLine.StartY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y);
+                                break;
+                            case MovementType.StartEnd:
+                                // TODO: move both start and end points
+                                break;
+                        }
                     }
 
                     ws.FireInvalidateCanvas();
@@ -382,9 +390,10 @@ namespace Svg.Core.Tools
             {
                 renderer.Graphics.Save();
 
-                var radius = (int)(16/ws.ZoomFactor);
-                renderer.DrawCircle(_currentLine.StartX - (radius >> 1), _currentLine.StartY - (radius >> 1), radius, BluePen);
-                renderer.DrawCircle(_currentLine.EndX - (radius >> 1), _currentLine.EndY - (radius >> 1), radius, BluePen);
+                var radius = (int) (16/ws.ZoomFactor);
+                var points = _currentLine.GetTransformedLinePoints();
+                renderer.DrawCircle(points[0].X - (radius >> 1), points[0].Y - (radius >> 1), radius, BluePen);
+                renderer.DrawCircle(points[1].X - (radius >> 1), points[1].Y - (radius >> 1), radius, BluePen);
 
                 renderer.Graphics.Restore();
             }

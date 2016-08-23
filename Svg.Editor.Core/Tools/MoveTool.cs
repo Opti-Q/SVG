@@ -16,7 +16,14 @@ namespace Svg.Core.Tools
         public MoveTool() : base("Move")
         {
         }
-        
+
+        public override Task Initialize(SvgDrawingCanvas ws)
+        {
+            IsActive = false;
+
+            return base.Initialize(ws);
+        }
+
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
             var p = @event as PointerEvent;
