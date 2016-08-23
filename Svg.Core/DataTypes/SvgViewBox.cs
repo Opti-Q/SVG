@@ -141,6 +141,16 @@ namespace Svg
             AddViewBoxTransform(aspectRatio, renderer, RectangleF.Create(x, y, width, height));
         }
 
+        /// <summary>
+        /// Applies the viewbox given the specified bounds
+        /// </summary>
+        /// <remarks>
+        /// a goot explanation of SVG viewboxes can be found here:
+        /// http://tutorials.jenkov.com/svg/svg-viewport-view-box.html
+        /// </remarks>
+        /// <param name="aspectRatio"></param>
+        /// <param name="renderer"></param>
+        /// <param name="bounds"></param>
         public void AddViewBoxTransform(SvgAspectRatio aspectRatio, ISvgRenderer renderer, RectangleF bounds)
         {
             var x = bounds.X;
