@@ -88,7 +88,7 @@ namespace Svg.Document_Structure
         protected internal override bool PushTransforms(ISvgRenderer renderer)
         {
             if (!base.PushTransforms(renderer)) return false;
-            this.ViewBox.AddViewBoxTransform(this.AspectRatio, renderer, null);
+            this.ViewBox.AddViewBoxTransform(this.AspectRatio, renderer);
             return true;
         }
 

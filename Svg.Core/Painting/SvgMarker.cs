@@ -221,49 +221,69 @@ namespace Svg
                 var fAngle = (float) fa;
                 var pOwner = (SvgVisualElement) po;
 
-                // apply marker transformations as well
-                var transMatrix = Matrix.Create();
-
                 // marker point has to be 0,0 of markers coordinate system, so translate there
-                transMatrix.Translate(pMarkerPoint.X, pMarkerPoint.Y);
+                renderer.TranslateTransform(pMarkerPoint.X, pMarkerPoint.Y);
+
+                if (Orient.IsAuto)
+                    renderer.RotateTransform(fAngle);
+                else
+                    renderer.RotateTransform(Orient.Angle);
+
+                // get the scaled bounding box of the markers child elements
+                var box = GetBoundingBox();
 
                 // apply viewbox transform
                 var vb = ViewBox;
                 if (vb != null)
                 {
-                    //transMatrix.Translate(ViewBox.MinX, ViewBox.MinY);
-                    transMatrix.Scale(1 / ViewBox.Width, 1 / ViewBox.Height);
-                    //vb.AddViewBoxTransform(new SvgAspectRatio(SvgPreserveAspectRatio.xMinYMin), renderer, GetBoundingBox());
+                    vb.AddViewBoxTransform(new SvgAspectRatio(SvgPreserveAspectRatio.xMinYMin), renderer, box);
                 }
 
-                if (Orient.IsAuto)
-                    transMatrix.Rotate(fAngle);
-                else
-                    transMatrix.Rotate(Orient.Angle);
+                // apply marker transformations
+                var transMatrix = Matrix.Create();
+
                 switch (MarkerUnits)
                 {
                     case SvgMarkerUnits.StrokeWidth:
+
+
                         var swDv = pOwner.StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, this);
-                        var mwDv = MarkerWidth.ToDeviceValue(renderer, UnitRenderingType.Other, this);
-                        var mhDv = MarkerHeight.ToDeviceValue(renderer, UnitRenderingType.Other, this);
                         
-                        var sx = swDv * mwDv;
-                        var sy = swDv * mhDv;
+                        // scale by stroke width
+                        var sx = swDv;
+                        var sy = swDv;
+
 
                         var scale = Math.Min(sx, sy);
-                        
-                        var tx = -RefX.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this) * scale;
-                        var ty = -RefY.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this) * scale;
-                        
+                        transMatrix.Scale(scale, scale);
+
+                        if (vb != null)
+                        {
+
+                            box = GetBoundingBox(transMatrix);
+                            // markerWidth and markerHeight are only considered given there is a viewBox set!
+                            var mwDv = MarkerWidth.ToDeviceValue(renderer, UnitRenderingType.Other, this);
+                            var mhDv = MarkerHeight.ToDeviceValue(renderer, UnitRenderingType.Other, this);
+                            var markerWidthHeight = Math.Min(mwDv, mhDv);
+                            var intendedSize = markerWidthHeight * swDv;
+                            var markerScaleFactorX = intendedSize / box.Width;
+                            var markerScaleFactorY = intendedSize / box.Height;
+
+                            transMatrix.Scale(markerScaleFactorX, markerScaleFactorY);
+
+                        }
+
+                        var tx = -RefX.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this);
+                        var ty = -RefY.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this);
                         transMatrix.Translate(tx, ty);
 
-                        transMatrix.Scale(scale, scale);
 
                         break;
                     case SvgMarkerUnits.UserSpaceOnUse:
                         transMatrix.Translate(-RefX.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this),
                                                 -RefY.ToDeviceValue(renderer, UnitRenderingType.Vertical, this));
                         break;
+
                 }
 
                 renderer.Graphics.Concat(transMatrix);
