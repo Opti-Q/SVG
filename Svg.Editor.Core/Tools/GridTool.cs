@@ -320,15 +320,31 @@ namespace Svg.Core.Tools
                 {
                     var points = line.GetTransformedLinePoints();
                     SnapPointToGrid(points[0].X, points[0].Y, out absoluteDeltaX, out absoluteDeltaY);
-                    line.StartX += absoluteDeltaX;
-                    line.StartY += absoluteDeltaY;
+                    points[0].X += absoluteDeltaX;
+                    points[0].Y += absoluteDeltaY;
+                    var m = line.Transforms.GetMatrix();
+                    m.Invert();
+                    m.TransformPoints(points);
+                    line.StartX = points[0].X;
+                    line.StartY = points[0].Y;
+                    //var rotation = line.Transforms.GetMatrix().Rotation;
+                    //line.StartX += absoluteDeltaX * (float)Math.Cos(rotation);
+                    //line.StartY += absoluteDeltaY * (float)Math.Cos(rotation);
                 }
                 else if (Regex.IsMatch(e.Attribute, @"^y2$"))
                 {
                     var points = line.GetTransformedLinePoints();
                     SnapPointToGrid(points[1].X, points[1].Y, out absoluteDeltaX, out absoluteDeltaY);
-                    line.EndX += absoluteDeltaX;
-                    line.EndY += absoluteDeltaY;
+                    points[1].X += absoluteDeltaX;
+                    points[1].Y += absoluteDeltaY;
+                    var m = line.Transforms.GetMatrix();
+                    m.Invert();
+                    m.TransformPoints(points);
+                    line.EndX = points[1].X;
+                    line.EndY = points[1].Y;
+                    //var rotation = line.Transforms.GetMatrix().Rotation;
+                    //line.EndX += absoluteDeltaX * (float)Math.Cos(rotation);
+                    //line.EndY += absoluteDeltaY * (float)Math.Cos(rotation);
                 }
                 _isSnappingInProgress = false;
             }
