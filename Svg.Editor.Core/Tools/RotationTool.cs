@@ -41,7 +41,9 @@ namespace Svg.Core.Tools
                     // and there is a single selected element
                     ws.SelectedElements.Count == 1 &&
                     // and the selectiontool is active
-                    ws.ActiveTool is SelectionTool)
+                    ws.ActiveTool is SelectionTool &&
+                    // and the gesture is made with 3 fingers
+                    re.PointerCount == 3)
                 {
                     // implicitly activate
                     ws.ActiveTool = this;
@@ -50,7 +52,8 @@ namespace Svg.Core.Tools
                     _rotations.Clear();
                 }
                 else if (re.Status == RotateStatus.Rotating &&
-                         ws.SelectedElements.Count == 1)
+                         ws.SelectedElements.Count == 1 &&
+                         re.PointerCount == 3)
                 {
                     RotateElement(ws.SelectedElements[0], re, ws);
                 }
