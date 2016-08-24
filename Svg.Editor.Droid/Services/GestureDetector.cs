@@ -34,8 +34,8 @@ namespace Svg.Droid.Editor.Services
             _scaleDetector.OnTouchEvent(ev);
             _rotateDetector.OnTouchEvent(ev);
 
-            if (_scaleInProgress)
-                return;
+            //if (_scaleInProgress)
+            //    return;
 
             UserInputEvent uie = null;
 
@@ -76,8 +76,8 @@ namespace Svg.Droid.Editor.Services
                     break;
 
                 case (int) MotionEventActions.Move:
-                    if (ev.PointerCount == 1)
-                    {
+                    //if (ev.PointerCount == 1)
+                    //{
                         var pointerIndex = ev.FindPointerIndex(ActivePointerId);
                         x = ev.GetX(pointerIndex);
                         y = ev.GetY(pointerIndex);
@@ -88,11 +88,12 @@ namespace Svg.Droid.Editor.Services
                         uie = new MoveEvent(Svg.Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
                             Svg.Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY),
                             Svg.Factory.Instance.CreatePointF(x, y),
-                            Svg.Factory.Instance.CreatePointF(relativeDeltaX, relativeDeltaY));
+                            Svg.Factory.Instance.CreatePointF(relativeDeltaX, relativeDeltaY),
+                            ev.PointerCount);
 
                         _lastTouchX = x;
                         _lastTouchY = y;
-                    }
+                    //}
                     break;
 
                 case (int) MotionEventActions.PointerUp:

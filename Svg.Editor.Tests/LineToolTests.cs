@@ -44,7 +44,7 @@ namespace Svg.Editor.Tests
             var start = PointF.Create(10, 10);
             var end = PointF.Create(10, 19);
             await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, start, start, start, 1));
-            await Canvas.OnEvent(new MoveEvent(start, start, end, end - start));
+            await Canvas.OnEvent(new MoveEvent(start, start, end, end - start, 1));
             await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, end, end, end, 1));
 
             // Assert
@@ -63,7 +63,7 @@ namespace Svg.Editor.Tests
             var start = PointF.Create(10, 10);
             var end = PointF.Create(10, 100);
             await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, start, start, start, 1));
-            await Canvas.OnEvent(new MoveEvent(start, start, end, end - start));
+            await Canvas.OnEvent(new MoveEvent(start, start, end, end - start, 1));
             await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, end, end, end, 1));
 
             // Assert
@@ -93,7 +93,7 @@ namespace Svg.Editor.Tests
             var start = PointF.Create(pointerDownX, pointerDownY);
             var end = PointF.Create(pointerPositionX, pointerPositionY);
             await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, start, start, start, 1));
-            await Canvas.OnEvent(new MoveEvent(start, start, end, end - start));
+            await Canvas.OnEvent(new MoveEvent(start, start, end, end - start, 1));
             await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, end, end, end, 1));
 
             // Assert
@@ -128,7 +128,7 @@ namespace Svg.Editor.Tests
             var start = PointF.Create(pointerDownX, pointerDownY);
             var end = PointF.Create(pointerPositionX, pointerPositionY);
             await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, start, start, start, 1));
-            await Canvas.OnEvent(new MoveEvent(start, start, end, end - start));
+            await Canvas.OnEvent(new MoveEvent(start, start, end, end - start, 1));
             await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, end, end, end, 1));
 
             // Assert

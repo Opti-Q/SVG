@@ -11,7 +11,7 @@ namespace Svg.Core.Tools
             : base("Pan")
         {
             IconName = "ic_pan_tool_white_48dp.png";
-            ToolUsage = ToolUsage.Explicit;
+            //ToolUsage = ToolUsage.Explicit;
         }
 
         public override Task Initialize(SvgDrawingCanvas ws)
@@ -38,11 +38,9 @@ namespace Svg.Core.Tools
 
             var ev = @event as MoveEvent;
 
-            if (ev == null)
+            if (ev == null || ev.PointerCount != 2)
                 return Task.FromResult(true);
 
-            //ws.Translate.X += ev.RelativeDelta.X / ws.ZoomFactor;
-            //ws.Translate.Y += ev.RelativeDelta.Y / ws.ZoomFactor;
             ws.Translate.X += ev.RelativeDelta.X;
             ws.Translate.Y += ev.RelativeDelta.Y;
             ws.FireInvalidateCanvas();

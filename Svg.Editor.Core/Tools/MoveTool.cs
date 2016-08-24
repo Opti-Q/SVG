@@ -27,7 +27,7 @@ namespace Svg.Core.Tools
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
             var p = @event as PointerEvent;
-            if (p != null)
+            if (p != null && p.PointerCount == 1)
             {
                 if (p.EventType == EventType.PointerDown)
                 {
@@ -77,7 +77,7 @@ namespace Svg.Core.Tools
                 _offsets.Clear();
                 _translates.Clear();
             }
-            else
+            else if (e.PointerCount == 1)
             {
                 // if there is no selection, we just skip
                 if (ws.SelectedElements.Any())
