@@ -10,7 +10,6 @@ namespace Svg.Editor.Tests
     [TestFixture]
     public class ColorToolTests : SvgDrawingCanvasTestBase
     {
-        private MockTextInputService _textMock;
         private MockColorInputService _colorMock;
 
         [SetUp]
@@ -18,10 +17,8 @@ namespace Svg.Editor.Tests
         {
             base.SetUp();
 
-            _textMock = new MockTextInputService();
             _colorMock = new MockColorInputService();
 
-            Engine.Register<ITextInputService, MockTextInputService>(() => _textMock);
             Engine.Register<IColorInputService, MockColorInputService>(() => _colorMock);
         }
 
@@ -190,16 +187,6 @@ namespace Svg.Editor.Tests
 
             // Assert
             Assert.True(child.Stroke.Equals(parent.Stroke));
-        }
-
-        private class MockTextInputService : ITextInputService
-        {
-            public Func<string, string, string> F { get; set; } = (x, y) => null;
-
-            public Task<string> GetUserInput(string title, string textValue)
-            {
-                return Task.FromResult(F(title, textValue));
-            }
         }
 
         private class MockColorInputService : IColorInputService
