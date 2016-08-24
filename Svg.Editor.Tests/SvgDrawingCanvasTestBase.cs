@@ -32,16 +32,16 @@ namespace Svg.Editor.Tests
         
         protected async Task Rotate(params float[] relativeAnglesDegree)
         {
-            await Canvas.OnEvent(new RotateEvent(0, 0, RotateStatus.Start, 2));
+            await Canvas.OnEvent(new RotateEvent(0, 0, RotateStatus.Start, 3));
 
             var sum = 0f;
             foreach (var a in relativeAnglesDegree)
             {
                 sum += a;
-                await Canvas.OnEvent(new RotateEvent(a, sum, RotateStatus.Rotating, 2));
+                await Canvas.OnEvent(new RotateEvent(a, sum, RotateStatus.Rotating, 3));
             }
 
-            await Canvas.OnEvent(new RotateEvent(0, sum, RotateStatus.End, 2));
+            await Canvas.OnEvent(new RotateEvent(0, sum, RotateStatus.End, 0));
         }
 
         protected async Task Move(PointF start, PointF end)

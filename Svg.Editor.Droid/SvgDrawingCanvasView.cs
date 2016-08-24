@@ -34,7 +34,7 @@ namespace Svg.Droid.Editor
         public override bool OnTouchEvent(MotionEvent ev)
         {
             // this is intentionally not awaited
-            _detector.OnTouch(ev).ConfigureAwait(false);
+            _detector.OnTouch(ev);
             
             return true;
         }
