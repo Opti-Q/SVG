@@ -462,40 +462,40 @@ namespace Svg.Core.Tools
             var diffY = y % StepSizeY;
 
             // if x is already snapped, just correct the floating point error by substracting StepSizeX
-            if (Math.Abs(diffX - StepSizeX) < FloatError)
+            if (Math.Abs(Math.Abs(diffX) - StepSizeX) < FloatError)
             {
-                diffX -= StepSizeX;
+                diffX -= StepSizeX * Math.Sign(diffX);
             }
 
             // if y is already snapped, just correct the floating point error by substracting StepSizeY
-            if (Math.Abs(diffY - StepSizeY) < FloatError)
+            if (Math.Abs(Math.Abs(diffY) - StepSizeY) < FloatError)
             {
-                diffY -= StepSizeY;
+                diffY -= StepSizeY * Math.Sign(diffY);
             }
 
             float deltaX = 0, deltaY = 0;
 
             // see if intermediary point is even nearer but also take Y coordinate into consideration!!
-            if (diffX >= halfStepSizeX - FloatError)
+            if (diffX > halfStepSizeX - FloatError)
             {
                 // transition to intermediary point
                 deltaX = halfStepSizeX;
-                deltaY = diffY >= halfStepSizeY ? halfStepSizeY : -halfStepSizeY;
+                deltaY = (Math.Abs(diffY) > halfStepSizeY - FloatError ? halfStepSizeY : -halfStepSizeY) * (Math.Abs(diffY) > FloatError ? Math.Sign(diffY) : 1);
             }
-            else if (diffX <= -halfStepSizeX + FloatError)
+            else if (diffX < -halfStepSizeX + FloatError)
             {
                 deltaX = -halfStepSizeX;
-                deltaY = diffY >= halfStepSizeY ? halfStepSizeY : -halfStepSizeY;
+                deltaY = (Math.Abs(diffY) > halfStepSizeY - FloatError ? halfStepSizeY : -halfStepSizeY) * (Math.Abs(diffY) > FloatError ? Math.Sign(diffY) : 1);
             }
-            else if (diffY >= halfStepSizeY - FloatError)
+            else if (diffY > halfStepSizeY - FloatError)
             {
                 deltaY = halfStepSizeY;
-                deltaX = diffX >= halfStepSizeX ? halfStepSizeX : -halfStepSizeX;
+                deltaX = (Math.Abs(diffX) > halfStepSizeX - FloatError ? halfStepSizeX : -halfStepSizeX) * (Math.Abs(diffX) > FloatError ? Math.Sign(diffX) : 1);
             }
-            else if (diffY <= -halfStepSizeY + FloatError)
+            else if (diffY < -halfStepSizeY + FloatError)
             {
                 deltaY = -halfStepSizeY;
-                deltaX = diffX >= halfStepSizeX ? halfStepSizeX : -halfStepSizeX;
+                deltaX = (Math.Abs(diffX) > halfStepSizeX - FloatError ? halfStepSizeX : -halfStepSizeX) * (Math.Abs(diffX) > FloatError ? Math.Sign(diffX) : 1);
             }
 
             absoluteDeltaX = deltaX - diffX;

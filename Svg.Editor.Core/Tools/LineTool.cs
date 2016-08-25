@@ -16,8 +16,8 @@ namespace Svg.Core.Tools
 
     public class LineTool : ToolBase
     {
-        private const double MIN_MOVED_DISTANCE = 10.0;
-        private const double MAX_POINTER_DISTANCE = 30.0;
+        private const double MinMovedDistance = 10.0;
+        private const double MaxPointerDistance = 20.0;
 
         private static ILineOptionsInputService LineOptionsInputServiceProxy => Engine.Resolve<ILineOptionsInputService>();
 
@@ -29,6 +29,7 @@ namespace Svg.Core.Tools
         private bool _isActive;
         private SvgDrawingCanvas _canvas;
         private MovementType _movementType;
+        private bool _moveRegistered;
         private Brush BlueBrush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
         private Pen BluePen => _pen ?? (_pen = Engine.Factory.CreatePen(BlueBrush, 5));
 
@@ -193,7 +194,7 @@ namespace Svg.Core.Tools
             ToolUsage = ToolUsage.Explicit;
 
             var markers = new List<SvgMarker>();
-            var marker = new SvgMarker { ID = "arrowStart", Orient = new SvgOrient() { IsAuto = true }, RefX = new SvgUnit(SvgUnitType.Pixel,-2.5f), MarkerWidth=2};
+            var marker = new SvgMarker { ID = "arrowStart", Orient = new SvgOrient() { IsAuto = true }, RefX = new SvgUnit(SvgUnitType.Pixel, -2.5f), MarkerWidth = 2 };
             marker.Children.Add(new SvgPath
             {
                 PathData = new SvgPathSegmentList(new SvgPathSegment[]
@@ -207,7 +208,7 @@ namespace Svg.Core.Tools
                 Fill = SvgColourServer.ContextFill, // inherit stroke color from parent/aka context
             });
             markers.Add(marker);
-            marker = new SvgMarker { ID = "arrowEnd", Orient = new SvgOrient() { IsAuto = true }, RefX = new SvgUnit(SvgUnitType.Pixel, 2.5f),  MarkerWidth = 2 };
+            marker = new SvgMarker { ID = "arrowEnd", Orient = new SvgOrient() { IsAuto = true }, RefX = new SvgUnit(SvgUnitType.Pixel, 2.5f), MarkerWidth = 2 };
             marker.Children.Add(new SvgPath
             {
                 PathData = new SvgPathSegmentList(new SvgPathSegment[]
@@ -260,7 +261,7 @@ namespace Svg.Core.Tools
             }
 
             var p = @event as PointerEvent;
-            if (p?.PointerCount == 1 && (p.EventType == EventType.PointerUp || p.EventType == EventType.Cancel))
+            if (!_moveRegistered && p?.PointerCount == 1 && (p.EventType == EventType.PointerUp || p.EventType == EventType.Cancel))
             {
                 if (_currentLine != null)
                 {
@@ -281,16 +282,24 @@ namespace Svg.Core.Tools
 
             if (p?.EventType == EventType.PointerDown)
             {
-                _multiplePointersRegistered = p.PointerCount != 1;
+                if (p.PointerCount == 1)
+                {
+                    _moveRegistered = false;
+                    _multiplePointersRegistered = false;
+                }
+                else
+                {
+                    _multiplePointersRegistered = true;
+                }
 
                 if (_currentLine != null)
                 {
                     var canvasPointer1Position = ws.ScreenToCanvas(p.Pointer1Position);
                     var points = _currentLine.GetTransformedLinePoints();
-                    _movementType = Math.Abs(canvasPointer1Position.X - points[1].X) <= MAX_POINTER_DISTANCE &&
-                                 Math.Abs(canvasPointer1Position.Y - points[1].Y) <= MAX_POINTER_DISTANCE ? MovementType.End :
-                                 Math.Abs(canvasPointer1Position.X - points[0].X) <= MAX_POINTER_DISTANCE &&
-                                 Math.Abs(canvasPointer1Position.Y - points[0].Y) <= MAX_POINTER_DISTANCE ? MovementType.Start :
+                    _movementType = Math.Abs(canvasPointer1Position.X - points[1].X) <= MaxPointerDistance &&
+                                 Math.Abs(canvasPointer1Position.Y - points[1].Y) <= MaxPointerDistance ? MovementType.End :
+                                 Math.Abs(canvasPointer1Position.X - points[0].X) <= MaxPointerDistance &&
+                                 Math.Abs(canvasPointer1Position.Y - points[0].Y) <= MaxPointerDistance ? MovementType.Start :
                                  _currentLine.GetBoundingBox().Contains(canvasPointer1Position) ? MovementType.StartEnd : MovementType.None;
                 }
             }
@@ -301,6 +310,7 @@ namespace Svg.Core.Tools
             var e = @event as MoveEvent;
             if (e != null)
             {
+                _moveRegistered = true;
                 var startX = e.Pointer1Down.X;
                 var startY = e.Pointer1Down.Y;
                 var endX = e.Pointer1Position.X;
@@ -323,7 +333,7 @@ namespace Svg.Core.Tools
                 // drawing only counts if length is not too small
                 _movedDistance = Math.Sqrt(Math.Pow(rect.Width, 2) + Math.Pow(rect.Height, 2));
 
-                if (_movedDistance >= MIN_MOVED_DISTANCE)
+                if (_movedDistance >= MinMovedDistance)
                 {
                     var relativeStart = ws.ScreenToCanvas(e.Pointer1Down);
                     var relativeEnd = ws.ScreenToCanvas(e.Pointer1Position);
@@ -390,7 +400,7 @@ namespace Svg.Core.Tools
             {
                 renderer.Graphics.Save();
 
-                var radius = (int) (16/ws.ZoomFactor);
+                var radius = (int)(MaxPointerDistance / ws.ZoomFactor);
                 var points = _currentLine.GetTransformedLinePoints();
                 renderer.DrawCircle(points[0].X - (radius >> 1), points[0].Y - (radius >> 1), radius, BluePen);
                 renderer.DrawCircle(points[1].X - (radius >> 1), points[1].Y - (radius >> 1), radius, BluePen);

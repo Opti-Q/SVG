@@ -101,7 +101,7 @@ namespace Svg.Core.Tools
 
             if (delta != 0)
             {
-                var m = element.CreateOriginRotation(delta);
+                var m = element.CreateOriginRotation(delta % 360);
                 element.SetTransformationMatrix(m);
 
                 ws.FireInvalidateCanvas();
