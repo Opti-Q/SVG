@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Events;
@@ -8,7 +9,7 @@ namespace Svg.Core.Tools
 {
     public interface ITextInputService
     {
-        Task<string> GetUserInput(string title, string textValue);
+        Task<TextTool.TextProperties> GetUserInput(string title, string textValue, IEnumerable<string> textSizeOptions, int textSizeSelected);
     }
 
     public class TextTool : ToolBase
@@ -16,7 +17,7 @@ namespace Svg.Core.Tools
         // if user moves cursor, she does not want to add/edit text
         private bool _moveEventWasRegistered;
 
-        public TextTool() : base("Text")
+        public TextTool(string properties) : base("Text", properties)
         {
             IconName = "ic_text_fields_white_48dp.png";
             ToolUsage = ToolUsage.Explicit;
@@ -30,6 +31,30 @@ namespace Svg.Core.Tools
             this.IsActive = false;
 
             return Task.FromResult(true);
+        }
+
+        public int[] FontSizes
+        {
+            get
+            {
+                object fontSizes;
+                if (!Properties.TryGetValue("fontsizes", out fontSizes))
+                    fontSizes = Enumerable.Empty<int>();
+                return (int[]) fontSizes;
+            }
+        }
+
+        public int SelectedFontSize { get; set; }
+
+        public string[] FontSizeNames
+        {
+            get
+            {
+                object fontSizeNames;
+                if (!Properties.TryGetValue("fontsizenames", out fontSizeNames))
+                    fontSizeNames = Enumerable.Empty<string>();
+                return (string[]) fontSizeNames;
+            }
         }
 
         public override async Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
@@ -75,7 +100,9 @@ namespace Svg.Core.Tools
                         if (span != null)
                             e = span;
 
-                        var txt = await TextInputService.GetUserInput("Edit text", e.Text?.Trim());
+                        var txtProperties = await TextInputService.GetUserInput("Edit text", e.Text?.Trim(), FontSizeNames, Array.IndexOf(FontSizes, (int)e.FontSize));
+                        var txt = txtProperties.Text;
+                        var fontSize = FontSizes[txtProperties.FontSizeIndex];
 
                         // make sure there is at least empty text in it so we actually still have a bounding box!!
                         if (string.IsNullOrEmpty(txt?.Trim()))
@@ -87,21 +114,25 @@ namespace Svg.Core.Tools
                         {
                             e.Parent.Children.Remove(e);
                         }
-                        else if(!string.Equals(e.Text, txt))
+                        else
                         {
                             e.Text = txt;
+                            e.FontSize = fontSize;
                         }
                     }
                     // else add new text   
                     else
                     {
-                        var txt = await TextInputService.GetUserInput("Add text", null);
+                        var txtProperties = await TextInputService.GetUserInput("Add text", null, FontSizeNames, SelectedFontSize);
+                        var txt = txtProperties.Text;
+                        var fontSize = FontSizes[txtProperties.FontSizeIndex];
+
                         // only add if user really entered text.
                         if (!string.IsNullOrWhiteSpace(txt))
                         {
                             var t = new SvgText(txt)
                             {
-                                FontSize = new SvgUnit(SvgUnitType.Pixel, 20),
+                                FontSize = new SvgUnit(SvgUnitType.Pixel, fontSize),
                                 Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
                                 Fill = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0))
                             };
@@ -126,5 +157,11 @@ namespace Svg.Core.Tools
             }
         }
 
+        public class TextProperties
+        {
+            public string Text { get; set; }
+            public int FontSizeIndex { get; set; }
+        }
     }
+
 }

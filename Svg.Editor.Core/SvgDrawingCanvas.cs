@@ -70,6 +70,12 @@ namespace Svg.Core
                 { "strokewidthnames", new [] { "normal", "thick", "thin" } }
             }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 
+            var textToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
+            {
+                { "fontsizes", new [] { 12, 24, 36, 48 } },
+                { "fontsizenames", new [] { "12px", "24px", "36px", "48px" } }
+            }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+
             _tools = new ObservableCollection<ITool>
             {
                     new GridTool(gridToolProperties), // must be before movetool!
@@ -78,7 +84,7 @@ namespace Svg.Core
                     new RotationTool(),
                     new ZoomTool(),
                     new SelectionTool(),
-                    new TextTool(),
+                    new TextTool(textToolProperties),
                     new LineTool(lineToolProperties),
                     new FreeDrawingTool(freeDrawToolProperties),
                     new ColorTool(colorToolProperties),

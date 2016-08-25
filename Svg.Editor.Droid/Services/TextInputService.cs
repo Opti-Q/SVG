@@ -1,7 +1,9 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Android.App;
-using Android.Content;
 using Android.Text;
+using Android.Views;
 using Android.Views.InputMethods;
 using Android.Widget;
 using Svg;
@@ -14,16 +16,27 @@ namespace Svg.Droid.Editor.Services
     public class TextInputService : ITextInputService
     {
 
-        public Task<string> GetUserInput(string title, string textValue)
+        public Task<TextTool.TextProperties> GetUserInput(string title, string textValue, IEnumerable<string> textSizeOptions, int textSizeSelected)
         {
-            var tcs = new TaskCompletionSource<string>();
+            var tcs = new TaskCompletionSource<TextTool.TextProperties>();
 
             var cp = Engine.Resolve<IContextProvider>();
             var context = cp.Context;
+            var result = new TextTool.TextProperties();
 
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.SetTitle(title);
 
+            var view = new LinearLayout(context) { Orientation = Orientation.Horizontal };
+
+            // setup spinner for stroke width
+            var editTextLayout = new LinearLayout(context)
+            {
+                Orientation = Orientation.Vertical,
+                LayoutParameters = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WrapContent) { Weight = 1 }
+            };
+            var spinner1Label = new TextView(context) { Text = "Text" };
+            editTextLayout.AddView(spinner1Label);
             // Set up the input
             var input = new EditText(context)
             {
@@ -32,16 +45,38 @@ namespace Svg.Droid.Editor.Services
                 ImeOptions = ImeAction.None
             };
             input.SetSingleLine(false);
-            builder.SetView(input);
+            editTextLayout.AddView(input);
+            view.AddView(editTextLayout);
+
+            // setup spinner for dash style
+            var spinnerLayout = new LinearLayout(context)
+            {
+                Orientation = Orientation.Vertical
+            };
+            var spinner2Label = new TextView(context) { Text = "Font size" };
+            spinnerLayout.AddView(spinner2Label);
+            var spinner2 = new Spinner(context)
+            {
+                Adapter =
+                    new ArrayAdapter(context, Android.Resource.Layout.SimpleSpinnerDropDownItem, textSizeOptions.ToArray())
+            };
+            spinner2.ItemSelected += (sender, args) => result.FontSizeIndex = args.Position;
+            spinner2.SetSelection(textSizeSelected);
+            spinnerLayout.AddView(spinner2);
+            view.AddView(spinnerLayout);
+
+            builder.SetView(view);
 
             builder.SetPositiveButton("OK", (sender, args) =>
             {
-                tcs.TrySetResult(input.Text);
+                result.Text = input.Text;
+                tcs.TrySetResult(result);
             });
 
             builder.SetNegativeButton("Cancel", (sender, args) =>
             {
-                tcs.TrySetResult(textValue);
+                result.Text = textValue;
+                tcs.TrySetResult(result);
             });
 
             builder.SetCancelable(false);
