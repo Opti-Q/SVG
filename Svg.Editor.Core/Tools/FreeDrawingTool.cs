@@ -16,12 +16,12 @@ namespace Svg.Core.Tools
         //private static ILineOptionsInputService LineOptionsInputServiceProxy => Engine.Resolve<ILineOptionsInputService>();
 
         private double _movedDistance;
-        private SvgPath _currentLine;
+        private SvgPath _currentPath;
         private bool _multiplePointersRegistered;
         private bool _isActive;
         private SvgDrawingCanvas _canvas;
-        private bool _validMove;
-        private PointF _lastPointerPosition;
+        private bool _drawingEnabled;
+        private PointF _lastCanvasPointerPosition;
 
         private IEnumerable<SvgMarker> Markers { get; set; }
 
@@ -39,7 +39,7 @@ namespace Svg.Core.Tools
                 object markerIds;
                 if (!Properties.TryGetValue("markerstartids", out markerIds))
                     markerIds = Enumerable.Empty<string>();
-                return (string[])markerIds;
+                return (string[]) markerIds;
             }
         }
 
@@ -50,7 +50,7 @@ namespace Svg.Core.Tools
                 object markerNames;
                 if (!Properties.TryGetValue("markerstartnames", out markerNames))
                     markerNames = Enumerable.Empty<string>();
-                return (string[])markerNames;
+                return (string[]) markerNames;
             }
         }
 
@@ -61,7 +61,7 @@ namespace Svg.Core.Tools
                 object markerIds;
                 if (!Properties.TryGetValue("markerendids", out markerIds))
                     markerIds = Enumerable.Empty<string>();
-                return (string[])markerIds;
+                return (string[]) markerIds;
             }
         }
 
@@ -72,7 +72,7 @@ namespace Svg.Core.Tools
                 object markerNames;
                 if (!Properties.TryGetValue("markerendnames", out markerNames))
                     markerNames = Enumerable.Empty<string>();
-                return (string[])markerNames;
+                return (string[]) markerNames;
             }
         }
 
@@ -83,7 +83,7 @@ namespace Svg.Core.Tools
                 object lineStyles;
                 if (!Properties.TryGetValue("linestyles", out lineStyles))
                     lineStyles = Enumerable.Empty<string>();
-                return (string[])lineStyles;
+                return (string[]) lineStyles;
             }
         }
 
@@ -94,7 +94,7 @@ namespace Svg.Core.Tools
                 object lineStyleNames;
                 if (!Properties.TryGetValue("linestylenames", out lineStyleNames))
                     lineStyleNames = Enumerable.Empty<string>();
-                return (string[])lineStyleNames;
+                return (string[]) lineStyleNames;
             }
         }
 
@@ -107,17 +107,17 @@ namespace Svg.Core.Tools
                 if (_isActive)
                 {
                     // if tool was activated, reduce selection to a single line and set it as current line
-                    _currentLine = _canvas.SelectedElements.OfType<SvgPath>().FirstOrDefault();
+                    _currentPath = _canvas.SelectedElements.OfType<SvgPath>().FirstOrDefault();
                     _canvas.SelectedElements.Clear();
-                    if (_currentLine == null) return;
-                    _canvas.SelectedElements.Add(_currentLine);
+                    if (_currentPath == null) return;
+                    _canvas.SelectedElements.Add(_currentPath);
                     _canvas.FireInvalidateCanvas();
                     return;
                 }
                 // if tool was deactivated, reset current line
-                if (_currentLine == null) return;
-                _canvas.SelectedElements.Remove(_currentLine);
-                _currentLine = null;
+                if (_currentPath == null) return;
+                _canvas.SelectedElements.Remove(_currentPath);
+                _currentPath = null;
                 _canvas.FireInvalidateCanvas();
             }
         }
@@ -142,9 +142,9 @@ namespace Svg.Core.Tools
 
         private void SvgDocumentOnChildRemoved(object sender, ChildRemovedEventArgs args)
         {
-            if (IsActive && args.RemovedChild == _currentLine)
+            if (IsActive && args.RemovedChild == _currentPath)
             {
-                _currentLine = null;
+                _currentPath = null;
                 _canvas.FireInvalidateCanvas();
             }
         }
@@ -245,37 +245,25 @@ namespace Svg.Core.Tools
             var p = @event as PointerEvent;
             if (p?.PointerCount == 1 && (p.EventType == EventType.PointerUp || p.EventType == EventType.Cancel))
             {
-                _validMove = false;
-                if (_currentLine != null)
-                {
-                    ws.SelectedElements.Remove(_currentLine);
-                    _currentLine = null;
-                }
-                else
-                {
-                    _currentLine =
-                        ws.GetElementsUnder<SvgPath>(ws.GetPointerRectangle(p.Pointer1Position),
-                            SelectionType.Intersect).FirstOrDefault();
-                    if (_currentLine != null) ws.SelectedElements.Add(_currentLine);
-                }
-
-                ws.FireToolCommandsChanged();
-                ws.FireInvalidateCanvas();
+                _currentPath = null;
+                _lastCanvasPointerPosition = null;
+                _drawingEnabled = false;
             }
 
             if (p?.EventType == EventType.PointerDown)
             {
-                _multiplePointersRegistered = p.PointerCount != 1;
+                _drawingEnabled = p.PointerCount == 1;
+                //_lastCanvasPointerPosition = ws.ScreenToCanvas(p.Pointer1Down);
             }
 
-            if (_multiplePointersRegistered)
+            if (!_drawingEnabled)
                 return Task.FromResult(true);
 
             var e = @event as MoveEvent;
             if (e != null)
             {
-                var startX = _lastPointerPosition?.X ?? e.Pointer1Down.X;
-                var startY = _lastPointerPosition?.Y ?? e.Pointer1Down.Y;
+                var startX = _lastCanvasPointerPosition?.X ?? e.Pointer1Down.X;
+                var startY = _lastCanvasPointerPosition?.Y ?? e.Pointer1Down.Y;
                 var endX = e.Pointer1Position.X;
                 var endY = e.Pointer1Position.Y;
 
@@ -298,60 +286,31 @@ namespace Svg.Core.Tools
 
                 if (_movedDistance >= MinMovedDistance)
                 {
-                    var relativeStart = ws.ScreenToCanvas(e.Pointer1Down);
-                    var relativePointerPosition = ws.ScreenToCanvas(e.Pointer1Position);
+                    var canvasStartPosition = ws.ScreenToCanvas(e.Pointer1Down);
+                    var canvasPointerPosition = ws.ScreenToCanvas(e.Pointer1Position);
 
-                    if (_currentLine == null)
+                    if (_currentPath == null)
                     {
 
-                        _currentLine = new SvgPath
+                        _currentPath = new SvgPath
                         {
                             Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
                             Fill = SvgPaintServer.None,
-                            StrokeWidth = new SvgUnit(SvgUnitType.Pixel, 5),
-                            PathData = new SvgPathSegmentList(new List<SvgPathSegment> { new SvgMoveToSegment(relativeStart) }),
+                            StrokeWidth = new SvgUnit(SvgUnitType.Pixel, 12),
+                            PathData = new SvgPathSegmentList(new List<SvgPathSegment> { new SvgMoveToSegment(canvasStartPosition) }),
                             StrokeLineCap = SvgStrokeLineCap.Round,
                             StrokeLineJoin = SvgStrokeLineJoin.Round
-                            //MarkerStart = CreateUriFromId(SelectedMarkerStartId),
-                            //MarkerEnd = CreateUriFromId(SelectedMarkerEndId)
                         };
 
-                        _validMove = true;
-
-                        //if (SelectedLineStyle == "dashed")
-                        //{
-                        //    _currentLine.StrokeDashArray = StrokeDashArray.Clone();
-                        //}
-
-                        ws.Document.Children.Add(_currentLine);
+                        ws.Document.Children.Add(_currentPath);
                     }
 
-                    if (_validMove)
-                    {
-                        // Calculate the control point
-                        var lastSegment = _currentLine.PathData.Last;
-                        var lastEndPoint = lastSegment.End;
-                        //if (_movedDistance >= MIN_QUAD_MOVED_DISTANCE)
-                        //{
-                            // quadratic bezier
-                            //var lastControlPoint = (lastSegment as SvgQuadraticCurveSegment)?.ControlPoint ??
-                            //                       lastSegment.Start;
-                            var nextControlPoint = lastSegment.End;
-                            var nextEndPoint = (lastEndPoint + relativePointerPosition)/2;
-                            _currentLine.PathData.Add(new SvgQuadraticCurveSegment(lastEndPoint, nextControlPoint, nextEndPoint));
-                        // cubic bezier
-                        //var firstControlPoint = (lastEndPoint + relativePointerPosition) / 2;
-                        //var secondControlPoint = relativePointerPosition * 2 - firstControlPoint;
-                        //_currentLine.PathData.Add(new SvgCubicCurveSegment(lastEndPoint, firstControlPoint, secondControlPoint, relativePointerPosition));
-                        //}
-                        //else
-                        //{
-                        //    // straight line
-                        //    _currentLine.PathData.Add(new SvgLineSegment(lastEndPoint, relativePointerPosition));
-                        //}
-                    }
+                    // Quadratic bezier curve to the approximate of the pointer position
+                    var nextControlPoint = _lastCanvasPointerPosition ?? _currentPath.PathData.Last.End;
+                    var nextEndPoint = (nextControlPoint + canvasPointerPosition) / 2;
+                    _currentPath.PathData.Add(new SvgQuadraticCurveSegment(_currentPath.PathData.Last.End, nextControlPoint, nextEndPoint));
 
-                    _lastPointerPosition = p.Pointer1Position;
+                    _lastCanvasPointerPosition = canvasPointerPosition;
 
                     ws.FireInvalidateCanvas();
                 }
