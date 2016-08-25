@@ -10,8 +10,8 @@ namespace Svg.Core.Tools
 {
     public class FreeDrawingTool : ToolBase
     {
-        private const double MIN_MOVED_DISTANCE = 0.0;
-        private const double MIN_QUAD_MOVED_DISTANCE = 120.0;
+        private const double MinMovedDistance = 0.0;
+        private const double MinQuadMovedDistance = 120.0;
 
         //private static ILineOptionsInputService LineOptionsInputServiceProxy => Engine.Resolve<ILineOptionsInputService>();
 
@@ -296,7 +296,7 @@ namespace Svg.Core.Tools
                 // drawing only counts if length is not too small
                 _movedDistance = Math.Sqrt(Math.Pow(rect.Width, 2) + Math.Pow(rect.Height, 2)) / ws.ZoomFactor;
 
-                if (_movedDistance >= MIN_MOVED_DISTANCE)
+                if (_movedDistance >= MinMovedDistance)
                 {
                     var relativeStart = ws.ScreenToCanvas(e.Pointer1Down);
                     var relativePointerPosition = ws.ScreenToCanvas(e.Pointer1Position);
