@@ -34,7 +34,7 @@ namespace Svg.Droid.Editor.Services
                 Orientation = Orientation.Vertical,
                 LayoutParameters = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WrapContent) { Weight = 1 }
             };
-            var spinner1Label = new TextView(context) { Text = "Stoke width" };
+            var spinner1Label = new TextView(context) { Text = "Stroke width" };
             spinner1Layout.AddView(spinner1Label);
             var spinner1 = new Spinner(context)
             {
