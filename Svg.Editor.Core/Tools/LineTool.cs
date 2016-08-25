@@ -192,6 +192,7 @@ namespace Svg.Core.Tools
         {
             IconName = "ic_mode_edit_white_48dp.png";
             ToolUsage = ToolUsage.Explicit;
+            ToolType = ToolType.Create;
 
             var markers = new List<SvgMarker>();
             var marker = new SvgMarker { ID = "arrowStart", Orient = new SvgOrient() { IsAuto = true }, RefX = new SvgUnit(SvgUnitType.Pixel, -2.5f), MarkerWidth = 2 };

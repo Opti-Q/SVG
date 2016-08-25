@@ -38,6 +38,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
         {
             SourceProvider = sourceProvider;
             _canvas = canvas;
+            ToolType = ToolType.Create;
             Commands = new List<IToolCommand>
             {
                 new ToolCommand(this, "Add random item", (obj) =>

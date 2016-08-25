@@ -78,6 +78,8 @@ namespace Svg.Core.Tools
             var b = a * SinDegree(beta) / SinDegree(Alpha);
             //var c = a * SinDegree(Gamma) / SinDegree(Alpha);
             StepSizeX = (float)b * 2;
+
+            ToolType = ToolType.Modify;
         }
 
         public string IconGridOn { get; set; } = "ic_grid_on_white_48dp.png";

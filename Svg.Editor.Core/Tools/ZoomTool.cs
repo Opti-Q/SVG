@@ -26,6 +26,7 @@ namespace Svg.Core.Tools
             MinScale = minScale;
             MaxScale = maxScale;
             IconName = "ic_zoom_white_48dp.png";
+            ToolType = ToolType.View;
         }
 
         public float MinScale { get; set; }

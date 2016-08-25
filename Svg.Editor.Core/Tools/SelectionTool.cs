@@ -22,6 +22,7 @@ namespace Svg.Core.Tools
         {
             this.IconName = SelectIconName;
             this.ToolUsage = ToolUsage.Explicit;
+            ToolType = ToolType.Select;
         }
 
         private Brush BlueBrush => _brush ?? (_brush = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));

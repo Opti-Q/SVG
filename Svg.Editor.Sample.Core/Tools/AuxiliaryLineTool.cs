@@ -26,6 +26,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
 
         public AuxiliaryLineTool() : base("Auxiliaryline")
         {
+            ToolType = ToolType.View;
         }
 
         public AuxiliaryLineTool(string jsonProperties) : base("Auxiliaryline", jsonProperties)

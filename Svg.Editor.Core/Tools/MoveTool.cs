@@ -12,9 +12,11 @@ namespace Svg.Core.Tools
         private readonly Dictionary<object, PointF> _offsets = new Dictionary<object, PointF>();
         private readonly Dictionary<object, PointF> _translates = new Dictionary<object, PointF>();
         private bool _implicitlyActivated = false;
+        private ITool _activatedFrom;
 
         public MoveTool() : base("Move")
         {
+            ToolType = ToolType.Modify;
         }
 
         public override Task Initialize(SvgDrawingCanvas ws)
@@ -38,8 +40,10 @@ namespace Svg.Core.Tools
                     {
                         // move tool is only active, if SelectionTool is the "ActiveTool"
                         // otherwise we'd move and pan at the same time, yielding confusing results... :)
-                        if (ws.ActiveTool is SelectionTool)
+                        if (ws.ActiveTool.ToolType == ToolType.Select)
                         {
+                            // save the active tool for restoring later
+                            _activatedFrom = ws.ActiveTool;
                             ws.ActiveTool = this;
                             _implicitlyActivated = true;
                         }
@@ -58,7 +62,7 @@ namespace Svg.Core.Tools
                     if (_implicitlyActivated)
                     {
                         _implicitlyActivated = false;
-                        ws.ActiveTool = ws.Tools.OfType<SelectionTool>().Single();
+                        ws.ActiveTool = _activatedFrom;
                     }
 
                     IsActive = false;

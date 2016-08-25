@@ -12,6 +12,7 @@ namespace Svg.Core.Tools
         {
             IconName = "ic_pan_tool_white_48dp.png";
             //ToolUsage = ToolUsage.Explicit;
+            ToolType = ToolType.View;
         }
 
         public override Task Initialize(SvgDrawingCanvas ws)

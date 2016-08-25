@@ -20,6 +20,7 @@ namespace Svg.Core.Tools
         public ColorTool(string properties) : base("Color", properties)
         {
             IconName = "svg/ic_format_color_fill_white_48px.svg";
+            ToolType = ToolType.Modify;
         }
 
         public string[] SelectableColors
