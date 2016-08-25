@@ -25,6 +25,7 @@ namespace Svg
         void AddString(string text, FontFamily fontFamily, int style, float size, PointF location, StringFormat createStringFormatGenericTypographic);
         void AddBezier(PointF start, PointF firstControlPoint, PointF secondControlPoint, PointF end);
         void AddBezier(float startX, float firstControlPoint, float secondControlPoint, float end, float f, float f1, float endpointX, float endpointY);
+        void AddQuad(PointF start, PointF control, PointF end);
         bool IsVisible(PointF pointF);
         void Flatten();
         void AddPolygon(PointF[] polygon);

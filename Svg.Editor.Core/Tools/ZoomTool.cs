@@ -87,6 +87,47 @@ namespace Svg.Core.Tools
             return Task.FromResult(true);
         }
 
+        /*
+         *  ____                     _                   _        _   
+         * |_  / ___  ___ ._ _ _   _| |_ ___   ___  ___ <_>._ _ _| |_ 
+         *  / / / . \/ . \| ' ' |   | | / . \ | . \/ . \| || ' | | |  
+         * /___|\___/\___/|_|_|_|   |_| \___/ |  _/\___/|_||_|_| |_|  
+         *                                    |_|           
+         *                                    
+         * Um auf einen Punkt (ZoomFocus) zu zoomen, wird vor dem Skalieren eine Translation ausgeführt, um den Punkt in den Nullpunkt zu setzen. 
+         *                                              
+         *                                     0                             6         8
+         * <-----------------------------------+----1----2----3----4----5----+----7----+--------------------------------------------------------------------->
+         *                                     |                             |         |
+         *                                     1                             |         |
+         *                                     |                             |         |
+         *                                     2              o P1           |         |
+         *                                     |                             |         |
+         *                                     3                             |         |
+         *                                     |                             |         |
+         *                                     4            screen           |         |
+         *                                     +-----------------------------+         |
+         *                                     5                                       |
+         *                                     |                                       |
+         *                                     6                                       |
+         *                                     |                                       |
+         *                                     7                                       |
+         *                                     |            canvas                     |
+         *                                   8 +---------------------------------------+
+         *                                     |
+         *                                     |
+         *                                     |
+         *                                     |
+         *                                     |
+         *                                     |
+         *                                     |
+         *                                     |
+         *                                     |
+         *                                     |
+         *                                     v
+         *
+         */
+
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
             if (!IsActive)
