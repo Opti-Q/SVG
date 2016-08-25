@@ -75,8 +75,20 @@ namespace Svg.Droid.Editor.Services
 
                 case (int)MotionEventActions.Move:
                     var pointerIndex = ev.FindPointerIndex(ActivePointerId);
-                    x = ev.GetX(pointerIndex);
-                    y = ev.GetY(pointerIndex);
+                    if (ev.PointerCount == 1)
+                    {
+                        x = ev.GetX(pointerIndex);
+                        y = ev.GetY(pointerIndex);
+                    }
+                    else
+                    {
+                        var pX = ev.GetX(pointerIndex);
+                        var pY = ev.GetY(pointerIndex);
+                        for (var i = 1; i < ev.PointerCount; i++)
+                        {
+                            //pX += 
+                        }
+                    }
 
                     var relativeDeltaX = x - _lastTouchX;
                     var relativeDeltaY = y - _lastTouchY;
@@ -267,8 +279,8 @@ namespace Svg.Droid.Editor.Services
 
             private static float AngleBetweenLines(float fX, float fY, float sX, float sY, float nfX, float nfY, float nsX, float nsY)
             {
-                var angle1 = (float)Math.Atan2(fY - sY, (fX - sX));
-                var angle2 = (float)Math.Atan2(nfY - nsY, (nfX - nsX));
+                var angle1 = (float)Math.Atan2(fY - sY, fX - sX);
+                var angle2 = (float)Math.Atan2(nfY - nsY, nfX - nsX);
 
                 var angle = (float)RadianToDegree(angle1 - angle2) % 360;
                 if (angle < -180f) angle += 360.0f;
