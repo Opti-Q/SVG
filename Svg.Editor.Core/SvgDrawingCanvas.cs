@@ -62,6 +62,14 @@ namespace Svg.Core
                 { "linestylenames", new [] { "-----", "- - -" } }
             }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 
+            var freeDrawToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
+            {
+                { "linestyles", new [] { "normal", "dashed" } },
+                { "linestylenames", new [] { "-----", "- - -" } },
+                { "strokewidths", new [] { 12, 24, 6 } },
+                { "strokewidthnames", new [] { "normal", "thick", "thin" } }
+            }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+
             _tools = new ObservableCollection<ITool>
             {
                     new GridTool(gridToolProperties), // must be before movetool!
@@ -72,7 +80,7 @@ namespace Svg.Core
                     new SelectionTool(),
                     new TextTool(),
                     new LineTool(lineToolProperties),
-                    new FreeDrawingTool(""),
+                    new FreeDrawingTool(freeDrawToolProperties),
                     new ColorTool(colorToolProperties),
                     new StrokeStyleTool()
             };

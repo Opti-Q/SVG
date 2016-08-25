@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Services\ContextProvider.cs" />
+    <Compile Include="Services\FreeDrawingOptionsInputService.cs" />
     <Compile Include="Services\LineOptionsInputService.cs" />
     <Compile Include="Services\ColorInputService.cs" />
     <Compile Include="Services\SKCanvasRenderer.cs" />
