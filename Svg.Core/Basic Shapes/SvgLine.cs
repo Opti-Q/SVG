@@ -26,7 +26,8 @@ namespace Svg
 	            {
 	                var oldValue = _startX;
             		this._startX = value;
-            		this.IsPathDirty = true;
+                    this.Attributes["x1"] = value;
+                    this.IsPathDirty = true;
             		OnAttributeChanged(new AttributeEventArgs("x1", value, oldValue));
             	}
             }
@@ -42,7 +43,8 @@ namespace Svg
                 {
                     var oldValue = _startY;
                     this._startY = value;
-            		this.IsPathDirty = true;
+                    this.Attributes["y1"] = value;
+                    this.IsPathDirty = true;
             		OnAttributeChanged(new AttributeEventArgs("y1", value, oldValue));
             	}
             }
@@ -58,7 +60,8 @@ namespace Svg
                 {
                     var oldValue = _endX;
                     this._endX = value;
-            		this.IsPathDirty = true;
+                    this.Attributes["x2"] = value;
+                    this.IsPathDirty = true;
             		OnAttributeChanged(new AttributeEventArgs("x2", value, oldValue));
             	}
             }
@@ -74,7 +77,8 @@ namespace Svg
                 {
                     var oldValue = _endY;
                     this._endY = value;
-            		this.IsPathDirty = true;
+                    this.Attributes["y2"] = value;
+                    this.IsPathDirty = true;
             		OnAttributeChanged(new AttributeEventArgs("y2", value, oldValue));
             	}
             }
@@ -110,19 +114,6 @@ namespace Svg
         {
             get { return this.Attributes.GetAttribute<Uri>("marker-start"); }
             set { this.Attributes["marker-start"] = value; }
-        }
-
-        public override SvgPaintServer Fill
-        {
-            get { return null; /* Line can't have a fill */ }
-            set
-            {
-                // Do nothing
-            }
-        }
-
-        public SvgLine()
-        {
         }
 
         public override GraphicsPath Path(ISvgRenderer renderer)

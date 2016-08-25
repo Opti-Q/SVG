@@ -22,6 +22,7 @@ namespace Svg.Core.Tools
         {
             this.IconName = SelectIconName;
             this.ToolUsage = ToolUsage.Explicit;
+            ToolType = ToolType.Select;
         }
 
         private Brush BlueBrush => _brush ?? (_brush = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
@@ -64,7 +65,7 @@ namespace Svg.Core.Tools
                 return Task.FromResult(true);
 
             var e = @event as MoveEvent;
-            if (e != null && _handledPointerDown)
+            if (e != null && _handledPointerDown && e.PointerCount == 1)
             {
                 float startX = e.Pointer1Down.X;
                 float startY = e.Pointer1Down.Y;
@@ -100,7 +101,7 @@ namespace Svg.Core.Tools
             {
                 if (p.EventType == EventType.PointerDown)
                 {
-                    _handledPointerDown = true;
+                    _handledPointerDown = p.PointerCount == 1;
                 }
                 // if the user never moved, but clicked on an item, we try to select that spot
                 if (_handledPointerDown && p.EventType == EventType.PointerUp && _selectionRectangle == null)

@@ -126,7 +126,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 {
                     var fs = Engine.Resolve<IFileSystem>();
                     
-                    using (var bmp = ws.Document.DrawAllContents(160, 160, Engine.Factory.Colors.White))
+                    using (var bmp = ws.Document.DrawAllContents(160, Engine.Factory.Colors.White))
                     {
                         // now save it as PNG
                         var path = fs.PathCombine(fs.GetDefaultStoragePath(), "svg_image_thumb.png");
@@ -157,7 +157,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 {
                     var fs = Engine.Resolve<IFileSystem>();
 
-                    using (var bmp = ws.Document.DrawAllContents(2048, 1920, Engine.Factory.Colors.White))
+                    using (var bmp = ws.Document.DrawAllContents(2048, Engine.Factory.Colors.White))
                     {
                         // now save it as PNG
                         var path = fs.PathCombine(fs.GetDefaultStoragePath(), "svg_image_XL.png");

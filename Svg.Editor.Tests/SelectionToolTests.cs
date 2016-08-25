@@ -95,7 +95,7 @@ namespace Svg.Editor.Tests
             var start = PointF.Create(b1.Left - 1, b1.Top - 1);
             var end = PointF.Create(b2.Right + 1, b2.Bottom + 1);
             await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, start, start, start, 1));
-            await Canvas.OnEvent(new MoveEvent(start, start, end, end - start));
+            await Canvas.OnEvent(new MoveEvent(start, start, end, end - start, 1));
             await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, end, end, end, 1));
 
             // Assert
@@ -136,7 +136,7 @@ namespace Svg.Editor.Tests
             var start = PointF.Create(b1.Left + 1, b1.Top + 1);
             var end = PointF.Create(b2.Right - 1, b2.Bottom - 1);
             await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, start, start, start, 1));
-            await Canvas.OnEvent(new MoveEvent(start, start, end, end - start));
+            await Canvas.OnEvent(new MoveEvent(start, start, end, end - start, 1));
             await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, end, end, end, 1));
 
             // Assert

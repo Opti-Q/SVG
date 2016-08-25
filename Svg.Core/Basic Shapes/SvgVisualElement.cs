@@ -20,7 +20,8 @@ namespace Svg
     {
         private bool _requiresSmoothRendering;
         private Region _previousClip;
-        public const string STROKE = "STROKE";
+        public const string CONTEXT_STROKE = "context-stroke";
+        public const string CONTEXT_FILL = "context-fill";
 
         /// <summary>
         /// Gets the <see cref="GraphicsPath"/> for this element.
@@ -344,11 +345,19 @@ namespace Svg
         /// <param name="renderer">The <see cref="ISvgRenderer"/> object to render to.</param>
         protected internal virtual void RenderFill(ISvgRenderer renderer)
         {
-            if (this.Fill != null)
+            object fillTemp;
+            var fill = this.Fill;
+            if (fill == SvgColourServer.ContextFill &&
+                renderer.Context.TryGetValue(CONTEXT_FILL, out fillTemp))
+            {
+                fill = (SvgPaintServer)fillTemp;
+            }
+
+            if (fill != null)
             {
                 /*using (*/
                 //var brush = GetFillBrush(renderer);/*)*/
-                using(var brush = this.Fill.GetBrush(this, renderer, Math.Min(Math.Max(this.FillOpacity * this.Opacity, 0), 1)))
+                using(var brush = fill.GetBrush(this, renderer, Math.Min(Math.Max(this.FillOpacity * this.Opacity, 0), 1)))
                 {
                     if (brush != null)
                     {
@@ -368,8 +377,8 @@ namespace Svg
             // allow to override stroke using context variable (used by marker to have same stoke color as owning path)
             object strokeTemp;
             SvgPaintServer stroke = this.Stroke;
-            if ((this.Stroke == SvgColourServer.Inherit || this.Stroke == SvgColourServer.NotSet) &&
-                renderer.Context.TryGetValue(STROKE, out strokeTemp))
+            if (this.Stroke == SvgColourServer.ContextStroke &&
+                renderer.Context.TryGetValue(CONTEXT_STROKE, out strokeTemp))
             {
                 stroke = (SvgPaintServer)strokeTemp;
             }

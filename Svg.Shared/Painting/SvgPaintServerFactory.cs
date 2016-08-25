@@ -27,6 +27,14 @@ namespace Svg
             {
                 return SvgColourServer.Inherit;
             }
+            else if (value == "context-fill")
+            {
+                return SvgColourServer.ContextFill;
+            }
+            else if (value == "context-stroke")
+            {
+                return SvgColourServer.ContextStroke;
+            }
             else if (value == "currentColor")
             {
                 return new SvgDeferredPaintServer(document, value);

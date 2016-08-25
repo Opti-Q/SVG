@@ -17,6 +17,7 @@ namespace Svg.Core.Tools
         private Brush RedBrush => _brush2 ?? (_brush2 = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 255, 150, 150)));
         private Pen RedPen => _pen2 ?? (_pen2 = Svg.Engine.Factory.CreatePen(RedBrush, 3));
         private readonly Dictionary<SvgElement, float> _rotations = new Dictionary<SvgElement, float>();
+        private ITool _activatedFrom;
 
         public bool IsDebugEnabled { get; set; }
 
@@ -26,6 +27,7 @@ namespace Svg.Core.Tools
         
         public RotationTool() : base("Rotate")
         {
+            ToolType = ToolType.Modify;
         }
 
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
@@ -41,16 +43,20 @@ namespace Svg.Core.Tools
                     // and there is a single selected element
                     ws.SelectedElements.Count == 1 &&
                     // and the selectiontool is active
-                    ws.ActiveTool is SelectionTool)
+                    ws.ActiveTool.ToolType == ToolType.Select &&
+                    // and the gesture is made with 3 fingers
+                    re.PointerCount == 3)
                 {
                     // implicitly activate
+                    _activatedFrom = ws.ActiveTool;
                     ws.ActiveTool = this;
                     _wasImplicitlyActivated = true;
                     zt.IsActive = false;
                     _rotations.Clear();
                 }
                 else if (re.Status == RotateStatus.Rotating &&
-                         ws.SelectedElements.Count == 1)
+                         ws.SelectedElements.Count == 1 &&
+                         re.PointerCount == 3)
                 {
                     RotateElement(ws.SelectedElements[0], re, ws);
                 }
@@ -58,7 +64,7 @@ namespace Svg.Core.Tools
                 {
                     if (ws.ActiveTool == this && _wasImplicitlyActivated)
                     {
-                        ws.ActiveTool = ws.Tools.OfType<SelectionTool>().Single();
+                        ws.ActiveTool = _activatedFrom;
                     }
                     zt.IsActive = true;
                     _lastRotationCenter = null;
@@ -98,7 +104,7 @@ namespace Svg.Core.Tools
 
             if (delta != 0)
             {
-                var m = element.CreateOriginRotation(delta);
+                var m = element.CreateOriginRotation(delta % 360);
                 element.SetTransformationMatrix(m);
 
                 ws.FireInvalidateCanvas();

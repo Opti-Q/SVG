@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using Android.Content;
 using Android.Views;
 using Svg.Core.Events;
@@ -8,50 +7,49 @@ namespace Svg.Droid.Editor.Services
 {
     public class GestureDetector
     {
-        private readonly Func<UserInputEvent, Task> _callback;
         public const int InvalidPointerId = -1;
         public int ActivePointerId = InvalidPointerId;
 
         private float _lastTouchX;
         private float _lastTouchY;
 
-        private bool _scaleInProgress = false;
         private readonly ScaleGestureDetector _scaleDetector;
         private readonly RotateDetector _rotateDetector;
         private float _pointerDownX;
         private float _pointerDownY;
 
-        public GestureDetector(Context ctx, Func<UserInputEvent, Task> callback)
+        public event EventHandler<UserInputEvent> OnGesture; 
+
+        public GestureDetector(Context ctx)
         {
-            _callback = callback;
-            _scaleDetector = new ScaleGestureDetector(ctx, new ScaleDetector(this));
-            _rotateDetector = new RotateDetector(ctx, this);
+            var scaleListener = new ScaleDetector();
+            scaleListener.OnEvent += (sender, ev) => OnGesture?.Invoke(this, ev);
+            _scaleDetector = new ScaleGestureDetector(ctx, scaleListener);
+            _rotateDetector = new RotateDetector();
+            _rotateDetector.OnRotate += (sender, ev) => OnGesture?.Invoke(this, ev);
         }
 
-        public async Task OnTouch(MotionEvent ev)
+        public void OnTouch(MotionEvent ev)
         {
             // detectors always have priority
             _scaleDetector.OnTouchEvent(ev);
             _rotateDetector.OnTouchEvent(ev);
-
-            if (_scaleInProgress)
-                return;
 
             UserInputEvent uie = null;
 
             var x = ev.GetX();
             var y = ev.GetY();
 
-            int action = (int) ev.Action;
-            int maskedAction = action & (int) MotionEventActions.Mask;
+            var action = (int)ev.Action;
+            var maskedAction = action & (int)MotionEventActions.Mask;
             switch (maskedAction)
             {
-                case (int) MotionEventActions.Down:
-                case (int) MotionEventActions.Pointer1Down:
+                case (int)MotionEventActions.Down:
+                case (int)MotionEventActions.Pointer1Down:
                     uie = new PointerEvent(EventType.PointerDown,
-                        Svg.Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
-                        Svg.Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY),
-                        Svg.Factory.Instance.CreatePointF(x, y), ev.PointerCount);
+                        Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
+                        Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY),
+                        Factory.Instance.CreatePointF(x, y), ev.PointerCount);
                     _lastTouchX = x;
                     _lastTouchY = y;
                     _pointerDownX = x;
@@ -59,59 +57,57 @@ namespace Svg.Droid.Editor.Services
                     ActivePointerId = ev.GetPointerId(0);
                     break;
 
-                case (int) MotionEventActions.Up:
+                case (int)MotionEventActions.Up:
                     ActivePointerId = InvalidPointerId;
                     uie = new PointerEvent(EventType.PointerUp,
-                        Svg.Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
-                        Svg.Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY),
-                        Svg.Factory.Instance.CreatePointF(x, y), ev.PointerCount);
+                        Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
+                        Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY),
+                        Factory.Instance.CreatePointF(x, y), ev.PointerCount);
                     break;
 
-                case (int) MotionEventActions.Cancel:
+                case (int)MotionEventActions.Cancel:
                     ActivePointerId = InvalidPointerId;
                     uie = new PointerEvent(EventType.Cancel,
-                        Svg.Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
-                        Svg.Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY),
-                        Svg.Factory.Instance.CreatePointF(x, y), 1);
+                        Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
+                        Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY),
+                        Factory.Instance.CreatePointF(x, y), 1);
                     break;
 
-                case (int) MotionEventActions.Move:
-                    if (ev.PointerCount == 1)
-                    {
-                        var pointerIndex = ev.FindPointerIndex(ActivePointerId);
-                        x = ev.GetX(pointerIndex);
-                        y = ev.GetY(pointerIndex);
+                case (int)MotionEventActions.Move:
+                    var pointerIndex = ev.FindPointerIndex(ActivePointerId);
+                    x = ev.GetX(pointerIndex);
+                    y = ev.GetY(pointerIndex);
 
-                        var relativeDeltaX = x - _lastTouchX;
-                        var relativeDeltaY = y - _lastTouchY;
-                        
-                        uie = new MoveEvent(Svg.Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
-                            Svg.Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY),
-                            Svg.Factory.Instance.CreatePointF(x, y),
-                            Svg.Factory.Instance.CreatePointF(relativeDeltaX, relativeDeltaY));
+                    var relativeDeltaX = x - _lastTouchX;
+                    var relativeDeltaY = y - _lastTouchY;
 
-                        _lastTouchX = x;
-                        _lastTouchY = y;
-                    }
+                    uie = new MoveEvent(Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
+                        Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY),
+                        Factory.Instance.CreatePointF(x, y),
+                        Factory.Instance.CreatePointF(relativeDeltaX, relativeDeltaY),
+                        ev.PointerCount);
+
+                    _lastTouchX = x;
+                    _lastTouchY = y;
                     break;
 
-                case (int) MotionEventActions.PointerUp:
+                case (int)MotionEventActions.PointerUp:
 
-                    int pointerIndex2 = ((int) ev.Action & (int) MotionEventActions.PointerIndexMask)
-                                        >> (int) MotionEventActions.PointerIndexShift;
+                    var pointerIndex2 = ((int)ev.Action & (int)MotionEventActions.PointerIndexMask)
+                                        >> (int)MotionEventActions.PointerIndexShift;
 
-                    int pointerId = ev.GetPointerId(pointerIndex2);
+                    var pointerId = ev.GetPointerId(pointerIndex2);
                     if (pointerId == ActivePointerId)
                     {
                         // This was our active pointer going up. Choose a new
                         // active pointer and adjust accordingly.
-                        int newPointerIndex = pointerIndex2 == 0 ? 1 : 0;
+                        var newPointerIndex = pointerIndex2 == 0 ? 1 : 0;
                         x = ev.GetX(newPointerIndex);
                         y = ev.GetY(newPointerIndex);
                         uie = new PointerEvent(EventType.PointerUp,
-                            Svg.Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
-                            Svg.Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY),
-                            Svg.Factory.Instance.CreatePointF(x, y), 1);
+                            Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
+                            Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY),
+                            Factory.Instance.CreatePointF(x, y), 1);
 
                         _lastTouchX = x;
                         _lastTouchY = y;
@@ -119,13 +115,13 @@ namespace Svg.Droid.Editor.Services
                     }
                     else
                     {
-                        int tempPointerIndex = ev.FindPointerIndex(ActivePointerId);
+                        var tempPointerIndex = ev.FindPointerIndex(ActivePointerId);
                         x = ev.GetX(tempPointerIndex);
                         y = ev.GetY(tempPointerIndex);
                         uie = new PointerEvent(EventType.PointerUp,
-                            Svg.Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
-                            Svg.Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY),
-                            Svg.Factory.Instance.CreatePointF(x, y), 1);
+                            Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
+                            Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY),
+                            Factory.Instance.CreatePointF(x, y), 1);
 
                         _lastTouchX = ev.GetX(tempPointerIndex);
                         _lastTouchY = ev.GetY(tempPointerIndex);
@@ -135,9 +131,7 @@ namespace Svg.Droid.Editor.Services
             }
 
             if (uie != null)
-                await _callback(uie);
-
-            return;
+                OnGesture?.Invoke(this, uie);
         }
 
         public void Reset()
@@ -150,34 +144,26 @@ namespace Svg.Droid.Editor.Services
 
         private class ScaleDetector : ScaleGestureDetector.SimpleOnScaleGestureListener
         {
-            private readonly GestureDetector _owner;
-
-            public ScaleDetector(GestureDetector owner)
-            {
-                _owner = owner;
-            }
+            public event EventHandler<UserInputEvent> OnEvent; 
 
             public override bool OnScaleBegin(ScaleGestureDetector detector)
             {
-                _owner._scaleInProgress = true;
                 var uie = new ScaleEvent(ScaleStatus.Start, detector.ScaleFactor, detector.FocusX, detector.FocusY);
-                _owner._callback(uie);
+                OnEvent?.Invoke(this, uie);
                 return true;
             }
 
             public override bool OnScale(ScaleGestureDetector detector)
             {
                 var uie = new ScaleEvent(ScaleStatus.Scaling, detector.ScaleFactor, detector.FocusX, detector.FocusY);
-                _owner._callback(uie);
-
+                OnEvent?.Invoke(this, uie);
                 return true;
             }
 
             public override void OnScaleEnd(ScaleGestureDetector detector)
             {
                 var uie = new ScaleEvent(ScaleStatus.End, detector.ScaleFactor, detector.FocusX, detector.FocusY);
-                _owner._callback(uie);
-                _owner._scaleInProgress = false;
+                OnEvent?.Invoke(this, uie);
             }
         }
 
@@ -186,84 +172,79 @@ namespace Svg.Droid.Editor.Services
         /// </summary>
         private class RotateDetector
         {
-            private static readonly int INVALID_POINTER_ID = -1;
-            private readonly GestureDetector _owner;
-            private readonly Context _ctx;
             private float _fX, _fY, _sX, _sY;
             private int _ptrId1, _ptrId2;
-            private float? _startAngle = null;
-            private float? _previousAngle = null;
+            private float? _startAngle;
+            private float? _previousAngle;
             private float _angle;
 
-            public RotateDetector(Context ctx, GestureDetector owner)
+            public event EventHandler<UserInputEvent> OnRotate; 
+
+            public RotateDetector()
             {
-                _ctx = ctx;
-                _owner = owner;
-                _ptrId1 = INVALID_POINTER_ID;
-                _ptrId2 = INVALID_POINTER_ID;
+                _ptrId1 = InvalidPointerId;
+                _ptrId2 = InvalidPointerId;
             }
-            
-            public bool OnTouchEvent(MotionEvent ev)
+
+            public void OnTouchEvent(MotionEvent ev)
             {
-                int action = (int) ev.Action;
-                switch (action & (int) MotionEventActions.Mask)
+                var action = (int)ev.Action;
+                switch (action & (int)MotionEventActions.Mask)
                 {
-                    case (int) MotionEventActions.Down:
+                    case (int)MotionEventActions.Down:
                         _ptrId1 = ev.GetPointerId(ev.ActionIndex);
                         break;
-                    case (int) MotionEventActions.PointerDown:
+                    case (int)MotionEventActions.PointerDown:
                         _ptrId2 = ev.GetPointerId(ev.ActionIndex);
                         _sX = ev.GetX(ev.FindPointerIndex(_ptrId1));
                         _sY = ev.GetY(ev.FindPointerIndex(_ptrId1));
                         _fX = ev.GetX(ev.FindPointerIndex(_ptrId2));
                         _fY = ev.GetY(ev.FindPointerIndex(_ptrId2));
                         break;
-                    case (int) MotionEventActions.Move:
-                        if (_ptrId1 != INVALID_POINTER_ID && _ptrId2 != INVALID_POINTER_ID)
+                    case (int)MotionEventActions.Move:
+                        if (_ptrId1 != InvalidPointerId && _ptrId2 != InvalidPointerId)
                         {
-                            float nfX, nfY, nsX, nsY;
-                            nsX = ev.GetX(ev.FindPointerIndex(_ptrId1));
-                            nsY = ev.GetY(ev.FindPointerIndex(_ptrId1));
-                            nfX = ev.GetX(ev.FindPointerIndex(_ptrId2));
-                            nfY = ev.GetY(ev.FindPointerIndex(_ptrId2));
+                            var nsX = ev.GetX(ev.FindPointerIndex(_ptrId1));
+                            var nsY = ev.GetY(ev.FindPointerIndex(_ptrId1));
+                            var nfX = ev.GetX(ev.FindPointerIndex(_ptrId2));
+                            var nfY = ev.GetY(ev.FindPointerIndex(_ptrId2));
 
                             _angle = AngleBetweenLines(_fX, _fY, _sX, _sY, nfX, nfY, nsX, nsY);
-                            
+
                             if (_startAngle == null)
                             {
                                 _startAngle = _angle;
-                                var uie = new RotateEvent(0, 0, RotateStatus.Start);
+                                var uie = new RotateEvent(0, 0, RotateStatus.Start, ev.PointerCount);
                                 //System.Diagnostics.Debug.WriteLine(uie.DebuggerDisplay);
-                                _owner._callback(uie);
+                                OnRotate?.Invoke(this, uie);
                             }
                             if (_previousAngle != null)
                             {
                                 var delta = (_previousAngle.Value - _angle) % 360;
                                 var absoluteDelta = (_startAngle.Value - _angle) % 360;
-                                
-                                var uie = new RotateEvent(delta, absoluteDelta, RotateStatus.Rotating);
+
+                                var uie = new RotateEvent(delta, absoluteDelta, RotateStatus.Rotating, ev.PointerCount);
                                 //System.Diagnostics.Debug.WriteLine(uie.DebuggerDisplay);
-                                _owner._callback(uie);
+                                OnRotate?.Invoke(this, uie);
                             }
                             _previousAngle = _angle;
 
                         }
                         break;
-                    case (int) MotionEventActions.Up:
-                        _ptrId1 = INVALID_POINTER_ID;
+                    case (int)MotionEventActions.Up:
+                        _ptrId1 = InvalidPointerId;
                         CleanUp();
                         break;
-                    case (int) MotionEventActions.PointerUp:
-                        _ptrId2 = INVALID_POINTER_ID;
+                    case (int)MotionEventActions.PointerUp:
+                        _ptrId2 = InvalidPointerId;
                         CleanUp();
                         break;
-                    case (int) MotionEventActions.Cancel:
-                        _ptrId1 = INVALID_POINTER_ID;
-                        _ptrId2 = INVALID_POINTER_ID;
+                    case (int)MotionEventActions.Cancel:
+                        _ptrId1 = InvalidPointerId;
+                        _ptrId2 = InvalidPointerId;
                         CleanUp();
                         break;
                 }
-                return true;
             }
 
             private void CleanUp()
@@ -274,9 +255,9 @@ namespace Svg.Droid.Editor.Services
                     var delta = (_previousAngle.Value - _angle) % 360;
                     var absoluteDelta = (_startAngle.Value - _angle) % 360;
 
-                    var uie = new RotateEvent(delta, absoluteDelta, RotateStatus.End);
+                    var uie = new RotateEvent(delta, absoluteDelta, RotateStatus.End, 0);
                     //System.Diagnostics.Debug.WriteLine(uie.DebuggerDisplay);
-                    _owner._callback(uie);
+                    OnRotate?.Invoke(this, uie);
                 }
 
                 _startAngle = null;
@@ -284,20 +265,20 @@ namespace Svg.Droid.Editor.Services
                 _angle = 0f;
             }
 
-            private float AngleBetweenLines(float fX, float fY, float sX, float sY, float nfX, float nfY, float nsX, float nsY)
+            private static float AngleBetweenLines(float fX, float fY, float sX, float sY, float nfX, float nfY, float nsX, float nsY)
             {
-                float angle1 = (float) Math.Atan2((fY - sY), (fX - sX));
-                float angle2 = (float) Math.Atan2((nfY - nsY), (nfX - nsX));
+                var angle1 = (float)Math.Atan2(fY - sY, (fX - sX));
+                var angle2 = (float)Math.Atan2(nfY - nsY, (nfX - nsX));
 
-                float angle = ((float) RadianToDegree(angle1 - angle2))%360;
+                var angle = (float)RadianToDegree(angle1 - angle2) % 360;
                 if (angle < -180f) angle += 360.0f;
                 if (angle > 180f) angle -= 360.0f;
                 return angle;
             }
 
-            private double RadianToDegree(double angle)
+            private static double RadianToDegree(double angle)
             {
-                return angle*(180.0/Math.PI);
+                return angle * (180.0 / Math.PI);
             }
         }
     }

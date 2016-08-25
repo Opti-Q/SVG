@@ -18,7 +18,9 @@ namespace Svg.FilterEffects
 
 		public override SvgElement DeepCopy()
 		{
-			throw new NotImplementedException();
+		    var e = (SvgMergeNode)base.DeepCopy<SvgMergeNode>();
+		    e.Input = this.Input;
+		    return e;
 		}
 
     }

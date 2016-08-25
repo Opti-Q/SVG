@@ -28,11 +28,11 @@ namespace Svg.Editor.Tests
             var matrix = element1.Transforms.GetMatrix();
 
             // Act
-            await Canvas.OnEvent(new RotateEvent(0, 0, RotateStatus.Start));
-            await Canvas.OnEvent(new RotateEvent(45, 45, RotateStatus.Rotating));
-            await Canvas.OnEvent(new RotateEvent(10, 55, RotateStatus.Rotating));
-            await Canvas.OnEvent(new RotateEvent(35, 90, RotateStatus.Rotating));
-            await Canvas.OnEvent(new RotateEvent(0, 90, RotateStatus.End));
+            await Canvas.OnEvent(new RotateEvent(0, 0, RotateStatus.Start, 2));
+            await Canvas.OnEvent(new RotateEvent(45, 45, RotateStatus.Rotating, 2));
+            await Canvas.OnEvent(new RotateEvent(10, 55, RotateStatus.Rotating, 2));
+            await Canvas.OnEvent(new RotateEvent(35, 90, RotateStatus.Rotating, 2));
+            await Canvas.OnEvent(new RotateEvent(0, 90, RotateStatus.End, 2));
 
             // Assert
             Assert.AreEqual(matrix, element1.Transforms.GetMatrix());

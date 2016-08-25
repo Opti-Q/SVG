@@ -31,12 +31,14 @@ namespace Svg.Droid.SampleEditor.Core.Tools
             //"svg/painting-marker-05-f.svg",
             //"svg/painting-marker-01-f.svg",
             //"svg/rect.svg",
+            //"svg/Bends_01.svg", causes StackOverflowException in SvgRectangle.Bounds
     };
 
         public AddRandomItemTool(SvgDrawingCanvas canvas, Func<string, ISvgSource> sourceProvider = null) : base("Add random item")
         {
             SourceProvider = sourceProvider;
             _canvas = canvas;
+            ToolType = ToolType.Create;
             Commands = new List<IToolCommand>
             {
                 new ToolCommand(this, "Add random item", (obj) =>

@@ -27,13 +27,14 @@ namespace Svg.Droid.Editor
         public SvgDrawingCanvasView(Context context, IAttributeSet attr) : base(context, attr)
         {
             _drawingCanvas = new SvgDrawingCanvas();
-            _detector = new GestureDetector(this.Context, (e) => DrawingCanvas.OnEvent(e));
+            _detector = new GestureDetector(Context);
+            _detector.OnGesture += async (sender, e) => await DrawingCanvas.OnEvent(e);
         }
 
         public override bool OnTouchEvent(MotionEvent ev)
         {
             // this is intentionally not awaited
-            _detector.OnTouch(ev).ConfigureAwait(false);
+            _detector.OnTouch(ev);
             
             return true;
         }

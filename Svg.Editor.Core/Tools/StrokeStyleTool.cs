@@ -9,6 +9,7 @@ namespace Svg.Core.Tools
         public StrokeStyleTool() : base("Stroke style")
         {
             IconName = "ic_border_style_white_48dp.png";
+            ToolType = ToolType.Modify;
         }
 
         public override Task Initialize(SvgDrawingCanvas ws)

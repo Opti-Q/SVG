@@ -30,6 +30,7 @@ namespace Svg
                 {
                     _dx[0] = value;
                 }
+                this.Attributes["startOffset"] = value;
             }
         }
 
@@ -51,7 +52,11 @@ namespace Svg
         public virtual Uri ReferencedPath
         {
             get { return this._referencedPath; }
-            set { this._referencedPath = value; }
+            set
+            {
+                this._referencedPath = value;
+                this.Attributes["href"] = value;
+            }
         }
 
         protected override GraphicsPath GetBaselinePath(ISvgRenderer renderer)

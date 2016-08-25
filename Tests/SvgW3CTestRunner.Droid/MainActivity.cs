@@ -91,25 +91,21 @@ namespace SvgW3CTestRunner.Droid
 
                 var watch = Stopwatch.StartNew();
 
+                var filter = "painting-marker";
+                //  var filter = "text-";
+                //  var filter = "paths-";
+                //  var filter = "coords-trans-09-t";
+                //  var filter = "coords-transformattr-05-f";
+                //  var filter = "imp-";
+                //var filter = "paths-";
+
                 var assetManager = Assets;
                 var svgs = assetManager.List("svg")
-                    .Where(@s => s.StartsWith("painting-"))
-                    //.Where(@s => s.StartsWith("text-"))
-                    //.Where(@s => s.StartsWith("coords-"))
-                    //.Where(@s => s.StartsWith("paths-"))
-                    //.Where(@s => s.StartsWith("coords-trans-09-t"))
-                    //.Where(@s => s.StartsWith("coords-transformattr-05-f"))
-                    //.Where(@s => s.StartsWith("imp-"))
+                    .Where(@s => string.IsNullOrWhiteSpace(filter) || s.StartsWith(filter))
                     .OrderBy(@s => s).ToList();
 
                 var pngs = assetManager.List("png")
-                    .Where(@s => s.StartsWith("painting-"))
-                    //.Where(@s => s.StartsWith("text-"))
-                    //.Where(@s => s.StartsWith("coords-"))
-                    //.Where(@s => s.StartsWith("paths-"))
-                    //.Where(@s => s.StartsWith("coords-trans-09-t"))
-                    //.Where(@s => s.StartsWith("coords-transformattr-05-f"))
-                    //.Where(@s => s.StartsWith("imp-"))
+                    .Where(@s => string.IsNullOrWhiteSpace(filter) || s.StartsWith(filter))
                     .OrderBy(@s => s).ToList();
 
                 _globalGfxCount = pngs.Count;

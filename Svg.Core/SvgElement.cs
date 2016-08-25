@@ -5,6 +5,7 @@ using System.Xml;
 using System.Linq;
 using Svg.Transforms;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Svg.Interfaces;
 using Svg.Interfaces.Xml;
 
@@ -512,7 +513,7 @@ namespace Svg
         {
         	OnAttributeChanged(e);
         }
-
+        
 		//public virtual void InitialiseFromXML(XmlTextReader reader, SvgDocument document)
 		//{
   //          throw new NotImplementedException();
@@ -557,14 +558,15 @@ namespace Svg
             var styles = new Dictionary<string, string>();
             bool writeStyle;
             bool forceWrite;
-
+            
             //properties
             foreach (var attr in _svgPropertyAttributes)
             {
                 if (attr.Property.Converter.CanConvertTo(typeof(string)) && 
                     (!attr.Attribute.InAttributeDictionary || _attributes.ContainsKey(attr.Attribute.Name)))
                 {
-                    object propertyValue = attr.Property.GetValue(this);
+                    object propertyValue = _attributes.GetAttribute<object>(attr.Attribute.Name); 
+
                     if (propertyValue == null)
                         continue;
 

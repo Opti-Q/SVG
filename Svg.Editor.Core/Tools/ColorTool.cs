@@ -20,6 +20,7 @@ namespace Svg.Core.Tools
         public ColorTool(string properties) : base("Color", properties)
         {
             IconName = "svg/ic_format_color_fill_white_48px.svg";
+            ToolType = ToolType.Modify;
         }
 
         public string[] SelectableColors
@@ -100,15 +101,15 @@ namespace Svg.Core.Tools
         {
             var colourServer = new SvgColourServer(color);
 
-            //foreach (var child in element.Children)
-            //{
-            //    ColorizeElement(child, color);
-            //}
-
             // only colorize visual elements
             if (!(element is SvgVisualElement)) return;
 
             if (element is SvgText)
+            {
+                element.Fill?.Dispose();
+                element.Fill = colourServer;
+            }
+            if (element is SvgLine)
             {
                 element.Fill?.Dispose();
                 element.Fill = colourServer;

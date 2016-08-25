@@ -17,6 +17,7 @@ namespace Svg.Core.Tools
 
         public DebugTool() : base("Debug")
         {
+            ToolType = ToolType.View;
         }
 
         private Brush RedBrush => _brush2 ?? (_brush2 = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 255, 150, 150)));

@@ -25,7 +25,8 @@ namespace Svg
 	            {
 	                var oldValue = _centerX;
             		this._centerX = value;
-            		this.IsPathDirty = true;
+                    this.Attributes["cx"] = value;
+                    this.IsPathDirty = true;
             		OnAttributeChanged(new AttributeEventArgs("cx", value, oldValue));
             	}
             }
@@ -41,7 +42,8 @@ namespace Svg
                 {
                     var oldValue = _centerY;
                     this._centerY = value;
-        			this.IsPathDirty = true;
+                    this.Attributes["cy"] = value;
+                    this.IsPathDirty = true;
         			OnAttributeChanged(new AttributeEventArgs("cy", value, oldValue));
         		}
         	}
@@ -57,7 +59,8 @@ namespace Svg
 		        {
 		            var oldValue = _radiusX;
         			this._radiusX = value;
-        			this.IsPathDirty = true;
+                    this.Attributes["rx"] = value;
+                    this.IsPathDirty = true;
         			OnAttributeChanged(new AttributeEventArgs("rx", value, oldValue));
         		}
         	}
@@ -73,7 +76,8 @@ namespace Svg
 		        {
 		            var oldValue = _radiusY;
         			this._radiusY = value;
-        			this.IsPathDirty = true;
+                    this.Attributes["ry"] = value;
+                    this.IsPathDirty = true;
         			OnAttributeChanged(new AttributeEventArgs("ry", value, oldValue));
         		}
         	}

@@ -24,7 +24,7 @@ namespace Svg
             r.Width = bounds.Width;
             r.Height = bounds.Height;
         }
-        
+
         public static RectangleF GetRectangle(this SvgRectangle r)
         {
             return RectangleF.Create(r.X, r.Y, r.Width, r.Height);
@@ -50,8 +50,8 @@ namespace Svg
         public static string GetXML(this SvgElement elem)
         {
             var result = "";
-            
-            using(var c = Engine.Resolve<ICultureHelper>().UsingCulture(CultureInfo.InvariantCulture))
+
+            using (var c = Engine.Resolve<ICultureHelper>().UsingCulture(CultureInfo.InvariantCulture))
             using (StringWriter str = new StringWriter())
             {
                 using (IXmlTextWriter xml = Engine.Factory.CreateXmlTextWriter(str))
@@ -63,36 +63,52 @@ namespace Svg
 
             return result;
         }
-        
+
         public static bool HasNonEmptyCustomAttribute(this SvgElement element, string name)
         {
-        	return element.CustomAttributes.ContainsKey(name) && !string.IsNullOrEmpty(element.CustomAttributes[name]);
+            return element.CustomAttributes.ContainsKey(name) && !string.IsNullOrEmpty(element.CustomAttributes[name]);
         }
-        
+
         public static void ApplyRecursive(this SvgElement elem, Action<SvgElement> action)
         {
-        	action(elem);
-        	
-        	if(!(elem is SvgDocument)) //don't apply action to subtree of documents
-        	{
-        		foreach (var element in elem.Children)
-        		{
-        			element.ApplyRecursive(action);
-        		}
-        	}
+            action(elem);
+
+            if (!(elem is SvgDocument)) //don't apply action to subtree of documents
+            {
+                foreach (var element in elem.Children)
+                {
+                    element.ApplyRecursive(action);
+                }
+            }
         }
-        
+
         public static void ApplyRecursiveDepthFirst(this SvgElement elem, Action<SvgElement> action)
         {
-        	if(!(elem is SvgDocument)) //don't apply action to subtree of documents
-        	{
-        		foreach (var element in elem.Children)
-        		{
-        			element.ApplyRecursiveDepthFirst(action);
-        		}
-        	}
-        	
-        	action(elem);
+            if (!(elem is SvgDocument)) //don't apply action to subtree of documents
+            {
+                foreach (var element in elem.Children)
+                {
+                    element.ApplyRecursiveDepthFirst(action);
+                }
+            }
+
+            action(elem);
+        }
+
+        /// <summary>
+        /// Calculates all tranformations into start and end points and returns the result.
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns>an array where [0] = start, [1] = end point.</returns>
+        public static PointF[] GetTransformedLinePoints(this SvgLine line)
+        {
+            var points = new[]
+            {
+                PointF.Create(line.StartX, line.StartY),
+                PointF.Create(line.EndX, line.EndY)
+            };
+            line.Transforms.GetMatrix().TransformPoints(points);
+            return points;
         }
     }
 }

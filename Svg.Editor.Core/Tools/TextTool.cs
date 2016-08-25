@@ -20,7 +20,7 @@ namespace Svg.Core.Tools
         {
             IconName = "ic_text_fields_white_48dp.png";
             ToolUsage = ToolUsage.Explicit;
-            //ToolType = ToolType.Create;
+            ToolType = ToolType.Create;
         }
 
         private ITextInputService TextInputService => Engine.Resolve<ITextInputService>();
