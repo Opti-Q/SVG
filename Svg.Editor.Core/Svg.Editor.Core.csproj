@@ -60,6 +60,7 @@
     <Compile Include="Interfaces\IRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\FreeDrawingTool.cs" />
+    <Compile Include="Tools\UndoRedoTool.cs" />
     <Compile Include="Tools\StrokeStyleTool.cs" />
     <Compile Include="Tools\ColorTool.cs" />
     <Compile Include="Tools\DebugTool.cs" />

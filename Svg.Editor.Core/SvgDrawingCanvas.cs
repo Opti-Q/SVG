@@ -82,7 +82,8 @@ namespace Svg.Core
                     new LineTool(lineToolProperties),
                     new FreeDrawingTool(freeDrawToolProperties),
                     new ColorTool(colorToolProperties),
-                    new StrokeStyleTool()
+                    new StrokeStyleTool(),
+                    new UndoRedoTool()
             };
             _tools.CollectionChanged += OnToolsChanged;
         }
