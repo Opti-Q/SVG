@@ -22,13 +22,16 @@ namespace Svg.Core.Tools
             IconName = "ic_text_fields_white_48dp.png";
             ToolUsage = ToolUsage.Explicit;
             ToolType = ToolType.Create;
+            object selectedFontSizeIndex;
+            if (Properties.TryGetValue("selectedfontsizeindex", out selectedFontSizeIndex))
+                SelectedFontSize = FontSizes[Convert.ToInt32(selectedFontSizeIndex)];
         }
 
         private ITextInputService TextInputService => Engine.Resolve<ITextInputService>();
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
-            this.IsActive = false;
+            IsActive = false;
 
             return Task.FromResult(true);
         }
@@ -68,7 +71,7 @@ namespace Svg.Core.Tools
             {
                 // if user moves with thumb we do not want to add text on pointer-up
                 var isMove = Math.Sqrt(Math.Pow(me.AbsoluteDelta.X, 2) + Math.Pow(me.AbsoluteDelta.Y, 2)) > 20d;
-                if(isMove)
+                if (isMove)
                     _moveEventWasRegistered = true;
             }
 
@@ -83,7 +86,7 @@ namespace Svg.Core.Tools
                 {
                     return;
                 }
-                
+
                 var dX = pe.Pointer1Position.X - pe.Pointer1Down.X;
                 var dY = pe.Pointer1Position.Y - pe.Pointer1Down.Y;
 
@@ -100,7 +103,7 @@ namespace Svg.Core.Tools
                         if (span != null)
                             e = span;
 
-                        var txtProperties = await TextInputService.GetUserInput("Edit text", e.Text?.Trim(), FontSizeNames, Array.IndexOf(FontSizes, (int)e.FontSize));
+                        var txtProperties = await TextInputService.GetUserInput("Edit text", e.Text?.Trim(), FontSizeNames, Array.IndexOf(FontSizes, (int) e.FontSize));
                         var txt = txtProperties.Text;
                         var fontSize = FontSizes[txtProperties.FontSizeIndex];
 
@@ -123,7 +126,7 @@ namespace Svg.Core.Tools
                     // else add new text   
                     else
                     {
-                        var txtProperties = await TextInputService.GetUserInput("Add text", null, FontSizeNames, SelectedFontSize);
+                        var txtProperties = await TextInputService.GetUserInput("Add text", null, FontSizeNames, Array.IndexOf(FontSizes, SelectedFontSize));
                         var txt = txtProperties.Text;
                         var fontSize = FontSizes[txtProperties.FontSizeIndex];
 

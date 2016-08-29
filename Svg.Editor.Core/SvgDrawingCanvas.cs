@@ -73,6 +73,7 @@ namespace Svg.Core
             var textToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
             {
                 { "fontsizes", new [] { 12, 24, 36, 48 } },
+                { "selectedfontsizeindex", 1 },
                 { "fontsizenames", new [] { "12px", "24px", "36px", "48px" } }
             }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 
