@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Svg.Core.Interfaces;
+using Svg.Core.UndoRedo;
 
 namespace Svg.Core.Tools
 {
-    public class StrokeStyleTool : ToolBase
+    public class StrokeStyleTool : UndoableToolBase
     {
-        public StrokeStyleTool() : base("Stroke style")
+        public StrokeStyleTool(IUndoRedoService undoRedoService) : base("Stroke style", undoRedoService)
         {
             IconName = "ic_border_style_white_48dp.png";
             ToolType = ToolType.Modify;
@@ -41,10 +43,15 @@ namespace Svg.Core.Tools
                 if (!_canvas.SelectedElements.Any()) return;
 
                 // change the stroke style of all selected items
-                foreach (var selectedElement in _canvas.SelectedElements)
-                {
-                    selectedElement.StrokeDashArray = SvgUnitCollection.IsNullOrEmpty(selectedElement.StrokeDashArray) ? "10 10" : null;
-                }
+                ((StrokeStyleTool) Tool).UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name,
+                    o =>
+                    {
+                        foreach (var selectedElement in _canvas.SelectedElements)
+                        {
+                            selectedElement.StrokeDashArray = SvgUnitCollection.IsNullOrEmpty(selectedElement.StrokeDashArray) ? "10 10" : null;
+                        }
+                    }));
+                _canvas.FireToolCommandsChanged();
                 _canvas.FireInvalidateCanvas();
             }
 

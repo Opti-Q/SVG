@@ -70,6 +70,8 @@ namespace Svg.Core
                 { "strokewidthnames", new [] { "normal", "thick", "thin" } }
             }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 
+            var undoRedoService = Engine.Resolve<IUndoRedoService>();
+
             _tools = new ObservableCollection<ITool>
             {
                     new GridTool(gridToolProperties), // must be before movetool!
@@ -79,11 +81,11 @@ namespace Svg.Core
                     new ZoomTool(),
                     new SelectionTool(),
                     new TextTool(),
-                    new LineTool(lineToolProperties),
-                    new FreeDrawingTool(freeDrawToolProperties),
-                    new ColorTool(colorToolProperties),
-                    new StrokeStyleTool(),
-                    new UndoRedoTool()
+                    new LineTool(lineToolProperties, undoRedoService),
+                    new FreeDrawingTool(freeDrawToolProperties, undoRedoService),
+                    new ColorTool(colorToolProperties, undoRedoService),
+                    new StrokeStyleTool(undoRedoService),
+                    new UndoRedoTool(undoRedoService)
             };
             _tools.CollectionChanged += OnToolsChanged;
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
+using Svg.Core.UndoRedo;
 using Svg.Interfaces;
 using Svg.Pathing;
 
@@ -14,7 +15,7 @@ namespace Svg.Core.Tools
         Task<int[]> GetUserInput(string title, IEnumerable<string> markerStartOptions, int markerStartSelected, IEnumerable<string> lineStyleOptions, int dashSelected, IEnumerable<string> markerEndOptions, int markerEndSelected);
     }
 
-    public class LineTool : ToolBase
+    public class LineTool : UndoableToolBase
     {
         private const double MinMovedDistance = 10.0;
         private const double MaxPointerDistance = 20.0;
@@ -49,7 +50,7 @@ namespace Svg.Core.Tools
                 object markerIds;
                 if (!Properties.TryGetValue("markerstartids", out markerIds))
                     markerIds = Enumerable.Empty<string>();
-                return (string[])markerIds;
+                return (string[]) markerIds;
             }
         }
 
@@ -60,7 +61,7 @@ namespace Svg.Core.Tools
                 object markerNames;
                 if (!Properties.TryGetValue("markerstartnames", out markerNames))
                     markerNames = Enumerable.Empty<string>();
-                return (string[])markerNames;
+                return (string[]) markerNames;
             }
         }
 
@@ -71,7 +72,7 @@ namespace Svg.Core.Tools
                 object markerIds;
                 if (!Properties.TryGetValue("markerendids", out markerIds))
                     markerIds = Enumerable.Empty<string>();
-                return (string[])markerIds;
+                return (string[]) markerIds;
             }
         }
 
@@ -82,7 +83,7 @@ namespace Svg.Core.Tools
                 object markerNames;
                 if (!Properties.TryGetValue("markerendnames", out markerNames))
                     markerNames = Enumerable.Empty<string>();
-                return (string[])markerNames;
+                return (string[]) markerNames;
             }
         }
 
@@ -93,7 +94,7 @@ namespace Svg.Core.Tools
                 object lineStyles;
                 if (!Properties.TryGetValue("linestyles", out lineStyles))
                     lineStyles = Enumerable.Empty<string>();
-                return (string[])lineStyles;
+                return (string[]) lineStyles;
             }
         }
 
@@ -104,7 +105,7 @@ namespace Svg.Core.Tools
                 object lineStyleNames;
                 if (!Properties.TryGetValue("linestylenames", out lineStyleNames))
                     lineStyleNames = Enumerable.Empty<string>();
-                return (string[])lineStyleNames;
+                return (string[]) lineStyleNames;
             }
         }
 
@@ -188,7 +189,7 @@ namespace Svg.Core.Tools
                                 new SvgUnit(SvgUnitType.Pixel, 10)
                             };
 
-        public LineTool(string properties) : base("Line", properties)
+        public LineTool(string properties, IUndoRedoService undoRedoService) : base("Line", properties, undoRedoService)
         {
             IconName = "ic_mode_edit_white_48dp.png";
             ToolUsage = ToolUsage.Explicit;
@@ -264,16 +265,34 @@ namespace Svg.Core.Tools
             var p = @event as PointerEvent;
             if (!_moveRegistered && p?.PointerCount == 1 && (p.EventType == EventType.PointerUp || p.EventType == EventType.Cancel))
             {
+                //var selectedElements = ws.SelectedElements;
                 if (_currentLine != null)
                 {
+                    //var currentLine = _currentLine;
+                    //UndoRedoService.ExecuteCommand(new UndoableActionCommand("Deselect current line", o =>
+                    //{
+                    //    selectedElements.Remove(_currentLine);
+                    //    _currentLine = null;
+                    //}, o =>
+                    //{
+                    //    _currentLine = currentLine;
+                    //    selectedElements.Add(currentLine);
+                    //    _canvas.FireInvalidateCanvas();
+                    //}));
                     ws.SelectedElements.Remove(_currentLine);
                     _currentLine = null;
                 }
                 else
                 {
-                    _currentLine =
-                        ws.GetElementsUnder<SvgLine>(ws.GetPointerRectangle(p.Pointer1Position),
-                            SelectionType.Intersect).FirstOrDefault();
+                    //var selectedLine = ws.GetElementsUnder<SvgLine>(ws.GetPointerRectangle(p.Pointer1Position),
+                    //            SelectionType.Intersect).FirstOrDefault();
+                    //UndoRedoService.ExecuteCommand(new UndoableActionCommand("Select current line", o =>
+                    //{
+                    //    _currentLine = selectedLine;
+                    //    if (_currentLine != null) selectedElements.Add(_currentLine);
+                    //}));
+                    _currentLine = ws.GetElementsUnder<SvgLine>(ws.GetPointerRectangle(p.Pointer1Position),
+                                SelectionType.Intersect).FirstOrDefault();
                     if (_currentLine != null) ws.SelectedElements.Add(_currentLine);
                 }
 
@@ -341,7 +360,6 @@ namespace Svg.Core.Tools
 
                     if (_currentLine == null)
                     {
-
                         _currentLine = new SvgLine
                         {
                             Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
@@ -360,7 +378,22 @@ namespace Svg.Core.Tools
                             _currentLine.StrokeDashArray = StrokeDashArray.Clone();
                         }
 
-                        ws.Document.Children.Add(_currentLine);
+                        var children = ws.Document.Children;
+                        var selectedElements = ws.SelectedElements;
+                        var capturedCurrentLine = _currentLine;
+                        UndoRedoService.ExecuteCommand(new UndoableActionCommand("Add new line", o =>
+                        {
+                            children.Add(capturedCurrentLine);
+                            _canvas.FireToolCommandsChanged();
+                            _canvas.FireInvalidateCanvas();
+                        }, o =>
+                        {
+                            _currentLine = null;
+                            selectedElements.Remove(capturedCurrentLine);
+                            children.Remove(capturedCurrentLine);
+                            _canvas.FireToolCommandsChanged();
+                            _canvas.FireInvalidateCanvas();
+                        }));
 
                         _movementType = MovementType.End;
                     }
@@ -401,7 +434,7 @@ namespace Svg.Core.Tools
             {
                 renderer.Graphics.Save();
 
-                var radius = (int)(MaxPointerDistance / ws.ZoomFactor);
+                var radius = (int) (MaxPointerDistance / ws.ZoomFactor);
                 var points = _currentLine.GetTransformedLinePoints();
                 renderer.DrawCircle(points[0].X - (radius >> 1), points[0].Y - (radius >> 1), radius, BluePen);
                 renderer.DrawCircle(points[1].X - (radius >> 1), points[1].Y - (radius >> 1), radius, BluePen);
@@ -423,28 +456,18 @@ namespace Svg.Core.Tools
                 _canvas = canvas;
             }
 
-            private new LineTool Tool => (LineTool)base.Tool;
-
             public override async void Execute(object parameter)
             {
-                var t = Tool;
+                var t = (LineTool) Tool;
 
-                var selectedLines = _canvas.SelectedElements.OfType<SvgLine>().ToArray();
-
-                var markerStartId = selectedLines.Any()
-                    ? selectedLines.All(x => selectedLines.First().MarkerStart == x.MarkerStart)
-                        ? selectedLines.First().MarkerStart?.OriginalString?.Replace("url(#", null)?.TrimEnd(')') ?? "none"
-                        : "none"
+                var markerStartId = t._currentLine != null
+                    ? t._currentLine.MarkerStart?.OriginalString?.Replace("url(#", null)?.TrimEnd(')') ?? "none"
                     : t.SelectedMarkerStartId;
-                var lineStyle = selectedLines.Any()
-                    ? selectedLines.All(x => selectedLines.First().StrokeDashArray?.ToString() == x.StrokeDashArray?.ToString())
-                        ? string.IsNullOrEmpty(selectedLines.First().StrokeDashArray?.ToString()) ? "normal" : "dashed"
-                        : "normal"
+                var lineStyle = t._currentLine != null
+                    ? string.IsNullOrEmpty(t._currentLine.StrokeDashArray?.ToString()) ? "normal" : "dashed"
                     : t.SelectedLineStyle;
-                var markerEndId = selectedLines.Any()
-                    ? selectedLines.All(x => selectedLines.First().MarkerEnd == x.MarkerEnd)
-                        ? selectedLines.First().MarkerEnd?.OriginalString?.Replace("url(#", null)?.TrimEnd(')') ?? "none"
-                        : "none"
+                var markerEndId = t._currentLine != null
+                    ? t._currentLine.MarkerEnd?.OriginalString?.Replace("url(#", null)?.TrimEnd(')') ?? "none"
                     : t.SelectedMarkerEndId;
 
                 int markerStartIndex;
@@ -464,30 +487,35 @@ namespace Svg.Core.Tools
                 var selectedLineStyle = t.LineStyles[selectedOptions[1]];
                 var selectedMarkerEndId = t.MarkerEndIds[selectedOptions[2]];
 
-                if (selectedLines.Any())
+                if (t._currentLine != null)
                 {
-                    // change the line style of all selected items
-                    foreach (var selectedLine in selectedLines)
+                    t.UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name, o =>
                     {
-                        selectedLine.MarkerStart = CreateUriFromId(selectedMarkerStartId);
-                        selectedLine.MarkerEnd = CreateUriFromId(selectedMarkerEndId);
+                        // change the line style of all selected items
+                        t._currentLine.MarkerStart = CreateUriFromId(selectedMarkerStartId);
+                        t._currentLine.MarkerEnd = CreateUriFromId(selectedMarkerEndId);
                         if (selectedLineStyle == "dashed")
                         {
-                            selectedLine.StrokeDashArray = Tool.StrokeDashArray.Clone();
+                            t._currentLine.StrokeDashArray = t.StrokeDashArray.Clone();
                         }
                         else
                         {
-                            selectedLine.StrokeDashArray = null;
+                            t._currentLine.StrokeDashArray = null;
                         }
-                    }
+                    }));
+                    _canvas.FireToolCommandsChanged();
                     _canvas.FireInvalidateCanvas();
                     // don't change the global line style when items are selected
                     return;
                 }
 
-                t.SelectedMarkerStartId = selectedMarkerStartId;
-                t.SelectedMarkerEndId = selectedMarkerEndId;
-                t.SelectedLineStyle = selectedLineStyle;
+                t.UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name, o =>
+                {
+                    t.SelectedMarkerStartId = selectedMarkerStartId;
+                    t.SelectedMarkerEndId = selectedMarkerEndId;
+                    t.SelectedLineStyle = selectedLineStyle;
+                }));
+                _canvas.FireToolCommandsChanged();
             }
 
             public override bool CanExecute(object parameter)

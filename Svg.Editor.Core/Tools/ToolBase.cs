@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -20,7 +19,6 @@ namespace Svg.Core.Tools
             Properties = JsonConvert.DeserializeObject<IDictionary<string, object>>(jsonProperties, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All }) ?? new Dictionary<string, object>();
         }
 
-        public event EventHandler<Action> ActionPerformed;
         public string Name { get; protected set; }
         public ToolUsage ToolUsage { get; protected set; }
         public ToolType ToolType { get; protected set; }

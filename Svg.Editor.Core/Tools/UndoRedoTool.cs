@@ -1,15 +1,14 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Svg.Core.Interfaces;
 
 namespace Svg.Core.Tools
 {
-    public class UndoRedoTool : ToolBase
+    public class UndoRedoTool : UndoableToolBase
     {
-        public UndoRedoTool() : base("Undo/Redo")
+        public UndoRedoTool(IUndoRedoService undoRedoService) : base("Undo/Redo", undoRedoService)
         {
             IconName = "ic_undo_white_48dp.png";
-            ToolType = ToolType.Modify;
         }
 
         public override Task Initialize(SvgDrawingCanvas ws)
@@ -17,9 +16,8 @@ namespace Svg.Core.Tools
             // add tool commands
             Commands = new List<IToolCommand>
             {
-                //new ChangeStrokeStyleCommand(ws, this, "Change stroke")
-                new ToolCommand(this, "Undo", o => { }, iconName: "ic_undo_white_48dp.png"),
-                new ToolCommand(this, "Redo", o => { }, o => false, iconName: "ic_redo_white_48dp.png")
+                new ToolCommand(this, "Undo", o => UndoRedoService.Undo(), o => UndoRedoService.CanUndo(), iconName: "ic_undo_white_48dp.png"),
+                new ToolCommand(this, "Redo", o => UndoRedoService.Redo(), o => UndoRedoService.CanRedo(), iconName: "ic_redo_white_48dp.png")
             };
 
             return Task.FromResult(true);
