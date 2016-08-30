@@ -20,7 +20,7 @@ namespace Svg.Core.Tools
                 new ToolCommand(this, "Redo", o => UndoRedoService.Redo(), o => UndoRedoService.CanRedo(), iconName: "ic_redo_white_48dp.png")
             };
 
-            return Task.FromResult(true);
+            return base.Initialize(ws);
         }
     }
 }

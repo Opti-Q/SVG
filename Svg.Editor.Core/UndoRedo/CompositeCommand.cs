@@ -37,9 +37,7 @@ namespace Svg.Core.UndoRedo
             CommandStarted?.Invoke(this, EventArgs.Empty);
 
             foreach (var t in _commands)
-            {
                 t.Redo();
-            }
 
             CommandEnded?.Invoke(this, EventArgs.Empty);
         }
@@ -70,8 +68,8 @@ namespace Svg.Core.UndoRedo
         {
             CommandStarted?.Invoke(this, EventArgs.Empty);
 
-            foreach (var command in _commands)
-                command.Undo(state);
+            for (var i = _commands.Count - 1; i >= 0; i--)
+                _commands[i].Undo(state);
 
             base.Undo(state);
 

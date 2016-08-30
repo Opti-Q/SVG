@@ -2,22 +2,25 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Events;
+using Svg.Core.Interfaces;
+using Svg.Core.UndoRedo;
 using Svg.Interfaces;
-using Svg.Transforms;
 
 namespace Svg.Core.Tools
 {
-    public class MoveTool : ToolBase
+    public class MoveTool : UndoableToolBase
     {
         private readonly Dictionary<object, PointF> _offsets = new Dictionary<object, PointF>();
         private readonly Dictionary<object, PointF> _translates = new Dictionary<object, PointF>();
-        private bool _implicitlyActivated = false;
+        private bool _implicitlyActivated;
         private ITool _activatedFrom;
 
-        public MoveTool() : base("Move")
+        public MoveTool(IUndoRedoService undoRedoService) : base("Move", undoRedoService)
         {
             ToolType = ToolType.Modify;
         }
+
+        public override int InputOrder => 200;
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
@@ -50,7 +53,7 @@ namespace Svg.Core.Tools
                     }
                     else
                     {
-                        this.IsActive = false;
+                        IsActive = false;
                     }
                 }
                 // clear offsets 
@@ -70,7 +73,7 @@ namespace Svg.Core.Tools
             }
 
             // skip moving if inactive
-            if (!this.IsActive)
+            if (!IsActive)
                 return Task.FromResult(true);
 
 
@@ -86,6 +89,15 @@ namespace Svg.Core.Tools
                 // if there is no selection, we just skip
                 if (ws.SelectedElements.Any())
                 {
+
+                    // check if offsets were cleared, that means we started a new move operation
+                    if (_offsets.Count == 0)
+                    {
+                        // when we start a move operation, we execute an empty undoable command first,
+                        // so the other ones will be added to this command as on undo step
+                        UndoRedoService.ExecuteCommand(new UndoableActionCommand("Move operation", o => { Canvas.FireInvalidateCanvas(); }, o => { Canvas.FireInvalidateCanvas(); }));
+                    }
+
                     var absoluteDeltaX = e.AbsoluteDelta.X / ws.ZoomFactor;
                     var absoluteDeltaY = e.AbsoluteDelta.Y / ws.ZoomFactor;
 
@@ -97,17 +109,16 @@ namespace Svg.Core.Tools
                         {
                             previousDelta = PointF.Create(0f, 0f);
                         }
-                        
+
                         var relativeDeltaX = absoluteDeltaX - previousDelta.X;
                         var relativeDeltaY = absoluteDeltaY - previousDelta.Y;
 
-                        
                         previousDelta.X = absoluteDeltaX;
                         previousDelta.Y = absoluteDeltaY;
                         _offsets[element] = previousDelta;
-                        
+
                         AddTranslate(element, relativeDeltaX, relativeDeltaY);
-                    }   
+                    }
 
                     ws.FireInvalidateCanvas();
                 }
@@ -127,7 +138,7 @@ namespace Svg.Core.Tools
             {
                 translate = PointF.Create(b.X, b.Y);
             }
-            
+
             translate.X += deltaX;
             translate.Y += deltaY;
 
@@ -137,7 +148,14 @@ namespace Svg.Core.Tools
             var dY = translate.Y - b.Y;
 
             var m = element.CreateTranslation(dX, dY);
-            element.SetTransformationMatrix(m);
+            var formerM = element.Transforms.GetMatrix().Clone();
+            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Move object", o =>
+            {
+                element.SetTransformationMatrix(m);
+            }, o =>
+            {
+                element.SetTransformationMatrix(formerM);
+            }), hasOwnUndoRedoScope: false);
         }
     }
 }

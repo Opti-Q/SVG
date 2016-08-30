@@ -11,8 +11,6 @@ namespace Svg.Droid.SampleEditor.Core.Tools
     public class AddRandomItemTool : ToolBase
     {
 
-        private readonly SvgDrawingCanvas _canvas;
-
         private string[] SvgPathStrings =
         {
             //"isolib/Welds/solid/weld1.svg",
@@ -32,12 +30,11 @@ namespace Svg.Droid.SampleEditor.Core.Tools
             //"svg/painting-marker-01-f.svg",
             //"svg/rect.svg",
             //"svg/Bends_01.svg", causes StackOverflowException in SvgRectangle.Bounds
-    };
+        };
 
         public AddRandomItemTool(SvgDrawingCanvas canvas, Func<string, ISvgSource> sourceProvider = null) : base("Add random item")
         {
             SourceProvider = sourceProvider;
-            _canvas = canvas;
             ToolType = ToolType.Create;
             Commands = new List<IToolCommand>
             {
@@ -67,11 +64,12 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     var provider = SourceProvider(SvgPathStrings[new Random().Next(0, SvgPathStrings.Length - 1)]);
                     var otherDoc = SvgDocument.Open<SvgDocument>(provider);
 
-                    _canvas.AddItemInScreenCenter(otherDoc);
+                    Canvas.AddItemInScreenCenter(otherDoc);
 
                 } , sortFunc:(x) => 1200)
             };
         }
+
         public Func<string, ISvgSource> SourceProvider { get; set; }
     }
 }

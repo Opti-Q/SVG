@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows.Input;
 using Svg;
 using Svg.Core.Interfaces;
@@ -62,7 +63,7 @@ namespace Svg.Core.UndoRedo
         /// <param name="hasOwnUndoRedoScope"></param>
         public void ExecuteCommand(IUndoableCommand command, object state = null, bool hasOwnUndoRedoScope = true)
         {
-            if (command == null)
+            if (command == null || IsActive)
             {
                 return;
             }
@@ -73,6 +74,8 @@ namespace Svg.Core.UndoRedo
             ExecutionStack.Push(new ExecutionStackEntry(command));
 
             command.Execute(state);
+
+            Debug.WriteLine($"Command executed: {command.Name}");
 
             var entry = ExecutionStack.Pop();
 
@@ -97,7 +100,7 @@ namespace Svg.Core.UndoRedo
                 // add to previous undostack entry 
                 var cmd = UndoStack.Pop();
 
-                var compositeCommand = new CompositeCommand(cmd);
+                var compositeCommand = cmd as CompositeCommand ?? new CompositeCommand(cmd);
                 compositeCommand.AddCommand(command);
 
                 UndoStack.Push(compositeCommand);
@@ -196,6 +199,7 @@ namespace Svg.Core.UndoRedo
 
         public event EventHandler CanRedoChanged;
         public event EventHandler CanUndoChanged;
+
         public void CancelCurrentOperation()
         {
             if (ExecutionStack.Count == 0)

@@ -1,4 +1,5 @@
 using System;
+using Svg.Core.UndoRedo;
 
 namespace Svg.Core.Interfaces
 {
@@ -20,5 +21,9 @@ namespace Svg.Core.Interfaces
         event EventHandler CanRedoChanged;
         event EventHandler CanUndoChanged;
 
+        /// <summary>
+        /// Occurs when either a do or an undo command is executed.
+        /// </summary>
+        event EventHandler<CommandEventArgs> ActionExecuted;
     }
 }

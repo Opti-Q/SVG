@@ -90,7 +90,7 @@ namespace Svg.Core.Tools
             // initialize with callbacks
             WatchDocument(ws.Document);
 
-            return Task.FromResult(true);
+            return base.Initialize(ws);
         }
 
         private static string StringifyColor(Color color)
@@ -98,26 +98,39 @@ namespace Svg.Core.Tools
             return $"{color.R}_{color.G}_{color.B}";
         }
 
-        private static void ColorizeElement(SvgElement element, Color color)
+        private void ColorizeElement(SvgElement element, Color color)
         {
-            var colourServer = new SvgColourServer(color);
-
             // only colorize visual elements
             if (!(element is SvgVisualElement)) return;
 
+            var oldStroke = ((SvgColourServer) element.Stroke)?.ToString();
+            UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name, o =>
+            {
+                element.Stroke?.Dispose();
+                element.Stroke = new SvgColourServer(color);
+                Canvas.FireInvalidateCanvas();
+            }, state =>
+            {
+                element.Stroke?.Dispose();
+                Engine.Resolve<ISvgElementFactory>().SetPropertyValue(element, "stroke", oldStroke, element.OwnerDocument);
+                Canvas.FireInvalidateCanvas();
+            }));
+
             if (element is SvgText)
             {
-                element.Fill?.Dispose();
-                element.Fill = colourServer;
+                var oldFill = ((SvgColourServer) element.Fill)?.ToString();
+                UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name, o =>
+                {
+                    element.Fill?.Dispose();
+                    element.Fill = new SvgColourServer(color);
+                    Canvas.FireInvalidateCanvas();
+                }, state =>
+                {
+                    element.Fill?.Dispose();
+                    Engine.Resolve<ISvgElementFactory>().SetPropertyValue(element, "fill", oldFill, element.OwnerDocument);
+                    Canvas.FireInvalidateCanvas();
+                }), hasOwnUndoRedoScope: false);
             }
-            if (element is SvgLine)
-            {
-                element.Fill?.Dispose();
-                element.Fill = colourServer;
-            }
-
-            element.Stroke?.Dispose();
-            element.Stroke = colourServer;
         }
 
         public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
@@ -177,25 +190,23 @@ namespace Svg.Core.Tools
 
                 if (_canvas.SelectedElements.Any())
                 {
-                    t.UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name, o =>
+                    // change the color of all selected items
+                    foreach (var selectedElement in _canvas.SelectedElements)
                     {
-                        // change the color of all selected items
-                        foreach (var selectedElement in _canvas.SelectedElements)
-                        {
-                            ColorizeElement(selectedElement, color);
-                        }
-                    }));
-                    _canvas.FireToolCommandsChanged();
-                    _canvas.FireInvalidateCanvas();
+                        t.ColorizeElement(selectedElement, color);
+                    }
                     // don't change the global color when items are selected
                     return;
                 }
 
+                Color formerSelectedColor = t.SelectedColor;
                 t.UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name, o =>
                 {
                     t.SelectedColor = color;
+                }, o =>
+                {
+                    t.SelectedColor = formerSelectedColor;
                 }));
-                _canvas.FireToolCommandsChanged();
             }
 
             public override string IconName

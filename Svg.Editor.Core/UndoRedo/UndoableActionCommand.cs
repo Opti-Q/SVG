@@ -26,7 +26,7 @@ namespace Svg.Core.UndoRedo
         public string Name { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Telerik.Windows.Diagrams.Core.UndoableDelegateCommand" /> class.
+        /// Initializes a new instance of the <see cref="UndoableActionCommand" /> class.
         /// </summary>
         /// <param name="name">The name or title of the command.</param>
         /// <param name="execute">The redo or execute method.</param>

@@ -22,7 +22,7 @@ namespace Svg.Core.Tools
                 new ChangeStrokeStyleCommand(ws, this, "Change stroke")
             };
 
-            return Task.FromResult(true);
+            return base.Initialize(ws);
         }
 
         /// <summary>
@@ -43,16 +43,20 @@ namespace Svg.Core.Tools
                 if (!_canvas.SelectedElements.Any()) return;
 
                 // change the stroke style of all selected items
-                ((StrokeStyleTool) Tool).UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name,
-                    o =>
-                    {
-                        foreach (var selectedElement in _canvas.SelectedElements)
+                foreach (var selectedElement in _canvas.SelectedElements)
+                {
+                    var formerStrokeDashArray = selectedElement.StrokeDashArray;
+                    ((StrokeStyleTool) Tool).UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name,
+                        o =>
                         {
                             selectedElement.StrokeDashArray = SvgUnitCollection.IsNullOrEmpty(selectedElement.StrokeDashArray) ? "10 10" : null;
-                        }
-                    }));
-                _canvas.FireToolCommandsChanged();
-                _canvas.FireInvalidateCanvas();
+                            _canvas.FireInvalidateCanvas();
+                        }, o =>
+                        {
+                            selectedElement.StrokeDashArray = formerStrokeDashArray;
+                            _canvas.FireInvalidateCanvas();
+                        }));
+                }
             }
 
             public override bool CanExecute(object parameter)

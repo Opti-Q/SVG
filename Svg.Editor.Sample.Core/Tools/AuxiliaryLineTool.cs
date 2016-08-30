@@ -9,7 +9,6 @@ namespace Svg.Droid.SampleEditor.Core.Tools
     public class AuxiliaryLineTool : ToolBase
     {
         private bool _showAuxiliaryLines = true;
-        private SvgDrawingCanvas _canvas;
 
         public bool ShowAuxiliaryLines 
         {
@@ -17,9 +16,9 @@ namespace Svg.Droid.SampleEditor.Core.Tools
             set
             {
                 _showAuxiliaryLines = value;
-                if (_canvas != null)
+                if (Canvas != null)
                 {
-                    ShowHideAuxiliaryLines(_canvas.Document);
+                    ShowHideAuxiliaryLines(Canvas.Document);
                 }
             }
         }
@@ -35,18 +34,16 @@ namespace Svg.Droid.SampleEditor.Core.Tools
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
-            _canvas = ws;
-
             Commands = new List<IToolCommand>
             {
                 new ToolCommand(this, "Toogle auxiliary lines", (obj) =>
                 {
                     ShowAuxiliaryLines = !ShowAuxiliaryLines;
-                    _canvas.FireInvalidateCanvas();
+                    Canvas.FireInvalidateCanvas();
                 }, iconName:"ic_code_white_48dp.png", sortFunc: (obj) => 1000)
             };
 
-            return Task.FromResult(true);
+            return base.Initialize(ws);
         }
 
         public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)

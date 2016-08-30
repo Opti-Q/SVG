@@ -4,13 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
+using Svg.Core.UndoRedo;
 using Svg.Interfaces;
 
 namespace Svg.Core.Tools
 {
-    public class SelectionTool : ToolBase
+    public class SelectionTool : UndoableToolBase
     {
-        private RectangleF _selectionRectangle = null;
+        private RectangleF _selectionRectangle;
         private Brush _brush;
         private Pen _pen;
         private bool _handledPointerDown;
@@ -18,15 +19,15 @@ namespace Svg.Core.Tools
         public string DeleteIconName { get; set; } = "ic_delete_white_48dp.png";
         public string SelectIconName { get; set; } = "ic_select_tool_white_48dp.png";
 
-        public SelectionTool() : base("Select")
+        public SelectionTool(IUndoRedoService undoRedoService) : base("Select", undoRedoService)
         {
-            this.IconName = SelectIconName;
-            this.ToolUsage = ToolUsage.Explicit;
+            IconName = SelectIconName;
+            ToolUsage = ToolUsage.Explicit;
             ToolType = ToolType.Select;
         }
 
-        private Brush BlueBrush => _brush ?? (_brush = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
-        private Pen BluePen => _pen ?? (_pen = Svg.Engine.Factory.CreatePen(BlueBrush, 5));
+        private Brush BlueBrush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
+        private Pen BluePen => _pen ?? (_pen = Engine.Factory.CreatePen(BlueBrush, 5));
 
         public override bool IsActive
         {
@@ -42,21 +43,29 @@ namespace Svg.Core.Tools
         {
             Commands = new List<IToolCommand>
             {
-                new ToolCommand(this, "Delete", (o) =>
+                new ToolCommand(this, "Delete", o =>
                 {
-                    foreach (var element in ws.SelectedElements)
-                    {
-                        element.Parent.Children.Remove(element);
-                    }
-                    ws.SelectedElements.Clear();
-                    ws.FireToolCommandsChanged();
-                    ws.FireInvalidateCanvas();
-                }, 
-                (o) => ws.SelectedElements.Any(), iconName:DeleteIconName, 
-                sortFunc: (t) => 550)
+                        foreach (var element in ws.SelectedElements)
+                        {
+                            var parent = element.Parent;
+                            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Remove element", x =>
+                            {
+                                parent.Children.Remove(element);
+                                ws.FireInvalidateCanvas();
+                            }, x =>
+                            {
+                                parent.Children.Add(element);
+                                ws.FireInvalidateCanvas();
+                            }));
+                        }
+                        ws.SelectedElements.Clear();
+                        ws.FireInvalidateCanvas();
+                },
+                o => ws.SelectedElements.Any(), iconName:DeleteIconName,
+                sortFunc: t => 550)
             };
 
-            return Task.FromResult(true);
+            return base.Initialize(ws);
         }
 
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
@@ -85,7 +94,7 @@ namespace Svg.Core.Tools
                     endY = t;
                 }
                 var rect = RectangleF.Create(startX, startY, endX - startX, endY - startY);
-                
+
                 // selection onyl counts if width and height are not too small
                 var dist = Math.Sqrt(Math.Pow(rect.Width, 2) + Math.Pow(rect.Height, 2));
 
@@ -177,7 +186,7 @@ namespace Svg.Core.Tools
             return Task.FromResult(true);
         }
 
-        private void Reset()
+        public override void Reset()
         {
             _handledPointerDown = false;
             _selectionRectangle = null;

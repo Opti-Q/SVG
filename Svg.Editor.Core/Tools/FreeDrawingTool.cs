@@ -23,7 +23,6 @@ namespace Svg.Core.Tools
 
         private double _movedDistance;
         private SvgPath _currentPath;
-        private SvgDrawingCanvas _canvas;
         private bool _drawingEnabled;
         private PointF _lastCanvasPointerPosition;
 
@@ -95,7 +94,7 @@ namespace Svg.Core.Tools
             if (IsActive && args.RemovedChild == _currentPath)
             {
                 _currentPath = null;
-                _canvas.FireInvalidateCanvas();
+                Canvas.FireInvalidateCanvas();
             }
         }
 
@@ -117,8 +116,6 @@ namespace Svg.Core.Tools
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
-            _canvas = ws;
-
             IsActive = false;
 
             SelectedLineStyle = LineStyles.FirstOrDefault();
@@ -129,7 +126,7 @@ namespace Svg.Core.Tools
                 new ChangeLineStyleCommand(this, "Line style", ws)
             };
 
-            return Task.FromResult(true);
+            return base.Initialize(ws);
         }
 
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
@@ -207,8 +204,12 @@ namespace Svg.Core.Tools
                         UndoRedoService.ExecuteCommand(new UndoableActionCommand("Add new freedrawing path", o =>
                         {
                             ws.Document.Children.Add(_currentPath);
+                            ws.FireInvalidateCanvas();
+                        }, o =>
+                        {
+                            ws.Document.Children.Remove(_currentPath);
+                            ws.FireInvalidateCanvas();
                         }));
-                        _canvas.FireToolCommandsChanged();
                     }
 
                     // Quadratic bezier curve to the approximate of the pointer position
@@ -231,7 +232,7 @@ namespace Svg.Core.Tools
         /// </summary>
         private class ChangeLineStyleCommand : ToolCommand
         {
-            private SvgDrawingCanvas _canvas;
+            private readonly SvgDrawingCanvas _canvas;
 
             public ChangeLineStyleCommand(FreeDrawingTool tool, string name, SvgDrawingCanvas canvas)
                 : base(tool, name, o => { }, iconName: tool.LineStyleIconName, sortFunc: tc => 500)
@@ -250,12 +251,17 @@ namespace Svg.Core.Tools
 
                 if (selectedOptions?.Length != 2) return;
 
+                var formerSelectedStrokeWidth = t.SelectedStrokeWidth;
+                var formerSelectedLineStyle = t.SelectedLineStyle;
                 t.UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name, o =>
                 {
                     t.SelectedStrokeWidth = t.StrokeWidths[selectedOptions[0]];
                     t.SelectedLineStyle = t.LineStyles[selectedOptions[1]];
+                }, o =>
+                {
+                    t.SelectedStrokeWidth = formerSelectedStrokeWidth;
+                    t.SelectedLineStyle = formerSelectedLineStyle;
                 }));
-                _canvas.FireToolCommandsChanged();
             }
 
             public override bool CanExecute(object parameter)
