@@ -201,13 +201,14 @@ namespace Svg.Core.Tools
                             _currentPath.StrokeDashArray = StrokeDashArray.Clone();
                         }
 
+                        var capturedCurrentPath = _currentPath;
                         UndoRedoService.ExecuteCommand(new UndoableActionCommand("Add new freedrawing path", o =>
                         {
-                            ws.Document.Children.Add(_currentPath);
+                            ws.Document.Children.Add(capturedCurrentPath);
                             ws.FireInvalidateCanvas();
                         }, o =>
                         {
-                            ws.Document.Children.Remove(_currentPath);
+                            ws.Document.Children.Remove(capturedCurrentPath);
                             ws.FireInvalidateCanvas();
                         }));
                     }

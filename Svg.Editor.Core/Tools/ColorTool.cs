@@ -104,7 +104,7 @@ namespace Svg.Core.Tools
             if (!(element is SvgVisualElement)) return;
 
             var oldStroke = ((SvgColourServer) element.Stroke)?.ToString();
-            UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name, o =>
+            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Colorize stroke", o =>
             {
                 element.Stroke?.Dispose();
                 element.Stroke = new SvgColourServer(color);
@@ -119,7 +119,7 @@ namespace Svg.Core.Tools
             if (element is SvgText)
             {
                 var oldFill = ((SvgColourServer) element.Fill)?.ToString();
-                UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name, o =>
+                UndoRedoService.ExecuteCommand(new UndoableActionCommand("Colorize fill", o =>
                 {
                     element.Fill?.Dispose();
                     element.Fill = new SvgColourServer(color);
@@ -163,6 +163,8 @@ namespace Svg.Core.Tools
 
         private void OnChildAdded(object sender, ChildAddedEventArgs e)
         {
+            /* TODO: some mechanism to add the undoable command without own undo/redo scope,
+             because the child was added by another tool obviously */
             ColorizeElement(e.NewChild, SelectedColor);
         }
 
