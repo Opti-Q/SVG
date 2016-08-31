@@ -30,11 +30,7 @@ namespace Svg.Editor.Tests
             Assert.AreEqual(transforms, child.Transforms);
 
             // Act
-            var start = PointF.Create(100, 200);
-            var end = PointF.Create(200, 100);
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, start, start, start, 1));
-            await Canvas.OnEvent(new MoveEvent(start, start, end, end - start, 1));
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, end, end, end, 1));
+            await Move(PointF.Create(100, 200), PointF.Create(200, 100));
 
             // Assert
             Assert.AreEqual(transforms, child.Transforms);
@@ -58,19 +54,58 @@ namespace Svg.Editor.Tests
             Canvas.Document.Children.Add(child2);
             Canvas.SelectedElements.Add(child);
             var transforms = child.Transforms.Clone();
+            var transforms1 = child1.Transforms.Clone();
+            var transforms2 = child2.Transforms.Clone();
 
             // Preassert
             Assert.AreEqual(transforms, child.Transforms);
+            Assert.AreEqual(transforms1, child1.Transforms);
+            Assert.AreEqual(transforms2, child2.Transforms);
 
             // Act
-            var start = PointF.Create(75, 75);
-            var end = PointF.Create(200, 100);
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, start, start, start, 1));
-            await Canvas.OnEvent(new MoveEvent(start, start, end, end - start, 1));
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, end, end, end, 1));
+            await Move(PointF.Create(75, 75), PointF.Create(200, 100));
 
             // Assert
             Assert.AreNotEqual(transforms, child.Transforms);
+            Assert.AreEqual(transforms1, child1.Transforms);
+            Assert.AreEqual(transforms2, child2.Transforms);
+        }
+
+        [Test]
+        public async Task IfPointerIsMoved_AndElementsAreSelected_ElementsAreMoved()
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            var tool = Canvas.Tools.OfType<SelectionTool>().Single();
+            Canvas.ActiveTool = tool;
+
+            var child = new SvgRectangle {X = 50, Y = 50, Width = 50, Height = 50};
+            var child1 = new SvgRectangle {X = 250, Y = 150, Width = 100, Height = 25};
+            var child2 = new SvgRectangle {X = 150, Y = 250, Width = 150, Height = 150};
+            Canvas.ScreenWidth = 800;
+            Canvas.ScreenHeight = 500;
+            Canvas.Document.Children.Add(child);
+            Canvas.Document.Children.Add(child1);
+            Canvas.Document.Children.Add(child2);
+            Canvas.SelectedElements.Add(child);
+            Canvas.SelectedElements.Add(child1);
+            Canvas.SelectedElements.Add(child2);
+            var transforms = child.Transforms.Clone();
+            var transforms1 = child1.Transforms.Clone();
+            var transforms2 = child2.Transforms.Clone();
+
+            // Preassert
+            Assert.AreEqual(transforms, child.Transforms);
+            Assert.AreEqual(transforms1, child1.Transforms);
+            Assert.AreEqual(transforms2, child2.Transforms);
+
+            // Act
+            await Move(PointF.Create(75, 75), PointF.Create(200, 100));
+
+            // Assert
+            Assert.AreNotEqual(transforms, child.Transforms);
+            Assert.AreNotEqual(transforms1, child1.Transforms);
+            Assert.AreNotEqual(transforms2, child2.Transforms);
         }
 
     }

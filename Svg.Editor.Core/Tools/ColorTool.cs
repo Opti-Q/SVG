@@ -115,7 +115,7 @@ namespace Svg.Core.Tools
                 Canvas.FireInvalidateCanvas();
             }), hasOwnUndoRedoScope: false);
 
-            if (element is SvgText)
+            if (element is SvgText || element is SvgLine)
             {
                 var oldFill = ((SvgColourServer) element.Fill)?.ToString();
                 UndoRedoService.ExecuteCommand(new UndoableActionCommand("Colorize fill", o =>

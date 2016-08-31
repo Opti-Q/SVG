@@ -54,6 +54,8 @@ namespace Svg.Core.Tools
                     _wasImplicitlyActivated = true;
                     zt.IsActive = false;
                     _rotations.Clear();
+
+                    UndoRedoService.ExecuteCommand(new UndoableActionCommand("Rotate operation", o => {}));
                 }
                 else if (re.Status == RotateStatus.Rotating &&
                          ws.SelectedElements.Count == 1 &&
@@ -116,7 +118,7 @@ namespace Svg.Core.Tools
                 {
                     element.SetTransformationMatrix(formerM);
                     ws.FireInvalidateCanvas();
-                }));
+                }), hasOwnUndoRedoScope: false);
 
             }
         }
@@ -130,7 +132,7 @@ namespace Svg.Core.Tools
             // else make sure we only rotate with the specified step size (e.g. 45°)
             var rest = absoluteAngle % RotationStep;
 
-            // if the remainder is less than halph the step size, just remove it
+            // if the remainder is less than half the step size, just remove it
             if (rest <= RotationStep / 2)
             {
                 return absoluteAngle - rest;

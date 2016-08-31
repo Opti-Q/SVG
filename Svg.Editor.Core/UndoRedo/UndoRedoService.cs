@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Input;
 using Svg;
 using Svg.Core.Interfaces;
@@ -75,7 +76,7 @@ namespace Svg.Core.UndoRedo
 
             command.Execute(state);
 
-            Debug.WriteLine($"Command executed: {command.Name}");
+            //Debug.WriteLine($"Command executed: {command.Name}");
 
             var entry = ExecutionStack.Pop();
 
@@ -87,6 +88,7 @@ namespace Svg.Core.UndoRedo
                 //entry.Command.Undo(state);
                 Undo(state);
                 RedoStack.Pop();
+                if (!RedoStack.Any()) CanRedoChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -94,19 +96,26 @@ namespace Svg.Core.UndoRedo
         {
             var args = new CommandEventArgs(command, ExecuteAction.Execute);
             if (hasOwnUndoRedoScope || UndoStack.Count == 0)
+            {
                 UndoStack.Push(command);
+                if (UndoStack.Count == 1) CanUndoChanged?.Invoke(this, EventArgs.Empty);
+            }
             else
             {
                 // add to previous undostack entry 
                 var cmd = UndoStack.Pop();
+                if (!UndoStack.Any()) CanUndoChanged?.Invoke(this, EventArgs.Empty);
 
                 var compositeCommand = cmd as CompositeCommand ?? new CompositeCommand(cmd);
                 compositeCommand.AddCommand(command);
 
                 UndoStack.Push(compositeCommand);
+                if (UndoStack.Count == 1) CanUndoChanged?.Invoke(this, EventArgs.Empty);
             }
 
+            var redoStackAny = RedoStack.Any();
             RedoStack.Clear();
+            if (redoStackAny) CanRedoChanged?.Invoke(this, EventArgs.Empty);
             OnActionExecuted(args);
         }
 
@@ -142,8 +151,12 @@ namespace Svg.Core.UndoRedo
         /// </summary>
         public virtual void Clear()
         {
+            var undoStackAny = RedoStack.Any();
             UndoStack.Clear();
+            if (undoStackAny) CanUndoChanged?.Invoke(this, EventArgs.Empty);
+            var redoStackAny = RedoStack.Any();
             RedoStack.Clear();
+            if (redoStackAny) CanRedoChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -153,6 +166,7 @@ namespace Svg.Core.UndoRedo
         public void AddCommand(IUndoableCommand command)
         {
             UndoStack.Push(command);
+            if (UndoStack.Count == 1) CanUndoChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -179,9 +193,11 @@ namespace Svg.Core.UndoRedo
         {
             IsActive = true;
             var command = RedoStack.Pop();
+            if (!RedoStack.Any()) CanRedoChanged?.Invoke(this, EventArgs.Empty);
             var args = new CommandEventArgs(command, ExecuteAction.Redo);
             command.Redo();
             UndoStack.Push(command);
+            if (UndoStack.Count == 1) CanUndoChanged?.Invoke(this, EventArgs.Empty);
             OnActionExecuted(args);
             IsActive = false;
         }
@@ -190,9 +206,11 @@ namespace Svg.Core.UndoRedo
         {
             IsActive = true;
             var command = UndoStack.Pop();
+            if (!UndoStack.Any()) CanUndoChanged?.Invoke(this, EventArgs.Empty);
             var args = new CommandEventArgs(command, ExecuteAction.Undo);
             command.Undo(state);
             RedoStack.Push(command);
+            if (RedoStack.Count == 1) CanRedoChanged?.Invoke(this, EventArgs.Empty);
             OnActionExecuted(args);
             IsActive = false;
         }

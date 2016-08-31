@@ -142,5 +142,42 @@ namespace Svg.Editor.Tests
             // Assert
             Assert.AreEqual(0, Canvas.SelectedElements.Count);
         }
+
+        [Test]
+        public async Task ElementsAreSelected_AndDeleteCommandExecuted_ElementsAreRemoved()
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            var tool = Canvas.Tools.OfType<SelectionTool>().Single();
+            Canvas.ActiveTool = tool;
+            Canvas.ScreenWidth = 800;
+            Canvas.ScreenHeight = 500;
+
+            var element1 = new SvgRectangle()
+            {
+                X = new SvgUnit(SvgUnitType.Pixel, 200),
+                Y = new SvgUnit(SvgUnitType.Pixel, 200),
+                Width = new SvgUnit(SvgUnitType.Pixel, 30),
+                Height = new SvgUnit(SvgUnitType.Pixel, 20),
+            };
+            Canvas.Document.Children.Add(element1);
+            var d = LoadDocument("nested_transformed_text.svg");
+            var element2 = d.Children.OfType<SvgVisualElement>().Single(c => c.Visible && c.Displayable);
+            Canvas.AddItemInScreenCenter(element2);
+            Canvas.SelectedElements.Add(element1);
+            Canvas.SelectedElements.Add(element2);
+
+            // Preassert
+            Assert.True(Canvas.Document.Children.Any(x => x == element1));
+            Assert.True(Canvas.Document.Children.Any(x => x == element2));
+
+            // Act
+            tool.Commands.First().Execute(null);
+
+            // Assert
+            Assert.False(Canvas.Document.Children.Any(x => x == element1));
+            Assert.False(Canvas.Document.Children.Any(x => x == element2));
+            Assert.AreEqual(0, Canvas.SelectedElements.Count);
+        }
     }
 }

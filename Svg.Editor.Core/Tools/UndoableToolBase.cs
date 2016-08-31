@@ -12,16 +12,26 @@ namespace Svg.Core.Tools
         {
             UndoRedoService = undoRedoService;
             UndoRedoService.ActionExecuted += UndoRedoServiceOnActionExecuted;
-        }
-
-        ~UndoableToolBase()
-        {
-            UndoRedoService.ActionExecuted -= UndoRedoServiceOnActionExecuted;
+            UndoRedoService.CanUndoChanged += UndoRedoServiceOnCanUndoRedoChanged;
+            UndoRedoService.CanRedoChanged += UndoRedoServiceOnCanUndoRedoChanged;
         }
 
         private void UndoRedoServiceOnActionExecuted(object sender, CommandEventArgs commandEventArgs)
         {
+            // clear selection when undoing
+            if (commandEventArgs.ExecuteAction == ExecuteAction.Undo)
+                Canvas?.SelectedElements.Clear();
+        }
+
+        private void UndoRedoServiceOnCanUndoRedoChanged(object sender, EventArgs eventArgs)
+        {
             Canvas?.FireToolCommandsChanged();
+        }
+
+        ~UndoableToolBase()
+        {
+            UndoRedoService.CanUndoChanged -= UndoRedoServiceOnCanUndoRedoChanged;
+            UndoRedoService.CanRedoChanged -= UndoRedoServiceOnCanUndoRedoChanged;
         }
 
         protected IUndoRedoService UndoRedoService { get; }

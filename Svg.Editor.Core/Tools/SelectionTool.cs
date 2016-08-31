@@ -45,6 +45,7 @@ namespace Svg.Core.Tools
             {
                 new ToolCommand(this, "Delete", o =>
                 {
+                    UndoRedoService.ExecuteCommand(new UndoableActionCommand("Remove operation", x => {}));
                         foreach (var element in ws.SelectedElements)
                         {
                             var parent = element.Parent;
@@ -56,7 +57,7 @@ namespace Svg.Core.Tools
                             {
                                 parent.Children.Add(element);
                                 ws.FireInvalidateCanvas();
-                            }));
+                            }), hasOwnUndoRedoScope: false);
                         }
                         ws.SelectedElements.Clear();
                         ws.FireInvalidateCanvas();

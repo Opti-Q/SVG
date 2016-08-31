@@ -17,7 +17,7 @@ namespace Svg.Core.Tools
 
     public class FreeDrawingTool : UndoableToolBase
     {
-        private const double MinMovedDistance = 12.0;
+        private const double MinMovedDistance = 6.0;
 
         private static IFreeDrawingOptionsInputService FreeDrawingOptionsInputServiceProxy => Engine.Resolve<IFreeDrawingOptionsInputService>();
 

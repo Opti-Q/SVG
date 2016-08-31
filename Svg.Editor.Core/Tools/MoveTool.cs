@@ -91,7 +91,7 @@ namespace Svg.Core.Tools
                 {
 
                     // check if offsets were cleared, that means we started a new move operation
-                    if (_offsets.Count == 0)
+                    if (!_offsets.Any())
                     {
                         // when we start a move operation, we execute an empty undoable command first,
                         // so the other ones will be added to this command as on undo step

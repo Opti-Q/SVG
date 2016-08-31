@@ -320,6 +320,10 @@ namespace Svg.Core.Tools
                                  Math.Abs(canvasPointer1Position.X - points[0].X) <= MaxPointerDistance &&
                                  Math.Abs(canvasPointer1Position.Y - points[0].Y) <= MaxPointerDistance ? MovementType.Start :
                                  _currentLine.GetBoundingBox().Contains(canvasPointer1Position) ? MovementType.StartEnd : MovementType.None;
+                    if (_movementType != MovementType.None)
+                    {
+                        UndoRedoService.ExecuteCommand(new UndoableActionCommand("Edit line", o => { }));
+                    }
                 }
             }
 
@@ -377,18 +381,17 @@ namespace Svg.Core.Tools
                             _currentLine.StrokeDashArray = StrokeDashArray.Clone();
                         }
 
+                        // capture variables for use in lambda
                         var children = ws.Document.Children;
                         var capturedCurrentLine = _currentLine;
                         UndoRedoService.ExecuteCommand(new UndoableActionCommand("Add new line", o =>
                         {
                             children.Add(capturedCurrentLine);
-                            Canvas.FireInvalidateCanvas();
+                            ws.FireInvalidateCanvas();
                         }, o =>
                         {
-                            _currentLine = null;
-                            Canvas.SelectedElements.Remove(capturedCurrentLine);
                             children.Remove(capturedCurrentLine);
-                            Canvas.FireInvalidateCanvas();
+                            ws.FireInvalidateCanvas();
                         }));
 
                         _movementType = MovementType.End;
@@ -399,15 +402,42 @@ namespace Svg.Core.Tools
                         m.Invert();
                         m.TransformPoints(new[] { relativeEnd });
 
+                        // capture _currentLine for use in lambda
+                        var capturedCurrentLine = _currentLine;
+
                         switch (_movementType)
                         {
                             case MovementType.End:
-                                _currentLine.EndX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X);
-                                _currentLine.EndY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y);
+                                // capture variables for use in lambda
+                                var formerEndX = _currentLine.EndX;
+                                var formerEndY = _currentLine.EndY;
+                                UndoRedoService.ExecuteCommand(new UndoableActionCommand("Move line end", o =>
+                                {
+                                    capturedCurrentLine.EndX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X);
+                                    capturedCurrentLine.EndY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y);
+                                    ws.FireInvalidateCanvas();
+                                }, o =>
+                                {
+                                    capturedCurrentLine.EndX = formerEndX;
+                                    capturedCurrentLine.EndY = formerEndY;
+                                    ws.FireInvalidateCanvas();
+                                }), hasOwnUndoRedoScope: false);
                                 break;
                             case MovementType.Start:
-                                _currentLine.StartX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X);
-                                _currentLine.StartY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y);
+                                // capture variables for use in lambda
+                                var formerStartX = _currentLine.StartX;
+                                var formerStartY = _currentLine.StartY;
+                                UndoRedoService.ExecuteCommand(new UndoableActionCommand("Move line start", o =>
+                                {
+                                    capturedCurrentLine.StartX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X);
+                                    capturedCurrentLine.StartY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y);
+                                    ws.FireInvalidateCanvas();
+                                }, o =>
+                                {
+                                    capturedCurrentLine.StartX = formerStartX;
+                                    capturedCurrentLine.StartY = formerStartY;
+                                    ws.FireInvalidateCanvas();
+                                }), hasOwnUndoRedoScope: false);
                                 break;
                             case MovementType.StartEnd:
                                 // TODO: move both start and end points
@@ -415,7 +445,6 @@ namespace Svg.Core.Tools
                         }
                     }
 
-                    ws.FireInvalidateCanvas();
                 }
             }
 

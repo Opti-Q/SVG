@@ -88,7 +88,7 @@ namespace Svg.Core.Tools
 
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
-            System.Diagnostics.Debug.WriteLine(@event.DebuggerDisplay);
+            //System.Diagnostics.Debug.WriteLine(@event.DebuggerDisplay);
 
             return base.OnUserInput(@event, ws);
         }
