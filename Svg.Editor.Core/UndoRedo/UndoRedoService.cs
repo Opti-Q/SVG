@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
 using Svg;
@@ -13,8 +12,10 @@ namespace Svg.Core.UndoRedo
     public class UndoRedoService : IUndoRedoService
     {
         private Stack<ExecutionStackEntry> ExecutionStack { get; } = new Stack<ExecutionStackEntry>();
-        private Stack<IUndoableCommand> UndoStack { get; } = new Stack<IUndoableCommand>();
+        private List<IUndoableCommand> UndoStack { get; } = new List<IUndoableCommand>();
         private Stack<IUndoableCommand> RedoStack { get; } = new Stack<IUndoableCommand>();
+
+        public int UndoStackCapacity { get; set; } = 10;
 
         /// <summary>
         /// Occurs when either a do or an undo command is executed.
@@ -97,19 +98,22 @@ namespace Svg.Core.UndoRedo
             var args = new CommandEventArgs(command, ExecuteAction.Execute);
             if (hasOwnUndoRedoScope || UndoStack.Count == 0)
             {
-                UndoStack.Push(command);
+                UndoStack.Add(command);
+                EnsureUndoCapacity();
                 if (UndoStack.Count == 1) CanUndoChanged?.Invoke(this, EventArgs.Empty);
             }
             else
             {
                 // add to previous undostack entry 
-                var cmd = UndoStack.Pop();
+                var cmd = UndoStack.Last();
+                UndoStack.RemoveAt(UndoStack.Count - 1);
                 if (!UndoStack.Any()) CanUndoChanged?.Invoke(this, EventArgs.Empty);
 
                 var compositeCommand = cmd as CompositeCommand ?? new CompositeCommand(cmd);
                 compositeCommand.AddCommand(command);
 
-                UndoStack.Push(compositeCommand);
+                UndoStack.Add(compositeCommand);
+                EnsureUndoCapacity();
                 if (UndoStack.Count == 1) CanUndoChanged?.Invoke(this, EventArgs.Empty);
             }
 
@@ -117,6 +121,12 @@ namespace Svg.Core.UndoRedo
             RedoStack.Clear();
             if (redoStackAny) CanRedoChanged?.Invoke(this, EventArgs.Empty);
             OnActionExecuted(args);
+        }
+
+        private void EnsureUndoCapacity()
+        {
+            while (UndoStack.Count > UndoStackCapacity)
+                UndoStack.RemoveAt(0);
         }
 
         /// <summary>
@@ -165,7 +175,8 @@ namespace Svg.Core.UndoRedo
         /// <param name="command">The command to add.</param>
         public void AddCommand(IUndoableCommand command)
         {
-            UndoStack.Push(command);
+            UndoStack.Add(command);
+            EnsureUndoCapacity();
             if (UndoStack.Count == 1) CanUndoChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -196,7 +207,7 @@ namespace Svg.Core.UndoRedo
             if (!RedoStack.Any()) CanRedoChanged?.Invoke(this, EventArgs.Empty);
             var args = new CommandEventArgs(command, ExecuteAction.Redo);
             command.Redo();
-            UndoStack.Push(command);
+            UndoStack.Add(command);
             if (UndoStack.Count == 1) CanUndoChanged?.Invoke(this, EventArgs.Empty);
             OnActionExecuted(args);
             IsActive = false;
@@ -205,7 +216,8 @@ namespace Svg.Core.UndoRedo
         private void UndoInternal(object state)
         {
             IsActive = true;
-            var command = UndoStack.Pop();
+            var command = UndoStack.Last();
+            UndoStack.RemoveAt(UndoStack.Count - 1);
             if (!UndoStack.Any()) CanUndoChanged?.Invoke(this, EventArgs.Empty);
             var args = new CommandEventArgs(command, ExecuteAction.Undo);
             command.Undo(state);

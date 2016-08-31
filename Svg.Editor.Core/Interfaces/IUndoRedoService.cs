@@ -17,7 +17,7 @@ namespace Svg.Core.Interfaces
         //IEnumerable<IUndoableCommand> UndoStack { get; }
         //IEnumerable<IUndoableCommand> RedoStack { get; }
         //int RedoBufferSize { get; set; }
-        //int UndoBufferSize { get; set; }
+        int UndoStackCapacity { get; set; }
         event EventHandler CanRedoChanged;
         event EventHandler CanUndoChanged;
 
