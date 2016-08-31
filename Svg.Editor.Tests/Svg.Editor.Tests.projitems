@@ -9,6 +9,10 @@
     <Import_RootNamespace>Svg.Editor.Tests</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)UndoRedoToolTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FreeDrawingToolTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MoveToolTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StrokeStyleToolTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IFIleLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RotationToolTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TransformationTests.cs" />

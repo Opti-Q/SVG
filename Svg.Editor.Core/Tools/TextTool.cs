@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Events;
+using Svg.Core.Interfaces;
+using Svg.Core.UndoRedo;
 using Svg.Transforms;
 
 namespace Svg.Core.Tools
@@ -11,12 +13,12 @@ namespace Svg.Core.Tools
         Task<string> GetUserInput(string title, string textValue);
     }
 
-    public class TextTool : ToolBase
+    public class TextTool : UndoableToolBase
     {
         // if user moves cursor, she does not want to add/edit text
         private bool _moveEventWasRegistered;
 
-        public TextTool() : base("Text")
+        public TextTool(IUndoRedoService undoRedoService) : base("Text", undoRedoService)
         {
             IconName = "ic_text_fields_white_48dp.png";
             ToolUsage = ToolUsage.Explicit;
@@ -27,14 +29,14 @@ namespace Svg.Core.Tools
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
-            this.IsActive = false;
+            IsActive = false;
 
-            return Task.FromResult(true);
+            return base.Initialize(ws);
         }
 
         public override async Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
-            if (!this.IsActive)
+            if (!IsActive)
                 return;
 
             // if user moves cursor, she does not want to add/edit text
@@ -43,7 +45,7 @@ namespace Svg.Core.Tools
             {
                 // if user moves with thumb we do not want to add text on pointer-up
                 var isMove = Math.Sqrt(Math.Pow(me.AbsoluteDelta.X, 2) + Math.Pow(me.AbsoluteDelta.Y, 2)) > 20d;
-                if(isMove)
+                if (isMove)
                     _moveEventWasRegistered = true;
             }
 
@@ -58,7 +60,7 @@ namespace Svg.Core.Tools
                 {
                     return;
                 }
-                
+
                 var dX = pe.Pointer1Position.X - pe.Pointer1Down.X;
                 var dY = pe.Pointer1Position.Y - pe.Pointer1Down.Y;
 
@@ -85,11 +87,29 @@ namespace Svg.Core.Tools
                         // if parent was not the document, then this would be a text within another group and should not be removed
                         if (string.IsNullOrWhiteSpace(txt) && e.Parent is SvgDocument)
                         {
-                            e.Parent.Children.Remove(e);
+                            var parent = e.Parent;
+                            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Remove text", o =>
+                            {
+                                parent.Children.Remove(e);
+                                Canvas.FireInvalidateCanvas();
+                            }, o =>
+                            {
+                                parent.Children.Add(e);
+                                Canvas.FireInvalidateCanvas();
+                            }));
                         }
-                        else if(!string.Equals(e.Text, txt))
+                        else if (!string.Equals(e.Text, txt))
                         {
-                            e.Text = txt;
+                            var formerText = e.Text;
+                            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Edit text", o =>
+                            {
+                                e.Text = txt;
+                                Canvas.FireInvalidateCanvas();
+                            }, o =>
+                            {
+                                e.Text = formerText;
+                                Canvas.FireInvalidateCanvas();
+                            }));
                         }
                     }
                     // else add new text   
@@ -117,11 +137,17 @@ namespace Svg.Core.Tools
                             //t.Y = new SvgUnitCollection { new SvgUnit(SvgUnitType.Pixel, y) };
                             t.Transforms.Add(new SvgTranslate(x, y));
 
-                            ws.Document.Children.Add(t);
+                            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Add text", o =>
+                            {
+                                ws.Document.Children.Add(t);
+                                ws.FireInvalidateCanvas();
+                            }, o =>
+                            {
+                                ws.Document.Children.Remove(t);
+                                ws.FireInvalidateCanvas();
+                            }));
                         }
                     }
-
-                    ws.FireInvalidateCanvas();
                 }
             }
         }

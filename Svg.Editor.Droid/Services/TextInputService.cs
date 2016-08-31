@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Android.App;
-using Android.Content;
 using Android.Text;
 using Android.Views.InputMethods;
 using Android.Widget;

@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using MvvmCross.Platform;
 using MvvmCross.Plugins.Email;
 using Svg.Core;
-using Svg.Core.Interfaces;
 using Svg.Core.Tools;
 using Svg.Interfaces;
 
@@ -196,7 +193,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 Commands.Single(t => t.Name == "Load").Execute(null);
             }
 
-            return Task.FromResult(true);
+            return base.Initialize(ws);
         }
     }
 }

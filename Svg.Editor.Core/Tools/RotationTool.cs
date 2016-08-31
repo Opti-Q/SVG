@@ -4,18 +4,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
+using Svg.Core.UndoRedo;
 using Svg.Interfaces;
 
 namespace Svg.Core.Tools
 {
-    public class RotationTool : ToolBase
+    public class RotationTool : UndoableToolBase
     {
-        private bool _wasImplicitlyActivated = false;
+        private bool _wasImplicitlyActivated;
         private PointF _lastRotationCenter;
         private Brush _brush2;
         private Pen _pen2;
-        private Brush RedBrush => _brush2 ?? (_brush2 = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 255, 150, 150)));
-        private Pen RedPen => _pen2 ?? (_pen2 = Svg.Engine.Factory.CreatePen(RedBrush, 3));
+        private Brush RedBrush => _brush2 ?? (_brush2 = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 255, 150, 150)));
+        private Pen RedPen => _pen2 ?? (_pen2 = Engine.Factory.CreatePen(RedBrush, 3));
         private readonly Dictionary<SvgElement, float> _rotations = new Dictionary<SvgElement, float>();
         private ITool _activatedFrom;
 
@@ -24,8 +25,8 @@ namespace Svg.Core.Tools
         public Func<SvgVisualElement, bool> Filter { get; set; }
 
         public float RotationStep { get; set; }
-        
-        public RotationTool() : base("Rotate")
+
+        public RotationTool(IUndoRedoService undoRedoService) : base("Rotate", undoRedoService)
         {
             ToolType = ToolType.Modify;
         }
@@ -53,6 +54,8 @@ namespace Svg.Core.Tools
                     _wasImplicitlyActivated = true;
                     zt.IsActive = false;
                     _rotations.Clear();
+
+                    UndoRedoService.ExecuteCommand(new UndoableActionCommand("Rotate operation", o => {}));
                 }
                 else if (re.Status == RotateStatus.Rotating &&
                          ws.SelectedElements.Count == 1 &&
@@ -60,7 +63,7 @@ namespace Svg.Core.Tools
                 {
                     RotateElement(ws.SelectedElements[0], re, ws);
                 }
-                else if(re.Status == RotateStatus.End)
+                else if (re.Status == RotateStatus.End)
                 {
                     if (ws.ActiveTool == this && _wasImplicitlyActivated)
                     {
@@ -71,13 +74,13 @@ namespace Svg.Core.Tools
                     _rotations.Clear();
                 }
             }
-            
+
             return Task.FromResult(true);
         }
 
         public override Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
-            if(IsDebugEnabled && _lastRotationCenter != null)
+            if (IsDebugEnabled && _lastRotationCenter != null)
                 renderer.DrawCircle(_lastRotationCenter.X, _lastRotationCenter.Y, 2, RedPen);
 
             return Task.FromResult(true);
@@ -102,26 +105,35 @@ namespace Svg.Core.Tools
 
             _rotations[element] = angle;
 
-            if (delta != 0)
+            if (Math.Abs(delta) > 0.01f)
             {
+                var formerM = element.Transforms.GetMatrix().Clone();
                 var m = element.CreateOriginRotation(delta % 360);
-                element.SetTransformationMatrix(m);
 
-                ws.FireInvalidateCanvas();
+                UndoRedoService.ExecuteCommand(new UndoableActionCommand("Rotate element", o =>
+                {
+                    element.SetTransformationMatrix(m);
+                    ws.FireInvalidateCanvas();
+                }, o =>
+                {
+                    element.SetTransformationMatrix(formerM);
+                    ws.FireInvalidateCanvas();
+                }), hasOwnUndoRedoScope: false);
+
             }
         }
 
         private float CalculateNewRotation(float absoluteAngle)
         {
             // if we can rotate with any angle, just return the absolute one
-            if(RotationStep <= 0)
+            if (RotationStep <= 0)
                 return absoluteAngle;
 
             // else make sure we only rotate with the specified step size (e.g. 45°)
             var rest = absoluteAngle % RotationStep;
 
-            // if the remainder is less than halph the step size, just remove it
-            if (rest <= RotationStep/2)
+            // if the remainder is less than half the step size, just remove it
+            if (rest <= RotationStep / 2)
             {
                 return absoluteAngle - rest;
             }

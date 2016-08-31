@@ -69,20 +69,23 @@ namespace Svg.Core
                 { "strokewidths", new [] { 12, 24, 6 } },
                 { "strokewidthnames", new [] { "normal", "thick", "thin" } }
             }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+            
+            var undoRedoService = Engine.Resolve<IUndoRedoService>();
 
             _tools = new ObservableCollection<ITool>
             {
-                    new GridTool(gridToolProperties), // must be before movetool!
-                    new MoveTool(), // must be before pantool as it decides whether or not it is active based on selection
+                    new GridTool(gridToolProperties, undoRedoService), // must be before movetool!
+                    new MoveTool(undoRedoService), // must be before pantool as it decides whether or not it is active based on selection
                     new PanTool(),
-                    new RotationTool(),
+                    new RotationTool(undoRedoService),
                     new ZoomTool(),
-                    new SelectionTool(),
-                    new TextTool(),
-                    new LineTool(lineToolProperties),
-                    new FreeDrawingTool(freeDrawToolProperties),
-                    new ColorTool(colorToolProperties),
-                    new StrokeStyleTool()
+                    new SelectionTool(undoRedoService),
+                    new TextTool(undoRedoService),
+                    new LineTool(lineToolProperties, undoRedoService),
+                    new FreeDrawingTool(freeDrawToolProperties, undoRedoService),
+                    new ColorTool(colorToolProperties, undoRedoService),
+                    new StrokeStyleTool(undoRedoService),
+                    new UndoRedoTool(undoRedoService)
             };
             _tools.CollectionChanged += OnToolsChanged;
         }
@@ -218,7 +221,7 @@ namespace Svg.Core
         {
             await EnsureInitialized();
 
-            foreach (var tool in Tools)
+            foreach (var tool in Tools.OrderBy(t => t.InputOrder))
             {
                 await tool.OnUserInput(ev, this);
             }
@@ -246,7 +249,7 @@ namespace Svg.Core
             renderer.FillEntireCanvasWithColor(Engine.Factory.Colors.White);
 
             // prerender step (e.g. gridlines, etc.)
-            foreach (var tool in Tools)
+            foreach (var tool in Tools.OrderBy(t => t.PreDrawOrder))
             {
                 await tool.OnPreDraw(renderer, this);
             }
@@ -257,7 +260,7 @@ namespace Svg.Core
             renderer.Graphics.Restore();
 
             // post render step (e.g. selection borders, etc.)
-            foreach (var tool in Tools)
+            foreach (var tool in Tools.OrderBy(t => t.DrawOrder))
             {
                 await tool.OnDraw(renderer, this);
             }
