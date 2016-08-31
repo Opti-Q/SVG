@@ -12,6 +12,7 @@ namespace Svg.Editor.Tests
     public class UndoRedoToolTests : SvgDrawingCanvasTestBase
     {
         private MockColorInputService _colorMock;
+        private MockTextInputService _textMock;
 
         [SetUp]
         public override void SetUp()
@@ -21,6 +22,10 @@ namespace Svg.Editor.Tests
             _colorMock = new MockColorInputService();
 
             Engine.Register<IColorInputService, MockColorInputService>(() => _colorMock);
+
+            _textMock = new MockTextInputService();
+
+            Engine.Register<ITextInputService, MockTextInputService>(() => _textMock);
         }
 
         [Test]
@@ -364,6 +369,250 @@ namespace Svg.Editor.Tests
             Assert.True(Canvas.Document.Children.Any(x => x == element1));
             Assert.True(Canvas.Document.Children.Any(x => x == element2));
             Assert.False(Canvas.SelectedElements.Any());
+        }
+
+        [Test]
+        public async Task OneElementSelected_StrokeStyleCommandExecuted_ChildStrokeIsChanged_ThenUndo_ChildStrokeIsRestored()
+        {
+            // Arrange
+            var tool = Canvas.Tools.OfType<StrokeStyleTool>().Single();
+            var rect = new SvgRectangle
+            {
+                X = 10,
+                Y = 10,
+                Width = 50,
+                Height = 50,
+                Stroke = new SvgColourServer(Color.Create(0, 0, 0))
+            };
+            var stroke = rect.StrokeDashArray?.ToString();
+            await Canvas.EnsureInitialized();
+
+            Canvas.Document.Children.Add(rect);
+            Canvas.SelectedElements.Add(rect);
+            tool.Commands.First().Execute(null);
+
+            // Preassert
+            Assert.AreEqual("10 10", rect.StrokeDashArray?.ToString());
+
+            // Act
+            var undoredoTool = Canvas.Tools.OfType<UndoRedoTool>().Single();
+            undoredoTool.Commands.First(x => x.Name == "Undo").Execute(null);
+
+            // Assert
+            Assert.AreEqual(stroke, rect.StrokeDashArray?.ToString());
+        }
+
+        [Test]
+        public async Task ManyElementsSelected_StrokeStyleCommandExecuted_AllChildStrokesAreChanged_ThenUndo_AllStrokesAreRestored()
+        {
+            // Arrange
+            var tool = Canvas.Tools.OfType<StrokeStyleTool>().Single();
+            var rect = new SvgRectangle
+            {
+                X = 10,
+                Y = 10,
+                Width = 50,
+                Height = 50,
+                Stroke = new SvgColourServer(Color.Create(0, 0, 0))
+            };
+            var stroke = rect.StrokeDashArray?.ToString();
+            var rect1 = new SvgRectangle
+            {
+                X = 100,
+                Y = 100,
+                Width = 50,
+                Height = 50,
+                Stroke = new SvgColourServer(Color.Create(0, 0, 0))
+            };
+            var stroke1 = rect1.StrokeDashArray?.ToString();
+            var rect2 = new SvgRectangle
+            {
+                X = 50,
+                Y = 50,
+                Width = 25,
+                Height = 25,
+                Stroke = new SvgColourServer(Color.Create(0, 0, 0))
+            };
+            var stroke2 = rect2.StrokeDashArray?.ToString();
+            await Canvas.EnsureInitialized();
+
+            Canvas.Document.Children.Add(rect);
+            Canvas.Document.Children.Add(rect1);
+            Canvas.Document.Children.Add(rect2);
+            Canvas.SelectedElements.Add(rect);
+            Canvas.SelectedElements.Add(rect1);
+            Canvas.SelectedElements.Add(rect2);
+            tool.Commands.First().Execute(null);
+
+            // Preassert
+            Assert.AreEqual("10 10", rect.StrokeDashArray?.ToString());
+            Assert.AreEqual("10 10", rect1.StrokeDashArray?.ToString());
+            Assert.AreEqual("10 10", rect2.StrokeDashArray?.ToString());
+
+            // Act
+            var undoredoTool = Canvas.Tools.OfType<UndoRedoTool>().Single();
+            undoredoTool.Commands.First(x => x.Name == "Undo").Execute(null);
+
+            // Assert
+            Assert.AreEqual(stroke, rect.StrokeDashArray?.ToString());
+            Assert.AreEqual(stroke1, rect1.StrokeDashArray?.ToString());
+            Assert.AreEqual(stroke2, rect2.StrokeDashArray?.ToString());
+        }
+
+        private class MockTextInputService : ITextInputService
+        {
+            public Func<string, string, string> F { get; set; } = (x, y) => null;
+
+            public Task<string> GetUserInput(string title, string textValue)
+            {
+                return Task.FromResult(F(title, textValue));
+            }
+        }
+
+        [Test]
+        public async Task WhenUserTapsToBlankArea_CreatesText_ThenUndo_TextIsRemoved()
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            var txtTool = Canvas.Tools.OfType<TextTool>().Single();
+            Canvas.ActiveTool = txtTool;
+            _textMock.F = ((x, y) => "hello");
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
+
+            // Preassert
+            var texts = Canvas.Document.Children.OfType<SvgTextBase>().ToList();
+            Assert.AreEqual(1, texts.Count);
+            var txt = texts.First();
+            Assert.AreEqual("hello", txt.Text);
+            Assert.AreEqual(20f, txt.FontSize.Value);
+            Assert.AreEqual(SvgUnitType.Pixel, txt.FontSize.Type);
+
+            // Act
+            var undoredoTool = Canvas.Tools.OfType<UndoRedoTool>().Single();
+            undoredoTool.Commands.First(x => x.Name == "Undo").Execute(null);
+
+            // Assert
+            texts = Canvas.Document.Children.OfType<SvgTextBase>().ToList();
+            Assert.IsEmpty(texts);
+        }
+
+        [Test]
+        public async Task WhenUserTapsOnExistingText_EditsText()
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            var txtTool = Canvas.Tools.OfType<TextTool>().Single();
+            Canvas.ActiveTool = txtTool;
+            const string formerText = "this is a test";
+            Canvas.Document.Children.Add(new SvgText()
+            {
+                Text = formerText,
+                X = new SvgUnitCollection() { new SvgUnit(SvgUnitType.Pixel, 5) },
+                Y = new SvgUnitCollection() { new SvgUnit(SvgUnitType.Pixel, 5) },
+                FontSize = new SvgUnit(SvgUnitType.Pixel, 20),
+            });
+
+            const string newText = "hello";
+            _textMock.F = (x, y) => newText;
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
+
+            // Preassert
+            var texts = Canvas.Document.Children.OfType<SvgTextBase>().ToList();
+            Assert.AreEqual(1, texts.Count);
+            var txt = texts.First();
+            Assert.AreEqual(newText, txt.Text);
+            Assert.AreEqual(20f, txt.FontSize.Value);
+            Assert.AreEqual(SvgUnitType.Pixel, txt.FontSize.Type);
+
+            // Act
+            var undoredoTool = Canvas.Tools.OfType<UndoRedoTool>().Single();
+            undoredoTool.Commands.First(x => x.Name == "Undo").Execute(null);
+
+            // Assert
+            texts = Canvas.Document.Children.OfType<SvgTextBase>().ToList();
+            Assert.AreEqual(1, texts.Count);
+            txt = texts.First();
+            Assert.AreEqual(formerText, txt.Text);
+            Assert.AreEqual(20f, txt.FontSize.Value);
+            Assert.AreEqual(SvgUnitType.Pixel, txt.FontSize.Type);
+        }
+
+        [Test]
+        [TestCase("")]
+        [TestCase(" ")]
+        [TestCase("\t")]
+        [TestCase((string) null)]
+        public async Task WhenUserTapsOnExistingText_AndEntersEmpty_RemovesText(string theText)
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            var txtTool = Canvas.Tools.OfType<TextTool>().Single();
+            Canvas.ActiveTool = txtTool;
+            Canvas.Document.Children.Add(new SvgText()
+            {
+                Text = "this is a test",
+                X = new SvgUnitCollection() { new SvgUnit(SvgUnitType.Pixel, 5) },
+                Y = new SvgUnitCollection() { new SvgUnit(SvgUnitType.Pixel, 5) },
+                FontSize = new SvgUnit(SvgUnitType.Pixel, 20),
+            });
+
+            _textMock.F = ((x, y) => theText);
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
+
+            // Preassert
+            var texts = Canvas.Document.Children.OfType<SvgTextBase>().ToList();
+            Assert.AreEqual(0, texts.Count);
+
+            // Act
+            var undoredoTool = Canvas.Tools.OfType<UndoRedoTool>().Single();
+            undoredoTool.Commands.First(x => x.Name == "Undo").Execute(null);
+
+            // Assert
+            texts = Canvas.Document.Children.OfType<SvgTextBase>().ToList();
+            Assert.AreEqual(1, texts.Count);
+        }
+
+        [Test]
+        [TestCase("", "  ")]
+        [TestCase(" ", "  ")]
+        [TestCase("\t", "  ")]
+        [TestCase((string) null, "  ")]
+        [TestCase("hello from svg", "hello from svg")]
+        public async Task WhenUserTapsNestedTextSpan_EditsTextSpan(string theText, string expectedText)
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            var txtTool = Canvas.Tools.OfType<TextTool>().Single();
+            Canvas.ActiveTool = txtTool;
+
+            var d = LoadDocument("nested_transformed_text.svg");
+            var child = d.Children.OfType<SvgVisualElement>().Single(c => c.Visible && c.Displayable);
+            var formerText = child.Descendants().OfType<SvgTextSpan>().Single().Text;
+            Canvas.ScreenWidth = 800;
+            Canvas.ScreenHeight = 500;
+            Canvas.AddItemInScreenCenter(child);
+
+            _textMock.F = ((x, y) => theText);
+            var pt1 = PointF.Create(370, 260);
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, pt1, pt1, pt1, 1));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, pt1, pt1, pt1, 1));
+
+            // Preassert
+            var texts = Canvas.Document.Children.OfType<SvgTextBase>().ToList();
+            Assert.AreEqual(0, texts.Count);
+            var nestedText = Canvas.Document.Descendants().OfType<SvgTextSpan>().Single();
+            Assert.AreEqual(expectedText, nestedText.Text);
+
+            // Act
+            var undoredoTool = Canvas.Tools.OfType<UndoRedoTool>().Single();
+            undoredoTool.Commands.First(x => x.Name == "Undo").Execute(null);
+
+            // Assert
+            nestedText = Canvas.Document.Descendants().OfType<SvgTextSpan>().Single();
+            Assert.AreEqual(formerText, nestedText.Text);
         }
     }
 }

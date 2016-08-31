@@ -42,11 +42,15 @@ namespace Svg.Core.Tools
             {
                 if (!_canvas.SelectedElements.Any()) return;
 
+                var t = (StrokeStyleTool) Tool;
+
+                // prepare command for the whole operation
+                t.UndoRedoService.ExecuteCommand(new UndoableActionCommand("Change stroke style operation", o => {}));
                 // change the stroke style of all selected items
                 foreach (var selectedElement in _canvas.SelectedElements)
                 {
                     var formerStrokeDashArray = selectedElement.StrokeDashArray;
-                    ((StrokeStyleTool) Tool).UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name,
+                    t.UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name,
                         o =>
                         {
                             selectedElement.StrokeDashArray = SvgUnitCollection.IsNullOrEmpty(selectedElement.StrokeDashArray) ? "10 10" : null;
@@ -55,7 +59,7 @@ namespace Svg.Core.Tools
                         {
                             selectedElement.StrokeDashArray = formerStrokeDashArray;
                             _canvas.FireInvalidateCanvas();
-                        }));
+                        }), hasOwnUndoRedoScope: false);
                 }
             }
 
