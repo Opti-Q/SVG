@@ -35,8 +35,7 @@ namespace Svg.Core.Tools
             }
         }
 
-        // implementaition for per-tool selected color
-
+        // implementation for per-tool selected color
         //public Color SelectedColor
         //{
         //    get
@@ -114,7 +113,7 @@ namespace Svg.Core.Tools
                 element.Stroke?.Dispose();
                 Engine.Resolve<ISvgElementFactory>().SetPropertyValue(element, "stroke", oldStroke, element.OwnerDocument);
                 Canvas.FireInvalidateCanvas();
-            }));
+            }), hasOwnUndoRedoScope: false);
 
             if (element is SvgText)
             {
@@ -163,8 +162,6 @@ namespace Svg.Core.Tools
 
         private void OnChildAdded(object sender, ChildAddedEventArgs e)
         {
-            /* TODO: some mechanism to add the undoable command without own undo/redo scope,
-             because the child was added by another tool obviously */
             ColorizeElement(e.NewChild, SelectedColor);
         }
 
@@ -192,6 +189,7 @@ namespace Svg.Core.Tools
 
                 if (_canvas.SelectedElements.Any())
                 {
+                    t.UndoRedoService.ExecuteCommand(new UndoableActionCommand("Colorize selecte elements", o => {}));
                     // change the color of all selected items
                     foreach (var selectedElement in _canvas.SelectedElements)
                     {
