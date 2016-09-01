@@ -94,6 +94,9 @@
     <Compile Include="..\Svg.Shared\DefaultLogger.cs">
       <Link>DefaultLogger.cs</Link>
     </Compile>
+    <Compile Include="..\Svg.Shared\FileRequestService.cs">
+      <Link>FileRequestService.cs</Link>
+    </Compile>
     <Compile Include="..\Svg.Shared\FileSystem.cs">
       <Link>FileSystem.cs</Link>
     </Compile>

@@ -213,6 +213,7 @@
     <Compile Include="Interfaces\ICloneable.cs" />
     <Compile Include="Interfaces\ICultureHelper.cs" />
     <Compile Include="Interfaces\IFactory.cs" />
+    <Compile Include="Interfaces\IFileRequest.cs" />
     <Compile Include="Interfaces\IFileSystem.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Interfaces\Image.cs" />
