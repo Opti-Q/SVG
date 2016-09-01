@@ -199,13 +199,15 @@ namespace Svg.Core.Tools
                     return;
                 }
 
-                Color formerSelectedColor = t.SelectedColor;
+                var formerSelectedColor = t.SelectedColor;
                 t.UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name, o =>
                 {
                     t.SelectedColor = color;
+                    t.Canvas.FireToolCommandsChanged();
                 }, o =>
                 {
                     t.SelectedColor = formerSelectedColor;
+                    t.Canvas.FireToolCommandsChanged();
                 }));
             }
 

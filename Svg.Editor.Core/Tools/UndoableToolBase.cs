@@ -30,6 +30,7 @@ namespace Svg.Core.Tools
 
         ~UndoableToolBase()
         {
+            UndoRedoService.ActionExecuted -= UndoRedoServiceOnActionExecuted;
             UndoRedoService.CanUndoChanged -= UndoRedoServiceOnCanUndoRedoChanged;
             UndoRedoService.CanRedoChanged -= UndoRedoServiceOnCanUndoRedoChanged;
         }
