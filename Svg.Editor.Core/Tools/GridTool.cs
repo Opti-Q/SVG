@@ -50,6 +50,8 @@ namespace Svg.Core.Tools
         private bool _areElementsMoved;
         private PointF _generalTranslation;
 
+        private Dictionary<double, double> CachedDiagonals = new Dictionary<double, double>();
+
 
         public GridTool(string properties, IUndoRedoService undoRedoService)
             : base("Grid", properties, undoRedoService)
@@ -178,7 +180,16 @@ namespace Svg.Core.Tools
             var x = screenTopLeft.X - relativeCanvasTranslationX - (StepSizeX * 2);
             // subtract 2x stepsize so gridlines always start from "out of sight" and lines do not start from a visible x-border
             var y = screenTopLeft.Y - relativeCanvasTranslationY;
-            var lineLength = Math.Sqrt(Math.Pow(renderer.Width, 2) + Math.Pow(renderer.Height, 2)) / ws.ZoomFactor + stepSize * 4;
+
+            // cache these expensive calculations for performance
+            var cachedDiagonalKey = renderer.Width + renderer.Height;
+            double diagonal;
+            if (!CachedDiagonals.TryGetValue(cachedDiagonalKey, out diagonal))
+            {
+                diagonal = Math.Sqrt(Math.Pow(renderer.Width, 2) + Math.Pow(renderer.Height, 2));
+                CachedDiagonals[cachedDiagonalKey] = diagonal;
+            }
+            var lineLength = diagonal / ws.ZoomFactor + stepSize * 8;
 
             for (var i = y - yPosition; i <= y + yPosition; i += stepSize)
             {
