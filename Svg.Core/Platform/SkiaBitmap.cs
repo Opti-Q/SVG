@@ -10,19 +10,23 @@ namespace Svg.Platform
     {
         protected readonly SKBitmap _image;
 
-        public SkiaBitmap(int width, int height) : this(new SKBitmap(width, height, SKImageInfo.PlatformColorType, SKAlphaType.Premul))
+        public SkiaBitmap(int width, int height)
         {
+            Width = width;
+            Height = height;
+            
+            _image = new SKBitmap(width, height, SKImageInfo.PlatformColorType, SKAlphaType.Premul);
         }
 
-        public SkiaBitmap(Image inputImage) : this(new SKBitmap(((SkiaBitmap)inputImage)._image.Info))
+        public SkiaBitmap(Image inputImage)
         {
+            var ii = (SkiaBitmap) inputImage;
+            _image = new SKBitmap(ii._image.Info);
         }
 
         public SkiaBitmap(SKBitmap bitmap)
         {
             _image = bitmap;
-            Width = _image.Width;
-            Height = _image.Height;
         }
 
         protected SkiaBitmap()

@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using Svg.Core;
-using Svg.Core.Interfaces;
 using Svg.Core.Tools;
 using Svg.Interfaces;
 using Svg.Transforms;
@@ -14,7 +11,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
     public class AddRandomItemTool : ToolBase
     {
 
-        private string[] SvgPathStrings { get; } =
+        private string[] SvgPathStrings =
         {
             //"isolib/Welds/solid/weld1.svg",
             "isolib/Valves/Valves/valve1.svg",
@@ -64,33 +61,10 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     //var provider = SourceProvider("svg/painting-marker-05-f.svg");
                     //var provider = SourceProvider("svg/painting-marker-01-f.svg");
                     //var provider = SourceProvider("svg/rect.svg");
-                    //var provider = SourceProvider(SvgPathStrings[new Random().Next(0, SvgPathStrings.Length - 1)]);
-                    //var otherDoc = SvgDocument.Open<SvgDocument>(provider);
+                    var provider = SourceProvider(SvgPathStrings[new Random().Next(0, SvgPathStrings.Length - 1)]);
+                    var otherDoc = SvgDocument.Open<SvgDocument>(provider);
 
-                    //Canvas.AddItemInScreenCenter(otherDoc);
-
-                    //Canvas.AddItemInScreenCenter(new SvgImage { Width = 100, Height = 100, Href = new Uri("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA" +
-                    //                                              "AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0D" +
-                    //                                              "HxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg ==", UriKind.Absolute)});
-
-                    var fs = Engine.Resolve<IFileSystem>();
-                    var svgCachingService = Engine.Resolve<ISvgCachingService>();
-                    var colorTool = Canvas.Tools.OfType<ColorTool>().Single();
-                    var selectedColor = colorTool.SelectedColor;
-                    var path = svgCachingService.GetCachedPngPath(colorTool.IconName, $"{selectedColor.R}_{selectedColor.G}_{selectedColor.B}", fs);
-                    try
-                    {
-                        Canvas.AddItemInScreenCenter(new SvgImage
-                        {
-                            Width = 100,
-                            Height = 100,
-                            Href = new Uri($"file://{path}", UriKind.Absolute)
-                        });
-                    }
-                    catch (IOException)
-                    {
-                        Debugger.Break();
-                    }
+                    Canvas.AddItemInScreenCenter(otherDoc);
 
                 } , sortFunc:(x) => 1200)
             };
