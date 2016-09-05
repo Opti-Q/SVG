@@ -239,8 +239,6 @@ namespace Svg.Core
             ScreenWidth = renderer.Width;
             ScreenHeight = renderer.Height;
 
-            //ZoomFocus = ScreenToCanvas(ScreenCenter);
-
             // apply global panning and zooming
             renderer.Translate(Translate.X, Translate.Y);
             renderer.Scale(ZoomFactor, ZoomFocus.X, ZoomFocus.Y);

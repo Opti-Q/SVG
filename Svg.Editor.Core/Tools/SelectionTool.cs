@@ -149,7 +149,10 @@ namespace Svg.Core.Tools
             var selected = ws.GetElementsUnder<SvgVisualElement>(selectionRectangle, selectionType, maxItems);
 
             foreach (var element in selected)
+            {
+                if (element.CustomAttributes.ContainsKey("iclbackground")) continue;
                 ws.SelectedElements.Add(element);
+            }
         }
 
         public override Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
