@@ -5,7 +5,7 @@ using Svg.Interfaces;
 
 namespace Svg.Core.Tools
 {
-    public class ZoomTool : ToolBase
+    public sealed class ZoomTool : ToolBase
     {
         private SvgDrawingCanvas _owner;
         private bool _focused;
@@ -20,18 +20,35 @@ namespace Svg.Core.Tools
         //private Brush OrangeBrush => _orangeBrush ?? (_orangeBrush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 220, 160, 60)));
         //private Pen OrangePen => _orangePen ?? (_orangePen = Engine.Factory.CreatePen(OrangeBrush, 5));
 
-        public ZoomTool(float minScale = 0.5f, float maxScale = 5.0f)
-            : base("Zoom")
+        public ZoomTool(string jsonProperies) : base("Zoom", jsonProperies)
         {
-            MinScale = minScale;
-            MaxScale = maxScale;
             IconName = "ic_zoom_white_48dp.png";
             ToolType = ToolType.View;
         }
 
-        public float MinScale { get; set; }
+        public float MinScale
+        {
+            get
+            {
+                object minScale;
+                if (!Properties.TryGetValue("minscale", out minScale))
+                    minScale = .5f;
+                return Convert.ToSingle(minScale);
+            }
+            set { Properties["minscale"] = value; }
+        }
 
-        public float MaxScale { get; set; }
+        public float MaxScale
+        {
+            get
+            {
+                object maxScale;
+                if (!Properties.TryGetValue("maxscale", out maxScale))
+                    maxScale = 5f;
+                return Convert.ToSingle(maxScale);
+            }
+            set { Properties["maxscale"] = value; }
+        }
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {
@@ -86,47 +103,6 @@ namespace Svg.Core.Tools
 
             return Task.FromResult(true);
         }
-
-        /*
-         *  ____                     _                   _        _   
-         * |_  / ___  ___ ._ _ _   _| |_ ___   ___  ___ <_>._ _ _| |_ 
-         *  / / / . \/ . \| ' ' |   | | / . \ | . \/ . \| || ' | | |  
-         * /___|\___/\___/|_|_|_|   |_| \___/ |  _/\___/|_||_|_| |_|  
-         *                                    |_|           
-         *                                    
-         * Um auf einen Punkt (ZoomFocus) zu zoomen, wird vor dem Skalieren eine Translation ausgeführt, um den Punkt in den Nullpunkt zu setzen. 
-         *                                              
-         *                                     0                             6         8
-         * <-----------------------------------+----1----2----3----4----5----+----7----+--------------------------------------------------------------------->
-         *                                     |                             |         |
-         *                                     1                             |         |
-         *                                     |                             |         |
-         *                                     2              o P1           |         |
-         *                                     |                             |         |
-         *                                     3                             |         |
-         *                                     |                             |         |
-         *                                     4            screen           |         |
-         *                                     +-----------------------------+         |
-         *                                     5                                       |
-         *                                     |                                       |
-         *                                     6                                       |
-         *                                     |                                       |
-         *                                     7                                       |
-         *                                     |            canvas                     |
-         *                                   8 +---------------------------------------+
-         *                                     |
-         *                                     |
-         *                                     |
-         *                                     |
-         *                                     |
-         *                                     |
-         *                                     |
-         *                                     |
-         *                                     |
-         *                                     |
-         *                                     v
-         *
-         */
 
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
@@ -219,6 +195,7 @@ namespace Svg.Core.Tools
                          * 
                          */
                         var canvasFocus = ws.ScreenToCanvas(CurrentFocusX, CurrentFocusY);
+                        // save translate from previous zoom
                         ws.Translate -= (ws.ZoomFocus - canvasFocus) * (ws.ZoomFactor - 1);
                         ws.ZoomFocus = canvasFocus;
                         _focused = true;

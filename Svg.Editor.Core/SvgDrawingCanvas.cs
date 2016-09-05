@@ -69,16 +69,30 @@ namespace Svg.Core
                 { "strokewidths", new [] { 12, 24, 6 } },
                 { "strokewidthnames", new [] { "normal", "thick", "thin" } }
             }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
-            
+
+            var zoomToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
+            {
+                { "minscale", 1.0f },
+                { "maxscale", 5.0f }
+            }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+
+            var panToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
+            {
+                { "constraintleft", .0f },
+                { "constrainttop", .0f },
+                { "constraintright", 3000.0f },
+                { "constraintbottom", 1600.0f }
+            }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+
             var undoRedoService = Engine.Resolve<IUndoRedoService>();
 
             _tools = new ObservableCollection<ITool>
             {
                     new GridTool(gridToolProperties, undoRedoService), // must be before movetool!
                     new MoveTool(undoRedoService), // must be before pantool as it decides whether or not it is active based on selection
-                    new PanTool(),
+                    new PanTool(panToolProperties),
                     new RotationTool(undoRedoService),
-                    new ZoomTool(),
+                    new ZoomTool(zoomToolProperties),
                     new SelectionTool(undoRedoService),
                     new TextTool(undoRedoService),
                     new LineTool(lineToolProperties, undoRedoService),
