@@ -4,6 +4,6 @@ namespace Svg.Core.Interfaces
 {
     public interface IPickImageService
     {
-        Task<string> PickImagePath();
+        Task<string> PickImagePath(int maxPixelDimension);
     }
 }

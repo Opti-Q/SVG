@@ -9,9 +9,9 @@ namespace Svg.Droid.SampleEditor.Core.Tools
 {
     public class AndroidPickImageService : IPickImageService
     {
-        public async Task<string> PickImagePath()
+        public async Task<string> PickImagePath(int maxPixelDimension)
         {
-            using (var inStream = await Mvx.Resolve<IMvxPictureChooserTask>().ChoosePictureFromLibrary(2048, 80))
+            using (var inStream = await Mvx.Resolve<IMvxPictureChooserTask>().ChoosePictureFromLibrary(maxPixelDimension, 80))
             {
                 var fs = Engine.Resolve<IFileSystem>();
                 var path = fs.PathCombine(fs.GetDefaultStoragePath(), $"{Guid.NewGuid()}.png");

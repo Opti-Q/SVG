@@ -39,6 +39,8 @@ namespace Svg.Core
             _selectedElements = new ObservableCollection<SvgVisualElement>();
             _selectedElements.CollectionChanged += OnSelectionChanged;
 
+            #region Tool properties
+
             // this part should be in the designer, when the iCL is created
             var gridToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
             {
@@ -76,20 +78,26 @@ namespace Svg.Core
                 { "maxscale", 5.0f }
             }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 
+            //var zoomToolProperties = "";
+
             var panToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
             {
                 { "constraintleft", .0f },
                 { "constrainttop", .0f },
-                { "constraintright", 3000.0f },
-                { "constraintbottom", 1600.0f }
+                { "constraintright", 1920.0f },
+                { "constraintbottom", 994.0f }
             }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+
+            //var panToolProperties = "";
+
+            #endregion
 
             var undoRedoService = Engine.Resolve<IUndoRedoService>();
 
             _tools = new ObservableCollection<ITool>
             {
-                    new GridTool(gridToolProperties, undoRedoService), // must be before movetool!
-                    new MoveTool(undoRedoService), // must be before pantool as it decides whether or not it is active based on selection
+                    new GridTool(gridToolProperties, undoRedoService),
+                    new MoveTool(undoRedoService),
                     new PanTool(panToolProperties),
                     new RotationTool(undoRedoService),
                     new ZoomTool(zoomToolProperties),

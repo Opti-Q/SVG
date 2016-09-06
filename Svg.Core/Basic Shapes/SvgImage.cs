@@ -20,8 +20,8 @@ namespace Svg
         /// </summary>
 		public SvgImage()
         {
-            Width = SvgUnit.Empty;
-            Height = SvgUnit.Empty;
+            //Width = SvgUnit.Empty;
+            //Height = SvgUnit.Empty;
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace Svg
                         return;
                     }
 
-                    var destClip = Width.IsEmpty && Height.IsEmpty
+                    var destClip = (Width.IsEmpty || Width.IsNone) && (Height.IsEmpty || Height.IsNone)
                             ? RectangleF.Create(Location.ToDeviceValue(renderer, this), srcRect.Size)
                             : RectangleF.Create(Location.ToDeviceValue(renderer, this),
                                 SizeF.Create(Width.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this),
