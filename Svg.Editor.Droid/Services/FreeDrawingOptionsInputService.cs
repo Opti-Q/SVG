@@ -25,7 +25,6 @@ namespace Svg.Droid.Editor.Services
             // setup builder
             builder.SetTitle(title);
 
-            // setup spinner for start marker
             var view = new LinearLayout(context) { Orientation = Orientation.Horizontal };
 
             // setup spinner for stroke width

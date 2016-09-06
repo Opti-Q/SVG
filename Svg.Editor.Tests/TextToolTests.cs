@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -143,7 +144,7 @@ namespace Svg.Editor.Tests
         {
             public Func<string, string, string> F { get; set; } = (x, y) => null;
             
-            public Task<string> GetUserInput(string title, string textValue)
+            public Task<string> GetUserInput(string title, string textValue, IEnumerable textSizeOptions)
             {
                 return Task.FromResult(F(title, textValue));
             }

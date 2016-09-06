@@ -69,6 +69,14 @@ namespace Svg.Core
                 { "strokewidths", new [] { 12, 24, 6 } },
                 { "strokewidthnames", new [] { "normal", "thick", "thin" } }
             }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+
+            var textToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
+            {
+                { "fontsizes", new [] { 12, 24, 36, 48 } },
+                { "selectedfontsizeindex", 1 },
+                { "fontsizenames", new [] { "12px", "24px", "36px", "48px" } }
+            }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+
             
             var undoRedoService = Engine.Resolve<IUndoRedoService>();
 
@@ -80,7 +88,7 @@ namespace Svg.Core
                     new RotationTool(undoRedoService),
                     new ZoomTool(),
                     new SelectionTool(undoRedoService),
-                    new TextTool(undoRedoService),
+                    new TextTool(textToolProperties, undoRedoService),
                     new LineTool(lineToolProperties, undoRedoService),
                     new FreeDrawingTool(freeDrawToolProperties, undoRedoService),
                     new ColorTool(colorToolProperties, undoRedoService),
