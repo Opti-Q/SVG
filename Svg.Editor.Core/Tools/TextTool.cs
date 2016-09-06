@@ -131,13 +131,16 @@ namespace Svg.Core.Tools
                         else if (!string.Equals(e.Text, txt))
                         {
                             var formerText = e.Text;
+                            var formerFontSize = e.FontSize;
                             UndoRedoService.ExecuteCommand(new UndoableActionCommand("Edit text", o =>
                             {
                                 e.Text = txt;
+                                e.FontSize = new SvgUnit(SvgUnitType.Pixel, fontSize);
                                 Canvas.FireInvalidateCanvas();
                             }, o =>
                             {
                                 e.Text = formerText;
+                                e.FontSize = formerFontSize;
                                 Canvas.FireInvalidateCanvas();
                             }));
                         }

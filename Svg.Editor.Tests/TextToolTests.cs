@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -31,7 +31,7 @@ namespace Svg.Editor.Tests
             await Canvas.EnsureInitialized();
             var txtTool = Canvas.Tools.OfType<TextTool>().Single();
             Canvas.ActiveTool = txtTool;
-            _textMock.F = ((x, y) => "hello");
+            _textMock.F = (x, y) => new TextTool.TextProperties { Text = "hello", FontSizeIndex = 0 };
 
             // Act
             await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
@@ -42,10 +42,10 @@ namespace Svg.Editor.Tests
             Assert.AreEqual(1, texts.Count);
             var txt = texts.First();
             Assert.AreEqual("hello", txt.Text);
-            Assert.AreEqual(20f, txt.FontSize.Value);
+            Assert.AreEqual(txtTool.FontSizes.First(), txt.FontSize.Value);
             Assert.AreEqual(SvgUnitType.Pixel, txt.FontSize.Type);
         }
-        
+
         [Test]
         public async Task WhenUserTapsOnExistingText_EditsText()
         {
@@ -55,13 +55,13 @@ namespace Svg.Editor.Tests
             Canvas.ActiveTool = txtTool;
             Canvas.Document.Children.Add(new SvgText()
             {
-                Text="this is a test",
+                Text = "this is a test",
                 X = new SvgUnitCollection() { new SvgUnit(SvgUnitType.Pixel, 5) },
                 Y = new SvgUnitCollection() { new SvgUnit(SvgUnitType.Pixel, 5) },
                 FontSize = new SvgUnit(SvgUnitType.Pixel, 20),
             });
 
-            _textMock.F = ((x, y) => "hello");
+            _textMock.F = (x, y) => new TextTool.TextProperties { Text = "hello", FontSizeIndex = 0 };
 
             // Act
             await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
@@ -72,7 +72,7 @@ namespace Svg.Editor.Tests
             Assert.AreEqual(1, texts.Count);
             var txt = texts.First();
             Assert.AreEqual("hello", txt.Text);
-            Assert.AreEqual(20f, txt.FontSize.Value);
+            Assert.AreEqual(txtTool.FontSizes.First(), txt.FontSize.Value);
             Assert.AreEqual(SvgUnitType.Pixel, txt.FontSize.Type);
         }
 
@@ -80,7 +80,7 @@ namespace Svg.Editor.Tests
         [TestCase("")]
         [TestCase(" ")]
         [TestCase("\t")]
-        [TestCase((string)null)]
+        [TestCase((string) null)]
         public async Task WhenUserTapsOnExistingText_AndEntersEmpty_RemovesText(string theText)
         {
             // Arrange
@@ -95,7 +95,7 @@ namespace Svg.Editor.Tests
                 FontSize = new SvgUnit(SvgUnitType.Pixel, 20),
             });
 
-            _textMock.F = ((x, y) => theText);
+            _textMock.F = (x, y) => new TextTool.TextProperties { Text = theText };
 
             // Act
             await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
@@ -110,7 +110,7 @@ namespace Svg.Editor.Tests
         [TestCase("", "  ")]
         [TestCase(" ", "  ")]
         [TestCase("\t", "  ")]
-        [TestCase((string)null, "  ")]
+        [TestCase(null, "  ")]
         [TestCase("hello from svg", "hello from svg")]
         public async Task WhenUserTapsNestedTextSpan_EditsTextSpan(string theText, string expectedText)
         {
@@ -125,7 +125,7 @@ namespace Svg.Editor.Tests
             Canvas.ScreenHeight = 500;
             Canvas.AddItemInScreenCenter(child);
 
-            _textMock.F = ((x, y) => theText);
+            _textMock.F = (x, y) => new TextTool.TextProperties { Text = theText };
 
             // Act
             var pt1 = PointF.Create(370, 260);
@@ -142,9 +142,9 @@ namespace Svg.Editor.Tests
 
         private class MockTextInputService : ITextInputService
         {
-            public Func<string, string, string> F { get; set; } = (x, y) => null;
-            
-            public Task<string> GetUserInput(string title, string textValue, IEnumerable textSizeOptions)
+            public Func<string, string, TextTool.TextProperties> F { get; set; } = (x, y) => null;
+
+            public Task<TextTool.TextProperties> GetUserInput(string title, string textValue, IEnumerable<string> textSizeOptions, int textSizeSelected)
             {
                 return Task.FromResult(F(title, textValue));
             }

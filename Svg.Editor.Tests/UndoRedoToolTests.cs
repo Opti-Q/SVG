@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -461,9 +462,9 @@ namespace Svg.Editor.Tests
 
         private class MockTextInputService : ITextInputService
         {
-            public Func<string, string, string> F { get; set; } = (x, y) => null;
+            public Func<string, string, TextTool.TextProperties> F { get; set; } = (x, y) => null;
 
-            public Task<string> GetUserInput(string title, string textValue)
+            public Task<TextTool.TextProperties> GetUserInput(string title, string textValue, IEnumerable<string> textSizeOptions, int textSizeSelected)
             {
                 return Task.FromResult(F(title, textValue));
             }
@@ -476,7 +477,7 @@ namespace Svg.Editor.Tests
             await Canvas.EnsureInitialized();
             var txtTool = Canvas.Tools.OfType<TextTool>().Single();
             Canvas.ActiveTool = txtTool;
-            _textMock.F = ((x, y) => "hello");
+            _textMock.F = (x, y) => new TextTool.TextProperties { Text = "hello", FontSizeIndex = 0 };
             await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
             await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
 
@@ -485,7 +486,7 @@ namespace Svg.Editor.Tests
             Assert.AreEqual(1, texts.Count);
             var txt = texts.First();
             Assert.AreEqual("hello", txt.Text);
-            Assert.AreEqual(20f, txt.FontSize.Value);
+            Assert.AreEqual(txtTool.FontSizes.First(), txt.FontSize.Value);
             Assert.AreEqual(SvgUnitType.Pixel, txt.FontSize.Type);
 
             // Act
@@ -505,16 +506,17 @@ namespace Svg.Editor.Tests
             var txtTool = Canvas.Tools.OfType<TextTool>().Single();
             Canvas.ActiveTool = txtTool;
             const string formerText = "this is a test";
+            var formerFontSize = new SvgUnit(SvgUnitType.Pixel, 20);
             Canvas.Document.Children.Add(new SvgText()
             {
                 Text = formerText,
                 X = new SvgUnitCollection() { new SvgUnit(SvgUnitType.Pixel, 5) },
                 Y = new SvgUnitCollection() { new SvgUnit(SvgUnitType.Pixel, 5) },
-                FontSize = new SvgUnit(SvgUnitType.Pixel, 20),
+                FontSize = formerFontSize
             });
 
             const string newText = "hello";
-            _textMock.F = (x, y) => newText;
+            _textMock.F = (x, y) => new TextTool.TextProperties { Text = newText, FontSizeIndex = 0 };
             await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
             await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
 
@@ -523,7 +525,7 @@ namespace Svg.Editor.Tests
             Assert.AreEqual(1, texts.Count);
             var txt = texts.First();
             Assert.AreEqual(newText, txt.Text);
-            Assert.AreEqual(20f, txt.FontSize.Value);
+            Assert.AreEqual(txtTool.FontSizes.First(), txt.FontSize.Value);
             Assert.AreEqual(SvgUnitType.Pixel, txt.FontSize.Type);
 
             // Act
@@ -535,7 +537,7 @@ namespace Svg.Editor.Tests
             Assert.AreEqual(1, texts.Count);
             txt = texts.First();
             Assert.AreEqual(formerText, txt.Text);
-            Assert.AreEqual(20f, txt.FontSize.Value);
+            Assert.AreEqual(formerFontSize.Value, txt.FontSize.Value);
             Assert.AreEqual(SvgUnitType.Pixel, txt.FontSize.Type);
         }
 
@@ -558,7 +560,7 @@ namespace Svg.Editor.Tests
                 FontSize = new SvgUnit(SvgUnitType.Pixel, 20),
             });
 
-            _textMock.F = ((x, y) => theText);
+            _textMock.F = (x, y) => new TextTool.TextProperties { Text = theText, FontSizeIndex = 0 };
             await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
             await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
 
@@ -579,7 +581,7 @@ namespace Svg.Editor.Tests
         [TestCase("", "  ")]
         [TestCase(" ", "  ")]
         [TestCase("\t", "  ")]
-        [TestCase((string) null, "  ")]
+        [TestCase(null, "  ")]
         [TestCase("hello from svg", "hello from svg")]
         public async Task WhenUserTapsNestedTextSpan_EditsTextSpan(string theText, string expectedText)
         {
@@ -595,7 +597,7 @@ namespace Svg.Editor.Tests
             Canvas.ScreenHeight = 500;
             Canvas.AddItemInScreenCenter(child);
 
-            _textMock.F = ((x, y) => theText);
+            _textMock.F = (x, y) => new TextTool.TextProperties { Text = theText, FontSizeIndex = 0 };
             var pt1 = PointF.Create(370, 260);
             await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, pt1, pt1, pt1, 1));
             await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, pt1, pt1, pt1, 1));
