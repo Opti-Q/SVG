@@ -100,6 +100,8 @@ namespace Svg.Core.Tools
             set { Properties["issnappingenabled"] = value; }
         }
 
+        public override int InputOrder => 100; // must be before movetool!
+
         public bool IsVisible { get; set; } = true;
         private Brush Brush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 210, 210, 210)));
         //private Brush Brush2 => _brush2 ?? (_brush2 = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(180, 0, 0, 0)));
@@ -400,7 +402,7 @@ namespace Svg.Core.Tools
                 return;
 
             var ve = element as SvgVisualElement;
-            if (ve == null)
+            if (ve == null || ve.CustomAttributes.ContainsKey("iclnosnapping"))
                 return;
 
             try

@@ -20,7 +20,7 @@ namespace Svg.Core.Tools
             ToolType = ToolType.Modify;
         }
 
-        public override int InputOrder => 200;
+        public override int InputOrder => 200; // must be before pantool as it decides whether or not it is active based on selection
 
         public override Task Initialize(SvgDrawingCanvas ws)
         {

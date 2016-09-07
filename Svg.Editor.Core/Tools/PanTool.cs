@@ -1,15 +1,16 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Svg.Core.Events;
+using Svg.Interfaces;
 
 namespace Svg.Core.Tools
 {
     public class PanTool : ToolBase
     {
-        public PanTool() 
-            : base("Pan")
+        public PanTool(string jsonProperties)
+            : base("Pan", jsonProperties)
         {
             IconName = "ic_pan_tool_white_48dp.png";
-            //ToolUsage = ToolUsage.Explicit;
             ToolType = ToolType.View;
         }
 
@@ -25,6 +26,8 @@ namespace Svg.Core.Tools
 
             ws.Translate.X += ev.RelativeDelta.X;
             ws.Translate.Y += ev.RelativeDelta.Y;
+            ws.FireInvalidateCanvas();
+
             ws.FireInvalidateCanvas();
 
             return Task.FromResult(true);

@@ -13,13 +13,15 @@ namespace Svg
     [SvgElement("image")]
     public class SvgImage : SvgVisualElement
     {
+        private object _img;
+
         /// <summary>
 		/// Initializes a new instance of the <see cref="SvgImage"/> class.
         /// </summary>
 		public SvgImage()
         {
-            Width = new SvgUnit(0.0f);
-            Height = new SvgUnit(0.0f);
+            //Width = SvgUnit.Empty;
+            //Height = SvgUnit.Empty;
         }
 
         /// <summary>
@@ -37,46 +39,55 @@ namespace Svg
         [SvgAttribute("preserveAspectRatio")]
         public SvgAspectRatio AspectRatio
         {
-            get { return this.Attributes.GetAttribute<SvgAspectRatio>("preserveAspectRatio"); }
-            set { this.Attributes["preserveAspectRatio"] = value; }
+            get { return Attributes.GetAttribute<SvgAspectRatio>("preserveAspectRatio"); }
+            set { Attributes["preserveAspectRatio"] = value; }
         }
 
-		[SvgAttribute("x")]
-		public virtual SvgUnit X
-		{
-			get { return this.Attributes.GetAttribute<SvgUnit>("x"); }
-			set { this.Attributes["x"] = value; }
-		}
+        [SvgAttribute("x")]
+        public virtual SvgUnit X
+        {
+            get { return Attributes.GetAttribute<SvgUnit>("x"); }
+            set { Attributes["x"] = value; }
+        }
 
-		[SvgAttribute("y")]
-		public virtual SvgUnit Y
-		{
-			get { return this.Attributes.GetAttribute<SvgUnit>("y"); }
-			set { this.Attributes["y"] = value; }
-		}
+        [SvgAttribute("y")]
+        public virtual SvgUnit Y
+        {
+            get { return Attributes.GetAttribute<SvgUnit>("y"); }
+            set { Attributes["y"] = value; }
+        }
 
 
-		[SvgAttribute("width")]
-		public virtual SvgUnit Width
-		{
-			get { return this.Attributes.GetAttribute<SvgUnit>("width"); }
-			set { this.Attributes["width"] = value; }
-		}
+        [SvgAttribute("width")]
+        public virtual SvgUnit Width
+        {
+            get { return Attributes.GetAttribute<SvgUnit>("width"); }
+            set { Attributes["width"] = value; }
+        }
 
-		[SvgAttribute("height")]
-		public virtual SvgUnit Height
-		{
-			get { return this.Attributes.GetAttribute<SvgUnit>("height"); }
-			set { this.Attributes["height"] = value; }
-		}
+        [SvgAttribute("height")]
+        public virtual SvgUnit Height
+        {
+            get { return Attributes.GetAttribute<SvgUnit>("height"); }
+            set { Attributes["height"] = value; }
+        }
 
-		[SvgAttribute("href", SvgAttributeAttribute.XLinkNamespace)]
-		public virtual Uri Href
-		{
-			get { return this.Attributes.GetAttribute<Uri>("href"); }
-			set { this.Attributes["href"] = value; }
-		}
+        [SvgAttribute("href", SvgAttributeAttribute.XLinkNamespace)]
+        public virtual Uri Href
+        {
+            get { return Attributes.GetAttribute<Uri>("href"); }
+            set
+            {
+                Attributes["href"] = value;
+                DisposeImage();
+            }
+        }
 
+        private void DisposeImage()
+        {
+            (_img as IDisposable)?.Dispose();
+            _img = null;
+        }
 
 
         /// <summary>
@@ -85,11 +96,21 @@ namespace Svg
         /// <value>The bounds.</value>
         public override RectangleF Bounds
         {
-			get
+            get
             {
-                return RectangleF.Create(this.Location.ToDeviceValue(null, this),
-                                        SizeF.Create(this.Width.ToDeviceValue(null, UnitRenderingType.Horizontal, this), 
-                                                  this.Height.ToDeviceValue(null, UnitRenderingType.Vertical, this)));
+                var bmp = _img as Image;
+                var svg = _img as SvgFragment;
+                if (bmp != null)
+                {
+                    return RectangleF.Create(Location.ToDeviceValue(null, this), SizeF.Create(bmp.Width, bmp.Height));
+                }
+                if (svg != null)
+                {
+                    return RectangleF.Create(Location.ToDeviceValue(null, this), svg.Bounds.Size);
+                }
+                return RectangleF.Create(Location.ToDeviceValue(null, this),
+                                        SizeF.Create(Width.ToDeviceValue(null, UnitRenderingType.Horizontal, this),
+                                                  Height.ToDeviceValue(null, UnitRenderingType.Vertical, this)));
             }
         }
 
@@ -98,7 +119,14 @@ namespace Svg
         /// </summary>
         public override GraphicsPath Path(ISvgRenderer renderer)
         {
-		    return null;
+            return null;
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            DisposeImage();
         }
 
         /// <summary>
@@ -109,9 +137,9 @@ namespace Svg
             if (!Visible || !Displayable)
                 return;
 
-            if (Width.Value > 0.0f && Height.Value > 0.0f && this.Href != null)
+            if (Href != null)
             {
-                var img = GetImage(this.Href);
+                var img = _img ?? (_img = GetImage(Href));
                 if (img != null)
                 {
                     RectangleF srcRect;
@@ -130,14 +158,16 @@ namespace Svg
                         return;
                     }
 
-                    var destClip = RectangleF.Create(this.Location.ToDeviceValue(renderer, this),
-                                                  SizeF.Create(Width.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
-                                                            Height.ToDeviceValue(renderer, UnitRenderingType.Vertical, this)));
-                    RectangleF destRect = destClip;
-                        
-                    this.PushTransforms(renderer);
+                    var destClip = (Width.IsEmpty || Width.IsNone) && (Height.IsEmpty || Height.IsNone)
+                            ? RectangleF.Create(Location.ToDeviceValue(renderer, this), srcRect.Size)
+                            : RectangleF.Create(Location.ToDeviceValue(renderer, this),
+                                SizeF.Create(Width.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this),
+                                Height.ToDeviceValue(renderer, UnitRenderingType.Vertical, this)));
+                    var destRect = destClip;
+
+                    PushTransforms(renderer);
                     renderer.SetClip(Engine.Factory.CreateRegion(destClip), CombineMode.Intersect);
-                    this.SetClip(renderer);
+                    SetClip(renderer);
 
                     if (AspectRatio != null && AspectRatio.Align != SvgPreserveAspectRatio.none)
                     {
@@ -191,14 +221,14 @@ namespace Svg
                                 break;
                         }
 
-                        destRect = RectangleF.Create(destClip.X + xOffset, destClip.Y + yOffset, 
+                        destRect = RectangleF.Create(destClip.X + xOffset, destClip.Y + yOffset,
                                                     srcRect.Width * fScaleX, srcRect.Height * fScaleY);
                     }
 
                     if (bmp != null)
                     {
                         renderer.DrawImage(bmp, destRect, srcRect, GraphicsUnit.Pixel);
-                        bmp.Dispose();
+                        //bmp.Dispose();
                     }
                     else if (svg != null)
                     {
@@ -211,9 +241,9 @@ namespace Svg
                         renderer.PopBoundable();
                     }
 
-                    
-                    this.ResetClip(renderer);
-                    this.PopTransforms(renderer);
+
+                    ResetClip(renderer);
+                    PopTransforms(renderer);
                 }
                 // TODO: cache images... will need a shared context for this
                 // TODO: support preserveAspectRatio, etc
@@ -249,7 +279,7 @@ namespace Svg
                 //// should work with http: and file: protocol urls
                 //var httpRequest = WebRequest.Create(uri);
                 //using (WebResponse webResponse = httpRequest.GetResponse())
-                using (var webResponse = Svg.Engine.Resolve<IWebRequest>().GetResponse(uri))
+                using (var webResponse = Engine.Resolve<IWebRequest>().GetResponse(uri))
                 {
                     using (var stream = webResponse.GetResponseStream())
                     {
@@ -288,20 +318,20 @@ namespace Svg
         }
 
 
-		public override SvgElement DeepCopy()
-		{
-			return DeepCopy<SvgImage>();
-		}
+        public override SvgElement DeepCopy()
+        {
+            return DeepCopy<SvgImage>();
+        }
 
-		public override SvgElement DeepCopy<T>()
-		{
- 			var newObj = base.DeepCopy<T>() as SvgImage;
-			newObj.Height = this.Height;
-			newObj.Width = this.Width;
-			newObj.X = this.X;
-			newObj.Y = this.Y;
-			newObj.Href = this.Href;
-			return newObj;
-		}
+        public override SvgElement DeepCopy<T>()
+        {
+            var newObj = base.DeepCopy<T>() as SvgImage;
+            newObj.Height = Height;
+            newObj.Width = Width;
+            newObj.X = X;
+            newObj.Y = Y;
+            newObj.Href = Href;
+            return newObj;
+        }
     }
 }

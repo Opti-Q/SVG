@@ -12,6 +12,7 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
     public class EditorViewModel 
         : MvxViewModel
     {
+        //public SvgDrawingCanvas Canvas { get; set; } = new SvgDrawingCanvas(0, 0, 400, 300);
         public SvgDrawingCanvas Canvas { get; set; } = new SvgDrawingCanvas();
 
         public void Init()
@@ -28,6 +29,7 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
             Canvas.Tools.Add(new AuxiliaryLineTool()); // auxiliar line tool
             
             Canvas.Tools.Add(new SaveTool(false));
+            Canvas.Tools.Add(new PlaceAsBackgroundTool("", Engine.Resolve<IUndoRedoService>()));
             Canvas.Document = SvgDocument.Open<SvgDocument>(GetSource("svg/large_svg_02.svg"));
             //Canvas.Document = SvgDocument.Open<SvgDocument>(GetSource("svg/ground_floor_plan.svg"));
             Canvas.IsDebugEnabled = true;
