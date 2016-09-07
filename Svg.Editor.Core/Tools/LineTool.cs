@@ -30,6 +30,7 @@ namespace Svg.Core.Tools
         private bool _isActive;
         private MovementType _movementType;
         private bool _moveRegistered;
+        private ITool _activatedFrom;
         private Brush BlueBrush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
         private Pen BluePen => _pen ?? (_pen = Engine.Factory.CreatePen(BlueBrush, 5));
 
@@ -41,6 +42,8 @@ namespace Svg.Core.Tools
         }
 
         public string LineStyleIconName { get; set; } = "ic_line_style_white_48dp.png";
+
+        public override int InputOrder => 300;
 
         public string[] MarkerStartIds
         {
@@ -113,21 +116,12 @@ namespace Svg.Core.Tools
             get { return _isActive; }
             set
             {
+                if (_isActive == value) return;
                 _isActive = value;
-                if (_isActive)
-                {
-                    // if tool was activated, reduce selection to a single line and set it as current line
-                    _currentLine = Canvas.SelectedElements.OfType<SvgLine>().FirstOrDefault();
-                    Canvas.SelectedElements.Clear();
-                    if (_currentLine == null) return;
-                    Canvas.SelectedElements.Add(_currentLine);
-                    Canvas.FireInvalidateCanvas();
-                    return;
-                }
-                // if tool was deactivated, reset current line
-                if (_currentLine == null) return;
-                Canvas.SelectedElements.Remove(_currentLine);
-                _currentLine = null;
+                // if tool was activated, reduce selection to a single line and set it as current line
+                _currentLine = _isActive ? Canvas.SelectedElements.OfType<SvgLine>().FirstOrDefault() : null;
+                Canvas.SelectedElements.Clear();
+                if (_currentLine != null) Canvas.SelectedElements.Add(_currentLine);
                 Canvas.FireInvalidateCanvas();
             }
         }
@@ -236,8 +230,10 @@ namespace Svg.Core.Tools
             Markers = markers;
         }
 
-        public override Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(SvgDrawingCanvas ws)
         {
+            await base.Initialize(ws);
+
             IsActive = false;
 
             SelectedMarkerStartId = MarkerStartIds.FirstOrDefault();
@@ -248,51 +244,46 @@ namespace Svg.Core.Tools
             {
                 new ChangeLineStyleCommand(ws, this, "Line style")
             };
-
-            return base.Initialize(ws);
         }
 
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
+            var p = @event as PointerEvent;
+            if (p?.EventType == EventType.PointerUp)
+            {
+                var pointerDiff = p.Pointer1Position - p.Pointer1Down;
+                var pointerDistance = Math.Abs(pointerDiff.X) + Math.Abs(pointerDiff.Y);
+                // determine if active by searching through selection and determining whether pointer was put on selected element
+                // if there are selected elements and pointer was put down on one of them, activate tool, otherwise deactivate
+                if (pointerDistance < 5.0f &&
+                    ws.SelectedElements.Count == 1 &&
+                    ws.GetElementsUnderPointer<SvgVisualElement>(p.Pointer1Position).Any(eup => eup is SvgLine && ws.SelectedElements.First() == eup))
+                {
+                    // save the active tool for restoring later
+                    _activatedFrom = ws.ActiveTool;
+                    ws.ActiveTool = this;
+                    ws.FireInvalidateCanvas();
+                }
+            }
+
             if (!IsActive)
             {
                 return Task.FromResult(true);
             }
 
-            var p = @event as PointerEvent;
             if (!_moveRegistered && p?.PointerCount == 1 && (p.EventType == EventType.PointerUp || p.EventType == EventType.Cancel))
             {
-                //var selectedElements = ws.SelectedElements;
+                _currentLine = ws.GetElementsUnder<SvgLine>(ws.GetPointerRectangle(p.Pointer1Position),
+                            SelectionType.Intersect).FirstOrDefault();
+
                 if (_currentLine != null)
                 {
-                    // uncomment this to make deselection undoable
-                    //var currentLine = _currentLine;
-                    //UndoRedoService.ExecuteCommand(new UndoableActionCommand("Deselect current line", o =>
-                    //{
-                    //    selectedElements.Remove(_currentLine);
-                    //    _currentLine = null;
-                    //}, o =>
-                    //{
-                    //    _currentLine = currentLine;
-                    //    selectedElements.Add(currentLine);
-                    //    _canvas.FireInvalidateCanvas();
-                    //}));
-                    ws.SelectedElements.Remove(_currentLine);
-                    _currentLine = null;
+                    ws.SelectedElements.Add(_currentLine);
                 }
-                else
+                else if (_activatedFrom != null)
                 {
-                    // uncomment this to make selection undoable
-                    //var selectedLine = ws.GetElementsUnder<SvgLine>(ws.GetPointerRectangle(p.Pointer1Position),
-                    //            SelectionType.Intersect).FirstOrDefault();
-                    //UndoRedoService.ExecuteCommand(new UndoableActionCommand("Select current line", o =>
-                    //{
-                    //    _currentLine = selectedLine;
-                    //    if (_currentLine != null) selectedElements.Add(_currentLine);
-                    //}));
-                    _currentLine = ws.GetElementsUnder<SvgLine>(ws.GetPointerRectangle(p.Pointer1Position),
-                                SelectionType.Intersect).FirstOrDefault();
-                    if (_currentLine != null) ws.SelectedElements.Add(_currentLine);
+                    ws.ActiveTool = _activatedFrom;
+                    _activatedFrom = null;
                 }
 
                 ws.FireToolCommandsChanged();
@@ -375,6 +366,8 @@ namespace Svg.Core.Tools
                             MarkerStart = CreateUriFromId(SelectedMarkerStartId),
                             MarkerEnd = CreateUriFromId(SelectedMarkerEndId)
                         };
+
+                        ws.SelectedElements.Add(_currentLine);
 
                         if (SelectedLineStyle == "dashed")
                         {
@@ -514,28 +507,22 @@ namespace Svg.Core.Tools
 
                 if (t._currentLine != null)
                 {
+                    var formerCurrentLine = t._currentLine;
                     var formerMarkerStart = t._currentLine.MarkerStart;
                     var formerMarkerEnd = t._currentLine.MarkerEnd;
                     var formerStrokeDashArray = t._currentLine.StrokeDashArray;
                     t.UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name, o =>
                     {
                         // change the line style of all selected items
-                        t._currentLine.MarkerStart = CreateUriFromId(selectedMarkerStartId);
-                        t._currentLine.MarkerEnd = CreateUriFromId(selectedMarkerEndId);
-                        if (selectedLineStyle == "dashed")
-                        {
-                            t._currentLine.StrokeDashArray = t.StrokeDashArray.Clone();
-                        }
-                        else
-                        {
-                            t._currentLine.StrokeDashArray = null;
-                        }
+                        formerCurrentLine.MarkerStart = CreateUriFromId(selectedMarkerStartId);
+                        formerCurrentLine.MarkerEnd = CreateUriFromId(selectedMarkerEndId);
+                        formerCurrentLine.StrokeDashArray = selectedLineStyle == "dashed" ? t.StrokeDashArray.Clone() : null;
                         _canvas.FireInvalidateCanvas();
                     }, o =>
                     {
-                        t._currentLine.MarkerStart = formerMarkerStart;
-                        t._currentLine.MarkerEnd = formerMarkerEnd;
-                        t._currentLine.StrokeDashArray = formerStrokeDashArray;
+                        formerCurrentLine.MarkerStart = formerMarkerStart;
+                        formerCurrentLine.MarkerEnd = formerMarkerEnd;
+                        formerCurrentLine.StrokeDashArray = formerStrokeDashArray;
                         _canvas.FireInvalidateCanvas();
                     }));
                     // don't change the global line style when items are selected

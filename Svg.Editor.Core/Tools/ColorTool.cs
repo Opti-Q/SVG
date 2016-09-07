@@ -63,8 +63,10 @@ namespace Svg.Core.Tools
             set { _defaultSelectedColor = value; }
         }
 
-        public override Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(SvgDrawingCanvas ws)
         {
+            await base.Initialize(ws);
+
             var selectableColors = SelectableColors;
 
             SelectedColor = Color.Create(selectableColors.FirstOrDefault() ?? "#000000");
@@ -88,8 +90,6 @@ namespace Svg.Core.Tools
 
             // initialize with callbacks
             WatchDocument(ws.Document);
-
-            return base.Initialize(ws);
         }
 
         private static string StringifyColor(Color color)

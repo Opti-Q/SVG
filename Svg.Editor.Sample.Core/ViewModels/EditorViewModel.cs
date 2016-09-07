@@ -12,7 +12,6 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
     public class EditorViewModel 
         : MvxViewModel
     {
-        //public SvgDrawingCanvas Canvas { get; set; } = new SvgDrawingCanvas(0, 0, 400, 300);
         public SvgDrawingCanvas Canvas { get; set; } = new SvgDrawingCanvas();
 
         public void Init()

@@ -31,11 +31,11 @@ namespace Svg.Core.Tools
 
         private ITextInputService TextInputService => Engine.Resolve<ITextInputService>();
 
-        public override Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(SvgDrawingCanvas ws)
         {
-            IsActive = false;
+            await base.Initialize(ws);
 
-            return base.Initialize(ws);
+            IsActive = false;
         }
 
         public int[] FontSizes

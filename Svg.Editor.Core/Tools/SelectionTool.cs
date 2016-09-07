@@ -39,8 +39,10 @@ namespace Svg.Core.Tools
             }
         }
 
-        public override Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(SvgDrawingCanvas ws)
         {
+            await base.Initialize(ws);
+
             Commands = new List<IToolCommand>
             {
                 new ToolCommand(this, "Delete", o =>
@@ -65,8 +67,6 @@ namespace Svg.Core.Tools
                 o => ws.SelectedElements.Any(), iconName:DeleteIconName,
                 sortFunc: t => 550)
             };
-
-            return base.Initialize(ws);
         }
 
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
@@ -118,6 +118,7 @@ namespace Svg.Core.Tools
                 {
                     // select elements under pointer
                     SelectElementsUnder(ws.GetPointerRectangle(p.Pointer1Position), ws, SelectionType.Intersect, 1);
+
                     Reset();
                     ws.FireInvalidateCanvas();
                 }
