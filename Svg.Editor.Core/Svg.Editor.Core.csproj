@@ -44,6 +44,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IPickImageService.cs" />
+    <Compile Include="Tools\ArrangeTool.cs" />
     <Compile Include="UndoRedo\CompositeCommand.cs" />
     <Compile Include="UndoRedo\UndoableActionCommand.cs" />
     <Compile Include="Events\MoveEvent.cs" />

@@ -26,6 +26,14 @@ namespace Svg.Core.Tools
         private bool _drawingEnabled;
         private PointF _lastCanvasPointerPosition;
 
+        private SvgUnitCollection StrokeDashArray { get; } = new SvgUnitCollection
+        {
+            new SvgUnit(SvgUnitType.Pixel, 25),
+            new SvgUnit(SvgUnitType.Pixel, 25)
+        };
+
+        #region Public properties
+
         public string LineStyleIconName { get; set; } = "ic_line_style_white_48dp.png";
 
         public string[] LineStyles
@@ -72,6 +80,14 @@ namespace Svg.Core.Tools
             }
         }
 
+        public string SelectedLineStyle { get; set; }
+
+        public int SelectedStrokeWidth { get; set; }
+
+        #endregion
+
+        #region Event handlers
+
         public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
         {
             if (oldDocument != null) UnWatchDocument(oldDocument);
@@ -98,15 +114,7 @@ namespace Svg.Core.Tools
             }
         }
 
-        public string SelectedLineStyle { get; set; }
-
-        public int SelectedStrokeWidth { get; set; }
-
-        private SvgUnitCollection StrokeDashArray { get; } = new SvgUnitCollection
-        {
-            new SvgUnit(SvgUnitType.Pixel, 25),
-            new SvgUnit(SvgUnitType.Pixel, 25)
-        };
+        #endregion
 
         public FreeDrawingTool(string properties, IUndoRedoService undoRedoService) : base("Free draw", properties, undoRedoService)
         {
