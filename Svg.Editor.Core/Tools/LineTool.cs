@@ -31,15 +31,14 @@ namespace Svg.Core.Tools
         private MovementType _movementType;
         private bool _moveRegistered;
         private ITool _activatedFrom;
+
         private Brush BlueBrush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
         private Pen BluePen => _pen ?? (_pen = Engine.Factory.CreatePen(BlueBrush, 5));
+        private IEnumerable<SvgMarker> Markers { get; }
 
-        private IEnumerable<SvgMarker> Markers { get; set; }
+        private SvgUnitCollection StrokeDashArray { get; }
 
-        private static Uri CreateUriFromId(string markerEndId, string exception = "none")
-        {
-            return markerEndId != exception ? new Uri($"url(#{markerEndId})", UriKind.Relative) : null;
-        }
+        #region Public properties
 
         public string LineStyleIconName { get; set; } = "ic_line_style_white_48dp.png";
 
@@ -126,6 +125,16 @@ namespace Svg.Core.Tools
             }
         }
 
+        public string SelectedMarkerStartId { get; set; }
+
+        public string SelectedMarkerEndId { get; set; }
+
+        public string SelectedLineStyle { get; set; }
+
+        #endregion
+
+        #region Event handlers
+
         public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
         {
             if (oldDocument != null) UnWatchDocument(oldDocument);
@@ -170,23 +179,15 @@ namespace Svg.Core.Tools
             }
         }
 
-        public string SelectedMarkerStartId { get; set; }
-
-        public string SelectedMarkerEndId { get; set; }
-
-        public string SelectedLineStyle { get; set; }
-
-        private SvgUnitCollection StrokeDashArray { get; set; } = new SvgUnitCollection()
-                            {
-                                new SvgUnit(SvgUnitType.Pixel, 10),
-                                new SvgUnit(SvgUnitType.Pixel, 10)
-                            };
+        #endregion
 
         public LineTool(string properties, IUndoRedoService undoRedoService) : base("Line", properties, undoRedoService)
         {
             IconName = "ic_mode_edit_white_48dp.png";
             ToolUsage = ToolUsage.Explicit;
             ToolType = ToolType.Create;
+
+            #region Init markers
 
             var markers = new List<SvgMarker>();
             var marker = new SvgMarker { ID = "arrowStart", Orient = new SvgOrient() { IsAuto = true }, RefX = new SvgUnit(SvgUnitType.Pixel, -2.5f), MarkerWidth = 2 };
@@ -228,6 +229,14 @@ namespace Svg.Core.Tools
             markers.Add(marker);
 
             Markers = markers;
+
+            #endregion
+
+            StrokeDashArray = new SvgUnitCollection
+            {
+                new SvgUnit(SvgUnitType.Pixel, 10),
+                new SvgUnit(SvgUnitType.Pixel, 10)
+            };
         }
 
         public override async Task Initialize(SvgDrawingCanvas ws)
@@ -249,7 +258,7 @@ namespace Svg.Core.Tools
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
             var p = @event as PointerEvent;
-            if (p?.EventType == EventType.PointerUp)
+            if (ws.ActiveTool.ToolType == ToolType.Select && p?.EventType == EventType.PointerUp)
             {
                 var pointerDiff = p.Pointer1Position - p.Pointer1Down;
                 var pointerDistance = Math.Abs(pointerDiff.X) + Math.Abs(pointerDiff.Y);
@@ -278,12 +287,18 @@ namespace Svg.Core.Tools
 
                 if (_currentLine != null)
                 {
+                    ws.SelectedElements.Clear();
                     ws.SelectedElements.Add(_currentLine);
                 }
-                else if (_activatedFrom != null)
+                else
                 {
-                    ws.ActiveTool = _activatedFrom;
-                    _activatedFrom = null;
+                    ws.SelectedElements.Clear();
+
+                    if (_activatedFrom != null)
+                    {
+                        ws.ActiveTool = _activatedFrom;
+                        _activatedFrom = null;
+                    }
                 }
 
                 ws.FireToolCommandsChanged();
@@ -459,6 +474,11 @@ namespace Svg.Core.Tools
 
                 renderer.Graphics.Restore();
             }
+        }
+
+        private static Uri CreateUriFromId(string markerEndId, string exception = "none")
+        {
+            return markerEndId != exception ? new Uri($"url(#{markerEndId})", UriKind.Relative) : null;
         }
 
         /// <summary>

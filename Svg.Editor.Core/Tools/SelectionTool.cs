@@ -16,16 +16,8 @@ namespace Svg.Core.Tools
         private Pen _pen;
         private bool _handledPointerDown;
 
-        public string DeleteIconName { get; set; } = "ic_delete_white_48dp.png";
-        public string SelectIconName { get; set; } = "ic_select_tool_white_48dp.png";
-
-        public SelectionTool(IUndoRedoService undoRedoService) : base("Select", undoRedoService)
-        {
-            IconName = SelectIconName;
-            ToolUsage = ToolUsage.Explicit;
-            ToolType = ToolType.Select;
-        }
-
+        private string DeleteIconName { get; } = "ic_delete_white_48dp.png";
+        private string SelectIconName { get; } = "ic_select_tool_white_48dp.png";
         private Brush BlueBrush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
         private Pen BluePen => _pen ?? (_pen = Engine.Factory.CreatePen(BlueBrush, 5));
 
@@ -37,6 +29,13 @@ namespace Svg.Core.Tools
                 base.IsActive = value;
                 Reset();
             }
+        }
+
+        public SelectionTool(IUndoRedoService undoRedoService) : base("Select", undoRedoService)
+        {
+            IconName = SelectIconName;
+            ToolUsage = ToolUsage.Explicit;
+            ToolType = ToolType.Select;
         }
 
         public override async Task Initialize(SvgDrawingCanvas ws)
@@ -141,21 +140,6 @@ namespace Svg.Core.Tools
             _selectionRectangle = null;
         }
 
-        private void SelectElementsUnder(RectangleF selectionRectangle, SvgDrawingCanvas ws, SelectionType selectionType, int maxItems = int.MaxValue)
-        {
-            ws.SelectedElements.Clear();
-
-            // the canvas has not been scaled and translated yet
-            // we need to compare our rectangle to the translated boundingboxes of the svg elements
-            var selected = ws.GetElementsUnder<SvgVisualElement>(selectionRectangle, selectionType, maxItems);
-
-            foreach (var element in selected)
-            {
-                if (element.CustomAttributes.ContainsKey("iclbackground")) continue;
-                ws.SelectedElements.Add(element);
-            }
-        }
-
         public override Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
             // we draw the selection rectangle
@@ -189,6 +173,21 @@ namespace Svg.Core.Tools
             }
 
             return Task.FromResult(true);
+        }
+
+        private static void SelectElementsUnder(RectangleF selectionRectangle, SvgDrawingCanvas ws, SelectionType selectionType, int maxItems = int.MaxValue)
+        {
+            ws.SelectedElements.Clear();
+
+            // the canvas has not been scaled and translated yet
+            // we need to compare our rectangle to the translated boundingboxes of the svg elements
+            var selected = ws.GetElementsUnder<SvgVisualElement>(selectionRectangle, selectionType, maxItems);
+
+            foreach (var element in selected)
+            {
+                if (element.CustomAttributes.ContainsKey("iclbackground")) continue;
+                ws.SelectedElements.Add(element);
+            }
         }
 
         public override void Reset()
