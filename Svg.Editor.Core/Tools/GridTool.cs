@@ -402,7 +402,7 @@ namespace Svg.Core.Tools
                 return;
 
             var ve = element as SvgVisualElement;
-            if (ve == null || ve.CustomAttributes.ContainsKey("iclbackground"))
+            if (ve == null || ve.CustomAttributes.ContainsKey("iclnosnapping"))
                 return;
 
             try

@@ -13,6 +13,8 @@ namespace Svg.Droid.SampleEditor.Core.Tools
         {
             using (var inStream = await Mvx.Resolve<IMvxPictureChooserTask>().ChoosePictureFromLibrary(maxPixelDimension, 80))
             {
+                if (inStream == null) return null;
+
                 var fs = Engine.Resolve<IFileSystem>();
                 var path = fs.PathCombine(fs.GetDefaultStoragePath(), $"{Guid.NewGuid()}.png");
                 using (var outStream = fs.OpenWrite(path))

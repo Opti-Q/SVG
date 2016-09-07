@@ -201,6 +201,8 @@ namespace Svg.Core.Tools
                             _currentPath.StrokeDashArray = StrokeDashArray.Clone();
                         }
 
+                        _currentPath.CustomAttributes.Add("iclnosnapping", "");
+
                         var capturedCurrentPath = _currentPath;
                         UndoRedoService.ExecuteCommand(new UndoableActionCommand("Add new freedrawing path", o =>
                         {

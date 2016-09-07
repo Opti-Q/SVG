@@ -37,19 +37,8 @@ namespace Svg.Core.Tools
 
             // the constraints are divided into 2 points, which relate to the maximum and minimum
             // translations that the canvas can have.
-            PointF bottomright;
-            PointF topleft;
-            // if we are in portrait mode, we need to switch the constraints a bit.
-            //if (ws.ScreenWidth < ws.ScreenHeight)
-            //{
-            //    bottomright = -PointF.Create(ConstraintBottom, ConstraintRight) * ws.ZoomFactor;
-            //    topleft = -PointF.Create(ConstraintTop, ConstraintLeft) * ws.ZoomFactor;
-            //}
-            //else
-            {
-                bottomright = -PointF.Create(ConstraintRight, ConstraintBottom)*ws.ZoomFactor;
-                topleft = -PointF.Create(ConstraintLeft, ConstraintTop)*ws.ZoomFactor;
-            }
+            var topleft = -PointF.Create(ws.ConstraintLeft, ws.ConstraintTop) * ws.ZoomFactor;
+            var bottomright = -PointF.Create(ws.ConstraintRight, ws.ConstraintBottom) * ws.ZoomFactor;
             m.TransformPoints(new[] { topleft, bottomright });
 
             // apply constraints to the pending horizontal pan
@@ -63,54 +52,6 @@ namespace Svg.Core.Tools
             ws.FireInvalidateCanvas();
 
             return Task.FromResult(true);
-        }
-
-        public float ConstraintTop
-        {
-            get
-            {
-                object constraintTop;
-                if (!Properties.TryGetValue("constrainttop", out constraintTop))
-                    constraintTop = float.MinValue;
-                return Convert.ToSingle(constraintTop);
-            }
-            set { Properties["constrainttop"] = value; }
-        }
-
-        public float ConstraintLeft
-        {
-            get
-            {
-                object constraintLeft;
-                if (!Properties.TryGetValue("constraintleft", out constraintLeft))
-                    constraintLeft = float.MinValue;
-                return Convert.ToSingle(constraintLeft);
-            }
-            set { Properties["constraintleft"] = value; }
-        }
-
-        public float ConstraintRight
-        {
-            get
-            {
-                object constraintRight;
-                if (!Properties.TryGetValue("constraintright", out constraintRight))
-                    constraintRight = float.MaxValue;
-                return Convert.ToSingle(constraintRight);
-            }
-            set { Properties["constraintright"] = value; }
-        }
-
-        public float ConstraintBottom
-        {
-            get
-            {
-                object constraintBottom;
-                if (!Properties.TryGetValue("constraintbottom", out constraintBottom))
-                    constraintBottom = float.MaxValue;
-                return Convert.ToSingle(constraintBottom);
-            }
-            set { Properties["constraintbottom"] = value; }
         }
     }
 }
