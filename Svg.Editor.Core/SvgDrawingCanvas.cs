@@ -278,14 +278,30 @@ namespace Svg.Core
                 Translate = PointF.Create(0, 0);
             }
 
-            //var constraintBottomRight = -PointF.Create(ConstraintRight, ConstraintBottom) * ZoomFactor;
-            //var constraintTopLeft = -PointF.Create(ConstraintLeft, ConstraintTop) * ZoomFactor;
-            //var screenTopLeft = ScreenToCanvas(0, 0);
+            var constraintTopLeft = PointF.Create(ConstraintLeft, ConstraintTop) * ZoomFactor;
+            var constraintBottomRight = PointF.Create(ConstraintRight, ConstraintBottom) * ZoomFactor;
+            var screenTopLeft = ScreenToCanvas(0, 0) * ZoomFactor;
+            var screenBottomRight = ScreenToCanvas(ScreenWidth, ScreenHeight) * ZoomFactor;
 
-            //if (screenTopLeft.X < constraintTopLeft.X)
-            //{
-            //    Translate.X += constraintTopLeft.X - screenTopLeft.X;
-            //}
+            if (screenTopLeft.X < constraintTopLeft.X)
+            {
+                Translate.X += screenTopLeft.X - constraintTopLeft.X;
+            }
+
+            if (screenTopLeft.Y < constraintTopLeft.Y)
+            {
+                Translate.Y += screenTopLeft.Y - constraintTopLeft.Y;
+            }
+
+            if (screenBottomRight.X > constraintBottomRight.X)
+            {
+                Translate.X += screenBottomRight.X - constraintBottomRight.X;
+            }
+
+            if (screenBottomRight.Y > constraintBottomRight.Y)
+            {
+                Translate.Y += screenBottomRight.Y - constraintBottomRight.Y;
+            }
 
             // apply global panning and zooming
             renderer.Translate(Translate.X, Translate.Y);

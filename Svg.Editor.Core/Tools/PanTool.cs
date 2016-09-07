@@ -24,30 +24,9 @@ namespace Svg.Core.Tools
             if (ev == null || ev.PointerCount != 2)
                 return Task.FromResult(true);
 
-            // for getting the translation from focal point zoom, take the canvas transformation
-            // and remove zoom and translate from it.
-            var m = ws.GetCanvasTransformationMatrix();
-            var zoom = Matrix.Create(ws.ZoomFactor, 0, 0, ws.ZoomFactor, 0, 0);
-            zoom.Invert();
-            var translate = Matrix.Create(1, 0, 0, 1, ws.Translate.X, ws.Translate.Y);
-            translate.Invert();
-            zoom.Multiply(translate);
-            m.Multiply(zoom);
-            m.Invert();
-
-            // the constraints are divided into 2 points, which relate to the maximum and minimum
-            // translations that the canvas can have.
-            var topleft = -PointF.Create(ws.ConstraintLeft, ws.ConstraintTop) * ws.ZoomFactor;
-            var bottomright = -PointF.Create(ws.ConstraintRight, ws.ConstraintBottom) * ws.ZoomFactor;
-            m.TransformPoints(new[] { topleft, bottomright });
-
-            // apply constraints to the pending horizontal pan
-            var translateX = ws.Translate.X + ev.RelativeDelta.X;
-            ws.Translate.X = translateX >= topleft.X ? topleft.X : translateX - ws.ScreenWidth <= bottomright.X ? Math.Min(0, bottomright.X + ws.ScreenWidth) : translateX;
-
-            // apply constraints to the pending vertical pan
-            var translateY = ws.Translate.Y + ev.RelativeDelta.Y;
-            ws.Translate.Y = translateY >= topleft.Y ? topleft.Y : translateY - ws.ScreenHeight <= bottomright.Y ? Math.Min(0, bottomright.Y + ws.ScreenHeight) : translateY;
+            ws.Translate.X += ev.RelativeDelta.X;
+            ws.Translate.Y += ev.RelativeDelta.Y;
+            ws.FireInvalidateCanvas();
 
             ws.FireInvalidateCanvas();
 

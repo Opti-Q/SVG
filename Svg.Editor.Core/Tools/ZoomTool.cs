@@ -213,16 +213,9 @@ namespace Svg.Core.Tools
 
         private float GetBoundedZoomFactor(ScaleEvent se, SvgDrawingCanvas ws)
         {
-            // check the constraints and if we have to change min and max scale to fit
-            var constraintWidth = ws.ConstraintRight - ws.ConstraintLeft;
-            var constraintHeight = ws.ConstraintBottom - ws.ConstraintTop;
-
-            var scaleConstraint = Math.Max(ws.ScreenWidth / constraintWidth,
-                ws.ScreenHeight / constraintHeight);
-
             var newZoomFactor = ws.ZoomFactor * se.ScaleFactor;
 
-            return Math.Max(scaleConstraint, Math.Max(MinScale, Math.Min(newZoomFactor, MaxScale)));
+            return Math.Max(MinScale, Math.Min(newZoomFactor, MaxScale));
         }
 
         //public override async Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
