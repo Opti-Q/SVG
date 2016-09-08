@@ -25,18 +25,18 @@ namespace Svg.Core.Tools
 
         public override int InputOrder => 300;
 
-        public int[] FontSizes
+        public float[] FontSizes
         {
             get
             {
                 object fontSizes;
                 if (!Properties.TryGetValue("fontsizes", out fontSizes))
-                    fontSizes = Enumerable.Empty<int>();
-                return (int[]) fontSizes;
+                    fontSizes = Enumerable.Empty<float>();
+                return (float[]) fontSizes;
             }
         }
 
-        public int SelectedFontSize { get; set; }
+        public float SelectedFontSize { get; set; }
 
         public string[] FontSizeNames
         {
@@ -152,7 +152,7 @@ namespace Svg.Core.Tools
                                 Canvas.FireInvalidateCanvas();
                             }));
                         }
-                        else if (!string.Equals(e.Text, txt))
+                        else if (!string.Equals(e.Text, txt) || Math.Abs(e.FontSize.Value - fontSize) > 0.01f)
                         {
                             var formerText = e.Text;
                             var formerFontSize = e.FontSize;

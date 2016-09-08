@@ -77,6 +77,36 @@ namespace Svg.Editor.Tests
         }
 
         [Test]
+        public async Task WhenUserTapsOnExistingText_AndOnlyChangesFontSize_EditsFontSize()
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            var txtTool = Canvas.Tools.OfType<TextTool>().Single();
+            Canvas.ActiveTool = txtTool;
+            Canvas.Document.Children.Add(new SvgText()
+            {
+                Text = "hello",
+                X = new SvgUnitCollection() { new SvgUnit(SvgUnitType.Pixel, 5) },
+                Y = new SvgUnitCollection() { new SvgUnit(SvgUnitType.Pixel, 5) },
+                FontSize = new SvgUnit(SvgUnitType.Pixel, 20),
+            });
+
+            _textMock.F = (x, y) => new TextTool.TextProperties { Text = "hello", FontSizeIndex = 0 };
+
+            // Act
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
+
+            // Assert
+            var texts = Canvas.Document.Children.OfType<SvgTextBase>().ToList();
+            Assert.AreEqual(1, texts.Count);
+            var txt = texts.First();
+            Assert.AreEqual("hello", txt.Text);
+            Assert.AreEqual(txtTool.FontSizes.First(), txt.FontSize.Value);
+            Assert.AreEqual(SvgUnitType.Pixel, txt.FontSize.Type);
+        }
+
+        [Test]
         [TestCase("")]
         [TestCase(" ")]
         [TestCase("\t")]
