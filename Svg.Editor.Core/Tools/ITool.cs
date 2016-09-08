@@ -15,10 +15,10 @@ namespace Svg.Core.Tools
 
     public enum ToolType
     {
-        Undefined = 0x0,
+        Undefined = 0x00,
         Select = 0x01,
         Create = 0x10,
-        Modify = 0x100,
+        Modify = 0x0100,
         View = 0x1000
     }
 
@@ -26,13 +26,28 @@ namespace Svg.Core.Tools
     {
         string Name { get; }
         ToolUsage ToolUsage { get; }
+        /// <summary>
+        /// Provides information about the type of action that this <see cref="ITool"/> is performing.
+        /// </summary>
         ToolType ToolType { get; }
         bool IsActive { get; set; }
         IEnumerable<IToolCommand> Commands { get; }
         /// <summary>
-        /// Properties for the tool that can be configured in the designer. Key should be lower-case for consistency.
+        /// Properties for the <see cref="ITool"/> that can be configured in the designer. Key should be lower-case for consistency.
         /// </summary>
         IDictionary<string, object> Properties { get; }
+        /// <summary>
+        /// Defines the order (ascending) in which this <see cref="ITool"/>s <see cref="OnDraw"/> method should be called.
+        /// </summary>
+        int DrawOrder { get; }
+        /// <summary>
+        /// Defines the order (ascending) in which this <see cref="ITool"/>s <see cref="OnPreDraw"/> method should be called.
+        /// </summary>
+        int PreDrawOrder { get; }
+        /// <summary>
+        /// Defines the order (ascending) in which this <see cref="ITool"/>s <see cref="OnUserInput"/> method should be called.
+        /// </summary>
+        int InputOrder { get; }
         string IconName { get; }
         Task Initialize(SvgDrawingCanvas ws);
         Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws);
@@ -55,27 +70,37 @@ namespace Svg.Core.Tools
 
     public class ToolCommand : IToolCommand
     {
-        private const int DEFAULT_SORT_VALUE = 1000;
+        private const int DefaultSortValue = 1000;
         private readonly Action<object> _execute;
         private readonly Func<object, bool> _canExecute;
         private readonly Func<IToolCommand, int> _sortFunc;
         private string _groupName;
         private string _groupIcon;
-        public virtual string Name { get; set; }
-        public virtual string Description { get; set; }
-        public ITool Tool { get; }
-        public virtual string IconName { get; set; }
+        private string _name;
+        private string _description;
+        private string _iconName;
 
-        public virtual int Sort
+        public virtual string Name
         {
-            get
-            {
-                if (_sortFunc != null)
-                    return _sortFunc(this);
-
-                return DEFAULT_SORT_VALUE;
-            }
+            get { return _name; }
+            set { _name = value; }
         }
+
+        public virtual string Description
+        {
+            get { return _description; }
+            set { _description = value; }
+        }
+
+        public ITool Tool { get; }
+
+        public virtual string IconName
+        {
+            get { return _iconName; }
+            set { _iconName = value; }
+        }
+
+        public virtual int Sort => _sortFunc?.Invoke(this) ?? DefaultSortValue;
 
         public virtual string GroupName
         {
@@ -97,9 +122,9 @@ namespace Svg.Core.Tools
             _canExecute = canExecute;
             _sortFunc = sortFunc;
             Tool = tool;
-            Name = name;
-            Description = description;
-            IconName = iconName;
+            _name = name;
+            _description = description;
+            _iconName = iconName;
         }
 
         public virtual bool CanExecute(object parameter)

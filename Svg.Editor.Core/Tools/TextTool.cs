@@ -1,40 +1,94 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Events;
+using Svg.Core.Interfaces;
+using Svg.Core.UndoRedo;
 using Svg.Transforms;
 
 namespace Svg.Core.Tools
 {
     public interface ITextInputService
     {
-        Task<string> GetUserInput(string title, string textValue);
+        Task<TextTool.TextProperties> GetUserInput(string title, string textValue, IEnumerable<string> textSizeOptions, int textSizeSelected);
     }
 
-    public class TextTool : ToolBase
+    public class TextTool : UndoableToolBase
     {
         // if user moves cursor, she does not want to add/edit text
         private bool _moveEventWasRegistered;
+        private ITool _activatedFrom;
+        private ITextInputService TextInputService => Engine.Resolve<ITextInputService>();
 
-        public TextTool() : base("Text")
+        #region Public properties
+
+        public override int InputOrder => 300;
+
+        public int[] FontSizes
+        {
+            get
+            {
+                object fontSizes;
+                if (!Properties.TryGetValue("fontsizes", out fontSizes))
+                    fontSizes = Enumerable.Empty<int>();
+                return (int[]) fontSizes;
+            }
+        }
+
+        public int SelectedFontSize { get; set; }
+
+        public string[] FontSizeNames
+        {
+            get
+            {
+                object fontSizeNames;
+                if (!Properties.TryGetValue("fontsizenames", out fontSizeNames))
+                    fontSizeNames = Enumerable.Empty<string>();
+                return (string[]) fontSizeNames;
+            }
+        }
+
+        #endregion
+
+        public TextTool(string jsonProperties, IUndoRedoService undoRedoService) : base("Text", jsonProperties, undoRedoService)
         {
             IconName = "ic_text_fields_white_48dp.png";
             ToolUsage = ToolUsage.Explicit;
             ToolType = ToolType.Create;
+            object selectedFontSizeIndex;
+            if (Properties.TryGetValue("selectedfontsizeindex", out selectedFontSizeIndex))
+                SelectedFontSize = FontSizes[Convert.ToInt32(selectedFontSizeIndex)];
         }
 
-        private ITextInputService TextInputService => Engine.Resolve<ITextInputService>();
-
-        public override Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(SvgDrawingCanvas ws)
         {
-            this.IsActive = false;
+            await base.Initialize(ws);
 
-            return Task.FromResult(true);
+            IsActive = false;
         }
 
         public override async Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
-            if (!this.IsActive)
+            var p = @event as PointerEvent;
+            if (ws.ActiveTool.ToolType == ToolType.Select && p?.EventType == EventType.PointerUp)
+            {
+                var pointerDiff = p.Pointer1Position - p.Pointer1Down;
+                var pointerDistance = Math.Abs(pointerDiff.X) + Math.Abs(pointerDiff.Y);
+                // determine if active by searching through selection and determining whether pointer was put on selected element
+                // if there are selected elements and pointer was put down on one of them, activate tool, otherwise deactivate
+                if (pointerDistance < 5.0f &&
+                    ws.SelectedElements.Count == 1 &&
+                    ws.GetElementsUnderPointer<SvgVisualElement>(p.Pointer1Position).Any(eup => eup is SvgText && ws.SelectedElements.First() == eup))
+                {
+                    // save the active tool for restoring later
+                    _activatedFrom = ws.ActiveTool;
+                    ws.ActiveTool = this;
+                    ws.FireInvalidateCanvas();
+                }
+            }
+
+            if (!IsActive)
                 return;
 
             // if user moves cursor, she does not want to add/edit text
@@ -42,8 +96,8 @@ namespace Svg.Core.Tools
             if (me != null)
             {
                 // if user moves with thumb we do not want to add text on pointer-up
-                var isMove = Math.Sqrt(Math.Pow(me.AbsoluteDelta.X, 2) + Math.Pow(me.AbsoluteDelta.Y, 2)) > 20d;
-                if(isMove)
+                var isMove = Math.Abs(me.AbsoluteDelta.X) + Math.Abs(me.AbsoluteDelta.Y) > 10d;
+                if (isMove)
                     _moveEventWasRegistered = true;
             }
 
@@ -58,7 +112,7 @@ namespace Svg.Core.Tools
                 {
                     return;
                 }
-                
+
                 var dX = pe.Pointer1Position.X - pe.Pointer1Down.X;
                 var dY = pe.Pointer1Position.Y - pe.Pointer1Down.Y;
 
@@ -75,7 +129,9 @@ namespace Svg.Core.Tools
                         if (span != null)
                             e = span;
 
-                        var txt = await TextInputService.GetUserInput("Edit text", e.Text?.Trim());
+                        var txtProperties = await TextInputService.GetUserInput("Edit text", e.Text?.Trim(), FontSizeNames, Array.IndexOf(FontSizes, (int) e.FontSize));
+                        var txt = txtProperties.Text;
+                        var fontSize = FontSizes[txtProperties.FontSizeIndex];
 
                         // make sure there is at least empty text in it so we actually still have a bounding box!!
                         if (string.IsNullOrEmpty(txt?.Trim()))
@@ -85,23 +141,47 @@ namespace Svg.Core.Tools
                         // if parent was not the document, then this would be a text within another group and should not be removed
                         if (string.IsNullOrWhiteSpace(txt) && e.Parent is SvgDocument)
                         {
-                            e.Parent.Children.Remove(e);
+                            var parent = e.Parent;
+                            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Remove text", o =>
+                            {
+                                parent.Children.Remove(e);
+                                Canvas.FireInvalidateCanvas();
+                            }, o =>
+                            {
+                                parent.Children.Add(e);
+                                Canvas.FireInvalidateCanvas();
+                            }));
                         }
-                        else if(!string.Equals(e.Text, txt))
+                        else if (!string.Equals(e.Text, txt))
                         {
-                            e.Text = txt;
+                            var formerText = e.Text;
+                            var formerFontSize = e.FontSize;
+                            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Edit text", o =>
+                            {
+                                e.Text = txt;
+                                e.FontSize = new SvgUnit(SvgUnitType.Pixel, fontSize);
+                                Canvas.FireInvalidateCanvas();
+                            }, o =>
+                            {
+                                e.Text = formerText;
+                                e.FontSize = formerFontSize;
+                                Canvas.FireInvalidateCanvas();
+                            }));
                         }
                     }
                     // else add new text   
                     else
                     {
-                        var txt = await TextInputService.GetUserInput("Add text", null);
+                        var txtProperties = await TextInputService.GetUserInput("Add text", null, FontSizeNames, Array.IndexOf(FontSizes, SelectedFontSize));
+                        var txt = txtProperties.Text;
+                        var fontSize = FontSizes[txtProperties.FontSizeIndex];
+
                         // only add if user really entered text.
                         if (!string.IsNullOrWhiteSpace(txt))
                         {
                             var t = new SvgText(txt)
                             {
-                                FontSize = new SvgUnit(SvgUnitType.Pixel, 20),
+                                FontSize = new SvgUnit(SvgUnitType.Pixel, fontSize),
                                 Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
                                 Fill = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0))
                             };
@@ -117,14 +197,32 @@ namespace Svg.Core.Tools
                             //t.Y = new SvgUnitCollection { new SvgUnit(SvgUnitType.Pixel, y) };
                             t.Transforms.Add(new SvgTranslate(x, y));
 
-                            ws.Document.Children.Add(t);
+                            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Add text", o =>
+                            {
+                                ws.Document.Children.Add(t);
+                                ws.FireInvalidateCanvas();
+                            }, o =>
+                            {
+                                ws.Document.Children.Remove(t);
+                                ws.FireInvalidateCanvas();
+                            }));
                         }
                     }
 
-                    ws.FireInvalidateCanvas();
+                    if (_activatedFrom != null)
+                    {
+                        ws.ActiveTool = _activatedFrom;
+                        _activatedFrom = null;
+                    }
                 }
             }
         }
 
+        public class TextProperties
+        {
+            public string Text { get; set; }
+            public int FontSizeIndex { get; set; }
+        }
     }
+
 }

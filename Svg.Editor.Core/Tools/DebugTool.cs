@@ -26,8 +26,10 @@ namespace Svg.Core.Tools
         private Brush GreenBrush => _brush3 ?? (_brush3 = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 0, 128, 0)));
         private Pen GreenPen => _pen3 ?? (_pen3 = Svg.Engine.Factory.CreatePen(GreenBrush, 5));
 
-        public override Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(SvgDrawingCanvas ws)
         {
+            await Task.FromResult(true);
+
             Commands = new[]
              {
                 new ToolCommand(this, "Toggle Bounding Path", (x) =>
@@ -42,8 +44,6 @@ namespace Svg.Core.Tools
                 }, iconName: null, sortFunc:(x) => 1500),
 
             };
-
-            return Task.FromResult(true);
         }
 
         private bool BoundingBoxEnabled { get; set; }
@@ -88,7 +88,7 @@ namespace Svg.Core.Tools
 
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
-            System.Diagnostics.Debug.WriteLine(@event.DebuggerDisplay);
+            //System.Diagnostics.Debug.WriteLine(@event.DebuggerDisplay);
 
             return base.OnUserInput(@event, ws);
         }

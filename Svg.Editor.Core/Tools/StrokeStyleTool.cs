@@ -1,26 +1,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Svg.Core.Interfaces;
+using Svg.Core.UndoRedo;
 
 namespace Svg.Core.Tools
 {
-    public class StrokeStyleTool : ToolBase
+    public class StrokeStyleTool : UndoableToolBase
     {
-        public StrokeStyleTool() : base("Stroke style")
+        public StrokeStyleTool(IUndoRedoService undoRedoService) : base("Stroke style", undoRedoService)
         {
             IconName = "ic_border_style_white_48dp.png";
             ToolType = ToolType.Modify;
         }
 
-        public override Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(SvgDrawingCanvas ws)
         {
+            await base.Initialize(ws);
+
             // add tool commands
             Commands = new List<IToolCommand>
             {
                 new ChangeStrokeStyleCommand(ws, this, "Change stroke")
             };
-
-            return Task.FromResult(true);
         }
 
         /// <summary>
@@ -40,12 +42,25 @@ namespace Svg.Core.Tools
             {
                 if (!_canvas.SelectedElements.Any()) return;
 
+                var t = (StrokeStyleTool) Tool;
+
+                // prepare command for the whole operation
+                t.UndoRedoService.ExecuteCommand(new UndoableActionCommand("Change stroke style operation", o => {}));
                 // change the stroke style of all selected items
                 foreach (var selectedElement in _canvas.SelectedElements)
                 {
-                    selectedElement.StrokeDashArray = SvgUnitCollection.IsNullOrEmpty(selectedElement.StrokeDashArray) ? "10 10" : null;
+                    var formerStrokeDashArray = selectedElement.StrokeDashArray;
+                    t.UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name,
+                        o =>
+                        {
+                            selectedElement.StrokeDashArray = SvgUnitCollection.IsNullOrEmpty(selectedElement.StrokeDashArray) ? "10 10" : null;
+                            _canvas.FireInvalidateCanvas();
+                        }, o =>
+                        {
+                            selectedElement.StrokeDashArray = formerStrokeDashArray;
+                            _canvas.FireInvalidateCanvas();
+                        }), hasOwnUndoRedoScope: false);
                 }
-                _canvas.FireInvalidateCanvas();
             }
 
             public override bool CanExecute(object parameter)

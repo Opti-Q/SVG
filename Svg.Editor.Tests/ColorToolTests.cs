@@ -29,14 +29,19 @@ namespace Svg.Editor.Tests
             await Canvas.EnsureInitialized();
             var colorTool = Canvas.Tools.OfType<ColorTool>().Single();
             var text = new SvgText("hello");
+            colorTool.SelectedColor = Color.Create(colorTool.SelectableColors[2]);
+            var color = colorTool.SelectedColor;
+
+            // Preassert
+            Assert.AreNotEqual(color, ((SvgColourServer) text.Fill)?.Colour);
+            Assert.AreNotEqual(color, ((SvgColourServer) text.Stroke)?.Colour);
 
             // Act
             Canvas.AddItemInScreenCenter(text);
 
             // Assert
-            var color = colorTool.SelectedColor;
-            Assert.True(color.Equals(((SvgColourServer)text.Fill).Colour));
-            Assert.True(color.Equals(((SvgColourServer)text.Stroke).Colour));
+            Assert.AreEqual(color, ((SvgColourServer) text.Fill).Colour);
+            Assert.AreEqual(color, ((SvgColourServer) text.Stroke).Colour);
         }
 
         [Test]

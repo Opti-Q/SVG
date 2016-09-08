@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Android.App;
-using Android.Content;
 using Android.Views;
 using Android.Widget;
 using Svg;
@@ -22,7 +21,6 @@ namespace Svg.Droid.Editor.Services
             var builder = new AlertDialog.Builder(context);
             var tcs = new TaskCompletionSource<int[]>();
             var result = new int[3];
-            AlertDialog dialog = null;
 
             // setup builder
             builder.SetTitle(title);
@@ -63,19 +61,15 @@ namespace Svg.Droid.Editor.Services
             spinner3.SetSelection(markerEndSelected);
             view.AddView(spinner3);
 
-            var okButton = new Button(context) { Text = "OK" };
-            view.AddView(okButton);
-
             builder.SetView(view);
 
-            // show dialog
-            dialog = builder.Show();
-
-            okButton.Click += (sender, args) =>
+            builder.SetPositiveButton("OK", (sender, args) =>
             {
                 tcs.TrySetResult(result);
-                dialog?.Dismiss();
-            };
+            });
+
+            // show dialog
+            builder.Show();
 
             return tcs.Task;
         }

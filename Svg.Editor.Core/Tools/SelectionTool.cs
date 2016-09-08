@@ -4,29 +4,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
+using Svg.Core.UndoRedo;
 using Svg.Interfaces;
 
 namespace Svg.Core.Tools
 {
-    public class SelectionTool : ToolBase
+    public class SelectionTool : UndoableToolBase
     {
-        private RectangleF _selectionRectangle = null;
+        private RectangleF _selectionRectangle;
         private Brush _brush;
         private Pen _pen;
         private bool _handledPointerDown;
 
-        public string DeleteIconName { get; set; } = "ic_delete_white_48dp.png";
-        public string SelectIconName { get; set; } = "ic_select_tool_white_48dp.png";
-
-        public SelectionTool() : base("Select")
-        {
-            this.IconName = SelectIconName;
-            this.ToolUsage = ToolUsage.Explicit;
-            ToolType = ToolType.Select;
-        }
-
-        private Brush BlueBrush => _brush ?? (_brush = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
-        private Pen BluePen => _pen ?? (_pen = Svg.Engine.Factory.CreatePen(BlueBrush, 5));
+        private string DeleteIconName { get; } = "ic_delete_white_48dp.png";
+        private string SelectIconName { get; } = "ic_select_tool_white_48dp.png";
+        private Brush BlueBrush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
+        private Pen BluePen => _pen ?? (_pen = Engine.Factory.CreatePen(BlueBrush, 5));
 
         public override bool IsActive
         {
@@ -38,25 +31,41 @@ namespace Svg.Core.Tools
             }
         }
 
-        public override Task Initialize(SvgDrawingCanvas ws)
+        public SelectionTool(IUndoRedoService undoRedoService) : base("Select", undoRedoService)
         {
+            IconName = SelectIconName;
+            ToolUsage = ToolUsage.Explicit;
+            ToolType = ToolType.Select;
+        }
+
+        public override async Task Initialize(SvgDrawingCanvas ws)
+        {
+            await base.Initialize(ws);
+
             Commands = new List<IToolCommand>
             {
-                new ToolCommand(this, "Delete", (o) =>
+                new ToolCommand(this, "Delete", o =>
                 {
-                    foreach (var element in ws.SelectedElements)
-                    {
-                        element.Parent.Children.Remove(element);
-                    }
-                    ws.SelectedElements.Clear();
-                    ws.FireToolCommandsChanged();
-                    ws.FireInvalidateCanvas();
-                }, 
-                (o) => ws.SelectedElements.Any(), iconName:DeleteIconName, 
-                sortFunc: (t) => 550)
+                    UndoRedoService.ExecuteCommand(new UndoableActionCommand("Remove operation", x => {}));
+                        foreach (var element in ws.SelectedElements)
+                        {
+                            var parent = element.Parent;
+                            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Remove element", x =>
+                            {
+                                parent.Children.Remove(element);
+                                ws.FireInvalidateCanvas();
+                            }, x =>
+                            {
+                                parent.Children.Add(element);
+                                ws.FireInvalidateCanvas();
+                            }), hasOwnUndoRedoScope: false);
+                        }
+                        ws.SelectedElements.Clear();
+                        ws.FireInvalidateCanvas();
+                },
+                o => ws.SelectedElements.Any(), iconName:DeleteIconName,
+                sortFunc: t => 550)
             };
-
-            return Task.FromResult(true);
         }
 
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
@@ -85,7 +94,7 @@ namespace Svg.Core.Tools
                     endY = t;
                 }
                 var rect = RectangleF.Create(startX, startY, endX - startX, endY - startY);
-                
+
                 // selection onyl counts if width and height are not too small
                 var dist = Math.Sqrt(Math.Pow(rect.Width, 2) + Math.Pow(rect.Height, 2));
 
@@ -108,6 +117,7 @@ namespace Svg.Core.Tools
                 {
                     // select elements under pointer
                     SelectElementsUnder(ws.GetPointerRectangle(p.Pointer1Position), ws, SelectionType.Intersect, 1);
+
                     Reset();
                     ws.FireInvalidateCanvas();
                 }
@@ -128,18 +138,6 @@ namespace Svg.Core.Tools
         public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
         {
             _selectionRectangle = null;
-        }
-
-        private void SelectElementsUnder(RectangleF selectionRectangle, SvgDrawingCanvas ws, SelectionType selectionType, int maxItems = int.MaxValue)
-        {
-            ws.SelectedElements.Clear();
-
-            // the canvas has not been scaled and translated yet
-            // we need to compare our rectangle to the translated boundingboxes of the svg elements
-            var selected = ws.GetElementsUnder<SvgVisualElement>(selectionRectangle, selectionType, maxItems);
-
-            foreach (var element in selected)
-                ws.SelectedElements.Add(element);
         }
 
         public override Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
@@ -177,7 +175,22 @@ namespace Svg.Core.Tools
             return Task.FromResult(true);
         }
 
-        private void Reset()
+        private static void SelectElementsUnder(RectangleF selectionRectangle, SvgDrawingCanvas ws, SelectionType selectionType, int maxItems = int.MaxValue)
+        {
+            ws.SelectedElements.Clear();
+
+            // the canvas has not been scaled and translated yet
+            // we need to compare our rectangle to the translated boundingboxes of the svg elements
+            var selected = ws.GetElementsUnder<SvgVisualElement>(selectionRectangle, selectionType, maxItems);
+
+            foreach (var element in selected)
+            {
+                if (element.CustomAttributes.ContainsKey("iclbackground")) continue;
+                ws.SelectedElements.Add(element);
+            }
+        }
+
+        public override void Reset()
         {
             _handledPointerDown = false;
             _selectionRectangle = null;

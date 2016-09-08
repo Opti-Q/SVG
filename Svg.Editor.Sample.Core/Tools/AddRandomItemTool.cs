@@ -1,7 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Generic;using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using Svg.Core;
+using Svg.Core.Interfaces;
 using Svg.Core.Tools;
 using Svg.Interfaces;
 using Svg.Transforms;
@@ -11,9 +13,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
     public class AddRandomItemTool : ToolBase
     {
 
-        private readonly SvgDrawingCanvas _canvas;
-
-        private string[] SvgPathStrings =
+        private string[] SvgPathStrings { get; } =
         {
             //"isolib/Welds/solid/weld1.svg",
             "isolib/Valves/Valves/valve1.svg",
@@ -32,12 +32,11 @@ namespace Svg.Droid.SampleEditor.Core.Tools
             //"svg/painting-marker-01-f.svg",
             //"svg/rect.svg",
             //"svg/Bends_01.svg", causes StackOverflowException in SvgRectangle.Bounds
-    };
+        };
 
         public AddRandomItemTool(SvgDrawingCanvas canvas, Func<string, ISvgSource> sourceProvider = null) : base("Add random item")
         {
             SourceProvider = sourceProvider;
-            _canvas = canvas;
             ToolType = ToolType.Create;
             Commands = new List<IToolCommand>
             {
@@ -64,14 +63,38 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     //var provider = SourceProvider("svg/painting-marker-05-f.svg");
                     //var provider = SourceProvider("svg/painting-marker-01-f.svg");
                     //var provider = SourceProvider("svg/rect.svg");
-                    var provider = SourceProvider(SvgPathStrings[new Random().Next(0, SvgPathStrings.Length - 1)]);
-                    var otherDoc = SvgDocument.Open<SvgDocument>(provider);
+                    //var provider = SourceProvider(SvgPathStrings[new Random().Next(0, SvgPathStrings.Length - 1)]);
+                    //var otherDoc = SvgDocument.Open<SvgDocument>(provider);
 
-                    _canvas.AddItemInScreenCenter(otherDoc);
+                    //Canvas.AddItemInScreenCenter(otherDoc);
+
+                    //Canvas.AddItemInScreenCenter(new SvgImage { Width = 100, Height = 100, Href = new Uri("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA" +
+                    //                                              "AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0D" +
+                    //                                              "HxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg ==", UriKind.Absolute)});
+
+                    var fs = Engine.Resolve<IFileSystem>();
+                    var svgCachingService = Engine.Resolve<ISvgCachingService>();
+                    var colorTool = Canvas.Tools.OfType<ColorTool>().Single();
+                    var selectedColor = colorTool.SelectedColor;
+                    var path = svgCachingService.GetCachedPngPath(colorTool.IconName, $"{selectedColor.R}_{selectedColor.G}_{selectedColor.B}", fs);
+                    try
+                    {
+                        Canvas.AddItemInScreenCenter(new SvgImage
+                        {
+                            Width = 100,
+                            Height = 100,
+                            Href = new Uri($"file://{path}", UriKind.Absolute)
+                        });
+                    }
+                    catch (IOException)
+                    {
+                        Debugger.Break();
+                    }
 
                 } , sortFunc:(x) => 1200)
             };
         }
+
         public Func<string, ISvgSource> SourceProvider { get; set; }
     }
 }

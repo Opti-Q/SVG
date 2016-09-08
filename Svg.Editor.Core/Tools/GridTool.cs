@@ -5,12 +5,13 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
+using Svg.Core.UndoRedo;
 using Svg.Interfaces;
 using Svg.Transforms;
 
 namespace Svg.Core.Tools
 {
-    public class GridTool : ToolBase
+    public class GridTool : UndoableToolBase
     {
         private const double Gamma = 90f;
         private const float FloatError = 0.01f;
@@ -49,9 +50,11 @@ namespace Svg.Core.Tools
         private bool _areElementsMoved;
         private PointF _generalTranslation;
 
+        private Dictionary<double, double> CachedDiagonals = new Dictionary<double, double>();
 
-        public GridTool(string properties)
-            : base("Grid", properties)
+
+        public GridTool(string properties, IUndoRedoService undoRedoService)
+            : base("Grid", properties, undoRedoService)
         {
             // using triangle calculation to determine the x and y steps based on stepsize (y) and angle (alpha)
             // http://www.arndt-bruenner.de/mathe/scripts/Dreiecksberechnung.htm
@@ -77,7 +80,7 @@ namespace Svg.Core.Tools
             var beta = 180f - (Alpha + Gamma);
             var b = a * SinDegree(beta) / SinDegree(Alpha);
             //var c = a * SinDegree(Gamma) / SinDegree(Alpha);
-            StepSizeX = (float)b * 2;
+            StepSizeX = (float) b * 2;
 
             ToolType = ToolType.Modify;
         }
@@ -92,10 +95,12 @@ namespace Svg.Core.Tools
                 object isSnappingEnabled;
                 if (!Properties.TryGetValue("issnappingenabled", out isSnappingEnabled))
                     isSnappingEnabled = true;
-                return (bool)isSnappingEnabled;
+                return (bool) isSnappingEnabled;
             }
             set { Properties["issnappingenabled"] = value; }
         }
+
+        public override int InputOrder => 100; // must be before movetool!
 
         public bool IsVisible { get; set; } = true;
         private Brush Brush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 210, 210, 210)));
@@ -103,8 +108,10 @@ namespace Svg.Core.Tools
         private Pen Pen => _pen ?? (_pen = Engine.Factory.CreatePen(Brush, 1));
         //private Pen Pen2 => _pen2 ?? (_pen2 = Engine.Factory.CreatePen(Brush2, 1));
 
-        public override Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(SvgDrawingCanvas ws)
         {
+            await base.Initialize(ws);
+            
             // add tool commands
             Commands = new List<IToolCommand>
             {
@@ -114,8 +121,6 @@ namespace Svg.Core.Tools
 
             // initialize with callbacks
             WatchDocument(ws.Document);
-
-            return Task.FromResult(true);
         }
 
         public override Task OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
@@ -172,12 +177,21 @@ namespace Svg.Core.Tools
 
             var height = renderer.Height / ws.ZoomFactor;
             var yPosition = height - height % StepSizeY + StepSizeY * 2;
-            var stepSize = (int)Math.Round(StepSizeY, 0);
+            var stepSize = (int) Math.Round(StepSizeY, 0);
 
             var x = screenTopLeft.X - relativeCanvasTranslationX - (StepSizeX * 2);
             // subtract 2x stepsize so gridlines always start from "out of sight" and lines do not start from a visible x-border
             var y = screenTopLeft.Y - relativeCanvasTranslationY;
-            var lineLength = Math.Sqrt(Math.Pow(renderer.Width, 2) + Math.Pow(renderer.Height, 2)) / ws.ZoomFactor + stepSize * 4;
+
+            // cache these expensive calculations for performance
+            var cachedDiagonalKey = renderer.Width + renderer.Height;
+            double diagonal;
+            if (!CachedDiagonals.TryGetValue(cachedDiagonalKey, out diagonal))
+            {
+                diagonal = Math.Sqrt(Math.Pow(renderer.Width, 2) + Math.Pow(renderer.Height, 2));
+                CachedDiagonals[cachedDiagonalKey] = diagonal;
+            }
+            var lineLength = diagonal / ws.ZoomFactor + stepSize * 8;
 
             for (var i = y - yPosition; i <= y + yPosition; i += stepSize)
             {
@@ -195,8 +209,8 @@ namespace Svg.Core.Tools
         {
             var startX = canvasX;
             var startY = y;
-            var stopX = (float)(lineLength * Math.Cos(Alpha * (Math.PI / 180))) + canvasX;
-            var stopY = y - (float)(lineLength * Math.Sin(Alpha * (Math.PI / 180)));
+            var stopX = (float) (lineLength * Math.Cos(Alpha * (Math.PI / 180))) + canvasX;
+            var stopY = y - (float) (lineLength * Math.Sin(Alpha * (Math.PI / 180)));
 
 
             renderer.DrawLine(
@@ -212,8 +226,8 @@ namespace Svg.Core.Tools
         {
             var startX = canvasX;
             var startY = y;
-            var endX = (float)(lineLength * Math.Cos(Alpha * (Math.PI / 180))) + canvasX;
-            var endY = y + (float)(lineLength * Math.Sin(Alpha * (Math.PI / 180)));
+            var endX = (float) (lineLength * Math.Cos(Alpha * (Math.PI / 180))) + canvasX;
+            var endY = y + (float) (lineLength * Math.Sin(Alpha * (Math.PI / 180)));
 
             renderer.DrawLine(
                 startX,
@@ -300,7 +314,7 @@ namespace Svg.Core.Tools
 
             if (string.Equals(e.Attribute, "transform"))
             {
-                var element = (SvgElement)sender;
+                var element = (SvgElement) sender;
 
                 // if transform was changed and rotation has been added, skip snapping
                 var oldRotation = (e.OldValue as SvgTransformCollection)?.GetMatrix()?.RotationDegrees;
@@ -335,16 +349,34 @@ namespace Svg.Core.Tools
                         points[0].X += absoluteDeltaX;
                         points[0].Y += absoluteDeltaY;
                         m.TransformPoints(points);
-                        line.StartX = points[0].X;
-                        line.StartY = points[0].Y;
+                        var formerLineStartX = line.StartX.Clone();
+                        var formerLineStartY = line.StartY.Clone();
+                        UndoRedoService.ExecuteCommand(new UndoableActionCommand("Snap line start to grid", o =>
+                        {
+                            line.StartX = points[0].X;
+                            line.StartY = points[0].Y;
+                        }, o =>
+                        {
+                            line.StartX = formerLineStartX;
+                            line.StartY = formerLineStartY;
+                        }), hasOwnUndoRedoScope: false);
                         break;
                     case "y2":
                         SnapPointToGrid(points[1].X, points[1].Y, out absoluteDeltaX, out absoluteDeltaY);
                         points[1].X += absoluteDeltaX;
                         points[1].Y += absoluteDeltaY;
                         m.TransformPoints(points);
-                        line.EndX = points[1].X;
-                        line.EndY = points[1].Y;
+                        var formerLineEndX = line.EndX.Clone();
+                        var formerLineEndY = line.EndY.Clone();
+                        UndoRedoService.ExecuteCommand(new UndoableActionCommand("Snap line end to grid", o =>
+                        {
+                            line.EndX = points[1].X;
+                            line.EndY = points[1].Y;
+                        }, o =>
+                        {
+                            line.EndX = formerLineEndX;
+                            line.EndY = formerLineEndY;
+                        }), hasOwnUndoRedoScope: false);
                         break;
                 }
 
@@ -370,7 +402,7 @@ namespace Svg.Core.Tools
                 return;
 
             var ve = element as SvgVisualElement;
-            if (ve == null)
+            if (ve == null || ve.CustomAttributes.ContainsKey("iclnosnapping"))
                 return;
 
             try
@@ -400,8 +432,16 @@ namespace Svg.Core.Tools
                     }
                 }
 
+                var formerMx = ve.Transforms.GetMatrix().Clone();
                 var mx = ve.CreateTranslation(absoluteDeltaX, absoluteDeltaY);
-                ve.SetTransformationMatrix(mx);
+
+                UndoRedoService.ExecuteCommand(new UndoableActionCommand("Snap element to grid", o =>
+                {
+                    ve.SetTransformationMatrix(mx);
+                }, o =>
+                {
+                    ve.SetTransformationMatrix(formerMx);
+                }), hasOwnUndoRedoScope: false);
 
             }
             finally
@@ -539,7 +579,7 @@ namespace Svg.Core.Tools
 
             public override void Execute(object parameter)
             {
-                var t = (GridTool)Tool;
+                var t = (GridTool) Tool;
                 t.IsVisible = !t.IsVisible;
                 IconName = t.IsVisible ? t.IconGridOff : t.IconGridOn;
                 _canvas.FireInvalidateCanvas();
@@ -559,7 +599,7 @@ namespace Svg.Core.Tools
 
             public override void Execute(object parameter)
             {
-                var t = (GridTool)Tool;
+                var t = (GridTool) Tool;
                 t.IsSnappingEnabled = !t.IsSnappingEnabled;
                 IconName = t.IsSnappingEnabled ? t.IconGridOff : t.IconGridOn;
                 _canvas.FireToolCommandsChanged();

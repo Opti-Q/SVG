@@ -16,7 +16,7 @@ using Svg.Interfaces;
 
 namespace Svg.Core
 {
-    public class SvgDrawingCanvas : IDisposable, ICanInvalidateCanvas, INotifyPropertyChanged
+    public sealed class SvgDrawingCanvas : IDisposable, ICanInvalidateCanvas, INotifyPropertyChanged
     {
         private readonly ObservableCollection<SvgVisualElement> _selectedElements;
         private readonly ObservableCollection<ITool> _tools;
@@ -31,13 +31,20 @@ namespace Svg.Core
         public event EventHandler CanvasInvalidated;
         public event EventHandler ToolCommandsChanged;
 
-        public SvgDrawingCanvas()
+        public SvgDrawingCanvas(float constraintLeft = float.MinValue, float constraintTop = float.MinValue, float constraintRight = float.MaxValue, float constraintBottom = float.MaxValue)
         {
+            ConstraintLeft = constraintLeft;
+            ConstraintTop = constraintTop;
+            ConstraintRight = constraintRight;
+            ConstraintBottom = constraintBottom;
+
             Translate = PointF.Create(0f, 0f);
             ZoomFactor = 1f;
 
             _selectedElements = new ObservableCollection<SvgVisualElement>();
             _selectedElements.CollectionChanged += OnSelectionChanged;
+
+            #region Tool properties
 
             // this part should be in the designer, when the iCL is created
             var gridToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
@@ -62,21 +69,55 @@ namespace Svg.Core
                 { "linestylenames", new [] { "-----", "- - -" } }
             }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 
+            var freeDrawToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
+            {
+                { "linestyles", new [] { "normal", "dashed" } },
+                { "linestylenames", new [] { "-----", "- - -" } },
+                { "strokewidths", new [] { 12, 24, 6 } },
+                { "strokewidthnames", new [] { "normal", "thick", "thin" } }
+            }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+
+            var textToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
+            {
+                { "fontsizes", new [] { 12, 24, 36, 48 } },
+                { "selectedfontsizeindex", 1 },
+                { "fontsizenames", new [] { "12px", "24px", "36px", "48px" } }
+            }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+
+            var zoomToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
+            {
+                { "minscale", 1.0f },
+                { "maxscale", 5.0f }
+            }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+
+            //var zoomToolProperties = "";
+
+            var panToolProperties = "";
+
+            #endregion
+
+            var undoRedoService = Engine.Resolve<IUndoRedoService>();
+
             _tools = new ObservableCollection<ITool>
             {
-                    new GridTool(gridToolProperties), // must be before movetool!
-                    new MoveTool(), // must be before pantool as it decides whether or not it is active based on selection
-                    new PanTool(),
-                    new RotationTool(),
-                    new ZoomTool(),
-                    new SelectionTool(),
-                    new TextTool(),
-                    new LineTool(lineToolProperties),
-                    new ColorTool(colorToolProperties),
-                    new StrokeStyleTool()
+                    new GridTool(gridToolProperties, undoRedoService),
+                    new MoveTool(undoRedoService),
+                    new PanTool(panToolProperties),
+                    new RotationTool(undoRedoService),
+                    new ZoomTool(zoomToolProperties),
+                    new SelectionTool(undoRedoService),
+                    new TextTool(textToolProperties, undoRedoService),
+                    new LineTool(lineToolProperties, undoRedoService),
+                    new FreeDrawingTool(freeDrawToolProperties, undoRedoService),
+                    new ColorTool(colorToolProperties, undoRedoService),
+                    new StrokeStyleTool(undoRedoService),
+                    new UndoRedoTool(undoRedoService),
+                    new ArrangeTool(undoRedoService)
             };
             _tools.CollectionChanged += OnToolsChanged;
         }
+
+        #region Public properties
 
         public SvgDocument Document
         {
@@ -156,7 +197,15 @@ namespace Svg.Core
 
         public int ScreenHeight { get; set; }
 
-        public PointF ScreenCenter => PointF.Create((float)ScreenWidth / 2, (float)ScreenHeight / 2);
+        public PointF ScreenCenter => PointF.Create((float) ScreenWidth / 2, (float) ScreenHeight / 2);
+
+        public float ConstraintTop { get; set; }
+
+        public float ConstraintLeft { get; set; }
+
+        public float ConstraintRight { get; set; }
+
+        public float ConstraintBottom { get; set; }
 
         /// <summary>
         /// If enabled, adds a DebugTool that brings some helpful visualizations
@@ -201,6 +250,8 @@ namespace Svg.Core
             }
         }
 
+        #endregion
+
         /// <summary>
         /// Called by the platform specific input event detector whenever the user interacts with the model
         /// </summary>
@@ -209,7 +260,7 @@ namespace Svg.Core
         {
             await EnsureInitialized();
 
-            foreach (var tool in Tools)
+            foreach (var tool in Tools.OrderBy(t => t.InputOrder))
             {
                 await tool.OnUserInput(ev, this);
             }
@@ -227,7 +278,7 @@ namespace Svg.Core
             ScreenWidth = renderer.Width;
             ScreenHeight = renderer.Height;
 
-            //ZoomFocus = ScreenToCanvas(ScreenCenter);
+            ApplyConstraints();
 
             // apply global panning and zooming
             renderer.Translate(Translate.X, Translate.Y);
@@ -237,7 +288,7 @@ namespace Svg.Core
             renderer.FillEntireCanvasWithColor(Engine.Factory.Colors.White);
 
             // prerender step (e.g. gridlines, etc.)
-            foreach (var tool in Tools)
+            foreach (var tool in Tools.OrderBy(t => t.PreDrawOrder))
             {
                 await tool.OnPreDraw(renderer, this);
             }
@@ -248,9 +299,50 @@ namespace Svg.Core
             renderer.Graphics.Restore();
 
             // post render step (e.g. selection borders, etc.)
-            foreach (var tool in Tools)
+            foreach (var tool in Tools.OrderBy(t => t.DrawOrder))
             {
                 await tool.OnDraw(renderer, this);
+            }
+        }
+
+        private void ApplyConstraints()
+        {
+            // check the constraints and if we have to zoom in to fit
+            var constraintWidth = ConstraintRight - ConstraintLeft;
+            var constraintHeight = ConstraintBottom - ConstraintTop;
+
+            if (ScreenWidth / ZoomFactor > constraintWidth || ScreenHeight / ZoomFactor > constraintHeight)
+            {
+                ZoomFactor = Math.Max(ScreenWidth / constraintWidth,
+                    ScreenHeight / constraintHeight);
+                ZoomFocus = PointF.Create(0, 0);
+                Translate = PointF.Create(ScreenWidth / ZoomFactor > constraintWidth ? 0 : Translate.X,
+                    ScreenHeight / ZoomFactor > constraintHeight ? 0 : Translate.Y);
+            }
+
+            var constraintTopLeft = PointF.Create(ConstraintLeft, ConstraintTop) * ZoomFactor;
+            var constraintBottomRight = PointF.Create(ConstraintRight, ConstraintBottom) * ZoomFactor;
+            var screenTopLeft = ScreenToCanvas(0, 0) * ZoomFactor;
+            var screenBottomRight = ScreenToCanvas(ScreenWidth, ScreenHeight) * ZoomFactor;
+
+            if (screenTopLeft.X < constraintTopLeft.X)
+            {
+                Translate.X += screenTopLeft.X - constraintTopLeft.X;
+            }
+
+            if (screenTopLeft.Y < constraintTopLeft.Y)
+            {
+                Translate.Y += screenTopLeft.Y - constraintTopLeft.Y;
+            }
+
+            if (screenBottomRight.X > constraintBottomRight.X)
+            {
+                Translate.X += screenBottomRight.X - constraintBottomRight.X;
+            }
+
+            if (screenBottomRight.Y > constraintBottomRight.Y)
+            {
+                Translate.Y += screenBottomRight.Y - constraintBottomRight.Y;
             }
         }
 
@@ -359,7 +451,7 @@ namespace Svg.Core
             var childBounds = element.GetBoundingBox();
             var halfRelChildWidth = childBounds.Width / 2;
             var halfRelChildHeight = childBounds.Height / 2;
-            var centerPos = ScreenToCanvas((float)ScreenWidth / 2, (float)ScreenHeight / 2);
+            var centerPos = ScreenToCanvas((float) ScreenWidth / 2, (float) ScreenHeight / 2);
             var centerPosX = centerPos.X - halfRelChildWidth;
             var centerPosY = centerPos.Y - halfRelChildHeight;
 
@@ -471,7 +563,7 @@ namespace Svg.Core
                 Document.Height = new SvgUnit(SvgUnitType.Pixel, documentSize.Height);
                 Document.ViewBox = new SvgViewBox(documentSize.X, documentSize.Y, documentSize.Width, documentSize.Height);
                 Document.Write(stream);
-                
+
                 FireToolCommandsChanged();
             }
             finally
@@ -527,10 +619,10 @@ namespace Svg.Core
             _toolSelectors = null;
             FireToolCommandsChanged();
         }
-        
+
         private void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
         {
-            if(oldDocument != null) 
+            if (oldDocument != null)
                 oldDocument.ContentModified -= OnDocumentContentModified;
             if (newDocument != null)
             {
@@ -599,7 +691,7 @@ namespace Svg.Core
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
