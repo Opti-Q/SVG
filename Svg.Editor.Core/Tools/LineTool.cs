@@ -168,7 +168,7 @@ namespace Svg.Core.Tools
             if (definitions == null)
             {
                 definitions = new SvgDefinitionList();
-                document.Children.Add(definitions);
+                document.Children.Insert(0, definitions);
             }
 
             foreach (var marker in Markers)
