@@ -23,13 +23,13 @@ namespace Svg.Droid.SampleEditor.Core.Tools
 
             Commands = new List<IToolCommand>
             {
-                new ToolCommand(this, "Place image", async o =>
+                new ToolCommand(this, "Choose background image", async o =>
                 {
                     ImagePath = await new AndroidPickImageService().PickImagePath(Canvas.ScreenWidth);
                     if (ImagePath == null) return;
                     PlaceImage(ImagePath);
                 }, iconName: "ic_insert_photo_white_48dp.png"),
-                new ToolCommand(this, "Remove image", o =>
+                new ToolCommand(this, "Remove background image", o =>
                 {
                     var children = Canvas.Document.Children;
                     var background = children.FirstOrDefault(x => x.CustomAttributes.ContainsKey("iclbackground"));

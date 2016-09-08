@@ -27,6 +27,9 @@ namespace Svg.Droid.Editor.Services
 
             // setup spinner for start marker
             var view = new LinearLayout(context) { Orientation = Orientation.Horizontal };
+
+            view.SetPadding(40, 12, 40, 0);
+
             var spinner1 = new Spinner(context)
             {
                 Adapter =
@@ -63,10 +66,7 @@ namespace Svg.Droid.Editor.Services
 
             builder.SetView(view);
 
-            builder.SetPositiveButton("OK", (sender, args) =>
-            {
-                tcs.TrySetResult(result);
-            });
+            builder.SetPositiveButton("OK", (sender, args) => tcs.TrySetResult(result));
 
             // show dialog
             builder.Show();
@@ -74,56 +74,4 @@ namespace Svg.Droid.Editor.Services
             return tcs.Task;
         }
     }
-
-    //internal class ColorListAdapter : BaseAdapter
-    //{
-    //    protected string[] Items { get; }
-    //    protected string[] Colors { get; }
-    //    protected Context Context { get; }
-
-    //    public ColorListAdapter(string[] items, string[] colors, Context context)
-    //    {
-    //        Items = items;
-    //        Colors = colors;
-    //        Context = context;
-    //    }
-
-    //    public override Java.Lang.Object GetItem(int position)
-    //    {
-    //        return new ColorItem { Title = Items[position], Color = Colors[position] };
-    //    }
-
-    //    public override long GetItemId(int position)
-    //    {
-    //        return position;
-    //    }
-
-    //    public override View GetView(int position, View convertView, ViewGroup parent)
-    //    {
-    //        var layoutInflater = Context.GetSystemService(Context.LayoutInflaterService) as LayoutInflater;
-    //        var view = convertView ?? layoutInflater?.Inflate(Android.Resource.Layout.SimpleListItem1, parent, false);
-
-    //        if (view == null) return null;
-
-    //        var text = view.FindViewById<TextView>(Android.Resource.Id.Text1);
-
-    //        text.Text = Items[position];
-
-    //        var bgColor = Android.Graphics.Color.ParseColor(Colors[position]);
-    //        view.SetBackgroundColor(bgColor);
-
-    //        var brightness = bgColor.R * .299 + bgColor.G * .587 + bgColor.B * .114;
-    //        text.SetTextColor(brightness > 128 ? Android.Graphics.Color.Black : Android.Graphics.Color.White);
-
-    //        return view;
-    //    }
-
-    //    public override int Count => Items.Length;
-
-    //    protected class ColorItem : Java.Lang.Object
-    //    {
-    //        public string Title { get; set; }
-    //        public string Color { get; set; }
-    //    }
-    //}
 }

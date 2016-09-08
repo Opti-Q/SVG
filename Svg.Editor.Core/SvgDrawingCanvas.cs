@@ -84,13 +84,13 @@ namespace Svg.Core
                 { "fontsizenames", new [] { "12px", "24px", "36px", "48px" } }
             }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 
-            var zoomToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
-            {
-                { "minscale", 1.0f },
-                { "maxscale", 5.0f }
-            }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+            //var zoomToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
+            //{
+            //    { "minscale", 1.0f },
+            //    { "maxscale", 5.0f }
+            //}, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 
-            //var zoomToolProperties = "";
+            var zoomToolProperties = "";
 
             var panToolProperties = "";
 

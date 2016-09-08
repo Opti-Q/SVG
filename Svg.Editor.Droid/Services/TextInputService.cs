@@ -29,6 +29,8 @@ namespace Svg.Droid.Editor.Services
 
             var view = new LinearLayout(context) { Orientation = Orientation.Horizontal };
 
+            view.SetPadding(40, 12, 40, 0);
+
             // setup spinner for stroke width
             var editTextLayout = new LinearLayout(context)
             {
