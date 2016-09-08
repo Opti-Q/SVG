@@ -19,17 +19,40 @@ namespace Svg.Core.Tools
 
             Commands = new List<IToolCommand>
             {
-                new ToolCommand(this, "Move forward", o =>
+                new ToolCommand(this, "Bring to front", o =>
+                {
+                    var children = Canvas.Document.Children;
+                    UndoRedoService.ExecuteCommand(new UndoableActionCommand("Bring to front operation", o1 => Canvas.FireInvalidateCanvas(), o1 => Canvas.FireInvalidateCanvas()));
+                    foreach (var element in Canvas.SelectedElements.Reverse())
+                    {
+                        var index = children.IndexOf(element);
+                        UndoRedoService.ExecuteCommand(new UndoableActionCommand("Bring to front", o1 =>
+                        {
+                            for (var i = index; i < children.Count - 1; i++)
+                            {
+                                children[i] = children[i + 1];
+                                children[i + 1] = element;
+                            }
+                        }, o1 =>
+                        {
+                            for (var i = children.IndexOf(element); i > index; i--)
+                            {
+                                children[i] = children[i - 1];
+                                children[i - 1] = element;
+                            }
+                        }), hasOwnUndoRedoScope: false);
+                    }
+                }, o => Canvas.SelectedElements.Any(), iconName: "ic_flip_to_front_white_48dp.png"),
+                new ToolCommand(this, "Bring forward", o =>
                 {
                     var children = Canvas.Document.Children;
                     var selected = Canvas.SelectedElements;
                     UndoRedoService.ExecuteCommand(new UndoableActionCommand("Move forward operation", o1 => Canvas.FireInvalidateCanvas(), o1 => Canvas.FireInvalidateCanvas()));
-                    for (int i = selected.Count; i >= 0; i--)
+                    foreach (var element in selected.Reverse())
                     {
-                        var element = selected[i];
                         var cIndex = children.IndexOf(element);
-                        var successor = children.ElementAtOrDefault(cIndex + 1) as SvgVisualElement;
-                        if (successor != null && !selected.Contains(successor))
+                        var successor = children.ElementAtOrDefault(cIndex + 1);
+                        if (successor != null && !selected.Contains(successor) && !successor.CustomAttributes.ContainsKey("iclbackground"))
                         {
                             UndoRedoService.ExecuteCommand(new UndoableActionCommand("Move forward", o1 =>
                             {
@@ -43,19 +66,18 @@ namespace Svg.Core.Tools
                         }
                     }
                 }, o => Canvas.SelectedElements.Any(), iconName: "ic_arrow_upward_white_48dp.png"),
-                new ToolCommand(this, "Move back", o =>
+                new ToolCommand(this, "Send backward", o =>
                 {
                     var children = Canvas.Document.Children;
                     var selected = Canvas.SelectedElements;
-                    UndoRedoService.ExecuteCommand(new UndoableActionCommand("Move back operation", o1 => Canvas.FireInvalidateCanvas(), o1 => Canvas.FireInvalidateCanvas()));
-                    for (int i = 0; i < selected.Count; i++)
+                    UndoRedoService.ExecuteCommand(new UndoableActionCommand("Send backward operation", o1 => Canvas.FireInvalidateCanvas(), o1 => Canvas.FireInvalidateCanvas()));
+                    foreach (var element in selected)
                     {
-                        var element = selected[i];
                         var cIndex = children.IndexOf(element);
-                        var precursor = children.ElementAtOrDefault(cIndex - 1) as SvgVisualElement;
-                        if (precursor != null && !selected.Contains(precursor))
+                        var precursor = children.ElementAtOrDefault(cIndex - 1);
+                        if (precursor != null && !selected.Contains(precursor) && !precursor.CustomAttributes.ContainsKey("iclbackground"))
                         {
-                            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Move back", o1 =>
+                            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Send backward", o1 =>
                             {
                                 children[cIndex] = precursor;
                                 children[cIndex - 1] = element;
@@ -66,7 +88,36 @@ namespace Svg.Core.Tools
                             }), hasOwnUndoRedoScope: false);
                         }
                     }
-                }, o => Canvas.SelectedElements.Any(), iconName: "ic_arrow_downward_white_48dp.png")
+                }, o => Canvas.SelectedElements.Any(), iconName: "ic_arrow_downward_white_48dp.png"),
+                new ToolCommand(this, "Send to back", o =>
+                {
+                    var children = Canvas.Document.Children;
+                    var selected = Canvas.SelectedElements;
+                    UndoRedoService.ExecuteCommand(new UndoableActionCommand("Send to back operation", o1 => Canvas.FireInvalidateCanvas(), o1 => Canvas.FireInvalidateCanvas()));
+                    foreach (var element in selected)
+                    {
+                        var index = children.IndexOf(element);
+                        UndoRedoService.ExecuteCommand(new UndoableActionCommand("Send to back", o1 =>
+                        {
+                            var firstArrangeableIndex =
+                                children.IndexOf(
+                                    children.First(
+                                        x => x is SvgVisualElement && !x.CustomAttributes.ContainsKey("iclbackground")));
+                            for (var i = index; i > firstArrangeableIndex; i--)
+                            {
+                                children[i] = children[i - 1];
+                                children[i - 1] = element;
+                            }
+                        }, o1 =>
+                        {
+                            for (var i = children.IndexOf(element); i < index; i++)
+                            {
+                                children[i] = children[i + 1];
+                                children[i + 1] = element;
+                            }
+                        }), hasOwnUndoRedoScope: false);
+                    }
+                }, o => Canvas.SelectedElements.Any(), iconName: "ic_flip_to_back_white_48dp.png")
             };
         }
     }

@@ -63,7 +63,7 @@ namespace Svg
 
         public void InsertAndForceUniqueID(int index, SvgElement item, bool autoForceUniqueID = true, bool autoFixChildrenID = true, Action<SvgElement, string, string> logElementOldIDNewID = null)
         {
-            AddToIdManager(item, this._elements[index], autoForceUniqueID, autoFixChildrenID, logElementOldIDNewID);
+            AddToIdManager(item, _elements.ElementAtOrDefault(index), autoForceUniqueID, autoFixChildrenID, logElementOldIDNewID);
             this._elements.Insert(index, item);
             item._parent.OnElementAdded(item, index);
         }

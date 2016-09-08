@@ -117,6 +117,8 @@ namespace Svg.Core
             _tools.CollectionChanged += OnToolsChanged;
         }
 
+        #region Public properties
+
         public SvgDocument Document
         {
             get
@@ -248,6 +250,8 @@ namespace Svg.Core
             }
         }
 
+        #endregion
+
         /// <summary>
         /// Called by the platform specific input event detector whenever the user interacts with the model
         /// </summary>
@@ -312,7 +316,8 @@ namespace Svg.Core
                 ZoomFactor = Math.Max(ScreenWidth / constraintWidth,
                     ScreenHeight / constraintHeight);
                 ZoomFocus = PointF.Create(0, 0);
-                Translate = PointF.Create(0, 0);
+                Translate = PointF.Create(ScreenWidth / ZoomFactor > constraintWidth ? 0 : Translate.X,
+                    ScreenHeight / ZoomFactor > constraintHeight ? 0 : Translate.Y);
             }
 
             var constraintTopLeft = PointF.Create(ConstraintLeft, ConstraintTop) * ZoomFactor;
