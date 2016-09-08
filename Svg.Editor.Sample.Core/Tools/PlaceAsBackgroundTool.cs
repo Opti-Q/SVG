@@ -17,16 +17,17 @@ namespace Svg.Droid.SampleEditor.Core.Tools
             IconName = "ic_insert_photo_white_48dp.png";
         }
 
-        public override Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(SvgDrawingCanvas ws)
         {
+            await base.Initialize(ws);
 
             Commands = new List<IToolCommand>
             {
                 new ToolCommand(this, "Place image", async o =>
                 {
-                    var path = await new AndroidPickImageService().PickImagePath(Canvas.ScreenWidth);
-                    if (path == null) return;
-                    PlaceImage(path);
+                    ImagePath = await new AndroidPickImageService().PickImagePath(Canvas.ScreenWidth);
+                    if (ImagePath == null) return;
+                    PlaceImage(ImagePath);
                 }, iconName: "ic_insert_photo_white_48dp.png"),
                 new ToolCommand(this, "Remove image", o =>
                 {
@@ -42,6 +43,8 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                         Canvas.ConstraintRight = float.MaxValue;
                         Canvas.ConstraintBottom = float.MaxValue;
 
+                        ImagePath = null;
+
                         Canvas.FireInvalidateCanvas();
                         Canvas.FireToolCommandsChanged();
                     }
@@ -52,8 +55,6 @@ namespace Svg.Droid.SampleEditor.Core.Tools
             {
                 PlaceImage(ImagePath);
             }
-
-            return base.Initialize(ws);
         }
 
         private void PlaceImage(string path)

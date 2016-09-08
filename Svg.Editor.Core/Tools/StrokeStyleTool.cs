@@ -14,15 +14,15 @@ namespace Svg.Core.Tools
             ToolType = ToolType.Modify;
         }
 
-        public override Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(SvgDrawingCanvas ws)
         {
+            await base.Initialize(ws);
+
             // add tool commands
             Commands = new List<IToolCommand>
             {
                 new ChangeStrokeStyleCommand(ws, this, "Change stroke")
             };
-
-            return base.Initialize(ws);
         }
 
         /// <summary>

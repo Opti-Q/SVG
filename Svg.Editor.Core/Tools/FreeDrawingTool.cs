@@ -25,8 +25,30 @@ namespace Svg.Core.Tools
         private SvgPath _currentPath;
         private bool _drawingEnabled;
         private PointF _lastCanvasPointerPosition;
+        private bool _isActive;
+
+        private SvgUnitCollection StrokeDashArray { get; } = new SvgUnitCollection
+        {
+            new SvgUnit(SvgUnitType.Pixel, 25),
+            new SvgUnit(SvgUnitType.Pixel, 25)
+        };
+
+        #region Public properties
 
         public string LineStyleIconName { get; set; } = "ic_line_style_white_48dp.png";
+
+        public override bool IsActive
+        {
+            get { return _isActive; }
+            set
+            {
+                if (_isActive == value) return;
+                _isActive = value;
+                if (!_isActive) return;
+                Canvas.SelectedElements.Clear();
+                Canvas.FireInvalidateCanvas();
+            }
+        }
 
         public string[] LineStyles
         {
@@ -72,6 +94,14 @@ namespace Svg.Core.Tools
             }
         }
 
+        public string SelectedLineStyle { get; set; }
+
+        public int SelectedStrokeWidth { get; set; }
+
+        #endregion
+
+        #region Event handlers
+
         public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
         {
             if (oldDocument != null) UnWatchDocument(oldDocument);
@@ -98,15 +128,7 @@ namespace Svg.Core.Tools
             }
         }
 
-        public string SelectedLineStyle { get; set; }
-
-        public int SelectedStrokeWidth { get; set; }
-
-        private SvgUnitCollection StrokeDashArray { get; } = new SvgUnitCollection
-        {
-            new SvgUnit(SvgUnitType.Pixel, 25),
-            new SvgUnit(SvgUnitType.Pixel, 25)
-        };
+        #endregion
 
         public FreeDrawingTool(string properties, IUndoRedoService undoRedoService) : base("Free draw", properties, undoRedoService)
         {
@@ -114,8 +136,10 @@ namespace Svg.Core.Tools
             ToolUsage = ToolUsage.Explicit;
         }
 
-        public override Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(SvgDrawingCanvas ws)
         {
+            await base.Initialize(ws);
+
             IsActive = false;
 
             SelectedLineStyle = LineStyles.FirstOrDefault();
@@ -125,8 +149,6 @@ namespace Svg.Core.Tools
             {
                 new ChangeLineStyleCommand(this, "Line style", ws)
             };
-
-            return base.Initialize(ws);
         }
 
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)

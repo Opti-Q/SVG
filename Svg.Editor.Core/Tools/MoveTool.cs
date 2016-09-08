@@ -22,11 +22,11 @@ namespace Svg.Core.Tools
 
         public override int InputOrder => 200; // must be before pantool as it decides whether or not it is active based on selection
 
-        public override Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(SvgDrawingCanvas ws)
         {
-            IsActive = false;
+            await base.Initialize(ws);
 
-            return base.Initialize(ws);
+            IsActive = false;
         }
 
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)

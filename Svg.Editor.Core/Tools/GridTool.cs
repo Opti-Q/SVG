@@ -108,8 +108,10 @@ namespace Svg.Core.Tools
         private Pen Pen => _pen ?? (_pen = Engine.Factory.CreatePen(Brush, 1));
         //private Pen Pen2 => _pen2 ?? (_pen2 = Engine.Factory.CreatePen(Brush2, 1));
 
-        public override Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(SvgDrawingCanvas ws)
         {
+            await base.Initialize(ws);
+            
             // add tool commands
             Commands = new List<IToolCommand>
             {
@@ -119,8 +121,6 @@ namespace Svg.Core.Tools
 
             // initialize with callbacks
             WatchDocument(ws.Document);
-
-            return base.Initialize(ws);
         }
 
         public override Task OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)

@@ -18,25 +18,12 @@ namespace Svg.Core.Tools
     {
         // if user moves cursor, she does not want to add/edit text
         private bool _moveEventWasRegistered;
-
-        public TextTool(string jsonProperties, IUndoRedoService undoRedoService) : base("Text", jsonProperties, undoRedoService)
-        {
-            IconName = "ic_text_fields_white_48dp.png";
-            ToolUsage = ToolUsage.Explicit;
-            ToolType = ToolType.Create;
-            object selectedFontSizeIndex;
-            if (Properties.TryGetValue("selectedfontsizeindex", out selectedFontSizeIndex))
-                SelectedFontSize = FontSizes[Convert.ToInt32(selectedFontSizeIndex)];
-        }
-
+        private ITool _activatedFrom;
         private ITextInputService TextInputService => Engine.Resolve<ITextInputService>();
 
-        public override Task Initialize(SvgDrawingCanvas ws)
-        {
-            IsActive = false;
+        #region Public properties
 
-            return base.Initialize(ws);
-        }
+        public override int InputOrder => 300;
 
         public int[] FontSizes
         {
@@ -62,8 +49,45 @@ namespace Svg.Core.Tools
             }
         }
 
+        #endregion
+
+        public TextTool(string jsonProperties, IUndoRedoService undoRedoService) : base("Text", jsonProperties, undoRedoService)
+        {
+            IconName = "ic_text_fields_white_48dp.png";
+            ToolUsage = ToolUsage.Explicit;
+            ToolType = ToolType.Create;
+            object selectedFontSizeIndex;
+            if (Properties.TryGetValue("selectedfontsizeindex", out selectedFontSizeIndex))
+                SelectedFontSize = FontSizes[Convert.ToInt32(selectedFontSizeIndex)];
+        }
+
+        public override async Task Initialize(SvgDrawingCanvas ws)
+        {
+            await base.Initialize(ws);
+
+            IsActive = false;
+        }
+
         public override async Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
+            var p = @event as PointerEvent;
+            if (ws.ActiveTool.ToolType == ToolType.Select && p?.EventType == EventType.PointerUp)
+            {
+                var pointerDiff = p.Pointer1Position - p.Pointer1Down;
+                var pointerDistance = Math.Abs(pointerDiff.X) + Math.Abs(pointerDiff.Y);
+                // determine if active by searching through selection and determining whether pointer was put on selected element
+                // if there are selected elements and pointer was put down on one of them, activate tool, otherwise deactivate
+                if (pointerDistance < 5.0f &&
+                    ws.SelectedElements.Count == 1 &&
+                    ws.GetElementsUnderPointer<SvgVisualElement>(p.Pointer1Position).Any(eup => eup is SvgText && ws.SelectedElements.First() == eup))
+                {
+                    // save the active tool for restoring later
+                    _activatedFrom = ws.ActiveTool;
+                    ws.ActiveTool = this;
+                    ws.FireInvalidateCanvas();
+                }
+            }
+
             if (!IsActive)
                 return;
 
@@ -72,7 +96,7 @@ namespace Svg.Core.Tools
             if (me != null)
             {
                 // if user moves with thumb we do not want to add text on pointer-up
-                var isMove = Math.Sqrt(Math.Pow(me.AbsoluteDelta.X, 2) + Math.Pow(me.AbsoluteDelta.Y, 2)) > 20d;
+                var isMove = Math.Abs(me.AbsoluteDelta.X) + Math.Abs(me.AbsoluteDelta.Y) > 10d;
                 if (isMove)
                     _moveEventWasRegistered = true;
             }
@@ -183,6 +207,12 @@ namespace Svg.Core.Tools
                                 ws.FireInvalidateCanvas();
                             }));
                         }
+                    }
+
+                    if (_activatedFrom != null)
+                    {
+                        ws.ActiveTool = _activatedFrom;
+                        _activatedFrom = null;
                     }
                 }
             }

@@ -84,8 +84,6 @@ namespace Svg.Core
                 { "fontsizenames", new [] { "12px", "24px", "36px", "48px" } }
             }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 
-            
-
             var zoomToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
             {
                 { "minscale", 1.0f },
@@ -113,10 +111,13 @@ namespace Svg.Core
                     new FreeDrawingTool(freeDrawToolProperties, undoRedoService),
                     new ColorTool(colorToolProperties, undoRedoService),
                     new StrokeStyleTool(undoRedoService),
-                    new UndoRedoTool(undoRedoService)
+                    new UndoRedoTool(undoRedoService),
+                    new ArrangeTool(undoRedoService)
             };
             _tools.CollectionChanged += OnToolsChanged;
         }
+
+        #region Public properties
 
         public SvgDocument Document
         {
@@ -249,6 +250,8 @@ namespace Svg.Core
             }
         }
 
+        #endregion
+
         /// <summary>
         /// Called by the platform specific input event detector whenever the user interacts with the model
         /// </summary>
@@ -275,6 +278,35 @@ namespace Svg.Core
             ScreenWidth = renderer.Width;
             ScreenHeight = renderer.Height;
 
+            ApplyConstraints();
+
+            // apply global panning and zooming
+            renderer.Translate(Translate.X, Translate.Y);
+            renderer.Scale(ZoomFactor, ZoomFocus.X, ZoomFocus.Y);
+
+            // draw default background
+            renderer.FillEntireCanvasWithColor(Engine.Factory.Colors.White);
+
+            // prerender step (e.g. gridlines, etc.)
+            foreach (var tool in Tools.OrderBy(t => t.PreDrawOrder))
+            {
+                await tool.OnPreDraw(renderer, this);
+            }
+
+            // render svg step
+            renderer.Graphics.Save();
+            Document.Draw(GetOrCreateRenderer(renderer.Graphics));
+            renderer.Graphics.Restore();
+
+            // post render step (e.g. selection borders, etc.)
+            foreach (var tool in Tools.OrderBy(t => t.DrawOrder))
+            {
+                await tool.OnDraw(renderer, this);
+            }
+        }
+
+        private void ApplyConstraints()
+        {
             // check the constraints and if we have to zoom in to fit
             var constraintWidth = ConstraintRight - ConstraintLeft;
             var constraintHeight = ConstraintBottom - ConstraintTop;
@@ -282,9 +314,10 @@ namespace Svg.Core
             if (ScreenWidth / ZoomFactor > constraintWidth || ScreenHeight / ZoomFactor > constraintHeight)
             {
                 ZoomFactor = Math.Max(ScreenWidth / constraintWidth,
-                        ScreenHeight / constraintHeight);
+                    ScreenHeight / constraintHeight);
                 ZoomFocus = PointF.Create(0, 0);
-                Translate = PointF.Create(0, 0);
+                Translate = PointF.Create(ScreenWidth / ZoomFactor > constraintWidth ? 0 : Translate.X,
+                    ScreenHeight / ZoomFactor > constraintHeight ? 0 : Translate.Y);
             }
 
             var constraintTopLeft = PointF.Create(ConstraintLeft, ConstraintTop) * ZoomFactor;
@@ -310,30 +343,6 @@ namespace Svg.Core
             if (screenBottomRight.Y > constraintBottomRight.Y)
             {
                 Translate.Y += screenBottomRight.Y - constraintBottomRight.Y;
-            }
-
-            // apply global panning and zooming
-            renderer.Translate(Translate.X, Translate.Y);
-            renderer.Scale(ZoomFactor, ZoomFocus.X, ZoomFocus.Y);
-
-            // draw default background
-            renderer.FillEntireCanvasWithColor(Engine.Factory.Colors.White);
-
-            // prerender step (e.g. gridlines, etc.)
-            foreach (var tool in Tools.OrderBy(t => t.PreDrawOrder))
-            {
-                await tool.OnPreDraw(renderer, this);
-            }
-
-            // render svg step
-            renderer.Graphics.Save();
-            Document.Draw(GetOrCreateRenderer(renderer.Graphics));
-            renderer.Graphics.Restore();
-
-            // post render step (e.g. selection borders, etc.)
-            foreach (var tool in Tools.OrderBy(t => t.DrawOrder))
-            {
-                await tool.OnDraw(renderer, this);
             }
         }
 

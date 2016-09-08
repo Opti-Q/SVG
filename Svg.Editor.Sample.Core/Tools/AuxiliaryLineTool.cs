@@ -32,8 +32,10 @@ namespace Svg.Droid.SampleEditor.Core.Tools
         {
         }
 
-        public override Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(SvgDrawingCanvas ws)
         {
+            await base.Initialize(ws);
+
             Commands = new List<IToolCommand>
             {
                 new ToolCommand(this, "Toogle auxiliary lines", (obj) =>
@@ -42,8 +44,6 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     Canvas.FireInvalidateCanvas();
                 }, iconName:"ic_code_white_48dp.png", sortFunc: (obj) => 1000)
             };
-
-            return base.Initialize(ws);
         }
 
         public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
