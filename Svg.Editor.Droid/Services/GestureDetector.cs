@@ -18,7 +18,7 @@ namespace Svg.Droid.Editor.Services
         private float _pointerDownX;
         private float _pointerDownY;
 
-        public event EventHandler<UserInputEvent> OnGesture; 
+        public event EventHandler<UserInputEvent> OnGesture;
 
         public GestureDetector(Context ctx)
         {
@@ -37,27 +37,37 @@ namespace Svg.Droid.Editor.Services
 
             UserInputEvent uie = null;
 
-            var x = ev.GetX();
-            var y = ev.GetY();
+            var x = 0f;
+            var y = 0f;
 
-            var action = (int)ev.Action;
-            var maskedAction = action & (int)MotionEventActions.Mask;
+            var pointerCount = ev.PointerCount;
+            for (var i = 0; i < pointerCount; i++)
+            {
+                x += ev.GetX(i) / pointerCount;
+                y += ev.GetY(i) / pointerCount;
+            }
+
+            var action = (int) ev.Action;
+            var maskedAction = action & (int) MotionEventActions.Mask;
             switch (maskedAction)
             {
-                case (int)MotionEventActions.Down:
-                case (int)MotionEventActions.Pointer1Down:
+                case (int) MotionEventActions.Down:
+                case (int) MotionEventActions.Pointer1Down:
                     uie = new PointerEvent(EventType.PointerDown,
                         Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
                         Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY),
                         Factory.Instance.CreatePointF(x, y), ev.PointerCount);
+
                     _lastTouchX = x;
                     _lastTouchY = y;
+
                     _pointerDownX = x;
                     _pointerDownY = y;
+
                     ActivePointerId = ev.GetPointerId(0);
                     break;
 
-                case (int)MotionEventActions.Up:
+                case (int) MotionEventActions.Up:
                     ActivePointerId = InvalidPointerId;
                     uie = new PointerEvent(EventType.PointerUp,
                         Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
@@ -65,7 +75,7 @@ namespace Svg.Droid.Editor.Services
                         Factory.Instance.CreatePointF(x, y), ev.PointerCount);
                     break;
 
-                case (int)MotionEventActions.Cancel:
+                case (int) MotionEventActions.Cancel:
                     ActivePointerId = InvalidPointerId;
                     uie = new PointerEvent(EventType.Cancel,
                         Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
@@ -73,11 +83,7 @@ namespace Svg.Droid.Editor.Services
                         Factory.Instance.CreatePointF(x, y), 1);
                     break;
 
-                case (int)MotionEventActions.Move:
-                    var pointerIndex = ev.FindPointerIndex(ActivePointerId);
-                    x = ev.GetX(pointerIndex);
-                    y = ev.GetY(pointerIndex);
-
+                case (int) MotionEventActions.Move:
                     var relativeDeltaX = x - _lastTouchX;
                     var relativeDeltaY = y - _lastTouchY;
 
@@ -91,10 +97,10 @@ namespace Svg.Droid.Editor.Services
                     _lastTouchY = y;
                     break;
 
-                case (int)MotionEventActions.PointerUp:
+                case (int) MotionEventActions.PointerUp:
 
-                    var pointerIndex2 = ((int)ev.Action & (int)MotionEventActions.PointerIndexMask)
-                                        >> (int)MotionEventActions.PointerIndexShift;
+                    var pointerIndex2 = ((int) ev.Action & (int) MotionEventActions.PointerIndexMask)
+                                        >> (int) MotionEventActions.PointerIndexShift;
 
                     var pointerId = ev.GetPointerId(pointerIndex2);
                     if (pointerId == ActivePointerId)
@@ -144,7 +150,7 @@ namespace Svg.Droid.Editor.Services
 
         private class ScaleDetector : ScaleGestureDetector.SimpleOnScaleGestureListener
         {
-            public event EventHandler<UserInputEvent> OnEvent; 
+            public event EventHandler<UserInputEvent> OnEvent;
 
             public override bool OnScaleBegin(ScaleGestureDetector detector)
             {
@@ -178,7 +184,7 @@ namespace Svg.Droid.Editor.Services
             private float? _previousAngle;
             private float _angle;
 
-            public event EventHandler<UserInputEvent> OnRotate; 
+            public event EventHandler<UserInputEvent> OnRotate;
 
             public RotateDetector()
             {
@@ -188,20 +194,20 @@ namespace Svg.Droid.Editor.Services
 
             public void OnTouchEvent(MotionEvent ev)
             {
-                var action = (int)ev.Action;
-                switch (action & (int)MotionEventActions.Mask)
+                var action = (int) ev.Action;
+                switch (action & (int) MotionEventActions.Mask)
                 {
-                    case (int)MotionEventActions.Down:
+                    case (int) MotionEventActions.Down:
                         _ptrId1 = ev.GetPointerId(ev.ActionIndex);
                         break;
-                    case (int)MotionEventActions.PointerDown:
+                    case (int) MotionEventActions.PointerDown:
                         _ptrId2 = ev.GetPointerId(ev.ActionIndex);
                         _sX = ev.GetX(ev.FindPointerIndex(_ptrId1));
                         _sY = ev.GetY(ev.FindPointerIndex(_ptrId1));
                         _fX = ev.GetX(ev.FindPointerIndex(_ptrId2));
                         _fY = ev.GetY(ev.FindPointerIndex(_ptrId2));
                         break;
-                    case (int)MotionEventActions.Move:
+                    case (int) MotionEventActions.Move:
                         if (_ptrId1 != InvalidPointerId && _ptrId2 != InvalidPointerId)
                         {
                             var nsX = ev.GetX(ev.FindPointerIndex(_ptrId1));
@@ -231,15 +237,15 @@ namespace Svg.Droid.Editor.Services
 
                         }
                         break;
-                    case (int)MotionEventActions.Up:
+                    case (int) MotionEventActions.Up:
                         _ptrId1 = InvalidPointerId;
                         CleanUp();
                         break;
-                    case (int)MotionEventActions.PointerUp:
+                    case (int) MotionEventActions.PointerUp:
                         _ptrId2 = InvalidPointerId;
                         CleanUp();
                         break;
-                    case (int)MotionEventActions.Cancel:
+                    case (int) MotionEventActions.Cancel:
                         _ptrId1 = InvalidPointerId;
                         _ptrId2 = InvalidPointerId;
                         CleanUp();
@@ -267,10 +273,10 @@ namespace Svg.Droid.Editor.Services
 
             private static float AngleBetweenLines(float fX, float fY, float sX, float sY, float nfX, float nfY, float nsX, float nsY)
             {
-                var angle1 = (float)Math.Atan2(fY - sY, (fX - sX));
-                var angle2 = (float)Math.Atan2(nfY - nsY, (nfX - nsX));
+                var angle1 = (float) Math.Atan2(fY - sY, fX - sX);
+                var angle2 = (float) Math.Atan2(nfY - nsY, nfX - nsX);
 
-                var angle = (float)RadianToDegree(angle1 - angle2) % 360;
+                var angle = (float) RadianToDegree(angle1 - angle2) % 360;
                 if (angle < -180f) angle += 360.0f;
                 if (angle > 180f) angle -= 360.0f;
                 return angle;
