@@ -51,7 +51,7 @@ namespace Svg.Core.Tools
 
         public override async Task Initialize(SvgDrawingCanvas ws)
         {
-            await Task.FromResult(true);
+            await base.Initialize(ws);
 
             Commands = new[]
             {
@@ -76,28 +76,28 @@ namespace Svg.Core.Tools
                     Canvas.Translate = PointF.Create(offsetX + marginX, offsetY + marginY);
                     Canvas.FireInvalidateCanvas();
                 }, iconName:"ic_aspect_ratio_white_48dp.png", sortFunc:x => 1450),
-                new ToolCommand(this, "Zoom in +", (x) =>
+                new ToolCommand(this, "Zoom in +", x =>
                 {
                     var f = Canvas.ZoomFactor + 0.25f;
-                    Canvas.ZoomFactor = ws.ZoomFactor = Math.Max(MinScale, Math.Min(f, MaxScale));
+                    Canvas.ZoomFactor = Math.Max(MinScale, Math.Min(f, MaxScale));
                     Canvas.FireInvalidateCanvas();
-                }, iconName:"ic_zoom_in_white_48dp.png", sortFunc:(x) => 1500),
-                new ToolCommand(this, "Zoom out -", (x) =>
+                }, iconName:"ic_zoom_in_white_48dp.png", sortFunc:x => 1500),
+                new ToolCommand(this, "Zoom out -", x =>
                 {
                     var f = Canvas.ZoomFactor - 0.25f;
-                    Canvas.ZoomFactor = ws.ZoomFactor = Math.Max(MinScale, Math.Min(f, MaxScale));
+                    Canvas.ZoomFactor = Math.Max(MinScale, Math.Min(f, MaxScale));
                     Canvas.FireInvalidateCanvas();
-                }, iconName:"ic_zoom_out_white_48dp.png", sortFunc:(x) => 1550),
-                new ToolCommand(this, "100 %", (x) =>
+                }, iconName:"ic_zoom_out_white_48dp.png", sortFunc:x => 1550),
+                new ToolCommand(this, "100 %", x =>
                 {
-                    Canvas.ZoomFactor = ws.ZoomFactor = Math.Max(MinScale, Math.Min(1, MaxScale));
+                    Canvas.ZoomFactor = Math.Max(MinScale, Math.Min(1, MaxScale));
                     Canvas.FireInvalidateCanvas();
-                }, iconName:"ic_zoom_100_white_48dp.png", sortFunc:(x) => 1600),
-                new ToolCommand(this, "200 %", (x) =>
+                }, iconName:"ic_zoom_100_white_48dp.png", sortFunc:x => 1600),
+                new ToolCommand(this, "200 %", x =>
                 {
-                    Canvas.ZoomFactor = ws.ZoomFactor = Math.Max(MinScale, Math.Min(2, MaxScale));
+                    Canvas.ZoomFactor = Math.Max(MinScale, Math.Min(2, MaxScale));
                     Canvas.FireInvalidateCanvas();
-                }, iconName:"ic_zoom_200_white_48dp.png", sortFunc:(x) => 1650),
+                }, iconName:"ic_zoom_200_white_48dp.png", sortFunc:x => 1650)
             };
         }
 

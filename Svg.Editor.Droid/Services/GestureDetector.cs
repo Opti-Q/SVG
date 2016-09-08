@@ -37,8 +37,15 @@ namespace Svg.Droid.Editor.Services
 
             UserInputEvent uie = null;
 
-            var x = ev.GetX();
-            var y = ev.GetY();
+            var x = 0f;
+            var y = 0f;
+
+            var pointerCount = ev.PointerCount;
+            for (var i = 0; i < pointerCount; i++)
+            {
+                x += ev.GetX(i) / pointerCount;
+                y += ev.GetY(i) / pointerCount;
+            }
 
             var action = (int) ev.Action;
             var maskedAction = action & (int) MotionEventActions.Mask;
@@ -50,10 +57,13 @@ namespace Svg.Droid.Editor.Services
                         Factory.Instance.CreatePointF(_pointerDownX, _pointerDownY),
                         Factory.Instance.CreatePointF(_lastTouchX, _lastTouchY),
                         Factory.Instance.CreatePointF(x, y), ev.PointerCount);
+
                     _lastTouchX = x;
                     _lastTouchY = y;
+
                     _pointerDownX = x;
                     _pointerDownY = y;
+
                     ActivePointerId = ev.GetPointerId(0);
                     break;
 
@@ -74,19 +84,6 @@ namespace Svg.Droid.Editor.Services
                     break;
 
                 case (int) MotionEventActions.Move:
-                    var pointerIndex = ev.FindPointerIndex(ActivePointerId);
-                    x = ev.GetX(pointerIndex);
-                    y = ev.GetY(pointerIndex);
-                    //x = y = 0;
-
-                    //var pointerCount = ev.PointerCount;
-
-                    //for (var i = 0; i < pointerCount; i++)
-                    //{
-                    //    x += ev.GetX(i) / pointerCount;
-                    //    y += ev.GetY(i) / pointerCount;
-                    //}
-
                     var relativeDeltaX = x - _lastTouchX;
                     var relativeDeltaY = y - _lastTouchY;
 
