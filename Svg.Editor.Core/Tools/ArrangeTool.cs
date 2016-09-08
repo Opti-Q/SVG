@@ -29,7 +29,7 @@ namespace Svg.Core.Tools
                         var element = selected[i];
                         var cIndex = children.IndexOf(element);
                         var successor = children.ElementAtOrDefault(cIndex + 1) as SvgVisualElement;
-                        if (successor != null && successor != selected.ElementAtOrDefault(i + 1))
+                        if (successor != null && !selected.Contains(successor))
                         {
                             UndoRedoService.ExecuteCommand(new UndoableActionCommand("Move forward", o1 =>
                             {
@@ -53,7 +53,7 @@ namespace Svg.Core.Tools
                         var element = selected[i];
                         var cIndex = children.IndexOf(element);
                         var precursor = children.ElementAtOrDefault(cIndex - 1) as SvgVisualElement;
-                        if (precursor != null && precursor != selected.ElementAtOrDefault(i - 1))
+                        if (precursor != null && !selected.Contains(precursor))
                         {
                             UndoRedoService.ExecuteCommand(new UndoableActionCommand("Move back", o1 =>
                             {
