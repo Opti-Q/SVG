@@ -23,7 +23,7 @@ namespace Svg.Core.Tools
                 {
                     var children = Canvas.Document.Children;
                     UndoRedoService.ExecuteCommand(new UndoableActionCommand("Bring to front operation", o1 => Canvas.FireInvalidateCanvas(), o1 => Canvas.FireInvalidateCanvas()));
-                    foreach (var element in Canvas.SelectedElements.Reverse())
+                    foreach (var element in Canvas.SelectedElements.OrderByDescending(x => children.IndexOf(x)))
                     {
                         var index = children.IndexOf(element);
                         UndoRedoService.ExecuteCommand(new UndoableActionCommand("Bring to front", o1 =>
@@ -46,13 +46,14 @@ namespace Svg.Core.Tools
                 new ToolCommand(this, "Bring forward", o =>
                 {
                     var children = Canvas.Document.Children;
-                    var selected = Canvas.SelectedElements;
+                    var selected = Canvas.SelectedElements.OrderByDescending(x => children.IndexOf(x));
                     UndoRedoService.ExecuteCommand(new UndoableActionCommand("Move forward operation", o1 => Canvas.FireInvalidateCanvas(), o1 => Canvas.FireInvalidateCanvas()));
-                    foreach (var element in selected.Reverse())
+                    foreach (var element in selected)
                     {
                         var cIndex = children.IndexOf(element);
                         var successor = children.ElementAtOrDefault(cIndex + 1);
-                        if (successor != null && !selected.Contains(successor) && !successor.CustomAttributes.ContainsKey("iclbackground"))
+                        if (successor != null && !selected.Contains(successor) &&
+                            !successor.CustomAttributes.ContainsKey("iclbackground"))
                         {
                             UndoRedoService.ExecuteCommand(new UndoableActionCommand("Move forward", o1 =>
                             {
@@ -69,7 +70,7 @@ namespace Svg.Core.Tools
                 new ToolCommand(this, "Send backward", o =>
                 {
                     var children = Canvas.Document.Children;
-                    var selected = Canvas.SelectedElements;
+                    var selected = Canvas.SelectedElements.OrderBy(x => children.IndexOf(x));
                     UndoRedoService.ExecuteCommand(new UndoableActionCommand("Send backward operation", o1 => Canvas.FireInvalidateCanvas(), o1 => Canvas.FireInvalidateCanvas()));
                     foreach (var element in selected)
                     {
@@ -92,7 +93,7 @@ namespace Svg.Core.Tools
                 new ToolCommand(this, "Send to back", o =>
                 {
                     var children = Canvas.Document.Children;
-                    var selected = Canvas.SelectedElements;
+                    var selected = Canvas.SelectedElements.OrderBy(x => children.IndexOf(x));
                     UndoRedoService.ExecuteCommand(new UndoableActionCommand("Send to back operation", o1 => Canvas.FireInvalidateCanvas(), o1 => Canvas.FireInvalidateCanvas()));
                     foreach (var element in selected)
                     {

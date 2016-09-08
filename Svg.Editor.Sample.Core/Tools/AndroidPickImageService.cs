@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MvvmCross.Platform;
 using MvvmCross.Plugins.PictureChooser;
 using Svg.Core.Interfaces;
@@ -16,7 +15,11 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 if (inStream == null) return null;
 
                 var fs = Engine.Resolve<IFileSystem>();
-                var path = fs.PathCombine(fs.GetDefaultStoragePath(), $"{Guid.NewGuid()}.png");
+                var path = fs.PathCombine(fs.GetDefaultStoragePath(), "background.png");
+
+                if (fs.FileExists(path))
+                    fs.DeleteFile(path);
+
                 using (var outStream = fs.OpenWrite(path))
                 {
                     inStream.CopyTo(outStream);

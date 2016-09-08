@@ -616,5 +616,265 @@ namespace Svg.Editor.Tests
             nestedText = Canvas.Document.Descendants().OfType<SvgTextSpan>().Single();
             Assert.AreEqual(formerText, nestedText.Text);
         }
+
+        [Test]
+        public async Task If1ElementIsSelected_AndSendBackwardsIsSelected_ElementIsSwappedWithPrecursor()
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            var tool = Canvas.Tools.OfType<ArrangeTool>().Single();
+            Canvas.ActiveTool = tool;
+
+            var child = new SvgRectangle { X = 50, Y = 50, Width = 50, Height = 50 };
+            var child1 = new SvgRectangle { X = 250, Y = 150, Width = 100, Height = 25 };
+            var child2 = new SvgRectangle { X = 150, Y = 250, Width = 150, Height = 150 };
+            Canvas.ScreenWidth = 800;
+            Canvas.ScreenHeight = 500;
+            Canvas.Document.Children.Add(child1);
+            Canvas.Document.Children.Add(child);
+            Canvas.Document.Children.Add(child2);
+            Canvas.SelectedElements.Add(child);
+            tool.Commands.First(x => x.Name == "Send backward").Execute(null);
+
+            // Preassert
+            Assert.True(Canvas.Document.Children.IndexOf(child) < Canvas.Document.Children.IndexOf(child1));
+            Assert.True(Canvas.Document.Children.IndexOf(child) < Canvas.Document.Children.IndexOf(child2));
+
+            // Act
+            Canvas.Tools.OfType<UndoRedoTool>().Single().Commands.First(x => x.Name == "Undo").Execute(null);
+
+            // Assert
+            Assert.True(Canvas.Document.Children.IndexOf(child) > Canvas.Document.Children.IndexOf(child1));
+            Assert.True(Canvas.Document.Children.IndexOf(child) < Canvas.Document.Children.IndexOf(child2));
+        }
+
+        [Test]
+        public async Task If1ElementIsSelected_AndSendToBackIsSelected_ElementIsSentToBack()
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            var tool = Canvas.Tools.OfType<ArrangeTool>().Single();
+            Canvas.ActiveTool = tool;
+
+            var child = new SvgRectangle { X = 50, Y = 50, Width = 50, Height = 50 };
+            var child1 = new SvgRectangle { X = 250, Y = 150, Width = 100, Height = 25 };
+            var child2 = new SvgRectangle { X = 150, Y = 250, Width = 150, Height = 150 };
+            Canvas.ScreenWidth = 800;
+            Canvas.ScreenHeight = 500;
+            Canvas.Document.Children.Add(child1);
+            Canvas.Document.Children.Add(child2);
+            Canvas.Document.Children.Add(child);
+            Canvas.SelectedElements.Add(child);
+            tool.Commands.First(x => x.Name == "Send to back").Execute(null);
+
+            // Preassert
+            Assert.True(Canvas.Document.Children.IndexOf(child) < Canvas.Document.Children.IndexOf(child1));
+            Assert.True(Canvas.Document.Children.IndexOf(child) < Canvas.Document.Children.IndexOf(child2));
+
+            // Act
+            Canvas.Tools.OfType<UndoRedoTool>().Single().Commands.First(x => x.Name == "Undo").Execute(null);
+
+            // Assert
+            Assert.True(Canvas.Document.Children.IndexOf(child) > Canvas.Document.Children.IndexOf(child1));
+            Assert.True(Canvas.Document.Children.IndexOf(child) > Canvas.Document.Children.IndexOf(child2));
+        }
+
+        [Test]
+        public async Task If1ElementIsSelected_AndBringForwardIsSelected_ElementIsSwappedWithSuccessor()
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            var tool = Canvas.Tools.OfType<ArrangeTool>().Single();
+            Canvas.ActiveTool = tool;
+
+            var child = new SvgRectangle { X = 50, Y = 50, Width = 50, Height = 50 };
+            var child1 = new SvgRectangle { X = 250, Y = 150, Width = 100, Height = 25 };
+            var child2 = new SvgRectangle { X = 150, Y = 250, Width = 150, Height = 150 };
+            Canvas.ScreenWidth = 800;
+            Canvas.ScreenHeight = 500;
+            Canvas.Document.Children.Add(child1);
+            Canvas.Document.Children.Add(child);
+            Canvas.Document.Children.Add(child2);
+            Canvas.SelectedElements.Add(child);
+            tool.Commands.First(x => x.Name == "Bring forward").Execute(null);
+
+            // Preassert
+            Assert.True(Canvas.Document.Children.IndexOf(child) > Canvas.Document.Children.IndexOf(child1));
+            Assert.True(Canvas.Document.Children.IndexOf(child) > Canvas.Document.Children.IndexOf(child2));
+
+            // Act
+            Canvas.Tools.OfType<UndoRedoTool>().Single().Commands.First(x => x.Name == "Undo").Execute(null);
+
+            // Assert
+            Assert.True(Canvas.Document.Children.IndexOf(child) > Canvas.Document.Children.IndexOf(child1));
+            Assert.True(Canvas.Document.Children.IndexOf(child) < Canvas.Document.Children.IndexOf(child2));
+        }
+
+        [Test]
+        public async Task If1ElementIsSelected_AndBringToFrontIsSelected_ElementIsBroughtToFront()
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            var tool = Canvas.Tools.OfType<ArrangeTool>().Single();
+            Canvas.ActiveTool = tool;
+
+            var child = new SvgRectangle { X = 50, Y = 50, Width = 50, Height = 50 };
+            var child1 = new SvgRectangle { X = 250, Y = 150, Width = 100, Height = 25 };
+            var child2 = new SvgRectangle { X = 150, Y = 250, Width = 150, Height = 150 };
+            Canvas.ScreenWidth = 800;
+            Canvas.ScreenHeight = 500;
+            Canvas.Document.Children.Add(child);
+            Canvas.Document.Children.Add(child1);
+            Canvas.Document.Children.Add(child2);
+            Canvas.SelectedElements.Add(child);
+            tool.Commands.First(x => x.Name == "Bring to front").Execute(null);
+
+            // Preassert
+            Assert.True(Canvas.Document.Children.IndexOf(child) > Canvas.Document.Children.IndexOf(child1));
+            Assert.True(Canvas.Document.Children.IndexOf(child) > Canvas.Document.Children.IndexOf(child2));
+
+            // Act
+            Canvas.Tools.OfType<UndoRedoTool>().Single().Commands.First(x => x.Name == "Undo").Execute(null);
+
+            // Assert
+            Assert.True(Canvas.Document.Children.IndexOf(child) < Canvas.Document.Children.IndexOf(child1));
+            Assert.True(Canvas.Document.Children.IndexOf(child) < Canvas.Document.Children.IndexOf(child2));
+        }
+
+        [Test]
+        public async Task IfMoreElementsAreSelected_AndSendBackwardsIsSelected_ElementsAreSwappedWithPrecursor()
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            var tool = Canvas.Tools.OfType<ArrangeTool>().Single();
+            Canvas.ActiveTool = tool;
+
+            var child = new SvgRectangle { X = 50, Y = 50, Width = 50, Height = 50 };
+            var child1 = new SvgRectangle { X = 250, Y = 150, Width = 100, Height = 25 };
+            var child2 = new SvgRectangle { X = 150, Y = 250, Width = 150, Height = 150 };
+            Canvas.ScreenWidth = 800;
+            Canvas.ScreenHeight = 500;
+            Canvas.Document.Children.Add(child1);
+            Canvas.Document.Children.Add(child);
+            Canvas.Document.Children.Add(child2);
+            Canvas.SelectedElements.Add(child);
+            Canvas.SelectedElements.Add(child2);
+            tool.Commands.First(x => x.Name == "Send backward").Execute(null);
+
+            // Preassert
+            Assert.True(Canvas.Document.Children.IndexOf(child) < Canvas.Document.Children.IndexOf(child1));
+            Assert.True(Canvas.Document.Children.IndexOf(child) < Canvas.Document.Children.IndexOf(child2));
+            Assert.True(Canvas.Document.Children.IndexOf(child2) < Canvas.Document.Children.IndexOf(child1));
+
+            // Act
+            Canvas.Tools.OfType<UndoRedoTool>().Single().Commands.First(x => x.Name == "Undo").Execute(null);
+
+            // Assert
+            Assert.True(Canvas.Document.Children.IndexOf(child) > Canvas.Document.Children.IndexOf(child1));
+            Assert.True(Canvas.Document.Children.IndexOf(child) < Canvas.Document.Children.IndexOf(child2));
+            Assert.True(Canvas.Document.Children.IndexOf(child2) > Canvas.Document.Children.IndexOf(child1));
+        }
+
+        [Test]
+        public async Task IfMoreElementsAreSelected_AndSendToBackIsSelected_ElementsAreSentToBack()
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            var tool = Canvas.Tools.OfType<ArrangeTool>().Single();
+            Canvas.ActiveTool = tool;
+
+            var child = new SvgRectangle { X = 50, Y = 50, Width = 50, Height = 50 };
+            var child1 = new SvgRectangle { X = 250, Y = 150, Width = 100, Height = 25 };
+            var child2 = new SvgRectangle { X = 150, Y = 250, Width = 150, Height = 150 };
+            Canvas.ScreenWidth = 800;
+            Canvas.ScreenHeight = 500;
+            Canvas.Document.Children.Add(child1);
+            Canvas.Document.Children.Add(child2);
+            Canvas.Document.Children.Add(child);
+            Canvas.SelectedElements.Add(child);
+            Canvas.SelectedElements.Add(child2);
+            tool.Commands.First(x => x.Name == "Send to back").Execute(null);
+
+            // Preassert
+            Assert.True(Canvas.Document.Children.IndexOf(child) < Canvas.Document.Children.IndexOf(child1));
+            Assert.True(Canvas.Document.Children.IndexOf(child) < Canvas.Document.Children.IndexOf(child2));
+            Assert.True(Canvas.Document.Children.IndexOf(child2) < Canvas.Document.Children.IndexOf(child1));
+
+            // Act
+            Canvas.Tools.OfType<UndoRedoTool>().Single().Commands.First(x => x.Name == "Undo").Execute(null);
+
+            // Assert
+            Assert.True(Canvas.Document.Children.IndexOf(child) > Canvas.Document.Children.IndexOf(child1));
+            Assert.True(Canvas.Document.Children.IndexOf(child) > Canvas.Document.Children.IndexOf(child2));
+            Assert.True(Canvas.Document.Children.IndexOf(child2) > Canvas.Document.Children.IndexOf(child1));
+        }
+
+        [Test]
+        public async Task IfMoreElementsAreSelected_AndBringForwardIsSelected_ElementsAreSwappedWithSuccessor()
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            var tool = Canvas.Tools.OfType<ArrangeTool>().Single();
+            Canvas.ActiveTool = tool;
+
+            var child = new SvgRectangle { X = 50, Y = 50, Width = 50, Height = 50 };
+            var child1 = new SvgRectangle { X = 250, Y = 150, Width = 100, Height = 25 };
+            var child2 = new SvgRectangle { X = 150, Y = 250, Width = 150, Height = 150 };
+            Canvas.ScreenWidth = 800;
+            Canvas.ScreenHeight = 500;
+            Canvas.Document.Children.Add(child1);
+            Canvas.Document.Children.Add(child);
+            Canvas.Document.Children.Add(child2);
+            Canvas.SelectedElements.Add(child);
+            Canvas.SelectedElements.Add(child1);
+            tool.Commands.First(x => x.Name == "Bring forward").Execute(null);
+
+            // Preassert
+            Assert.True(Canvas.Document.Children.IndexOf(child) > Canvas.Document.Children.IndexOf(child1));
+            Assert.True(Canvas.Document.Children.IndexOf(child) > Canvas.Document.Children.IndexOf(child2));
+            Assert.True(Canvas.Document.Children.IndexOf(child1) > Canvas.Document.Children.IndexOf(child2));
+
+            // Act
+            Canvas.Tools.OfType<UndoRedoTool>().Single().Commands.First(x => x.Name == "Undo").Execute(null);
+
+            // Assert
+            Assert.True(Canvas.Document.Children.IndexOf(child) > Canvas.Document.Children.IndexOf(child1));
+            Assert.True(Canvas.Document.Children.IndexOf(child) < Canvas.Document.Children.IndexOf(child2));
+            Assert.True(Canvas.Document.Children.IndexOf(child1) < Canvas.Document.Children.IndexOf(child2));
+        }
+
+        [Test]
+        public async Task IfMoreElementsAreSelected_AndBringToFrontIsSelected_ElementsAreBroughtToFront()
+        {
+            // Arrange
+            await Canvas.EnsureInitialized();
+            var tool = Canvas.Tools.OfType<ArrangeTool>().Single();
+            Canvas.ActiveTool = tool;
+
+            var child = new SvgRectangle { X = 50, Y = 50, Width = 50, Height = 50 };
+            var child1 = new SvgRectangle { X = 250, Y = 150, Width = 100, Height = 25 };
+            var child2 = new SvgRectangle { X = 150, Y = 250, Width = 150, Height = 150 };
+            Canvas.ScreenWidth = 800;
+            Canvas.ScreenHeight = 500;
+            Canvas.Document.Children.Add(child);
+            Canvas.Document.Children.Add(child1);
+            Canvas.Document.Children.Add(child2);
+            Canvas.SelectedElements.Add(child);
+            Canvas.SelectedElements.Add(child1);
+            tool.Commands.First(x => x.Name == "Bring to front").Execute(null);
+
+            // Preassert
+            Assert.True(Canvas.Document.Children.IndexOf(child) > Canvas.Document.Children.IndexOf(child1));
+            Assert.True(Canvas.Document.Children.IndexOf(child) > Canvas.Document.Children.IndexOf(child2));
+            Assert.True(Canvas.Document.Children.IndexOf(child1) > Canvas.Document.Children.IndexOf(child2));
+
+            // Act
+            Canvas.Tools.OfType<UndoRedoTool>().Single().Commands.First(x => x.Name == "Undo").Execute(null);
+
+            // Assert
+            Assert.True(Canvas.Document.Children.IndexOf(child) < Canvas.Document.Children.IndexOf(child1));
+            Assert.True(Canvas.Document.Children.IndexOf(child) < Canvas.Document.Children.IndexOf(child2));
+            Assert.True(Canvas.Document.Children.IndexOf(child1) < Canvas.Document.Children.IndexOf(child2));
+        }
     }
 }
