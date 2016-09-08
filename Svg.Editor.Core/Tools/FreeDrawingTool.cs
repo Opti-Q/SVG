@@ -25,6 +25,7 @@ namespace Svg.Core.Tools
         private SvgPath _currentPath;
         private bool _drawingEnabled;
         private PointF _lastCanvasPointerPosition;
+        private bool _isActive;
 
         private SvgUnitCollection StrokeDashArray { get; } = new SvgUnitCollection
         {
@@ -35,6 +36,19 @@ namespace Svg.Core.Tools
         #region Public properties
 
         public string LineStyleIconName { get; set; } = "ic_line_style_white_48dp.png";
+
+        public override bool IsActive
+        {
+            get { return _isActive; }
+            set
+            {
+                if (_isActive == value) return;
+                _isActive = value;
+                if (!_isActive) return;
+                Canvas.SelectedElements.Clear();
+                Canvas.FireInvalidateCanvas();
+            }
+        }
 
         public string[] LineStyles
         {
@@ -122,8 +136,10 @@ namespace Svg.Core.Tools
             ToolUsage = ToolUsage.Explicit;
         }
 
-        public override Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(SvgDrawingCanvas ws)
         {
+            await base.Initialize(ws);
+
             IsActive = false;
 
             SelectedLineStyle = LineStyles.FirstOrDefault();
@@ -133,8 +149,6 @@ namespace Svg.Core.Tools
             {
                 new ChangeLineStyleCommand(this, "Line style", ws)
             };
-
-            return base.Initialize(ws);
         }
 
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)

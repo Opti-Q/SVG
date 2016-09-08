@@ -49,8 +49,10 @@ namespace Svg.Core.Tools
             set { Properties["maxscale"] = value; }
         }
 
-        public override Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(SvgDrawingCanvas ws)
         {
+            await Task.FromResult(true);
+
             Commands = new[]
             {
                 new ToolCommand(this, "Show all", x =>
@@ -97,8 +99,6 @@ namespace Svg.Core.Tools
                     Canvas.FireInvalidateCanvas();
                 }, iconName:"ic_zoom_200_white_48dp.png", sortFunc:(x) => 1650),
             };
-
-            return Task.FromResult(true);
         }
 
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)

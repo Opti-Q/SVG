@@ -17,8 +17,9 @@ namespace Svg.Droid.SampleEditor.Core.Tools
             IconName = "ic_insert_photo_white_48dp.png";
         }
 
-        public override Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(SvgDrawingCanvas ws)
         {
+            await base.Initialize(ws);
 
             Commands = new List<IToolCommand>
             {
@@ -52,8 +53,6 @@ namespace Svg.Droid.SampleEditor.Core.Tools
             {
                 PlaceImage(ImagePath);
             }
-
-            return base.Initialize(ws);
         }
 
         private void PlaceImage(string path)

@@ -37,15 +37,15 @@ namespace Svg.Core.Tools
         /// </summary>
         IDictionary<string, object> Properties { get; }
         /// <summary>
-        /// Defines the order (asc) in which this <see cref="ITool"/>s <see cref="OnDraw"/> method should be called.
+        /// Defines the order (ascending) in which this <see cref="ITool"/>s <see cref="OnDraw"/> method should be called.
         /// </summary>
         int DrawOrder { get; }
         /// <summary>
-        /// Defines the order (asc) in which this <see cref="ITool"/>s <see cref="OnPreDraw"/> method should be called.
+        /// Defines the order (ascending) in which this <see cref="ITool"/>s <see cref="OnPreDraw"/> method should be called.
         /// </summary>
         int PreDrawOrder { get; }
         /// <summary>
-        /// Defines the order (asc) in which this <see cref="ITool"/>s <see cref="OnUserInput"/> method should be called.
+        /// Defines the order (ascending) in which this <see cref="ITool"/>s <see cref="OnUserInput"/> method should be called.
         /// </summary>
         int InputOrder { get; }
         string IconName { get; }
