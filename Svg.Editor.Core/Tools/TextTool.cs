@@ -79,7 +79,7 @@ namespace Svg.Core.Tools
                 // if there are selected elements and pointer was put down on one of them, activate tool, otherwise deactivate
                 if (pointerDistance < 5.0f &&
                     ws.SelectedElements.Count == 1 &&
-                    ws.GetElementsUnderPointer<SvgVisualElement>(p.Pointer1Position).Any(eup => eup is SvgText && ws.SelectedElements.First() == eup))
+                    ws.GetElementsUnderPointer<SvgVisualElement>(p.Pointer1Position).Any(eup => (eup is SvgText || eup.Descendants().OfType<SvgText>().Any()) && ws.SelectedElements.First() == eup))
                 {
                     // save the active tool for restoring later
                     _activatedFrom = ws.ActiveTool;

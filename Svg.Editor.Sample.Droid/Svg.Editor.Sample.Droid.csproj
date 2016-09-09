@@ -466,6 +466,57 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\ic_flip_to_front_white_48dp.png" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Positions\Positions\Positions_03.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Positions\Positions\Positions_04.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Positions\Positions\Positions_05.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Positions\Positions\Positions_06.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Positions\Positions\Positions_07.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Positions\Positions\Positions_08.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Positions\Positions\Positions_09.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Positions\Positions\Positions_10.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Positions\Positions\Positions_11.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Positions\Positions\Positions_12.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Positions\Positions\Positions_13.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Positions\Positions\Positions_14.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Positions\Positions\Positions_15.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Positions\Positions\Positions_16.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Positions\Positions\Positions_17.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Positions\Positions\Positions_01.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Positions\Positions\Positions_02.svg" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
      Other similar extension points exist, see Microsoft.Common.targets.
