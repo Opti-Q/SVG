@@ -74,12 +74,14 @@ namespace Svg.Core.Tools
             if (ws.ActiveTool.ToolType == ToolType.Select && p?.EventType == EventType.PointerUp)
             {
                 var pointerDiff = p.Pointer1Position - p.Pointer1Down;
-                var pointerDistance = Math.Abs(pointerDiff.X) + Math.Abs(pointerDiff.Y);
+                var pointerDistX = Math.Abs(pointerDiff.X);
+                var pointerDistY = Math.Abs(pointerDiff.Y);
                 // determine if active by searching through selection and determining whether pointer was put on selected element
                 // if there are selected elements and pointer was put down on one of them, activate tool, otherwise deactivate
-                if (pointerDistance < 5.0f &&
-                    ws.SelectedElements.Count == 1 &&
-                    ws.GetElementsUnderPointer<SvgVisualElement>(p.Pointer1Position).Any(eup => (eup is SvgText || eup.Descendants().OfType<SvgText>().Any()) && ws.SelectedElements.First() == eup))
+                var selectedTextBase = ws.GetElementsUnderPointer<SvgTextBase>(p.Pointer1Position, 20).FirstOrDefault();
+                if (pointerDistX < 20.0f && pointerDistY < 20.0f &&                         // pointer didn't move
+                    ws.SelectedElements.Count == 1 &&                                       // and there is just 1 element selected
+                    selectedTextBase != null && selectedTextBase.ParentsAndSelf.Contains(ws.SelectedElements.First()))  // and the selected element is a parent of the text element
                 {
                     // save the active tool for restoring later
                     _activatedFrom = ws.ActiveTool;
@@ -113,11 +115,12 @@ namespace Svg.Core.Tools
                     return;
                 }
 
-                var dX = pe.Pointer1Position.X - pe.Pointer1Down.X;
-                var dY = pe.Pointer1Position.Y - pe.Pointer1Down.Y;
+                var pointerDiff = p.Pointer1Position - p.Pointer1Down;
+                var pointerDistX = Math.Abs(pointerDiff.X);
+                var pointerDistY = Math.Abs(pointerDiff.Y);
 
                 // if Point-Down and Point-Up are merely the same
-                if (dX < 20 && dY < 20)
+                if (pointerDistX < 20.0f && pointerDistY < 20.0f)
                 {
                     // if there is text below the pointer, edit it
                     var e = ws.GetElementsUnderPointer<SvgTextBase>(pe.Pointer1Position, 20).FirstOrDefault();

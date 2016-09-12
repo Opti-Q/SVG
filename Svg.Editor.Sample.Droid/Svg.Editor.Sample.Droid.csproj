@@ -517,6 +517,93 @@
   <ItemGroup>
     <AndroidAsset Include="Assets\isolib\Positions\Positions\Positions_02.svg" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_01.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_02.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_03.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_04.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_05.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_06.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_07.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_08.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_09.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_10.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_11.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_12.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_13.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_14.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_15.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_16.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_17.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_18.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_19.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_20.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_21.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_22.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_23.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_24.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_25.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_26.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_27.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_28.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\isolib\Bends\Bends\Bends_29.svg" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
      Other similar extension points exist, see Microsoft.Common.targets.

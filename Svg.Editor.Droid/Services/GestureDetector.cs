@@ -195,6 +195,9 @@ namespace Svg.Droid.Editor.Services
             public void OnTouchEvent(MotionEvent ev)
             {
                 var action = (int) ev.Action;
+                var ptrIndex1 = _ptrId1 != InvalidPointerId ? ev.FindPointerIndex(_ptrId1) : -1;
+                var ptrIndex2 = _ptrId2 != InvalidPointerId ? ev.FindPointerIndex(_ptrId2) : -1;
+
                 switch (action & (int) MotionEventActions.Mask)
                 {
                     case (int) MotionEventActions.Down:
@@ -202,40 +205,41 @@ namespace Svg.Droid.Editor.Services
                         break;
                     case (int) MotionEventActions.PointerDown:
                         _ptrId2 = ev.GetPointerId(ev.ActionIndex);
-                        _sX = ev.GetX(ev.FindPointerIndex(_ptrId1));
-                        _sY = ev.GetY(ev.FindPointerIndex(_ptrId1));
-                        _fX = ev.GetX(ev.FindPointerIndex(_ptrId2));
-                        _fY = ev.GetY(ev.FindPointerIndex(_ptrId2));
+                        if (ptrIndex1 != -1)
+                        {
+                            _sX = ev.GetX(ptrIndex1);
+                            _sY = ev.GetY(ptrIndex1);
+                        }
+                        _fX = ev.GetX(ev.ActionIndex);
+                        _fY = ev.GetY(ev.ActionIndex);
                         break;
                     case (int) MotionEventActions.Move:
-                        if (_ptrId1 != InvalidPointerId && _ptrId2 != InvalidPointerId)
+                        if (ptrIndex1 == -1 || ptrIndex2 == -1) break;
+
+                        var nsX = ev.GetX(ptrIndex1);
+                        var nsY = ev.GetY(ptrIndex1);
+                        var nfX = ev.GetX(ptrIndex2);
+                        var nfY = ev.GetY(ptrIndex2);
+
+                        _angle = AngleBetweenLines(_fX, _fY, _sX, _sY, nfX, nfY, nsX, nsY);
+
+                        if (_startAngle == null)
                         {
-                            var nsX = ev.GetX(ev.FindPointerIndex(_ptrId1));
-                            var nsY = ev.GetY(ev.FindPointerIndex(_ptrId1));
-                            var nfX = ev.GetX(ev.FindPointerIndex(_ptrId2));
-                            var nfY = ev.GetY(ev.FindPointerIndex(_ptrId2));
-
-                            _angle = AngleBetweenLines(_fX, _fY, _sX, _sY, nfX, nfY, nsX, nsY);
-
-                            if (_startAngle == null)
-                            {
-                                _startAngle = _angle;
-                                var uie = new RotateEvent(0, 0, RotateStatus.Start, ev.PointerCount);
-                                //System.Diagnostics.Debug.WriteLine(uie.DebuggerDisplay);
-                                OnRotate?.Invoke(this, uie);
-                            }
-                            if (_previousAngle != null)
-                            {
-                                var delta = (_previousAngle.Value - _angle) % 360;
-                                var absoluteDelta = (_startAngle.Value - _angle) % 360;
-
-                                var uie = new RotateEvent(delta, absoluteDelta, RotateStatus.Rotating, ev.PointerCount);
-                                //System.Diagnostics.Debug.WriteLine(uie.DebuggerDisplay);
-                                OnRotate?.Invoke(this, uie);
-                            }
-                            _previousAngle = _angle;
-
+                            _startAngle = _angle;
+                            var uie = new RotateEvent(0, 0, RotateStatus.Start, ev.PointerCount);
+                            //System.Diagnostics.Debug.WriteLine(uie.DebuggerDisplay);
+                            OnRotate?.Invoke(this, uie);
                         }
+                        if (_previousAngle != null)
+                        {
+                            var delta = (_previousAngle.Value - _angle) % 360;
+                            var absoluteDelta = (_startAngle.Value - _angle) % 360;
+
+                            var uie = new RotateEvent(delta, absoluteDelta, RotateStatus.Rotating, ev.PointerCount);
+                            //System.Diagnostics.Debug.WriteLine(uie.DebuggerDisplay);
+                            OnRotate?.Invoke(this, uie);
+                        }
+                        _previousAngle = _angle;
                         break;
                     case (int) MotionEventActions.Up:
                         _ptrId1 = InvalidPointerId;

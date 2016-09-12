@@ -79,9 +79,9 @@ namespace Svg.Core
 
             var textToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
             {
-                { "fontsizes", new [] { 12f, 24f, 36f, 48f } },
+                { "fontsizes", new [] { 12f, 16f, 20f, 24f, 36f, 48f } },
                 { "selectedfontsizeindex", 1 },
-                { "fontsizenames", new [] { "12px", "24px", "36px", "48px" } }
+                { "fontsizenames", new [] { "12px", "16px", "20px", "24px", "36px", "48px" } }
             }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 
             //var zoomToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>

@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;using System.Diagnostics;
-using System.IO;
-using System.Linq;
+using System.Collections.Generic;
 using Svg.Core;
-using Svg.Core.Interfaces;
 using Svg.Core.Tools;
 using Svg.Interfaces;
-using Svg.Transforms;
 
 namespace Svg.Droid.SampleEditor.Core.Tools
 {
     public class AddRandomItemTool : ToolBase
     {
+        private static Random _random = new Random();
 
         private string[] SvgPathStrings { get; } =
         {
@@ -32,7 +29,13 @@ namespace Svg.Droid.SampleEditor.Core.Tools
             //"svg/painting-marker-01-f.svg",
             //"svg/rect.svg",
             //"svg/Bends_01.svg", causes StackOverflowException in SvgRectangle.Bounds
-            "isolib/Positions/Positions/Positions_08.svg"
+            //"isolib/Positions/Positions/Positions_08.svg",
+            "isolib/Bends/Bends/Bends_01.svg",
+            "isolib/Bends/Bends/Bends_02.svg",
+            "isolib/Bends/Bends/Bends_12.svg",
+            "isolib/Bends/Bends/Bends_13.svg",
+            "isolib/Bends/Bends/Bends_21.svg",
+            "isolib/Bends/Bends/Bends_23.svg"
         };
 
         public AddRandomItemTool(SvgDrawingCanvas canvas, Func<string, ISvgSource> sourceProvider = null) : base("Add random item")
@@ -64,7 +67,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     //var provider = SourceProvider("svg/painting-marker-05-f.svg");
                     //var provider = SourceProvider("svg/painting-marker-01-f.svg");
                     //var provider = SourceProvider("svg/rect.svg");
-                    var provider = SourceProvider(SvgPathStrings[new Random().Next(0, SvgPathStrings.Length - 1)]);
+                    var provider = SourceProvider(SvgPathStrings[_random.Next(0, SvgPathStrings.Length)]);
                     var otherDoc = SvgDocument.Open<SvgDocument>(provider);
 
                     Canvas.AddItemInScreenCenter(otherDoc);
