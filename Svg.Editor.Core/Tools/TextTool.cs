@@ -132,7 +132,7 @@ namespace Svg.Core.Tools
                         if (span != null)
                             e = span;
 
-                        var txtProperties = await TextInputService.GetUserInput("Edit text", e.Text?.Trim(), FontSizeNames, Array.IndexOf(FontSizes, (int) e.FontSize));
+                        var txtProperties = await TextInputService.GetUserInput("Edit text", e.Text?.Trim(), FontSizeNames, Array.IndexOf(FontSizes, (int) Math.Round(e.FontSize, 0)));
                         var txt = txtProperties.Text;
                         var fontSize = FontSizes[txtProperties.FontSizeIndex];
 

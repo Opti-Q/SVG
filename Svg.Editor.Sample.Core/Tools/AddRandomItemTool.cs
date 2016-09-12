@@ -30,12 +30,13 @@ namespace Svg.Droid.SampleEditor.Core.Tools
             //"svg/rect.svg",
             //"svg/Bends_01.svg", causes StackOverflowException in SvgRectangle.Bounds
             //"isolib/Positions/Positions/Positions_08.svg",
-            "isolib/Bends/Bends/Bends_01.svg",
-            "isolib/Bends/Bends/Bends_02.svg",
-            "isolib/Bends/Bends/Bends_12.svg",
-            "isolib/Bends/Bends/Bends_13.svg",
-            "isolib/Bends/Bends/Bends_21.svg",
-            "isolib/Bends/Bends/Bends_23.svg"
+            "svg/Penetrations.svg",
+            "svg/Positions.svg",
+            "svg/Reducers.svg",
+            "svg/Spec_change.svg",
+            "svg/Straights.svg",
+            "svg/Valves.svg",
+            "svg/Welds.svg"
         };
 
         public AddRandomItemTool(SvgDrawingCanvas canvas, Func<string, ISvgSource> sourceProvider = null) : base("Add random item")
