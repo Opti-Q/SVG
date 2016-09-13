@@ -61,7 +61,10 @@ namespace Svg
 
         public void WriteString(string content)
         {
-            _w.WriteString(content);
+            if (string.IsNullOrWhiteSpace(content) && content != null)
+                _w.WriteWhitespace(content);
+            else if(content != null)
+                _w.WriteString(content);
         }
 
         public void WriteRaw(string content)

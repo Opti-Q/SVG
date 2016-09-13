@@ -318,6 +318,13 @@ namespace Svg
                             element = elementStack.Peek();
                             element.Nodes.Add(new SvgContentNode() { Content = reader.Value });
                             break;
+                        case XmlNodeType.SignificantWhitespace:
+                            if (elementStack.Count > 0 && elementStack.Peek() is SvgTextSpan)
+                            {
+                                element = elementStack.Peek();
+                                element.Nodes.Add(new SvgContentNode() {Content = reader.Value});
+                            }
+                            break;
                         case XmlNodeType.EntityReference:
                             reader.ResolveEntity();
                             element = elementStack.Peek();

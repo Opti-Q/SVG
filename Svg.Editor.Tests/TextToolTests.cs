@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -156,6 +157,8 @@ namespace Svg.Editor.Tests
             Canvas.AddItemInScreenCenter(child);
 
             _textMock.F = (x, y) => new TextTool.TextProperties { Text = theText };
+            
+            var txt = Canvas.Document.Descendants().OfType<SvgText>().Single();
 
             // Act
             var pt1 = PointF.Create(370, 260);
@@ -168,6 +171,19 @@ namespace Svg.Editor.Tests
 
             var nestedText = Canvas.Document.Descendants().OfType<SvgTextSpan>().Single();
             Assert.AreEqual(expectedText, nestedText.Text);
+
+            //assert that after saving and loading the text is still the same
+            using (var ms = new MemoryStream())
+            {
+                Canvas.Document.Write(ms);
+                ms.Seek(0, SeekOrigin.Begin);
+
+                var loadedDoc = SvgDocument.Open<SvgDocument>(ms);
+                var nestedLoaded = loadedDoc.Descendants().OfType<SvgTextSpan>().Single();
+                Assert.AreEqual(expectedText, nestedLoaded.Text);
+                var parent = nestedLoaded.Parent;
+                Assert.AreEqual(0, parent.Nodes.OfType<SvgContentNode>().Count());
+            }
         }
 
         private class MockTextInputService : ITextInputService

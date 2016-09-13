@@ -143,22 +143,46 @@ namespace Svg
         {
             get
             {
-            	return _content;
+                var cNode = Nodes.OfType<SvgContentNode>().FirstOrDefault();
+                if (cNode != null)
+                    return cNode.Content;
+
+                return _content;
             }
             set
             {
-            	if(_content != null)
-            	{
-            		var oldVal = _content;
-            		_content = value;
-            		if(_content != oldVal)
-            			OnContentChanged(new ContentEventArgs{ Content = value });
-            	}
-            	else
-            	{
-            		_content = value;
-            		OnContentChanged(new ContentEventArgs{ Content = value });
-            	}
+                var cNode = Nodes.OfType<SvgContentNode>().FirstOrDefault();
+                if (cNode == null)
+                {
+                    if (_content != null)
+                    {
+                        var oldVal = _content;
+                        _content = value;
+                        if (_content != oldVal)
+                            OnContentChanged(new ContentEventArgs {Content = value});
+                    }
+                    else
+                    {
+                        _content = value;
+                        OnContentChanged(new ContentEventArgs {Content = value});
+                    }
+                }
+                else
+                {
+                    if (cNode.Content != null)
+                    {
+                        var oldVal = cNode.Content;
+                        cNode.Content = value;
+                        if (cNode.Content != oldVal)
+                            OnContentChanged(new ContentEventArgs { Content = value });
+                    }
+                    else
+                    {
+                        cNode.Content = value;
+                        OnContentChanged(new ContentEventArgs { Content = value });
+                    }
+                }
+
             }
         }
 

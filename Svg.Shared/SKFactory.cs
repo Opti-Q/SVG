@@ -23,14 +23,14 @@ namespace Svg
         public override IXmlTextWriter CreateXmlTextWriter(Stream stream, Encoding utf8)
         {
             var w = new SvgXmlTextWriter(stream, utf8);
-            w.Formatting = Formatting.Indented;
+            w.Formatting = Formatting.None;
             return w;
         }
         public override XmlReader CreateSvgTextReader(Stream stream, Dictionary<string, string> entities)
         {
             var reader = new SvgTextReader(stream, entities);
             reader.XmlResolver = new SvgDtdResolver();
-            reader.WhitespaceHandling = WhitespaceHandling.None;
+            reader.WhitespaceHandling = WhitespaceHandling.Significant;
             return reader;
         }
 
@@ -38,7 +38,7 @@ namespace Svg
         {
             var reader = new SvgTextReader(r, entities);
             reader.XmlResolver = new SvgDtdResolver();
-            reader.WhitespaceHandling = WhitespaceHandling.None;
+            reader.WhitespaceHandling = WhitespaceHandling.Significant;
             return reader;
         }
 
