@@ -25,7 +25,7 @@ namespace Svg.Tests.Win
                     new SvgGroup()
                     {
                         Fill = new SvgColourServer(Color.Create(255, 0, 0)),
-                        StrokeDashArray = "10 10",
+                        StrokeDashArray = "3 3",
                         Stroke = new SvgColourServer(Color.Create(0, 255, 0)),
 
                         Children =
@@ -58,7 +58,7 @@ namespace Svg.Tests.Win
             Assert.IsNotNull(doc2);
             var g = doc2.Children.OfType<SvgVisualElement>().Single();
             Assert.AreEqual("#ff0000", g.Fill.ToString());
-            Assert.AreEqual("10 10", (string)g.StrokeDashArray);
+            Assert.AreEqual("3 3", (string)g.StrokeDashArray);
             Assert.AreEqual("#00ff00", g.Stroke.ToString());
 
             var r = g.Children.OfType<SvgRectangle>().Single();
@@ -67,7 +67,7 @@ namespace Svg.Tests.Win
             Assert.AreEqual(300, r.Width.Value);
             Assert.AreEqual(50, r.Height.Value);
             Assert.AreEqual("#ff0000", r.Fill.ToString());
-            Assert.AreEqual("10 10", (string)r.StrokeDashArray);
+            Assert.AreEqual("3 3", (string)r.StrokeDashArray);
             Assert.AreEqual("#00ff00", r.Stroke.ToString());
             AssertInheritedAttribute(r, "stroke");
             AssertInheritedAttribute(r, "fill");
@@ -85,7 +85,7 @@ namespace Svg.Tests.Win
                     new SvgGroup()
                     {
                         Fill = new SvgColourServer(Color.Create(255, 0, 0)),
-                        StrokeDashArray = "10 10",
+                        StrokeDashArray = "3 3",
                         Stroke = new SvgColourServer(Color.Create(0, 255, 0)),
 
                         Children =
@@ -118,7 +118,7 @@ namespace Svg.Tests.Win
             Assert.IsNotNull(doc2);
             var g = doc2.Children.OfType<SvgVisualElement>().Single();
             Assert.AreEqual("#ff0000", g.Fill.ToString());
-            Assert.AreEqual("10 10", (string)g.StrokeDashArray);
+            Assert.AreEqual("3 3", (string)g.StrokeDashArray);
             Assert.AreEqual("#00ff00", g.Stroke.ToString());
 
             var r = g.Children.OfType<SvgRectangle>().Single();
@@ -127,7 +127,7 @@ namespace Svg.Tests.Win
             Assert.AreEqual(300, r.Width.Value);
             Assert.AreEqual(50, r.Height.Value);
             Assert.AreEqual("#ff0000", r.Fill.ToString());
-            Assert.AreEqual("10 10", (string)r.StrokeDashArray);
+            Assert.AreEqual("3 3", (string)r.StrokeDashArray);
             Assert.AreEqual("#00ff00", r.Stroke.ToString());
             AssertInheritedAttribute(r, "stroke");
             AssertInheritedAttribute(r, "fill");

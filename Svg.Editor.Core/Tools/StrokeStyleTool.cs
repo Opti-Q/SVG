@@ -53,7 +53,7 @@ namespace Svg.Core.Tools
                     t.UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name,
                         o =>
                         {
-                            selectedElement.StrokeDashArray = SvgUnitCollection.IsNullOrEmpty(selectedElement.StrokeDashArray) ? "10 10" : null;
+                            selectedElement.StrokeDashArray = SvgUnitCollection.IsNullOrEmpty(selectedElement.StrokeDashArray) ? "3 3" : null;
                             _canvas.FireInvalidateCanvas();
                         }, o =>
                         {
