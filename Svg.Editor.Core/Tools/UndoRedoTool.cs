@@ -21,5 +21,10 @@ namespace Svg.Core.Tools
                 new ToolCommand(this, "Redo", o => UndoRedoService.Redo(), o => UndoRedoService.CanRedo(), iconName: "ic_redo_white_48dp.png")
             };
         }
+
+        public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
+        {
+            UndoRedoService.Clear();
+        }
     }
 }
