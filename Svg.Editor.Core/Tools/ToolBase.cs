@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Svg.Core.Events;
 using Svg.Core.Interfaces;
 
@@ -14,9 +13,10 @@ namespace Svg.Core.Tools
             Name = name;
         }
 
-        protected ToolBase(string name, string jsonProperties) : this(name)
+        protected ToolBase(string name, IDictionary<string,object> properties) : this(name)
         {
-            Properties = JsonConvert.DeserializeObject<IDictionary<string, object>>(jsonProperties, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All }) ?? new Dictionary<string, object>();
+            //Properties = JsonConvert.DeserializeObject<IDictionary<string, object>>(properties, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All }) ?? new Dictionary<string, object>();
+            Properties = properties ?? new Dictionary<string, object>();
         }
 
         protected SvgDrawingCanvas Canvas { get; private set; }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Interfaces;
@@ -7,8 +8,8 @@ namespace Svg.Core.Tools
 {
     public class PanTool : ToolBase
     {
-        public PanTool(string jsonProperties)
-            : base("Pan", jsonProperties)
+        public PanTool(IDictionary<string, object> properties)
+            : base("Pan", properties)
         {
             IconName = "ic_pan_tool_white_48dp.png";
             ToolType = ToolType.View;

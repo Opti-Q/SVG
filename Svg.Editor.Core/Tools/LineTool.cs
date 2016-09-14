@@ -181,7 +181,7 @@ namespace Svg.Core.Tools
 
         #endregion
 
-        public LineTool(string properties, IUndoRedoService undoRedoService) : base("Line", properties, undoRedoService)
+        public LineTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Line", properties, undoRedoService)
         {
             IconName = "ic_mode_edit_white_48dp.png";
             ToolUsage = ToolUsage.Explicit;

@@ -130,7 +130,7 @@ namespace Svg.Core.Tools
 
         #endregion
 
-        public FreeDrawingTool(string properties, IUndoRedoService undoRedoService) : base("Free draw", properties, undoRedoService)
+        public FreeDrawingTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Free draw", properties, undoRedoService)
         {
             IconName = "ic_brush_white_48dp.png";
             ToolUsage = ToolUsage.Explicit;

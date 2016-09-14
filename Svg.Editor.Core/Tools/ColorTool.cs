@@ -18,7 +18,7 @@ namespace Svg.Core.Tools
         private static IColorInputService ColorInputServiceProxy => Engine.Resolve<IColorInputService>();
         private Color _defaultSelectedColor;
 
-        public ColorTool(string properties, IUndoRedoService undoRedoService) : base("Color", properties, undoRedoService)
+        public ColorTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Color", properties, undoRedoService)
         {
             IconName = "svg/ic_format_color_fill_white_48px.svg";
             ToolType = ToolType.Modify;
@@ -189,7 +189,7 @@ namespace Svg.Core.Tools
 
                 if (_canvas.SelectedElements.Any())
                 {
-                    t.UndoRedoService.ExecuteCommand(new UndoableActionCommand("Colorize selecte elements", o => {}));
+                    t.UndoRedoService.ExecuteCommand(new UndoableActionCommand("Colorize selecte elements", o => { }));
                     // change the color of all selected items
                     foreach (var selectedElement in _canvas.SelectedElements)
                     {

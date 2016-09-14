@@ -52,7 +52,7 @@ namespace Svg.Core.Tools
 
         #endregion
 
-        public TextTool(string jsonProperties, IUndoRedoService undoRedoService) : base("Text", jsonProperties, undoRedoService)
+        public TextTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Text", properties, undoRedoService)
         {
             IconName = "ic_text_fields_white_48dp.png";
             ToolUsage = ToolUsage.Explicit;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Svg.Core.Events;
 using Svg.Interfaces;
@@ -19,7 +20,7 @@ namespace Svg.Core.Tools
         //private Brush OrangeBrush => _orangeBrush ?? (_orangeBrush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 220, 160, 60)));
         //private Pen OrangePen => _orangePen ?? (_orangePen = Engine.Factory.CreatePen(OrangeBrush, 5));
 
-        public ZoomTool(string jsonProperies) : base("Zoom", jsonProperies)
+        public ZoomTool(IDictionary<string, object> properties) : base("Zoom", properties)
         {
             IconName = "ic_zoom_white_48dp.png";
             ToolType = ToolType.View;

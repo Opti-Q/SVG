@@ -53,7 +53,7 @@ namespace Svg.Core.Tools
         private Dictionary<double, double> CachedDiagonals = new Dictionary<double, double>();
 
 
-        public GridTool(string properties, IUndoRedoService undoRedoService)
+        public GridTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService)
             : base("Grid", properties, undoRedoService)
         {
             // using triangle calculation to determine the x and y steps based on stepsize (y) and angle (alpha)
@@ -111,7 +111,7 @@ namespace Svg.Core.Tools
         public override async Task Initialize(SvgDrawingCanvas ws)
         {
             await base.Initialize(ws);
-            
+
             // add tool commands
             Commands = new List<IToolCommand>
             {

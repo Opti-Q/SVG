@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Svg.Core.Interfaces;
 using Svg.Core.UndoRedo;
 
@@ -6,9 +7,9 @@ namespace Svg.Core.Tools
 {
     public abstract class UndoableToolBase : ToolBase
     {
-        protected UndoableToolBase(string name, IUndoRedoService undoRedoService) : this(name, "", undoRedoService) { }
+        protected UndoableToolBase(string name, IUndoRedoService undoRedoService) : this(name, null, undoRedoService) { }
 
-        protected UndoableToolBase(string name, string jsonProperties, IUndoRedoService undoRedoService) : base(name, jsonProperties)
+        protected UndoableToolBase(string name, IDictionary<string,object> properties, IUndoRedoService undoRedoService) : base(name, properties)
         {
             UndoRedoService = undoRedoService;
             UndoRedoService.ActionExecuted += UndoRedoServiceOnActionExecuted;

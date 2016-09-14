@@ -47,19 +47,19 @@ namespace Svg.Core
             #region Tool properties
 
             // this part should be in the designer, when the iCL is created
-            var gridToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
+            var gridToolProperties = new Dictionary<string, object>
             {
                 { "angle", 30.0f },
                 { "stepsizey", 20.0f },
                 { "issnappingenabled", true }
-            }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+            };
 
-            var colorToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
+            var colorToolProperties = new Dictionary<string, object>
             {
                 { "selectablecolors", new [] { "#000000","#FF0000","#00FF00","#0000FF","#FFFF00","#FF00FF","#00FFFF" } }
-            }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+            };
 
-            var lineToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
+            var lineToolProperties = new Dictionary<string, object>
             {
                 { "markerstartids", new [] { "none", "arrowStart", "circle" } },
                 { "markerstartnames", new [] { "---", "<--", "O--" } },
@@ -67,22 +67,22 @@ namespace Svg.Core
                 { "markerendnames", new [] { "---", "-->", "--O" } },
                 { "linestyles", new [] { "normal", "dashed" } },
                 { "linestylenames", new [] { "-----", "- - -" } }
-            }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+            };
 
-            var freeDrawToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
+            var freeDrawToolProperties = new Dictionary<string, object>
             {
                 { "linestyles", new [] { "normal", "dashed" } },
                 { "linestylenames", new [] { "-----", "- - -" } },
                 { "strokewidths", new [] { 12, 24, 6 } },
                 { "strokewidthnames", new [] { "normal", "thick", "thin" } }
-            }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+            };
 
-            var textToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
+            var textToolProperties = new Dictionary<string, object>
             {
                 { "fontsizes", new [] { 12f, 16f, 20f, 24f, 36f, 48f } },
                 { "selectedfontsizeindex", 1 },
                 { "fontsizenames", new [] { "12px", "16px", "20px", "24px", "36px", "48px" } }
-            }, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+            };
 
             //var zoomToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
             //{
@@ -90,9 +90,9 @@ namespace Svg.Core
             //    { "maxscale", 5.0f }
             //}, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 
-            var zoomToolProperties = "";
+            var zoomToolProperties = new Dictionary<string, object>();
 
-            var panToolProperties = "";
+            var panToolProperties = new Dictionary<string, object>();
 
             #endregion
 
