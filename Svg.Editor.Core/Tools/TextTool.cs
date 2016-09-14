@@ -165,26 +165,53 @@ namespace Svg.Core.Tools
                         }
                         else if (text != txt || Math.Abs(e.FontSize.Value - fontSize) > 0.01f)
                         {
-                            //var formerText = e.Text;
-                            var formerChildren = e.Children;
+                            var formerText = e.Text;
+                            var formerChildrenTexts = e.Children.OfType<SvgTextSpan>().Select(x => x.Text).ToArray();
                             var formerFontSize = e.FontSize;
                             UndoRedoService.ExecuteCommand(new UndoableActionCommand("Edit text", o =>
                             {
-                                //e.Text = txt;
-                                e.Children.Clear();
-                                foreach (var span in txt.Split('\n').Select((t, i) => new SvgTextSpan { Nodes = { new SvgContentNode {Content = t} }, X = e.X, Y = new SvgUnitCollection { e.Y.FirstOrDefault() + fontSize * lineHeight * i } }))
+                                var lines = txt.Split('\n');
+                                if (lines.Length > 1)
                                 {
-                                    e.Children.Add(span);
+                                    e.Text = null;
+                                    var spans = lines.Select((t, i) =>
+                                        new SvgTextSpan
+                                        {
+                                            Nodes = { new SvgContentNode { Content = t } },
+                                            X = e.X,
+                                            Y =
+                                                new SvgUnitCollection
+                                                {
+                                                    e.Y.FirstOrDefault() + fontSize * lineHeight * i
+                                                }
+                                        });
+
+                                    // add spans as children
+                                    e.Children.Clear();
+                                    foreach (var span in spans)
+                                    {
+                                        e.Children.Add(span);
+                                    }
+                                }
+                                else
+                                {
+                                    var span = e.Children.OfType<SvgTextSpan>().FirstOrDefault() ?? e;
+                                    span.Text = lines.First();
                                 }
                                 e.FontSize = new SvgUnit(SvgUnitType.Pixel, fontSize);
                                 Canvas.FireInvalidateCanvas();
                             }, o =>
                             {
-                                //e.Text = formerText;
+                                e.Text = formerText;
                                 e.Children.Clear();
-                                foreach (var child in formerChildren)
+                                for (var i = 0; i < formerChildrenTexts.Length; i++)
                                 {
-                                    e.Children.Add(child);
+                                    e.Children.Add(new SvgTextSpan
+                                    {
+                                        Nodes = { new SvgContentNode { Content = formerChildrenTexts[i] } },
+                                        X = new SvgUnitCollection { 0 },
+                                        Y = new SvgUnitCollection { fontSize * lineHeight * i }
+                                    });
                                 }
                                 e.FontSize = formerFontSize;
                                 Canvas.FireInvalidateCanvas();
@@ -212,9 +239,26 @@ namespace Svg.Core.Tools
                                 Fill = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0))
                             };
 
-                            foreach (var span in txt.Split('\n').Select((t, i) => new SvgTextSpan { Nodes = { new SvgContentNode { Content = t } }, X = new SvgUnitCollection { 0 }, Y = new SvgUnitCollection { fontSize * lineHeight * i } }))
+                            var lines = txt.Split('\n');
+                            if (lines.Length > 1)
                             {
-                                svgText.Children.Add(span);
+                                var spans = lines.
+                                    Select(
+                                        (t, i) =>
+                                            new SvgTextSpan
+                                            {
+                                                Nodes = {new SvgContentNode {Content = t}},
+                                                X = new SvgUnitCollection {0},
+                                                Y = new SvgUnitCollection {fontSize*lineHeight*i}
+                                            });
+                                foreach (var span in spans)
+                                {
+                                    svgText.Children.Add(span);
+                                }
+                            }
+                            else
+                            {
+                                svgText.Text = lines.First();
                             }
 
                             var relativePointer = ws.ScreenToCanvas(pe.Pointer1Position);
