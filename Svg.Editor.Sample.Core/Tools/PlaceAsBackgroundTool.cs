@@ -12,7 +12,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
 {
     public class PlaceAsBackgroundTool : UndoableToolBase
     {
-        public PlaceAsBackgroundTool(string jsonProperties, IUndoRedoService undoRedoService) : base("Background", jsonProperties, undoRedoService)
+        public PlaceAsBackgroundTool(IDictionary<string,object> properties, IUndoRedoService undoRedoService) : base("Background", properties, undoRedoService)
         {
             IconName = "ic_insert_photo_white_48dp.png";
         }

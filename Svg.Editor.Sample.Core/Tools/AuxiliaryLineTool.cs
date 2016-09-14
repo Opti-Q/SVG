@@ -10,7 +10,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
     {
         private bool _showAuxiliaryLines = true;
 
-        public bool ShowAuxiliaryLines 
+        public bool ShowAuxiliaryLines
         {
             get { return _showAuxiliaryLines; }
             set
@@ -28,7 +28,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
             ToolType = ToolType.View;
         }
 
-        public AuxiliaryLineTool(string jsonProperties) : base("Auxiliaryline", jsonProperties)
+        public AuxiliaryLineTool(IDictionary<string, object> properties) : base("Auxiliaryline", properties)
         {
         }
 
@@ -110,7 +110,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
         {
             Unsubscribe(e.RemovedChild);
         }
-        
+
         private void ShowHideAuxiliaryLines(SvgElement element)
         {
             var d = element as SvgDocument;
