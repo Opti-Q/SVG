@@ -163,7 +163,7 @@ namespace Svg.Core.Tools
                                 Canvas.FireInvalidateCanvas();
                             }));
                         }
-                        else if (!string.Equals(e.Text, txt) || Math.Abs(e.FontSize.Value - fontSize) > 0.01f)
+                        else if (text != txt || Math.Abs(e.FontSize.Value - fontSize) > 0.01f)
                         {
                             //var formerText = e.Text;
                             var formerChildren = e.Children;
@@ -172,7 +172,7 @@ namespace Svg.Core.Tools
                             {
                                 //e.Text = txt;
                                 e.Children.Clear();
-                                foreach (var span in txt.Split('\n').Select((t, i) => new SvgTextSpan { Text = t, X = new SvgUnitCollection { 0 }, Y = new SvgUnitCollection { fontSize * lineHeight * i } }))
+                                foreach (var span in txt.Split('\n').Select((t, i) => new SvgTextSpan { Nodes = { new SvgContentNode {Content = t} }, X = e.X, Y = new SvgUnitCollection { e.Y.FirstOrDefault() + fontSize * lineHeight * i } }))
                                 {
                                     e.Children.Add(span);
                                 }
@@ -212,7 +212,7 @@ namespace Svg.Core.Tools
                                 Fill = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0))
                             };
 
-                            foreach (var span in txt.Split('\n').Select((t, i) => new SvgTextSpan { Text = t, X = new SvgUnitCollection { 0 }, Y = new SvgUnitCollection { fontSize * lineHeight * i } }))
+                            foreach (var span in txt.Split('\n').Select((t, i) => new SvgTextSpan { Nodes = { new SvgContentNode { Content = t } }, X = new SvgUnitCollection { 0 }, Y = new SvgUnitCollection { fontSize * lineHeight * i } }))
                             {
                                 svgText.Children.Add(span);
                             }
