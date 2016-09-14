@@ -44,12 +44,12 @@ namespace Svg.Editor.Tests
             await Canvas.OnEvent(new RotateEvent(0, sum, RotateStatus.End, 0));
         }
 
-        protected async Task Move(PointF start, PointF end)
+        protected async Task Move(PointF start, PointF end, int pointerCount = 1)
         {
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, start, start, start, 1));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, start, start, start, pointerCount));
             var delta = end - start;
-            await Canvas.OnEvent(new MoveEvent(start, start, end, delta, 1));
-            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, start, start, end, 1));
+            await Canvas.OnEvent(new MoveEvent(start, start, end, delta, pointerCount));
+            await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, start, start, end, pointerCount));
         }
     }
 }

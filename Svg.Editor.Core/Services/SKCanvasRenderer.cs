@@ -4,7 +4,7 @@ using Svg.Interfaces;
 using Svg.Platform;
 using PointF = Svg.Interfaces.PointF;
 
-namespace Svg.Droid.Editor.Services
+namespace Svg.Core.Services
 {
     public class SKCanvasRenderer : IRenderer
     {

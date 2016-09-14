@@ -129,8 +129,8 @@ namespace Svg.Editor.Tests
             var to = PointF.Create(100, 100);
 
             await Rotate(45, 45); // rotate to 90 degree
-            await Move(from, to); // move away
-            await Move(to, from); // move back
+            await Move(@from, to); // move away
+            await Move(to, @from); // move back
 
             // Assert
             var actual = element1.Transforms.GetMatrix();
@@ -166,8 +166,8 @@ namespace Svg.Editor.Tests
             var to = PointF.Create(100, 100);
 
             await Rotate(10, 35); // rotate to 45 degree
-            await Move(from, to); // move away
-            await Move(to, from); // move back
+            await Move(@from, to); // move away
+            await Move(to, @from); // move back
             await Rotate(35, 10); // rotate to 90 degree
 
             // Assert

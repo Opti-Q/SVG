@@ -5,6 +5,7 @@ using Android.Graphics;
 using Android.Util;
 using Android.Views;
 using Svg.Core;
+using Svg.Core.Services;
 using Svg.Droid.Editor.Services;
 using GestureDetector = Svg.Droid.Editor.Services.GestureDetector;
 

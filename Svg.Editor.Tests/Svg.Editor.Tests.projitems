@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ArrangeToolTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PerformanceTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UndoRedoToolTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FreeDrawingToolTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MoveToolTests.cs" />
@@ -25,6 +26,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)TextToolTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)Assets\nested_transformed_text.svg" />
+    <Content Include="$(MSBuildThisFileDirectory)Assets\nested_transformed_text.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)Assets\iso_sketch_large.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

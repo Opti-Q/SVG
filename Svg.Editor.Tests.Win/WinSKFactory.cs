@@ -2,8 +2,7 @@
 using Svg.Editor.Tests;
 using Svg.Interfaces;
 
-[assembly: SvgService(typeof(IFactory), typeof(WinSKFactory))]
-
+//[assembly: SvgService(typeof(IFactory), typeof(WinSKFactory))]
 namespace Svg.Editor.Tests
 {
     public class WinSKFactory : SKFactory
