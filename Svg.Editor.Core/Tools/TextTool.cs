@@ -19,6 +19,7 @@ namespace Svg.Core.Tools
         // if user moves cursor, she does not want to add/edit text
         private bool _moveEventWasRegistered;
         private ITool _activatedFrom;
+        private bool _dialogShown;
         private ITextInputService TextInputService => Engine.Resolve<ITextInputService>();
 
         #region Public properties
@@ -132,7 +133,10 @@ namespace Svg.Core.Tools
                         if (span != null)
                             e = span;
 
+                        if (_dialogShown) return;
+                        _dialogShown = true;
                         var txtProperties = await TextInputService.GetUserInput("Edit text", e.Text?.Trim(), FontSizeNames, Array.IndexOf(FontSizes, (int) Math.Round(e.FontSize, 0)));
+                        _dialogShown = false;
                         var txt = txtProperties.Text;
                         var fontSize = FontSizes[txtProperties.FontSizeIndex];
 
@@ -175,7 +179,10 @@ namespace Svg.Core.Tools
                     // else add new text   
                     else
                     {
+                        if (_dialogShown) return;
+                        _dialogShown = true;
                         var txtProperties = await TextInputService.GetUserInput("Add text", null, FontSizeNames, Array.IndexOf(FontSizes, SelectedFontSize));
+                        _dialogShown = false;
                         var txt = txtProperties.Text;
                         var fontSize = FontSizes[txtProperties.FontSizeIndex];
 
