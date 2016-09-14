@@ -32,7 +32,7 @@ namespace Svg.Editor.Tests
             tool.Commands.First().Execute(null);
 
             // Assert
-            Assert.AreEqual("10 10", rect.StrokeDashArray.ToString());
+            Assert.AreEqual("3 3", rect.StrokeDashArray.ToString());
         }
 
         [Test]
@@ -77,9 +77,9 @@ namespace Svg.Editor.Tests
             tool.Commands.First().Execute(null);
 
             // Assert
-            Assert.AreEqual("10 10", rect.StrokeDashArray.ToString());
-            Assert.AreEqual("10 10", rect1.StrokeDashArray.ToString());
-            Assert.AreEqual("10 10", rect2.StrokeDashArray.ToString());
+            Assert.AreEqual("3 3", rect.StrokeDashArray.ToString());
+            Assert.AreEqual("3 3", rect1.StrokeDashArray.ToString());
+            Assert.AreEqual("3 3", rect2.StrokeDashArray.ToString());
         }
     }
 }

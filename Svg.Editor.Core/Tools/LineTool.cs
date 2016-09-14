@@ -234,8 +234,8 @@ namespace Svg.Core.Tools
 
             StrokeDashArray = new SvgUnitCollection
             {
-                new SvgUnit(SvgUnitType.Pixel, 10),
-                new SvgUnit(SvgUnitType.Pixel, 10)
+                new SvgUnit(SvgUnitType.Pixel, 3),
+                new SvgUnit(SvgUnitType.Pixel, 3)
             };
         }
 

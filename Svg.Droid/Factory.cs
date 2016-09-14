@@ -203,7 +203,7 @@ namespace Svg
         {
             var reader = new SvgTextReader(stream, entities);
             reader.XmlResolver = new SvgDtdResolver();
-            reader.WhitespaceHandling = WhitespaceHandling.None;
+            reader.WhitespaceHandling = WhitespaceHandling.Significant;
             return reader;
         }
 
@@ -211,7 +211,7 @@ namespace Svg
         {
             var reader = new SvgTextReader(r, entities);
             reader.XmlResolver = new SvgDtdResolver();
-            reader.WhitespaceHandling = WhitespaceHandling.None;
+            reader.WhitespaceHandling = WhitespaceHandling.Significant;
             return reader;
         }
 
