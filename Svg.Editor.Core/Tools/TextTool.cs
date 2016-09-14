@@ -124,9 +124,9 @@ namespace Svg.Core.Tools
                 if (pointerDistX < 20.0f && pointerDistY < 20.0f)
                 {
                     // if there is text below the pointer, edit it
-                    var e = ws.GetElementsUnderPointer<SvgTextBase>(pe.Pointer1Position, 20).FirstOrDefault();
+                    var svgText = ws.GetElementsUnderPointer<SvgTextBase>(pe.Pointer1Position, 20).FirstOrDefault();
 
-                    if (e != null)
+                    if (svgText != null)
                     {
                         // primitive handling of text spans
                         //var span = e.Children.OfType<SvgTextSpan>().FirstOrDefault();
@@ -134,11 +134,11 @@ namespace Svg.Core.Tools
                         //    e = span;
 
                         // joining the spans as newlines
-                        var text = !string.IsNullOrWhiteSpace(e.Text) ? e.Text : string.Join("\n", e.Children.OfType<SvgTextSpan>().Select(x => x.Text));
+                        var text = !string.IsNullOrWhiteSpace(svgText.Text) ? svgText.Text : string.Join("\n", svgText.Children.OfType<SvgTextSpan>().Select(x => x.Text));
 
                         if (_dialogShown) return;
                         _dialogShown = true;
-                        var txtProperties = await TextInputService.GetUserInput("Edit text", text, FontSizeNames, Array.IndexOf(FontSizes, (int) Math.Round(e.FontSize, 0)));
+                        var txtProperties = await TextInputService.GetUserInput("Edit text", text, FontSizeNames, Array.IndexOf(FontSizes, (int) Math.Round(svgText.FontSize, 0)));
                         _dialogShown = false;
                         var txt = txtProperties.Text;
                         var fontSize = FontSizes[txtProperties.FontSizeIndex];
@@ -150,70 +150,86 @@ namespace Svg.Core.Tools
 
                         // if text was removed, and parent was document, remove element
                         // if parent was not the document, then this would be a text within another group and should not be removed
-                        if (string.IsNullOrWhiteSpace(txt) && e.Parent is SvgDocument)
+                        if (string.IsNullOrWhiteSpace(txt) && svgText.Parent is SvgDocument)
                         {
-                            var parent = e.Parent;
+                            var parent = svgText.Parent;
                             UndoRedoService.ExecuteCommand(new UndoableActionCommand("Remove text", o =>
                             {
-                                parent.Children.Remove(e);
+                                parent.Children.Remove(svgText);
                                 Canvas.FireInvalidateCanvas();
                             }, o =>
                             {
-                                parent.Children.Add(e);
+                                parent.Children.Add(svgText);
                                 Canvas.FireInvalidateCanvas();
                             }));
                         }
-                        else if (text != txt || Math.Abs(e.FontSize.Value - fontSize) > 0.01f)
+                        else if (text != txt || Math.Abs(svgText.FontSize.Value - fontSize) > 0.01f)
                         {
-                            var formerText = e.Text;
-                            var formerChildrenTexts = e.Children.OfType<SvgTextSpan>().Select(x => x.Text).ToArray();
-                            var formerFontSize = e.FontSize;
+                            var formerText = svgText.Text;
+                            var formerChildren = svgText.Children.OfType<SvgTextSpan>().Select(x =>
+                                new SvgTextSpan
+                                {
+                                    Nodes = { new SvgContentNode { Content = x.Text } },
+                                    X = x.X,
+                                    Y = x.Y
+                                }).ToArray();
+                            var formerFontSize = svgText.FontSize;
                             UndoRedoService.ExecuteCommand(new UndoableActionCommand("Edit text", o =>
                             {
                                 var lines = txt.Split('\n');
+                                // if we have more lines, we need to put each in a different span
                                 if (lines.Length > 1)
                                 {
-                                    e.Text = null;
+                                    svgText.Text = null;
+                                    var origin = svgText.Children.OfType<SvgTextSpan>().FirstOrDefault() ?? svgText;
                                     var spans = lines.Select((t, i) =>
                                         new SvgTextSpan
                                         {
                                             Nodes = { new SvgContentNode { Content = t } },
-                                            X = e.X,
+                                            X = origin.X,
                                             Y =
                                                 new SvgUnitCollection
                                                 {
-                                                    e.Y.FirstOrDefault() + fontSize * lineHeight * i
-                                                }
+                                                    origin.Y.FirstOrDefault() + fontSize * lineHeight * i
+                                                },
+                                            TextAnchor = origin.TextAnchor,
+                                            SpaceHandling = origin.SpaceHandling
                                         });
 
                                     // add spans as children
-                                    e.Children.Clear();
+                                    svgText.Children.Clear();
                                     foreach (var span in spans)
                                     {
-                                        e.Children.Add(span);
+                                        svgText.Children.Add(span);
                                     }
                                 }
+                                // else we can just set the text accordingly
                                 else
                                 {
-                                    var span = e.Children.OfType<SvgTextSpan>().FirstOrDefault() ?? e;
-                                    span.Text = lines.First();
+                                    var span = svgText.Children.OfType<SvgTextSpan>().FirstOrDefault();
+                                    if (span != null)
+                                    {
+                                        span.Text = lines.First();
+                                        span.FontSize = new SvgUnit(SvgUnitType.Pixel, fontSize);
+                                        svgText.Children.Clear();
+                                        svgText.Children.Add(span);
+                                    }
+                                    else
+                                    {
+                                        svgText.Text = lines.First();
+                                    }
                                 }
-                                e.FontSize = new SvgUnit(SvgUnitType.Pixel, fontSize);
+                                svgText.FontSize = new SvgUnit(SvgUnitType.Pixel, fontSize);
                                 Canvas.FireInvalidateCanvas();
                             }, o =>
                             {
-                                e.Text = formerText;
-                                e.Children.Clear();
-                                for (var i = 0; i < formerChildrenTexts.Length; i++)
+                                svgText.Text = formerText;
+                                svgText.Children.Clear();
+                                foreach (var child in formerChildren)
                                 {
-                                    e.Children.Add(new SvgTextSpan
-                                    {
-                                        Nodes = { new SvgContentNode { Content = formerChildrenTexts[i] } },
-                                        X = new SvgUnitCollection { 0 },
-                                        Y = new SvgUnitCollection { fontSize * lineHeight * i }
-                                    });
+                                    svgText.Children.Add(child);
                                 }
-                                e.FontSize = formerFontSize;
+                                svgText.FontSize = formerFontSize;
                                 Canvas.FireInvalidateCanvas();
                             }));
                         }
@@ -232,7 +248,7 @@ namespace Svg.Core.Tools
                         // only add if user really entered text.
                         if (!string.IsNullOrWhiteSpace(txt))
                         {
-                            var svgText = new SvgText
+                            svgText = new SvgText
                             {
                                 FontSize = new SvgUnit(SvgUnitType.Pixel, fontSize),
                                 Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
@@ -247,9 +263,9 @@ namespace Svg.Core.Tools
                                         (t, i) =>
                                             new SvgTextSpan
                                             {
-                                                Nodes = {new SvgContentNode {Content = t}},
-                                                X = new SvgUnitCollection {0},
-                                                Y = new SvgUnitCollection {fontSize*lineHeight*i}
+                                                Nodes = { new SvgContentNode { Content = t } },
+                                                X = new SvgUnitCollection { 0 },
+                                                Y = new SvgUnitCollection { fontSize * lineHeight * i }
                                             });
                                 foreach (var span in spans)
                                 {
