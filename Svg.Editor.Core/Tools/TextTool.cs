@@ -129,16 +129,20 @@ namespace Svg.Core.Tools
                     if (e != null)
                     {
                         // primitive handling of text spans
-                        var span = e.Children.OfType<SvgTextSpan>().FirstOrDefault();
-                        if (span != null)
-                            e = span;
+                        //var span = e.Children.OfType<SvgTextSpan>().FirstOrDefault();
+                        //if (span != null)
+                        //    e = span;
+
+                        // joining the spans as newlines
+                        var text = !string.IsNullOrWhiteSpace(e.Text) ? e.Text : string.Join("\n", e.Children.OfType<SvgTextSpan>().Select(x => x.Text));
 
                         if (_dialogShown) return;
                         _dialogShown = true;
-                        var txtProperties = await TextInputService.GetUserInput("Edit text", e.Text?.Trim(), FontSizeNames, Array.IndexOf(FontSizes, (int) Math.Round(e.FontSize, 0)));
+                        var txtProperties = await TextInputService.GetUserInput("Edit text", text, FontSizeNames, Array.IndexOf(FontSizes, (int) Math.Round(e.FontSize, 0)));
                         _dialogShown = false;
                         var txt = txtProperties.Text;
                         var fontSize = FontSizes[txtProperties.FontSizeIndex];
+                        var lineHeight = txtProperties.LineHeight;
 
                         // make sure there is at least empty text in it so we actually still have a bounding box!!
                         if (string.IsNullOrEmpty(txt?.Trim()))
@@ -161,16 +165,27 @@ namespace Svg.Core.Tools
                         }
                         else if (!string.Equals(e.Text, txt) || Math.Abs(e.FontSize.Value - fontSize) > 0.01f)
                         {
-                            var formerText = e.Text;
+                            //var formerText = e.Text;
+                            var formerChildren = e.Children;
                             var formerFontSize = e.FontSize;
                             UndoRedoService.ExecuteCommand(new UndoableActionCommand("Edit text", o =>
                             {
-                                e.Text = txt;
+                                //e.Text = txt;
+                                e.Children.Clear();
+                                foreach (var span in txt.Split('\n').Select((t, i) => new SvgTextSpan { Text = t, X = new SvgUnitCollection { 0 }, Y = new SvgUnitCollection { fontSize * lineHeight * i } }))
+                                {
+                                    e.Children.Add(span);
+                                }
                                 e.FontSize = new SvgUnit(SvgUnitType.Pixel, fontSize);
                                 Canvas.FireInvalidateCanvas();
                             }, o =>
                             {
-                                e.Text = formerText;
+                                //e.Text = formerText;
+                                e.Children.Clear();
+                                foreach (var child in formerChildren)
+                                {
+                                    e.Children.Add(child);
+                                }
                                 e.FontSize = formerFontSize;
                                 Canvas.FireInvalidateCanvas();
                             }));
@@ -185,35 +200,39 @@ namespace Svg.Core.Tools
                         _dialogShown = false;
                         var txt = txtProperties.Text;
                         var fontSize = FontSizes[txtProperties.FontSizeIndex];
+                        var lineHeight = txtProperties.LineHeight;
 
                         // only add if user really entered text.
                         if (!string.IsNullOrWhiteSpace(txt))
                         {
-                            var t = new SvgText(txt)
+                            var svgText = new SvgText
                             {
                                 FontSize = new SvgUnit(SvgUnitType.Pixel, fontSize),
                                 Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
                                 Fill = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0))
                             };
 
+                            foreach (var span in txt.Split('\n').Select((t, i) => new SvgTextSpan { Text = t, X = new SvgUnitCollection { 0 }, Y = new SvgUnitCollection { fontSize * lineHeight * i } }))
+                            {
+                                svgText.Children.Add(span);
+                            }
+
                             var relativePointer = ws.ScreenToCanvas(pe.Pointer1Position);
-                            var childBounds = t.Bounds;
+                            var childBounds = svgText.Bounds;
                             var halfRelChildWidth = childBounds.Width / 2;
                             var halfRelChildHeight = childBounds.Height / 2;
 
                             var x = relativePointer.X - halfRelChildWidth;
                             var y = relativePointer.Y - halfRelChildHeight;
-                            //t.X = new SvgUnitCollection {new SvgUnit(SvgUnitType.Pixel, x)};
-                            //t.Y = new SvgUnitCollection { new SvgUnit(SvgUnitType.Pixel, y) };
-                            t.Transforms.Add(new SvgTranslate(x, y));
+                            svgText.Transforms.Add(new SvgTranslate(x, y));
 
                             UndoRedoService.ExecuteCommand(new UndoableActionCommand("Add text", o =>
                             {
-                                ws.Document.Children.Add(t);
+                                ws.Document.Children.Add(svgText);
                                 ws.FireInvalidateCanvas();
                             }, o =>
                             {
-                                ws.Document.Children.Remove(t);
+                                ws.Document.Children.Remove(svgText);
                                 ws.FireInvalidateCanvas();
                             }));
                         }
@@ -232,6 +251,7 @@ namespace Svg.Core.Tools
         {
             public string Text { get; set; }
             public int FontSizeIndex { get; set; }
+            public float LineHeight { get; set; } = 1.25f;
         }
     }
 
