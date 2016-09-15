@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Android.App;
+using Android.Content;
 using Android.Text;
 using Android.Views;
 using Android.Views.InputMethods;
@@ -16,7 +17,7 @@ namespace Svg.Droid.Editor.Services
     public class TextInputService : ITextInputService
     {
 
-        public Task<TextTool.TextProperties> GetUserInput(string title, string textValue, IEnumerable<string> textSizeOptions, int textSizeSelected)
+        public async Task<TextTool.TextProperties> GetUserInput(string title, string textValue, IEnumerable<string> textSizeOptions, int textSizeSelected)
         {
             var tcs = new TaskCompletionSource<TextTool.TextProperties>();
 
@@ -37,8 +38,8 @@ namespace Svg.Droid.Editor.Services
                 Orientation = Orientation.Vertical,
                 LayoutParameters = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WrapContent) { Weight = 1 }
             };
-            var spinner1Label = new TextView(context) { Text = "Text" };
-            editTextLayout.AddView(spinner1Label);
+            var inputLabel = new TextView(context) { Text = "Text" };
+            editTextLayout.AddView(inputLabel);
             // Set up the input
             var input = new EditText(context)
             {
@@ -47,6 +48,7 @@ namespace Svg.Droid.Editor.Services
                 ImeOptions = ImeAction.None
             };
             input.SetSingleLine(false);
+            input.SelectAll();
             editTextLayout.AddView(input);
             view.AddView(editTextLayout);
 
@@ -84,7 +86,19 @@ namespace Svg.Droid.Editor.Services
             builder.SetCancelable(false);
             builder.Show();
 
-            return tcs.Task;
+            // delay showing soft keyboard
+            await Task.Delay(150);
+            ShowKeyboard(input);
+
+            return await tcs.Task;
+        }
+
+        public static void ShowKeyboard(View pView)
+        {
+            pView.RequestFocus();
+
+            var inputMethodManager = (InputMethodManager) Application.Context.GetSystemService(Context.InputMethodService);
+            inputMethodManager.ShowSoftInput(pView, ShowFlags.Implicit);
         }
     }
 }
