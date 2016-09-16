@@ -548,6 +548,8 @@ namespace Svg.Core.Tools
 
         public override void Dispose()
         {
+            base.Dispose();
+
             _pen?.Dispose();
             //_pen2?.Dispose();
             _brush?.Dispose();

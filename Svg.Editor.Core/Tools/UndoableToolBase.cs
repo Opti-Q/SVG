@@ -29,13 +29,15 @@ namespace Svg.Core.Tools
             Canvas?.FireToolCommandsChanged();
         }
 
-        ~UndoableToolBase()
+        protected IUndoRedoService UndoRedoService { get; }
+
+        public override void Dispose()
         {
+            base.Dispose();
+
             UndoRedoService.ActionExecuted -= UndoRedoServiceOnActionExecuted;
             UndoRedoService.CanUndoChanged -= UndoRedoServiceOnCanUndoRedoChanged;
             UndoRedoService.CanRedoChanged -= UndoRedoServiceOnCanUndoRedoChanged;
         }
-
-        protected IUndoRedoService UndoRedoService { get; }
     }
 }
