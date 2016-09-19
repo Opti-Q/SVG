@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Drawing;
 using Svg.Interfaces;
 
 namespace Svg
@@ -33,42 +30,42 @@ namespace Svg
 
         public SvgColourServer(Color colour)
         {
-            this._colour = colour;
+            _colour = colour;
         }
 
         private Color _colour;
 
         public Color Colour
         {
-            get { return this._colour; }
-            set { this._colour = value; }
+            get { return _colour; }
+            set { _colour = value; }
         }
 
         public override Brush GetBrush(SvgVisualElement styleOwner, ISvgRenderer renderer, float opacity, bool forStroke = false)
         {
             //is none?
-            if (this == SvgPaintServer.None) return Engine.Factory.CreateSolidBrush(Engine.Factory.Colors.Transparent);
+            if (this == None) return Engine.Factory.CreateSolidBrush(Engine.Factory.Colors.Transparent);
                 
-            int alpha = (int)((opacity * (this.Colour.A/255.0f) ) * 255);
-            Color colour = Engine.Factory.CreateColorFromArgb(alpha, this.Colour);
+            int alpha = (int)((opacity * (Colour.A/255.0f) ) * 255);
+            Color colour = Engine.Factory.CreateColorFromArgb(alpha, Colour);
 
             return Engine.Factory.CreateSolidBrush(colour);
         }
 
         public override string ToString()
         {
-        	if(this == SvgPaintServer.None)
+        	if(this == None)
         		return "none";
-        	else if(this == SvgColourServer.NotSet)
-        		return "";
-            else if (this == SvgColourServer.Inherit)
+            if(this == NotSet)
+                return "";
+            if (this == Inherit)
                 return "inherit";
-            else if (this == SvgColourServer.ContextFill)
+            if (this == ContextFill)
                 return "context-fill";
-            else if (this == SvgColourServer.ContextStroke)
+            if (this == ContextStroke)
                 return "context-stroke";
 
-            Color c = this.Colour;
+            Color c = Colour;
 
             // Return the name if it exists
             if (c.IsKnownColor)
@@ -90,7 +87,7 @@ namespace Svg
 		public override SvgElement DeepCopy<T>()
 		{
 			var newObj = base.DeepCopy<T>() as SvgColourServer;
-			newObj.Colour = this.Colour;
+			newObj.Colour = Colour;
 			return newObj;
 
 		}
@@ -101,14 +98,18 @@ namespace Svg
             if (objColor == null)
                 return false;
 
-            if ((this == SvgPaintServer.None && obj != SvgPaintServer.None) ||
-                (this != SvgPaintServer.None && obj == SvgPaintServer.None) ||
-                (this == SvgColourServer.NotSet && obj != SvgColourServer.NotSet) ||
-                (this != SvgColourServer.NotSet && obj == SvgColourServer.NotSet) ||
-                (this == SvgColourServer.Inherit && obj != SvgColourServer.Inherit) ||
-                (this != SvgColourServer.Inherit && obj == SvgColourServer.Inherit)) return false;
+            if ((this == None && obj != None) ||
+                (this != None && obj == None) ||
+                (this == NotSet && obj != NotSet) ||
+                (this != NotSet && obj == NotSet) ||
+                (this == Inherit && obj != Inherit) ||
+                (this != Inherit && obj == Inherit) ||
+                (this == ContextFill && obj != ContextFill) ||
+                (this != ContextFill && obj == ContextFill) ||
+                (this == ContextStroke && obj != ContextStroke) ||
+                (this != ContextStroke && obj == ContextStroke)) return false;
 
-            return this.GetHashCode() == objColor.GetHashCode();
+            return GetHashCode() == objColor.GetHashCode();
         }
 
         public override int GetHashCode()

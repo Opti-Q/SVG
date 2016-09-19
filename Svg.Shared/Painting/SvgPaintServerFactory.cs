@@ -109,8 +109,19 @@ namespace Svg
             var s = value as string;
             if (string.IsNullOrWhiteSpace(s))
                 return SvgColourServer.NotSet;
-            if (string.Equals(s.Trim(), "none", StringComparison.OrdinalIgnoreCase))
-                return SvgPaintServer.None;
+            //if (string.Equals(s.Trim(), "none", StringComparison.OrdinalIgnoreCase))
+            //    return SvgPaintServer.None;
+            switch (s.Trim().ToLowerInvariant())
+            {
+                case "none":
+                    return SvgPaintServer.None;
+                case "inherit":
+                    return SvgColourServer.Inherit;
+                case "context-fill":
+                    return SvgColourServer.ContextFill;
+                case "context-stroke":
+                    return SvgColourServer.ContextStroke;
+            }
             return Create(s, ((ISvgDocumentProvider)context).Document);
         }
 
@@ -139,8 +150,10 @@ namespace Svg
             if (destinationType == typeof(string))
             {
                 //check for none
-                if (value == SvgPaintServer.None || value == SvgColourServer.None) return "none";
+                if (value == SvgPaintServer.None) return "none";
                 if (value == SvgColourServer.Inherit) return "inherit";
+                if (value == SvgColourServer.ContextFill) return "context-fill";
+                if (value == SvgColourServer.ContextStroke) return "context-stroke";
                 if (value == SvgColourServer.NotSet) return "";
 
                 var colourServer = value as SvgColourServer;
