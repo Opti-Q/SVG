@@ -103,33 +103,38 @@ namespace Svg.Core.Tools
             if (!(element is SvgVisualElement)) return;
 
             var oldStroke = ((SvgColourServer) element.Stroke)?.ToString();
+            var oldFill = ((SvgColourServer) element.Fill)?.ToString();
             UndoRedoService.ExecuteCommand(new UndoableActionCommand("Colorize stroke", o =>
             {
                 element.Stroke?.Dispose();
                 element.Stroke = new SvgColourServer(color);
+                element.Fill?.Dispose();
+                element.Fill = new SvgColourServer(color);
                 Canvas.FireInvalidateCanvas();
             }, state =>
             {
                 element.Stroke?.Dispose();
                 Engine.Resolve<ISvgElementFactory>().SetPropertyValue(element, "stroke", oldStroke, element.OwnerDocument);
+                element.Fill?.Dispose();
+                Engine.Resolve<ISvgElementFactory>().SetPropertyValue(element, "fill", oldFill, element.OwnerDocument);
                 Canvas.FireInvalidateCanvas();
             }), hasOwnUndoRedoScope: false);
 
-            if (element is SvgText || element is SvgLine)
-            {
-                var oldFill = ((SvgColourServer) element.Fill)?.ToString();
-                UndoRedoService.ExecuteCommand(new UndoableActionCommand("Colorize fill", o =>
-                {
-                    element.Fill?.Dispose();
-                    element.Fill = new SvgColourServer(color);
-                    Canvas.FireInvalidateCanvas();
-                }, state =>
-                {
-                    element.Fill?.Dispose();
-                    Engine.Resolve<ISvgElementFactory>().SetPropertyValue(element, "fill", oldFill, element.OwnerDocument);
-                    Canvas.FireInvalidateCanvas();
-                }), hasOwnUndoRedoScope: false);
-            }
+            //if (element is SvgText || element is SvgLine)
+            //{
+            //    var oldFill = ((SvgColourServer) element.Fill)?.ToString();
+            //    UndoRedoService.ExecuteCommand(new UndoableActionCommand("Colorize fill", o =>
+            //    {
+            //        element.Fill?.Dispose();
+            //        element.Fill = new SvgColourServer(color);
+            //        Canvas.FireInvalidateCanvas();
+            //    }, state =>
+            //    {
+            //        element.Fill?.Dispose();
+            //        Engine.Resolve<ISvgElementFactory>().SetPropertyValue(element, "fill", oldFill, element.OwnerDocument);
+            //        Canvas.FireInvalidateCanvas();
+            //    }), hasOwnUndoRedoScope: false);
+            //}
         }
 
         public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
