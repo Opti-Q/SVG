@@ -29,7 +29,8 @@ namespace Svg.Droid.Editor
         {
             _drawingCanvas = new SvgDrawingCanvas();
             _detector = new GestureDetector(Context);
-            _detector.OnGesture += async (sender, e) => await DrawingCanvas.OnEvent(e);
+            //_detector.OnGesture += async (sender, e) => await DrawingCanvas.OnEvent(e);
+            _detector.GestureDetectedObservable.Subscribe(async uie => await DrawingCanvas.OnEvent(uie));
         }
 
         public override bool OnTouchEvent(MotionEvent ev)

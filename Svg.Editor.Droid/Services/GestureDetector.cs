@@ -1,4 +1,8 @@
 using System;
+using System.Linq;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using Android.Content;
 using Android.Views;
 using Svg.Core.Events;
@@ -17,16 +21,37 @@ namespace Svg.Droid.Editor.Services
         private readonly RotateDetector _rotateDetector;
         private float _pointerDownX;
         private float _pointerDownY;
+        private readonly Subject<UserInputEvent> _gestureDetectedSubject = new Subject<UserInputEvent>();
 
-        public event EventHandler<UserInputEvent> OnGesture;
+        public IObservable<UserInputEvent> GestureDetectedObservable => _gestureDetectedSubject.AsObservable();
 
         public GestureDetector(Context ctx)
         {
             var scaleListener = new ScaleDetector();
-            scaleListener.OnEvent += (sender, ev) => OnGesture?.Invoke(this, ev);
+            scaleListener.OnEvent += (sender, ev) => _gestureDetectedSubject.OnNext(ev);
             _scaleDetector = new ScaleGestureDetector(ctx, scaleListener);
             _rotateDetector = new RotateDetector();
-            _rotateDetector.OnRotate += (sender, ev) => OnGesture?.Invoke(this, ev);
+            _rotateDetector.OnRotate += (sender, ev) => _gestureDetectedSubject.OnNext(ev);
+
+            var pointerEvents = GestureDetectedObservable.OfType<PointerEvent>();
+            var enterEvents = pointerEvents.Where(pe => pe.EventType == EventType.PointerDown);
+            var exitEvents = pointerEvents.Where(pe => pe.EventType == EventType.PointerUp || pe.EventType == EventType.Cancel);
+            var interactionWindows = pointerEvents.Window(enterEvents, _ => exitEvents);
+            interactionWindows.Subscribe(window =>
+            {
+                window
+                    .Scan((acc, current) =>
+                    {
+                        var delta = current.Pointer1Position - current.Pointer1Down;
+                        if (current.EventType != EventType.PointerDown && Math.Abs(delta.X) > 20 && Math.Abs(delta.Y) > 20) throw new Exception("Moved too far.");
+                        return null;
+                    })
+                    .Timeout(TimeSpan.FromSeconds(0.5), TaskPoolScheduler.Default)
+                    .LastAsync()
+                    .Subscribe(
+                        b => {/* TODO: make some tap */},
+                        ex => { });
+            });
         }
 
         public void OnTouch(MotionEvent ev)
@@ -137,7 +162,7 @@ namespace Svg.Droid.Editor.Services
             }
 
             if (uie != null)
-                OnGesture?.Invoke(this, uie);
+                _gestureDetectedSubject.OnNext(uie);
         }
 
         public void Reset()

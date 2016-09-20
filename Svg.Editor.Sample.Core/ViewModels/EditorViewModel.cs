@@ -29,7 +29,7 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
             
             Canvas.Tools.Add(new SaveTool(false));
             Canvas.Tools.Add(new PlaceAsBackgroundTool(null, Engine.Resolve<IUndoRedoService>()));
-            Canvas.Document = SvgDocument.Open<SvgDocument>(GetSource("svg/svg_80ae394472b24f3daaaca4d067656058_78c.svg"));
+            //Canvas.Document = SvgDocument.Open<SvgDocument>(GetSource("svg/svg_80ae394472b24f3daaaca4d067656058_78c.svg"));
             //Canvas.Document = SvgDocument.Open<SvgDocument>(GetSource("svg/ground_floor_plan.svg"));
             Canvas.IsDebugEnabled = true;
         }
