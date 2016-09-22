@@ -1,7 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Reactive.Concurrency;
+using System.Threading.Tasks;
+using Microsoft.Reactive.Testing;
 using NUnit.Framework;
 using Svg.Core;
 using Svg.Core.Events;
+using Svg.Core.Services;
 using Svg.Interfaces;
 
 namespace Svg.Editor.Tests
@@ -11,10 +14,13 @@ namespace Svg.Editor.Tests
         private SvgDrawingCanvas _canvas;
 
         protected SvgDrawingCanvas Canvas => _canvas;
+        protected SchedulerProvider SchedulerProvider { get; } = new SchedulerProvider(new TestScheduler(), new TestScheduler());
 
         [SetUp]
         public virtual void SetUp()
         {
+            Engine.Register<SchedulerProvider, SchedulerProvider>(() => SchedulerProvider);
+
             _canvas = new SvgDrawingCanvas();
         }
 

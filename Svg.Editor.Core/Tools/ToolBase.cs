@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Events;
+using Svg.Core.Gestures;
 using Svg.Core.Interfaces;
 
 namespace Svg.Core.Tools
@@ -13,7 +14,7 @@ namespace Svg.Core.Tools
             Name = name;
         }
 
-        protected ToolBase(string name, IDictionary<string,object> properties) : this(name)
+        protected ToolBase(string name, IDictionary<string, object> properties) : this(name)
         {
             //Properties = JsonConvert.DeserializeObject<IDictionary<string, object>>(properties, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All }) ?? new Dictionary<string, object>();
             Properties = properties ?? new Dictionary<string, object>();
@@ -33,6 +34,7 @@ namespace Svg.Core.Tools
         public virtual int DrawOrder => 500;
         public virtual int PreDrawOrder => 500;
         public virtual int InputOrder => 500;
+        public virtual int GestureOrder => 500;
 
         public string IconName { get; set; }
 
@@ -54,6 +56,38 @@ namespace Svg.Core.Tools
         {
             return Task.FromResult(true);
         }
+
+        public virtual async Task OnGesture(UserGesture gesture)
+        {
+            switch (gesture.Type)
+            {
+                case GestureType.Tap:
+                    await OnTap((TapGesture) gesture);
+                    break;
+                case GestureType.LongPress:
+                    await OnLongPress((LongPressGesture) gesture);
+                    break;
+                case GestureType.Drag:
+                    await OnDrag((DragGesture) gesture);
+                    break;
+            }
+        }
+
+        protected virtual Task OnTap(TapGesture tap)
+        {
+            return Task.FromResult(true);
+        }
+
+        protected virtual Task OnLongPress(LongPressGesture longPress)
+        {
+            return Task.FromResult(true);
+        }
+
+        protected virtual Task OnDrag(DragGesture drag)
+        {
+            return Task.FromResult(true);
+        }
+
         public virtual void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
         {
 

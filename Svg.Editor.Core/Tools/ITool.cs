@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Svg.Core.Events;
+using Svg.Core.Gestures;
 using Svg.Core.Interfaces;
 
 namespace Svg.Core.Tools
@@ -48,11 +49,16 @@ namespace Svg.Core.Tools
         /// Defines the order (ascending) in which this <see cref="ITool"/>s <see cref="OnUserInput"/> method should be called.
         /// </summary>
         int InputOrder { get; }
+        /// <summary>
+        /// Defines the order (ascending) in which this <see cref="ITool"/>s <see cref="OnGesture"/> method should be called.
+        /// </summary>
+        int GestureOrder { get; }
         string IconName { get; }
         Task Initialize(SvgDrawingCanvas ws);
         Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws);
         Task OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws);
         Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws);
+        Task OnGesture(UserGesture gesture);
         void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument);
         void Reset();
     }

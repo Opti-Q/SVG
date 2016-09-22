@@ -4,10 +4,10 @@ using Android.Content;
 using Android.Graphics;
 using Android.Util;
 using Android.Views;
+using SkiaSharp;
 using Svg.Core;
 using Svg.Core.Services;
 using Svg.Droid.Editor.Services;
-using GestureDetector = Svg.Droid.Editor.Services.GestureDetector;
 
 namespace Svg.Droid.Editor
 {
@@ -16,7 +16,7 @@ namespace Svg.Droid.Editor
 #if !ANDROID
         private Android.Graphics.Bitmap _bitmap;
 #endif
-        private readonly GestureDetector _detector;
+        private readonly AndroidGestureDetector _detector;
         private SvgDrawingCanvas _drawingCanvas;
 
         public SvgDrawingCanvas DrawingCanvas
@@ -28,9 +28,8 @@ namespace Svg.Droid.Editor
         public SvgDrawingCanvasView(Context context, IAttributeSet attr) : base(context, attr)
         {
             _drawingCanvas = new SvgDrawingCanvas();
-            _detector = new GestureDetector(Context);
-            //_detector.OnGesture += async (sender, e) => await DrawingCanvas.OnEvent(e);
-            _detector.GestureDetectedObservable.Subscribe(async uie => await DrawingCanvas.OnEvent(uie));
+            _detector = new AndroidGestureDetector(Context);
+            _detector.DetectedGestures.Subscribe(async uie => await DrawingCanvas.OnEvent(uie));
         }
 
         public override bool OnTouchEvent(MotionEvent ev)
@@ -62,7 +61,7 @@ namespace Svg.Droid.Editor
 
             try
             {
-                using (var surface = SkiaSharp.SKSurface.Create(canvas.Width, canvas.Height, SkiaSharp.SKColorType.Rgba8888, SkiaSharp.SKAlphaType.Premul, _bitmap.LockPixels(), canvas.Width * 4))
+                using (var surface = SKSurface.Create(canvas.Width, canvas.Height, SKColorType.Rgba8888, SKAlphaType.Premul, _bitmap.LockPixels(), canvas.Width * 4))
                 {
                     await DrawingCanvas.OnDraw(new SKCanvasRenderer(surface, canvas.Width, canvas.Height));
                 }
@@ -78,7 +77,7 @@ namespace Svg.Droid.Editor
 #endif
         protected override void OnAttachedToWindow()
         {
-            ContextProvider._context = this.Context;
+            ContextProvider._context = Context;
 
             base.OnAttachedToWindow();
             _drawingCanvas.CanvasInvalidated -= OnCanvasInvalidated;
@@ -103,7 +102,7 @@ namespace Svg.Droid.Editor
 
         private void OnToolCommandsChanged(object sender, EventArgs e)
         {
-            ((Activity)this.Context).InvalidateOptionsMenu();
+            ((Activity)Context).InvalidateOptionsMenu();
         }
 
         protected override void Dispose(bool disposing)
@@ -111,6 +110,7 @@ namespace Svg.Droid.Editor
             if (disposing)
             {
                 DrawingCanvas?.Dispose();
+                _detector?.Dispose();
             }
             base.Dispose(disposing);
         }

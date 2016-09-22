@@ -1,4 +1,5 @@
-using System;
+using System.Reactive.Concurrency;
+using System.Threading;
 using Svg;
 #if ANDROID
 using Android.Content;
@@ -8,13 +9,11 @@ using Svg.Interfaces;
 using Svg.Platform;
 
 [assembly:SvgPlatform(typeof(SvgPlatformSetup))]
-
 namespace Svg
 {
 
     public class SvgPlatformSetup : SvgPlatformSetupBase
     {
-        private static bool _isInitialized = false;
         private static bool _enableFastTextRendering = true;
 
         public static bool EnableFastTextRendering
@@ -48,7 +47,13 @@ namespace Svg
             }
 #else
             Engine.Register<IFactory, IFactory>(() => new SKFactory());
-            
+            var context = SynchronizationContext.Current;
+            if (context != null)
+            {
+                var scheduler = new SynchronizationContextScheduler(context);
+                Engine.Register<IScheduler, SynchronizationContextScheduler>(() => scheduler);
+            }
+
             if (EnableFastTextRendering)
             {
                 Engine.Register<IAlternativeSvgTextRenderer, SkiaTextRenderer>(() => new SkiaTextRenderer());

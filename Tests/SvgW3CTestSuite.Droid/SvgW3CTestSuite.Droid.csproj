@@ -112,6 +112,7 @@
     <AndroidAsset Include="Assets\resources\ScheherazadeRegOT.ttf" />
     <AndroidAsset Include="Assets\resources\Plane1\.directory" />
     <AndroidAsset Include="Assets\resources\Plane1\PlaneOne.sfd" />
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
   </ItemGroup>

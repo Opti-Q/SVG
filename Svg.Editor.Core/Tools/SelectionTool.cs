@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Events;
+using Svg.Core.Gestures;
 using Svg.Core.Interfaces;
 using Svg.Core.UndoRedo;
 using Svg.Interfaces;
@@ -11,15 +12,27 @@ namespace Svg.Core.Tools
 {
     public class SelectionTool : UndoableToolBase
     {
+        #region Private fields
+
         private RectangleF _selectionRectangle;
         private Brush _brush;
         private Pen _pen;
         private bool _handledPointerDown;
 
+        #endregion
+
+        #region Private properties
+
         private string DeleteIconName { get; } = "ic_delete_white_48dp.png";
         private string SelectIconName { get; } = "ic_select_tool_white_48dp.png";
         private Brush BlueBrush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
         private Pen BluePen => _pen ?? (_pen = Engine.Factory.CreatePen(BlueBrush, 5));
+
+        #endregion
+
+        #region Public properties
+
+        public override int GestureOrder => 1000;
 
         public override bool IsActive
         {
@@ -31,12 +44,16 @@ namespace Svg.Core.Tools
             }
         }
 
+        #endregion
+
         public SelectionTool(IUndoRedoService undoRedoService) : base("Select", undoRedoService)
         {
             IconName = SelectIconName;
             ToolUsage = ToolUsage.Explicit;
             ToolType = ToolType.Select;
         }
+
+        #region Overrides
 
         public override async Task Initialize(SvgDrawingCanvas ws)
         {
@@ -68,76 +85,58 @@ namespace Svg.Core.Tools
             };
         }
 
-        public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
+        protected override async Task OnTap(TapGesture tap)
         {
-            if (!IsActive)
-                return Task.FromResult(true);
+            await base.OnTap(tap);
 
-            var e = @event as MoveEvent;
-            if (e != null && _handledPointerDown && e.PointerCount == 1)
-            {
-                float startX = e.Pointer1Down.X;
-                float startY = e.Pointer1Down.Y;
-                float endX = e.Pointer1Position.X;
-                float endY = e.Pointer1Position.Y;
+            if (!IsActive) return;
 
-                if (startX > endX)
-                {
-                    var t = startX;
-                    startX = endX;
-                    endX = t;
-                }
-                if (startY > endY)
-                {
-                    var t = startY;
-                    startY = endY;
-                    endY = t;
-                }
-                var rect = RectangleF.Create(startX, startY, endX - startX, endY - startY);
+            // select elements under pointer
+            SelectElementsUnder(Canvas.GetPointerRectangle(tap.Position), Canvas, SelectionType.Intersect, 1);
 
-                // selection onyl counts if width and height are not too small
-                var dist = Math.Sqrt(Math.Pow(rect.Width, 2) + Math.Pow(rect.Height, 2));
-
-                if (dist > 30)
-                {
-                    _selectionRectangle = rect;
-                    ws.FireInvalidateCanvas();
-                }
-            }
-
-            var p = @event as PointerEvent;
-            if (p != null)
-            {
-                if (p.EventType == EventType.PointerDown)
-                {
-                    _handledPointerDown = p.PointerCount == 1;
-                }
-                // if the user never moved, but clicked on an item, we try to select that spot
-                if (_handledPointerDown && p.EventType == EventType.PointerUp && _selectionRectangle == null)
-                {
-                    // select elements under pointer
-                    SelectElementsUnder(ws.GetPointerRectangle(p.Pointer1Position), ws, SelectionType.Intersect, 1);
-
-                    Reset();
-                    ws.FireInvalidateCanvas();
-                }
-                // on pointer up or cancel, we remove the selection rectangle
-                else if (_handledPointerDown && p.EventType == EventType.PointerUp || p.EventType == EventType.Cancel)
-                {
-                    // select elements under rectangle
-                    SelectElementsUnder(_selectionRectangle, ws, SelectionType.Contain);
-
-                    Reset();
-                    ws.FireInvalidateCanvas();
-                }
-            }
-
-            return Task.FromResult(true);
+            Reset();
+            Canvas.FireInvalidateCanvas();
         }
 
-        public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
+        protected override async Task OnDrag(DragGesture drag)
         {
-            _selectionRectangle = null;
+            await base.OnDrag(drag);
+
+            if (!IsActive) return;
+
+            if (drag == DragGesture.Exit)
+            {
+                // select elements under rectangle
+                SelectElementsUnder(_selectionRectangle, Canvas, SelectionType.Contain);
+
+                Reset();
+                Canvas.FireInvalidateCanvas();
+
+                return;
+            }
+
+            var location = drag.Start;
+            var size = drag.Delta;
+
+            if (size.Width < 0 && size.Height < 0)
+            {
+                location = location + size;
+                size = SizeF.Create(Math.Abs(size.Width), Math.Abs(size.Height));
+            }
+            else if (size.Height < 0)
+            {
+                location = PointF.Create(location.X, location.Y + size.Height);
+                size = SizeF.Create(size.Width, Math.Abs(size.Height));
+            }
+            else if (size.Width < 0)
+            {
+                location = PointF.Create(location.X + size.Width, location.Y);
+                size = SizeF.Create(Math.Abs(size.Width), size.Height);
+            }
+
+            _selectionRectangle = RectangleF.Create(location, size);
+
+            Canvas.FireInvalidateCanvas();
         }
 
         public override Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
@@ -159,7 +158,6 @@ namespace Svg.Core.Tools
                 renderer.Graphics.Restore();
             }
 
-
             // we draw the selection boundingboxes of all selected elements
             foreach (var element in ws.SelectedElements)
             {
@@ -174,6 +172,21 @@ namespace Svg.Core.Tools
 
             return Task.FromResult(true);
         }
+
+        public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
+        {
+            _selectionRectangle = null;
+        }
+
+        public override void Reset()
+        {
+            _handledPointerDown = false;
+            _selectionRectangle = null;
+        }
+
+        #endregion
+
+        #region Private helpers
 
         private static void SelectElementsUnder(RectangleF selectionRectangle, SvgDrawingCanvas ws, SelectionType selectionType, int maxItems = int.MaxValue)
         {
@@ -190,10 +203,6 @@ namespace Svg.Core.Tools
             }
         }
 
-        public override void Reset()
-        {
-            _handledPointerDown = false;
-            _selectionRectangle = null;
-        }
+        #endregion
     }
 }

@@ -5,11 +5,17 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Svg.Core.Annotations;
 using Svg.Core.Events;
+using Svg.Core.Gestures;
 using Svg.Core.Interfaces;
+using Svg.Core.Services;
 using Svg.Core.Tools;
 using Svg.Interfaces;
 
@@ -17,6 +23,8 @@ namespace Svg.Core
 {
     public sealed class SvgDrawingCanvas : IDisposable, ICanInvalidateCanvas, INotifyPropertyChanged
     {
+        #region Private fields
+
         private readonly ObservableCollection<SvgVisualElement> _selectedElements;
         private readonly ObservableCollection<ITool> _tools;
         private List<IToolCommand> _toolSelectors;
@@ -26,6 +34,9 @@ namespace Svg.Core
         private bool _isDebugEnabled;
         private bool _documentIsDirty;
         private PointF _zoomFocus;
+        private readonly Subject<UserInputEvent> _detectedGestures;
+
+        #endregion
 
         public event EventHandler CanvasInvalidated;
         public event EventHandler ToolCommandsChanged;
@@ -42,6 +53,18 @@ namespace Svg.Core
 
             _selectedElements = new ObservableCollection<SvgVisualElement>();
             _selectedElements.CollectionChanged += OnSelectionChanged;
+
+            _detectedGestures = new Subject<UserInputEvent>();
+            var mainScheduler = Engine.TryResolve<IScheduler>();
+            var backgroundScheduler = (IScheduler) Scheduler.Default;
+            var p = Engine.TryResolve<SchedulerProvider>();
+            if (p != null)
+            {
+                mainScheduler = p.MainScheduer;
+                backgroundScheduler = p.BackgroundScheduler;
+            }
+            var gestureRecognizer = new GestureRecognizer(_detectedGestures.AsObservable(), mainScheduler, backgroundScheduler);
+            gestureRecognizer.RecognizedGestures.Subscribe(async g => await OnGesture(g));
 
             #region Tool properties
 
@@ -257,11 +280,27 @@ namespace Svg.Core
         /// <param name="ev"></param>
         public async Task OnEvent(UserInputEvent ev)
         {
+            _detectedGestures.OnNext(ev);
+
             await EnsureInitialized();
 
             foreach (var tool in Tools.OrderBy(t => t.InputOrder))
             {
                 await tool.OnUserInput(ev, this);
+            }
+        }
+
+        /// <summary>
+        /// Called when a gesture - like tap, double tap, long press, etc - is recognized.
+        /// </summary>
+        /// <param name="gesture"></param>
+        public async Task OnGesture(UserGesture gesture)
+        {
+            await EnsureInitialized();
+
+            foreach (var tool in Tools.OrderBy(t => t.GestureOrder))
+            {
+                await tool.OnGesture(gesture);
             }
         }
 

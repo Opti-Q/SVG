@@ -13,6 +13,8 @@ namespace Svg.Core.Tools
 {
     public class GridTool : UndoableToolBase
     {
+        #region Private fields
+
         private const double Gamma = 90f;
         private const float FloatError = 0.01f;
 
@@ -50,8 +52,41 @@ namespace Svg.Core.Tools
         private bool _areElementsMoved;
         private PointF _generalTranslation;
 
-        private Dictionary<double, double> CachedDiagonals = new Dictionary<double, double>();
+        #endregion
 
+        #region Private properties
+
+        private Dictionary<double, double> CachedDiagonals { get; } = new Dictionary<double, double>();
+
+        private Brush Brush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 210, 210, 210)));
+        //private Brush Brush2 => _brush2 ?? (_brush2 = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(180, 0, 0, 0)));
+        private Pen Pen => _pen ?? (_pen = Engine.Factory.CreatePen(Brush, 1));
+        //private Pen Pen2 => _pen2 ?? (_pen2 = Engine.Factory.CreatePen(Brush2, 1));
+
+        #endregion
+
+        #region Public properties
+
+        public string IconGridOn { get; set; } = "ic_grid_on_white_48dp.png";
+        public string IconGridOff { get; set; } = "ic_grid_off_white_48dp.png";
+
+        public bool IsSnappingEnabled
+        {
+            get
+            {
+                object isSnappingEnabled;
+                if (!Properties.TryGetValue("issnappingenabled", out isSnappingEnabled))
+                    isSnappingEnabled = true;
+                return (bool) isSnappingEnabled;
+            }
+            set { Properties["issnappingenabled"] = value; }
+        }
+
+        public override int InputOrder => 100; // must be before movetool!
+
+        public bool IsVisible { get; set; } = true;
+
+        #endregion
 
         public GridTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService)
             : base("Grid", properties, undoRedoService)
@@ -85,28 +120,7 @@ namespace Svg.Core.Tools
             ToolType = ToolType.Modify;
         }
 
-        public string IconGridOn { get; set; } = "ic_grid_on_white_48dp.png";
-        public string IconGridOff { get; set; } = "ic_grid_off_white_48dp.png";
-
-        public bool IsSnappingEnabled
-        {
-            get
-            {
-                object isSnappingEnabled;
-                if (!Properties.TryGetValue("issnappingenabled", out isSnappingEnabled))
-                    isSnappingEnabled = true;
-                return (bool) isSnappingEnabled;
-            }
-            set { Properties["issnappingenabled"] = value; }
-        }
-
-        public override int InputOrder => 100; // must be before movetool!
-
-        public bool IsVisible { get; set; } = true;
-        private Brush Brush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 210, 210, 210)));
-        //private Brush Brush2 => _brush2 ?? (_brush2 = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(180, 0, 0, 0)));
-        private Pen Pen => _pen ?? (_pen = Engine.Factory.CreatePen(Brush, 1));
-        //private Pen Pen2 => _pen2 ?? (_pen2 = Engine.Factory.CreatePen(Brush2, 1));
+        #region Overrides
 
         public override async Task Initialize(SvgDrawingCanvas ws)
         {
@@ -165,6 +179,18 @@ namespace Svg.Core.Tools
             }
             return Task.FromResult(true);
         }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            _pen?.Dispose();
+            //_pen2?.Dispose();
+            _brush?.Dispose();
+            //_brush2?.Dispose();
+        }
+
+        #endregion
 
         #region GridLines
 
@@ -546,15 +572,7 @@ namespace Svg.Core.Tools
 
         #endregion
 
-        public override void Dispose()
-        {
-            base.Dispose();
-
-            _pen?.Dispose();
-            //_pen2?.Dispose();
-            _brush?.Dispose();
-            //_brush2?.Dispose();
-        }
+        #region Private helpers
 
         private static double SinDegree(double value)
         {
@@ -568,6 +586,10 @@ namespace Svg.Core.Tools
         {
             return angle * (180.0 / Math.PI);
         }
+
+        #endregion
+
+        #region Inner types
 
         private class ToggleGridCommand : ToolCommand
         {
@@ -607,5 +629,7 @@ namespace Svg.Core.Tools
                 _canvas.FireToolCommandsChanged();
             }
         }
+
+        #endregion
     }
 }

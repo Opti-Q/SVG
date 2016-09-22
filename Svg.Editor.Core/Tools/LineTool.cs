@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Svg.Core.Events;
+using Svg.Core.Gestures;
 using Svg.Core.Interfaces;
 using Svg.Core.UndoRedo;
 using Svg.Interfaces;
@@ -17,26 +17,27 @@ namespace Svg.Core.Tools
 
     public class LineTool : UndoableToolBase
     {
-        private const double MinMovedDistance = 10.0;
+        #region Private fields
+
         private const double MaxPointerDistance = 20.0;
-
         private static ILineOptionsInputService LineOptionsInputServiceProxy => Engine.Resolve<ILineOptionsInputService>();
-
-        private double _movedDistance;
         private SvgLine _currentLine;
-        private bool _multiplePointersRegistered;
         private Brush _brush;
         private Pen _pen;
         private bool _isActive;
-        private MovementType _movementType;
-        private bool _moveRegistered;
+        private MovementHandle _movementHandle;
         private ITool _activatedFrom;
+
+        #endregion
+
+        #region Private properties
 
         private Brush BlueBrush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
         private Pen BluePen => _pen ?? (_pen = Engine.Factory.CreatePen(BlueBrush, 5));
         private IEnumerable<SvgMarker> Markers { get; }
-
         private SvgUnitCollection StrokeDashArray { get; }
+
+        #endregion
 
         #region Public properties
 
@@ -133,54 +134,6 @@ namespace Svg.Core.Tools
 
         #endregion
 
-        #region Event handlers
-
-        public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
-        {
-            if (oldDocument != null) UnWatchDocument(oldDocument);
-            WatchDocument(newDocument);
-            InitializeDefinitions(newDocument);
-        }
-
-        private void UnWatchDocument(SvgDocument svgDocument)
-        {
-            svgDocument.ChildRemoved -= SvgDocumentOnChildRemoved;
-        }
-
-        private void WatchDocument(SvgDocument svgDocument)
-        {
-            svgDocument.ChildRemoved -= SvgDocumentOnChildRemoved;
-            svgDocument.ChildRemoved += SvgDocumentOnChildRemoved;
-        }
-
-        private void SvgDocumentOnChildRemoved(object sender, ChildRemovedEventArgs args)
-        {
-            if (IsActive && args.RemovedChild == _currentLine)
-            {
-                _currentLine = null;
-                Canvas.FireInvalidateCanvas();
-            }
-        }
-
-        private void InitializeDefinitions(SvgDocument document)
-        {
-            var definitions = document.Children.OfType<SvgDefinitionList>().FirstOrDefault();
-            if (definitions == null)
-            {
-                definitions = new SvgDefinitionList();
-                document.Children.Insert(0, definitions);
-            }
-
-            foreach (var marker in Markers)
-            {
-                if (document.GetElementById(marker.ID) != null) continue;
-
-                definitions.Children.Add(marker);
-            }
-        }
-
-        #endregion
-
         public LineTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Line", properties, undoRedoService)
         {
             IconName = "ic_mode_edit_white_48dp.png";
@@ -239,224 +192,161 @@ namespace Svg.Core.Tools
             };
         }
 
-        public override async Task Initialize(SvgDrawingCanvas ws)
+        #region Overrides
+
+        public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
         {
-            await base.Initialize(ws);
-
-            IsActive = false;
-
-            SelectedMarkerStartId = MarkerStartIds.FirstOrDefault();
-            SelectedMarkerEndId = MarkerEndIds.FirstOrDefault();
-            SelectedLineStyle = LineStyles.FirstOrDefault();
-
-            Commands = new List<IToolCommand>
-            {
-                new ChangeLineStyleCommand(ws, this, "Line style")
-            };
+            if (oldDocument != null) UnWatchDocument(oldDocument);
+            WatchDocument(newDocument);
+            InitializeDefinitions(newDocument);
         }
 
-        public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
+        protected override async Task OnTap(TapGesture tap)
         {
-            var p = @event as PointerEvent;
-            if (ws.ActiveTool.ToolType == ToolType.Select && p?.EventType == EventType.PointerUp)
+            await base.OnTap(tap);
+
+            if (!IsActive) return;
+
+            _currentLine = Canvas.GetElementsUnder<SvgLine>(Canvas.GetPointerRectangle(tap.Position),
+                        SelectionType.Intersect).FirstOrDefault();
+
+            if (_currentLine != null)
             {
-                var pointerDiff = p.Pointer1Position - p.Pointer1Down;
-                var pointerDistance = Math.Abs(pointerDiff.X) + Math.Abs(pointerDiff.Y);
-                // determine if active by searching through selection and determining whether pointer was put on selected element
-                // if there are selected elements and pointer was put down on one of them, activate tool, otherwise deactivate
-                if (pointerDistance < 5.0f &&
-                    ws.SelectedElements.Count == 1 &&
-                    ws.GetElementsUnderPointer<SvgVisualElement>(p.Pointer1Position).Any(eup => eup is SvgLine && ws.SelectedElements.First() == eup))
+                Canvas.SelectedElements.Clear();
+                Canvas.SelectedElements.Add(_currentLine);
+            }
+            else
+            {
+                Canvas.SelectedElements.Clear();
+
+                if (_activatedFrom != null)
                 {
-                    // save the active tool for restoring later
-                    _activatedFrom = ws.ActiveTool;
-                    ws.ActiveTool = this;
-                    ws.FireInvalidateCanvas();
+                    Canvas.ActiveTool = _activatedFrom;
+                    _activatedFrom = null;
                 }
             }
 
-            if (!IsActive)
+            Canvas.FireToolCommandsChanged();
+            Canvas.FireInvalidateCanvas();
+        }
+
+        protected override async Task OnLongPress(LongPressGesture longPress)
+        {
+            await base.OnLongPress(longPress);
+
+            if (Canvas.ActiveTool.ToolType != ToolType.Select) return;
+
+            var line = Canvas.GetElementsUnderPointer<SvgLine>(longPress.Position).FirstOrDefault();
+            if (line != null)
             {
-                return Task.FromResult(true);
+                Canvas.SelectedElements.Clear();
+                Canvas.SelectedElements.Add(line);
+
+                // save the active tool for restoring later
+                _activatedFrom = Canvas.ActiveTool;
+                Canvas.ActiveTool = this;
+                Canvas.FireInvalidateCanvas();
+            }
+        }
+
+        protected override async Task OnDrag(DragGesture drag)
+        {
+            await base.OnDrag(drag);
+
+            if (!IsActive) return;
+
+            if (drag == DragGesture.Exit)
+            {
+                _movementHandle = MovementHandle.None;
+                return;
             }
 
-            if (!_moveRegistered && p?.PointerCount == 1 && (p.EventType == EventType.PointerUp || p.EventType == EventType.Cancel))
+            var relativeEnd = Canvas.ScreenToCanvas(drag.Position);
+
+            if (_currentLine == null)
             {
-                _currentLine = ws.GetElementsUnder<SvgLine>(ws.GetPointerRectangle(p.Pointer1Position),
-                            SelectionType.Intersect).FirstOrDefault();
+                var relativeStart = Canvas.ScreenToCanvas(drag.Start);
 
-                if (_currentLine != null)
+                SelectLine(CreateLine(relativeStart));
+
+                // capture variables for use in lambda
+                var children = Canvas.Document.Children;
+                var capturedCurrentLine = _currentLine;
+                UndoRedoService.ExecuteCommand(new UndoableActionCommand("Add new line", o =>
                 {
-                    ws.SelectedElements.Clear();
-                    ws.SelectedElements.Add(_currentLine);
-                }
-                else
+                    children.Add(capturedCurrentLine);
+                    Canvas.FireInvalidateCanvas();
+                }, o =>
                 {
-                    ws.SelectedElements.Clear();
+                    children.Remove(capturedCurrentLine);
+                    Canvas.FireInvalidateCanvas();
+                }));
 
-                    if (_activatedFrom != null)
-                    {
-                        ws.ActiveTool = _activatedFrom;
-                        _activatedFrom = null;
-                    }
-                }
-
-                ws.FireToolCommandsChanged();
-                ws.FireInvalidateCanvas();
+                _movementHandle = MovementHandle.End;
             }
-
-            if (p?.EventType == EventType.PointerDown)
+            else
             {
-                if (p.PointerCount == 1)
-                {
-                    _moveRegistered = false;
-                    _multiplePointersRegistered = false;
-                }
-                else
-                {
-                    _multiplePointersRegistered = true;
-                }
+                var m = _currentLine.Transforms.GetMatrix();
+                m.Invert();
+                m.TransformPoints(new[] { relativeEnd });
 
-                if (_currentLine != null)
+                // capture _currentLine for use in lambda
+                var capturedCurrentLine = _currentLine;
+
+                if (_movementHandle == MovementHandle.None)
                 {
-                    var canvasPointer1Position = ws.ScreenToCanvas(p.Pointer1Position);
+                    var canvasPointer1Position = Canvas.ScreenToCanvas(drag.Start);
                     var points = _currentLine.GetTransformedLinePoints();
-                    _movementType = Math.Abs(canvasPointer1Position.X - points[1].X) <= MaxPointerDistance &&
-                                 Math.Abs(canvasPointer1Position.Y - points[1].Y) <= MaxPointerDistance ? MovementType.End :
+                    _movementHandle = Math.Abs(canvasPointer1Position.X - points[1].X) <= MaxPointerDistance &&
+                                 Math.Abs(canvasPointer1Position.Y - points[1].Y) <= MaxPointerDistance ? MovementHandle.End :
                                  Math.Abs(canvasPointer1Position.X - points[0].X) <= MaxPointerDistance &&
-                                 Math.Abs(canvasPointer1Position.Y - points[0].Y) <= MaxPointerDistance ? MovementType.Start :
-                                 _currentLine.GetBoundingBox().Contains(canvasPointer1Position) ? MovementType.StartEnd : MovementType.None;
-                    if (_movementType != MovementType.None)
+                                 Math.Abs(canvasPointer1Position.Y - points[0].Y) <= MaxPointerDistance ? MovementHandle.Start :
+                                 _currentLine.GetBoundingBox().Contains(canvasPointer1Position) ? MovementHandle.StartEnd : MovementHandle.None;
+                    if (_movementHandle != MovementHandle.None)
                     {
                         UndoRedoService.ExecuteCommand(new UndoableActionCommand("Edit line", o => { }));
                     }
                 }
-            }
 
-            if (_multiplePointersRegistered)
-                return Task.FromResult(true);
-
-            var e = @event as MoveEvent;
-            if (e != null)
-            {
-                _moveRegistered = true;
-                var startX = e.Pointer1Down.X;
-                var startY = e.Pointer1Down.Y;
-                var endX = e.Pointer1Position.X;
-                var endY = e.Pointer1Position.Y;
-
-                if (startX > endX)
+                switch (_movementHandle)
                 {
-                    var t = startX;
-                    startX = endX;
-                    endX = t;
-                }
-                if (startY > endY)
-                {
-                    var t = startY;
-                    startY = endY;
-                    endY = t;
-                }
-                var rect = RectangleF.Create(startX, startY, endX - startX, endY - startY);
-
-                // drawing only counts if length is not too small
-                _movedDistance = Math.Sqrt(Math.Pow(rect.Width, 2) + Math.Pow(rect.Height, 2));
-
-                if (_movedDistance >= MinMovedDistance)
-                {
-                    var relativeStart = ws.ScreenToCanvas(e.Pointer1Down);
-                    var relativeEnd = ws.ScreenToCanvas(e.Pointer1Position);
-
-                    if (_currentLine == null)
-                    {
-                        _currentLine = new SvgLine
-                        {
-                            Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
-                            Fill = SvgPaintServer.None,
-                            StrokeWidth = new SvgUnit(SvgUnitType.Pixel, 2),
-                            StartX = new SvgUnit(SvgUnitType.Pixel, relativeStart.X),
-                            StartY = new SvgUnit(SvgUnitType.Pixel, relativeStart.Y),
-                            EndX = new SvgUnit(SvgUnitType.Pixel, relativeStart.X),
-                            EndY = new SvgUnit(SvgUnitType.Pixel, relativeStart.Y),
-                            MarkerStart = CreateUriFromId(SelectedMarkerStartId),
-                            MarkerEnd = CreateUriFromId(SelectedMarkerEndId)
-                        };
-
-                        ws.SelectedElements.Add(_currentLine);
-
-                        if (SelectedLineStyle == "dashed")
-                        {
-                            _currentLine.StrokeDashArray = StrokeDashArray.Clone();
-                        }
-
+                    case MovementHandle.End:
                         // capture variables for use in lambda
-                        var children = ws.Document.Children;
-                        var capturedCurrentLine = _currentLine;
-                        UndoRedoService.ExecuteCommand(new UndoableActionCommand("Add new line", o =>
+                        var formerEndX = _currentLine.EndX;
+                        var formerEndY = _currentLine.EndY;
+                        UndoRedoService.ExecuteCommand(new UndoableActionCommand("Move line end", o =>
                         {
-                            children.Add(capturedCurrentLine);
-                            ws.FireInvalidateCanvas();
+                            capturedCurrentLine.EndX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X);
+                            capturedCurrentLine.EndY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y);
+                            Canvas.FireInvalidateCanvas();
                         }, o =>
                         {
-                            children.Remove(capturedCurrentLine);
-                            ws.FireInvalidateCanvas();
-                        }));
-
-                        _movementType = MovementType.End;
-                    }
-                    else
-                    {
-                        var m = _currentLine.Transforms.GetMatrix();
-                        m.Invert();
-                        m.TransformPoints(new[] { relativeEnd });
-
-                        // capture _currentLine for use in lambda
-                        var capturedCurrentLine = _currentLine;
-
-                        switch (_movementType)
+                            capturedCurrentLine.EndX = formerEndX;
+                            capturedCurrentLine.EndY = formerEndY;
+                            Canvas.FireInvalidateCanvas();
+                        }), hasOwnUndoRedoScope: false);
+                        break;
+                    case MovementHandle.Start:
+                        // capture variables for use in lambda
+                        var formerStartX = _currentLine.StartX;
+                        var formerStartY = _currentLine.StartY;
+                        UndoRedoService.ExecuteCommand(new UndoableActionCommand("Move line start", o =>
                         {
-                            case MovementType.End:
-                                // capture variables for use in lambda
-                                var formerEndX = _currentLine.EndX;
-                                var formerEndY = _currentLine.EndY;
-                                UndoRedoService.ExecuteCommand(new UndoableActionCommand("Move line end", o =>
-                                {
-                                    capturedCurrentLine.EndX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X);
-                                    capturedCurrentLine.EndY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y);
-                                    ws.FireInvalidateCanvas();
-                                }, o =>
-                                {
-                                    capturedCurrentLine.EndX = formerEndX;
-                                    capturedCurrentLine.EndY = formerEndY;
-                                    ws.FireInvalidateCanvas();
-                                }), hasOwnUndoRedoScope: false);
-                                break;
-                            case MovementType.Start:
-                                // capture variables for use in lambda
-                                var formerStartX = _currentLine.StartX;
-                                var formerStartY = _currentLine.StartY;
-                                UndoRedoService.ExecuteCommand(new UndoableActionCommand("Move line start", o =>
-                                {
-                                    capturedCurrentLine.StartX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X);
-                                    capturedCurrentLine.StartY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y);
-                                    ws.FireInvalidateCanvas();
-                                }, o =>
-                                {
-                                    capturedCurrentLine.StartX = formerStartX;
-                                    capturedCurrentLine.StartY = formerStartY;
-                                    ws.FireInvalidateCanvas();
-                                }), hasOwnUndoRedoScope: false);
-                                break;
-                            case MovementType.StartEnd:
-                                // TODO: move both start and end points
-                                break;
-                        }
-                    }
-
+                            capturedCurrentLine.StartX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X);
+                            capturedCurrentLine.StartY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y);
+                            Canvas.FireInvalidateCanvas();
+                        }, o =>
+                        {
+                            capturedCurrentLine.StartX = formerStartX;
+                            capturedCurrentLine.StartY = formerStartY;
+                            Canvas.FireInvalidateCanvas();
+                        }), hasOwnUndoRedoScope: false);
+                        break;
+                    case MovementHandle.StartEnd:
+                        // TODO: move both start and end points
+                        break;
                 }
             }
-
-            return Task.FromResult(true);
         }
 
         public override async Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
@@ -476,10 +366,101 @@ namespace Svg.Core.Tools
             }
         }
 
+        public override async Task Initialize(SvgDrawingCanvas ws)
+        {
+            await base.Initialize(ws);
+
+            IsActive = false;
+
+            SelectedMarkerStartId = MarkerStartIds.FirstOrDefault();
+            SelectedMarkerEndId = MarkerEndIds.FirstOrDefault();
+            SelectedLineStyle = LineStyles.FirstOrDefault();
+
+            Commands = new List<IToolCommand>
+            {
+                new ChangeLineStyleCommand(ws, this, "Line style")
+            };
+        }
+
+        #endregion
+
+        #region Private helpers
+
+        private void UnWatchDocument(SvgDocument svgDocument)
+        {
+            svgDocument.ChildRemoved -= SvgDocumentOnChildRemoved;
+        }
+
+        private void WatchDocument(SvgDocument svgDocument)
+        {
+            svgDocument.ChildRemoved -= SvgDocumentOnChildRemoved;
+            svgDocument.ChildRemoved += SvgDocumentOnChildRemoved;
+        }
+
+        private void SvgDocumentOnChildRemoved(object sender, ChildRemovedEventArgs args)
+        {
+            if (IsActive && args.RemovedChild == _currentLine)
+            {
+                _currentLine = null;
+                Canvas.FireInvalidateCanvas();
+            }
+        }
+
+        private void InitializeDefinitions(SvgDocument document)
+        {
+            var definitions = document.Children.OfType<SvgDefinitionList>().FirstOrDefault();
+            if (definitions == null)
+            {
+                definitions = new SvgDefinitionList();
+                document.Children.Insert(0, definitions);
+            }
+
+            foreach (var marker in Markers)
+            {
+                if (document.GetElementById(marker.ID) != null) continue;
+
+                definitions.Children.Add(marker);
+            }
+        }
+        
+        private SvgLine CreateLine(PointF relativeStart)
+        {
+            var line = new SvgLine
+            {
+                Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
+                Fill = SvgPaintServer.None,
+                StrokeWidth = new SvgUnit(SvgUnitType.Pixel, 2),
+                StartX = new SvgUnit(SvgUnitType.Pixel, relativeStart.X),
+                StartY = new SvgUnit(SvgUnitType.Pixel, relativeStart.Y),
+                EndX = new SvgUnit(SvgUnitType.Pixel, relativeStart.X),
+                EndY = new SvgUnit(SvgUnitType.Pixel, relativeStart.Y),
+                MarkerStart = CreateUriFromId(SelectedMarkerStartId),
+                MarkerEnd = CreateUriFromId(SelectedMarkerEndId)
+            };
+
+            if (SelectedLineStyle == "dashed")
+            {
+                line.StrokeDashArray = StrokeDashArray.Clone();
+            }
+
+            return line;
+        }
+
+        private void SelectLine(SvgLine line)
+        {
+            _currentLine = line;
+            Canvas.SelectedElements.Clear();
+            Canvas.SelectedElements.Add(line);
+        }
+
         private static Uri CreateUriFromId(string markerEndId, string exception = "none")
         {
             return markerEndId != exception ? new Uri($"url(#{markerEndId})", UriKind.Relative) : null;
         }
+
+        #endregion
+
+        #region Inner types
 
         /// <summary>
         /// This command changes the line style of selected items, or the global line style, if no items are selected.
@@ -571,6 +552,8 @@ namespace Svg.Core.Tools
             }
         }
 
-        private enum MovementType { None, Start, End, StartEnd }
+        private enum MovementHandle { None, Start, End, StartEnd }
+
+        #endregion
     }
 }

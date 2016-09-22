@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Svg.Core.Events;
+using Svg.Core.Gestures;
 using Svg.Core.Interfaces;
 using Svg.Core.UndoRedo;
+using Svg.Interfaces;
 using Svg.Transforms;
 
 namespace Svg.Core.Tools
@@ -16,11 +17,14 @@ namespace Svg.Core.Tools
 
     public class TextTool : UndoableToolBase
     {
+        #region Private fields
+
         // if user moves cursor, she does not want to add/edit text
-        private bool _moveEventWasRegistered;
         private ITool _activatedFrom;
         private bool _dialogShown;
         private ITextInputService TextInputService => Engine.Resolve<ITextInputService>();
+
+        #endregion
 
         #region Public properties
 
@@ -62,6 +66,8 @@ namespace Svg.Core.Tools
                 SelectedFontSize = FontSizes[Convert.ToInt32(selectedFontSizeIndex)];
         }
 
+        #region Overrides
+
         public override async Task Initialize(SvgDrawingCanvas ws)
         {
             await base.Initialize(ws);
@@ -69,243 +75,234 @@ namespace Svg.Core.Tools
             IsActive = false;
         }
 
-        public override async Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
+        protected override async Task OnTap(TapGesture tap)
         {
-            var p = @event as PointerEvent;
-            if (ws.ActiveTool.ToolType == ToolType.Select && p?.EventType == EventType.PointerUp)
+            await base.OnTap(tap);
+
+            if (!IsActive) return;
+
+            // if there is text below the pointer, edit it
+            var svgText = Canvas.GetElementsUnderPointer<SvgTextBase>(tap.Position, 20).FirstOrDefault();
+
+            if (svgText != null)
             {
-                var pointerDiff = p.Pointer1Position - p.Pointer1Down;
-                var pointerDistX = Math.Abs(pointerDiff.X);
-                var pointerDistY = Math.Abs(pointerDiff.Y);
-                // determine if active by searching through selection and determining whether pointer was put on selected element
-                // if there are selected elements and pointer was put down on one of them, activate tool, otherwise deactivate
-                var selectedTextBase = ws.GetElementsUnderPointer<SvgTextBase>(p.Pointer1Position, 20).FirstOrDefault();
-                if (pointerDistX < 20.0f && pointerDistY < 20.0f &&                         // pointer didn't move
-                    ws.SelectedElements.Count == 1 &&                                       // and there is just 1 element selected
-                    selectedTextBase != null && selectedTextBase.ParentsAndSelf.Contains(ws.SelectedElements.First()))  // and the selected element is a parent of the text element
-                {
-                    // save the active tool for restoring later
-                    _activatedFrom = ws.ActiveTool;
-                    ws.ActiveTool = this;
-                    ws.FireInvalidateCanvas();
-                }
+                // joining the spans as newlines
+                var text = !string.IsNullOrWhiteSpace(svgText.Text)
+                    ? svgText.Text
+                    : string.Join("\n", svgText.Children.OfType<SvgTextSpan>().Select(x => x.Text));
+
+                var txtProperties = await GetTextPropertiesFromUserInput("Edit text", text, Array.IndexOf(FontSizes, (int) Math.Round(svgText.FontSize, 0)));
+                if (txtProperties == null) return;
+
+                var txt = txtProperties.Text;
+                var fontSize = FontSizes[txtProperties.FontSizeIndex];
+                var lineHeight = txtProperties.LineHeight;
+
+                EditSvgText(svgText, txt, fontSize, lineHeight);
+            }
+            // else add new text   
+            else
+            {
+                var txtProperties = await GetTextPropertiesFromUserInput("Add text", null, Array.IndexOf(FontSizes, SelectedFontSize));
+                if (txtProperties == null) return;
+
+                var txt = txtProperties.Text;
+                var fontSize = FontSizes[txtProperties.FontSizeIndex];
+                var lineHeight = txtProperties.LineHeight;
+
+                CreateSvgText(txt, fontSize, lineHeight, tap.Position);
             }
 
-            if (!IsActive)
-                return;
-
-            // if user moves cursor, she does not want to add/edit text
-            var me = @event as MoveEvent;
-            if (me != null)
+            if (_activatedFrom != null)
             {
-                // if user moves with thumb we do not want to add text on pointer-up
-                var isMove = Math.Abs(me.AbsoluteDelta.X) + Math.Abs(me.AbsoluteDelta.Y) > 10d;
-                if (isMove)
-                    _moveEventWasRegistered = true;
-            }
-
-            var pe = @event as PointerEvent;
-            if (pe != null && pe.EventType == EventType.PointerDown)
-            {
-                _moveEventWasRegistered = false;
-            }
-            else if (pe != null && pe.EventType == EventType.PointerUp)
-            {
-                if (_moveEventWasRegistered)
-                {
-                    return;
-                }
-
-                var pointerDiff = p.Pointer1Position - p.Pointer1Down;
-                var pointerDistX = Math.Abs(pointerDiff.X);
-                var pointerDistY = Math.Abs(pointerDiff.Y);
-
-                // if Point-Down and Point-Up are merely the same
-                if (pointerDistX < 20.0f && pointerDistY < 20.0f)
-                {
-                    // if there is text below the pointer, edit it
-                    var svgText = ws.GetElementsUnderPointer<SvgTextBase>(pe.Pointer1Position, 20).FirstOrDefault();
-
-                    if (svgText != null)
-                    {
-                        // primitive handling of text spans
-                        //var span = e.Children.OfType<SvgTextSpan>().FirstOrDefault();
-                        //if (span != null)
-                        //    e = span;
-
-                        // joining the spans as newlines
-                        var text = !string.IsNullOrWhiteSpace(svgText.Text) ? svgText.Text : string.Join("\n", svgText.Children.OfType<SvgTextSpan>().Select(x => x.Text));
-
-                        if (_dialogShown) return;
-                        _dialogShown = true;
-                        var txtProperties = await TextInputService.GetUserInput("Edit text", text, FontSizeNames, Array.IndexOf(FontSizes, (int) Math.Round(svgText.FontSize, 0)));
-                        _dialogShown = false;
-                        var txt = txtProperties.Text;
-                        var fontSize = FontSizes[txtProperties.FontSizeIndex];
-                        var lineHeight = txtProperties.LineHeight;
-
-                        // make sure there is at least empty text in it so we actually still have a bounding box!!
-                        if (string.IsNullOrEmpty(txt?.Trim()))
-                            txt = "  ";
-
-                        // if text was removed, and parent was document, remove element
-                        // if parent was not the document, then this would be a text within another group and should not be removed
-                        if (string.IsNullOrWhiteSpace(txt) && svgText.Parent is SvgDocument)
-                        {
-                            var parent = svgText.Parent;
-                            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Remove text", o =>
-                            {
-                                parent.Children.Remove(svgText);
-                                Canvas.FireInvalidateCanvas();
-                            }, o =>
-                            {
-                                parent.Children.Add(svgText);
-                                Canvas.FireInvalidateCanvas();
-                            }));
-                        }
-                        else if (text != txt || Math.Abs(svgText.FontSize.Value - fontSize) > 0.01f)
-                        {
-                            var formerText = svgText.Text;
-                            var formerChildren = svgText.Children.OfType<SvgTextSpan>().Select(x =>
-                                new SvgTextSpan
-                                {
-                                    Nodes = { new SvgContentNode { Content = x.Text } },
-                                    X = x.X,
-                                    Y = x.Y
-                                }).ToArray();
-                            var formerFontSize = svgText.FontSize;
-                            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Edit text", o =>
-                            {
-                                var lines = txt.Split('\n');
-                                // if we have more lines, we need to put each in a different span
-                                if (lines.Length > 1)
-                                {
-                                    svgText.Text = null;
-                                    var origin = svgText.Children.OfType<SvgTextSpan>().FirstOrDefault() ?? svgText;
-                                    var spans = lines.Select((t, i) =>
-                                        new SvgTextSpan
-                                        {
-                                            Nodes = { new SvgContentNode { Content = t } },
-                                            X = origin.X,
-                                            Y =
-                                                new SvgUnitCollection
-                                                {
-                                                    origin.Y.FirstOrDefault() + fontSize * lineHeight * i
-                                                },
-                                            TextAnchor = origin.TextAnchor,
-                                            SpaceHandling = origin.SpaceHandling
-                                        });
-
-                                    // add spans as children
-                                    svgText.Children.Clear();
-                                    foreach (var span in spans)
-                                    {
-                                        svgText.Children.Add(span);
-                                    }
-                                }
-                                // else we can just set the text accordingly
-                                else
-                                {
-                                    var span = svgText.Children.OfType<SvgTextSpan>().FirstOrDefault();
-                                    if (span != null)
-                                    {
-                                        span.Text = lines.First();
-                                        span.FontSize = new SvgUnit(SvgUnitType.Pixel, fontSize);
-                                        svgText.Children.Clear();
-                                        svgText.Children.Add(span);
-                                    }
-                                    else
-                                    {
-                                        svgText.Text = lines.First();
-                                    }
-                                }
-                                svgText.FontSize = new SvgUnit(SvgUnitType.Pixel, fontSize);
-                                Canvas.FireInvalidateCanvas();
-                            }, o =>
-                            {
-                                svgText.Text = formerText;
-                                svgText.Children.Clear();
-                                foreach (var child in formerChildren)
-                                {
-                                    svgText.Children.Add(child);
-                                }
-                                svgText.FontSize = formerFontSize;
-                                Canvas.FireInvalidateCanvas();
-                            }));
-                        }
-                    }
-                    // else add new text   
-                    else
-                    {
-                        if (_dialogShown) return;
-                        _dialogShown = true;
-                        var txtProperties = await TextInputService.GetUserInput("Add text", null, FontSizeNames, Array.IndexOf(FontSizes, SelectedFontSize));
-                        _dialogShown = false;
-                        var txt = txtProperties.Text;
-                        var fontSize = FontSizes[txtProperties.FontSizeIndex];
-                        var lineHeight = txtProperties.LineHeight;
-
-                        // only add if user really entered text.
-                        if (!string.IsNullOrWhiteSpace(txt))
-                        {
-                            svgText = new SvgText
-                            {
-                                FontSize = new SvgUnit(SvgUnitType.Pixel, fontSize),
-                                Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
-                                Fill = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0))
-                            };
-
-                            var lines = txt.Split('\n');
-                            if (lines.Length > 1)
-                            {
-                                var spans = lines.
-                                    Select(
-                                        (t, i) =>
-                                            new SvgTextSpan
-                                            {
-                                                Nodes = { new SvgContentNode { Content = t } },
-                                                X = new SvgUnitCollection { 0 },
-                                                Y = new SvgUnitCollection { fontSize * lineHeight * i }
-                                            });
-                                foreach (var span in spans)
-                                {
-                                    svgText.Children.Add(span);
-                                }
-                            }
-                            else
-                            {
-                                svgText.Text = lines.First();
-                            }
-
-                            var relativePointer = ws.ScreenToCanvas(pe.Pointer1Position);
-                            var childBounds = svgText.Bounds;
-                            var halfRelChildWidth = childBounds.Width / 2;
-                            var halfRelChildHeight = childBounds.Height / 2;
-
-                            var x = relativePointer.X - halfRelChildWidth;
-                            var y = relativePointer.Y - halfRelChildHeight;
-                            svgText.Transforms.Add(new SvgTranslate(x, y));
-
-                            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Add text", o =>
-                            {
-                                ws.Document.Children.Add(svgText);
-                                ws.FireInvalidateCanvas();
-                            }, o =>
-                            {
-                                ws.Document.Children.Remove(svgText);
-                                ws.FireInvalidateCanvas();
-                            }));
-                        }
-                    }
-
-                    if (_activatedFrom != null)
-                    {
-                        ws.ActiveTool = _activatedFrom;
-                        _activatedFrom = null;
-                    }
-                }
+                Canvas.ActiveTool = _activatedFrom;
+                _activatedFrom = null;
             }
         }
+
+        protected override async Task OnLongPress(LongPressGesture longPress)
+        {
+            await base.OnLongPress(longPress);
+
+            if (Canvas.ActiveTool.ToolType != ToolType.Select) return;
+
+            // determine if pointer was put down on a text
+            var selectedTextBase = Canvas.GetElementsUnderPointer<SvgTextBase>(longPress.Position, 20).FirstOrDefault();
+            if (selectedTextBase != null)
+            {
+                // save the active tool for restoring later
+                _activatedFrom = Canvas.ActiveTool;
+                Canvas.ActiveTool = this;
+                Canvas.FireInvalidateCanvas();
+            }
+        }
+
+        #endregion
+
+        #region Private helpers
+
+        private async Task<TextProperties> GetTextPropertiesFromUserInput(string title, string text, int index)
+        {
+            if (_dialogShown) return null;
+            _dialogShown = true;
+            var txtProperties =
+                await TextInputService.GetUserInput(title, text, FontSizeNames, index);
+            _dialogShown = false;
+            return txtProperties;
+        }
+
+        private void CreateSvgText(string txt, float fontSize, float lineHeight, PointF position)
+        {
+            // only add if user really entered text.
+            if (string.IsNullOrWhiteSpace(txt)) return;
+
+            var svgText = new SvgText
+            {
+                FontSize = new SvgUnit(SvgUnitType.Pixel, fontSize),
+                Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
+                Fill = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0))
+            };
+
+            var lines = txt.Split('\n');
+            if (lines.Length > 1)
+            {
+                var spans = lines.
+                    Select(
+                        (t, i) =>
+                            new SvgTextSpan
+                            {
+                                Nodes = { new SvgContentNode { Content = t } },
+                                X = new SvgUnitCollection { 0 },
+                                Y = new SvgUnitCollection { fontSize * lineHeight * i }
+                            });
+                foreach (var span in spans)
+                {
+                    svgText.Children.Add(span);
+                }
+            }
+            else
+            {
+                svgText.Text = lines.First();
+            }
+
+            var relativePosition = Canvas.ScreenToCanvas(position);
+            var childBounds = svgText.Bounds;
+            var halfRelChildWidth = childBounds.Width / 2;
+            var halfRelChildHeight = childBounds.Height / 2;
+
+            var x = relativePosition.X - halfRelChildWidth;
+            var y = relativePosition.Y - halfRelChildHeight;
+            svgText.Transforms.Add(new SvgTranslate(x, y));
+
+            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Add text", o =>
+            {
+                Canvas.Document.Children.Add(svgText);
+                Canvas.FireInvalidateCanvas();
+            }, o =>
+            {
+                Canvas.Document.Children.Remove(svgText);
+                Canvas.FireInvalidateCanvas();
+            }));
+        }
+
+        private void EditSvgText(SvgTextBase svgText, string text, float fontSize, float lineHeight)
+        {
+            // make sure there is at least empty text in it so we actually still have a bounding box!!
+            if (string.IsNullOrEmpty(text?.Trim()))
+                text = "  ";
+
+            // if text was removed, and parent was document, remove element
+            // if parent was not the document, then this would be a text within another group and should not be removed
+            if (string.IsNullOrWhiteSpace(text) && svgText.Parent is SvgDocument)
+            {
+                var parent = svgText.Parent;
+                UndoRedoService.ExecuteCommand(new UndoableActionCommand("Remove text", o =>
+                {
+                    parent.Children.Remove(svgText);
+                    Canvas.FireInvalidateCanvas();
+                }, o =>
+                {
+                    parent.Children.Add(svgText);
+                    Canvas.FireInvalidateCanvas();
+                }));
+
+                return;
+            }
+
+            if (text == svgText.Text && Math.Abs(svgText.FontSize.Value - fontSize) < 0.1f) return;
+
+            var formerText = svgText.Text;
+            var formerChildren = svgText.Children.OfType<SvgTextSpan>().Select(x =>
+                new SvgTextSpan
+                {
+                    Nodes = { new SvgContentNode { Content = x.Text } },
+                    X = x.X,
+                    Y = x.Y
+                }).ToArray();
+            var formerFontSize = svgText.FontSize;
+            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Edit text", o =>
+            {
+                var lines = text.Split('\n');
+                // if we have more lines, we need to put each in a different span
+                if (lines.Length > 1)
+                {
+                    svgText.Text = null;
+                    var origin = svgText.Children.OfType<SvgTextSpan>().FirstOrDefault() ?? svgText;
+                    var spans = lines.Select((t, i) =>
+                        new SvgTextSpan
+                        {
+                            Nodes = { new SvgContentNode { Content = t } },
+                            X = origin.X,
+                            Y =
+                                new SvgUnitCollection
+                                {
+                                        origin.Y.FirstOrDefault() + fontSize * lineHeight * i
+                                },
+                            TextAnchor = origin.TextAnchor,
+                            SpaceHandling = origin.SpaceHandling
+                        });
+
+                    // add spans as children
+                    svgText.Children.Clear();
+                    foreach (var span in spans)
+                    {
+                        svgText.Children.Add(span);
+                    }
+                }
+                // else we can just set the text accordingly
+                else
+                {
+                    var span = svgText.Children.OfType<SvgTextSpan>().FirstOrDefault();
+                    if (span != null)
+                    {
+                        span.Text = lines.First();
+                        span.FontSize = new SvgUnit(SvgUnitType.Pixel, fontSize);
+                        svgText.Children.Clear();
+                        svgText.Children.Add(span);
+                    }
+                    else
+                    {
+                        svgText.Text = lines.First();
+                    }
+                }
+                svgText.FontSize = new SvgUnit(SvgUnitType.Pixel, fontSize);
+                Canvas.FireInvalidateCanvas();
+            }, o =>
+            {
+                svgText.Text = formerText;
+                svgText.Children.Clear();
+                foreach (var child in formerChildren)
+                {
+                    svgText.Children.Add(child);
+                }
+                svgText.FontSize = formerFontSize;
+                Canvas.FireInvalidateCanvas();
+            }));
+        }
+
+        #endregion
+
+        #region Inner types
 
         public class TextProperties
         {
@@ -313,6 +310,8 @@ namespace Svg.Core.Tools
             public int FontSizeIndex { get; set; }
             public float LineHeight { get; set; } = 1.25f;
         }
+
+        #endregion
     }
 
 }

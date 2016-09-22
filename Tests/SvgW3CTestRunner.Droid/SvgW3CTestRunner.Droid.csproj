@@ -1534,6 +1534,7 @@
     <AndroidAsset Include="Assets\images\PngSuite\pngsuite.doc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

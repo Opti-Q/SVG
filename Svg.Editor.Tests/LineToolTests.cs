@@ -1,17 +1,16 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Svg.Core.Events;
 using Svg.Core.Tools;
 using Svg.Interfaces;
-using Svg.Transforms;
 
 namespace Svg.Editor.Tests
 {
     [TestFixture]
     public class LineToolTests : SvgDrawingCanvasTestBase
     {
+
         [Test]
         public async Task IfUserTapsCanvas_AndDoesNotMove_NoLineIsDrawn()
         {
