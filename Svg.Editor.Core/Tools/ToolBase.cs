@@ -36,6 +36,15 @@ namespace Svg.Core.Tools
         public virtual int InputOrder => 500;
         public virtual int GestureOrder => 500;
 
+        /// <summary>
+        /// States if the <see cref="OnDrag"/> method should receive <see cref="DragGesture.Enter"/> gestures.
+        /// </summary>
+        protected bool HandleDragEnter { get; set; }
+        /// <summary>
+        /// States if the <see cref="OnDrag"/> method should receive <see cref="DragGesture.Exit"/> gestures.
+        /// </summary>
+        protected bool HandleDragExit { get; set; }
+
         public string IconName { get; set; }
 
         public virtual Task Initialize(SvgDrawingCanvas ws)
@@ -68,6 +77,9 @@ namespace Svg.Core.Tools
                     await OnLongPress((LongPressGesture) gesture);
                     break;
                 case GestureType.Drag:
+                    var drag = (DragGesture) gesture;
+                    if (drag.State == DragState.Enter && !HandleDragEnter) return;
+                    if (drag.State == DragState.Exit && !HandleDragExit) return;
                     await OnDrag((DragGesture) gesture);
                     break;
             }

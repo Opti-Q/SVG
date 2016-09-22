@@ -19,10 +19,8 @@ namespace Svg.Core.Tools
     {
         #region Private fields
 
-        // if user moves cursor, she does not want to add/edit text
-        private ITool _activatedFrom;
         private bool _dialogShown;
-        private ITextInputService TextInputService => Engine.Resolve<ITextInputService>();
+        private static ITextInputService TextInputService => Engine.Resolve<ITextInputService>();
 
         #endregion
 
@@ -86,19 +84,7 @@ namespace Svg.Core.Tools
 
             if (svgText != null)
             {
-                // joining the spans as newlines
-                var text = !string.IsNullOrWhiteSpace(svgText.Text)
-                    ? svgText.Text
-                    : string.Join("\n", svgText.Children.OfType<SvgTextSpan>().Select(x => x.Text));
-
-                var txtProperties = await GetTextPropertiesFromUserInput("Edit text", text, Array.IndexOf(FontSizes, (int) Math.Round(svgText.FontSize, 0)));
-                if (txtProperties == null) return;
-
-                var txt = txtProperties.Text;
-                var fontSize = FontSizes[txtProperties.FontSizeIndex];
-                var lineHeight = txtProperties.LineHeight;
-
-                EditSvgText(svgText, txt, fontSize, lineHeight);
+                await ChangeText(svgText);
             }
             // else add new text   
             else
@@ -112,12 +98,6 @@ namespace Svg.Core.Tools
 
                 CreateSvgText(txt, fontSize, lineHeight, tap.Position);
             }
-
-            if (_activatedFrom != null)
-            {
-                Canvas.ActiveTool = _activatedFrom;
-                _activatedFrom = null;
-            }
         }
 
         protected override async Task OnLongPress(LongPressGesture longPress)
@@ -127,13 +107,10 @@ namespace Svg.Core.Tools
             if (Canvas.ActiveTool.ToolType != ToolType.Select) return;
 
             // determine if pointer was put down on a text
-            var selectedTextBase = Canvas.GetElementsUnderPointer<SvgTextBase>(longPress.Position, 20).FirstOrDefault();
-            if (selectedTextBase != null)
+            var svgText = Canvas.GetElementsUnderPointer<SvgTextBase>(longPress.Position, 20).FirstOrDefault();
+            if (svgText != null)
             {
-                // save the active tool for restoring later
-                _activatedFrom = Canvas.ActiveTool;
-                Canvas.ActiveTool = this;
-                Canvas.FireInvalidateCanvas();
+                await ChangeText(svgText);
             }
         }
 
@@ -203,6 +180,26 @@ namespace Svg.Core.Tools
                 Canvas.Document.Children.Remove(svgText);
                 Canvas.FireInvalidateCanvas();
             }));
+        }
+
+        private async Task ChangeText(SvgTextBase svgText)
+        {
+            // joining the spans as newlines
+            var text = !string.IsNullOrWhiteSpace(svgText.Text)
+                ? svgText.Text
+                : string.Join("\n", svgText.Children.OfType<SvgTextSpan>().Select(x => x.Text));
+
+            var txtProperties =
+                await
+                    GetTextPropertiesFromUserInput("Edit text", text,
+                        Array.IndexOf(FontSizes, (int) Math.Round(svgText.FontSize, 0)));
+            if (txtProperties == null) return;
+
+            var txt = txtProperties.Text;
+            var fontSize = FontSizes[txtProperties.FontSizeIndex];
+            var lineHeight = txtProperties.LineHeight;
+
+            EditSvgText(svgText, txt, fontSize, lineHeight);
         }
 
         private void EditSvgText(SvgTextBase svgText, string text, float fontSize, float lineHeight)

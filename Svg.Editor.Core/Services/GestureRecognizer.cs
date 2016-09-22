@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reactive;
 using System.Reactive.Concurrency;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
@@ -84,32 +87,38 @@ namespace Svg.Core.Services
             // drag gesture
             _subscriptions["drag"] = interactionWindows.Subscribe(window =>
             {
-                window
-                    .Where(pe => pe.EventType == EventType.Move && pe.PointerCount == 1)
-                    .DefaultIfEmpty(new PointerEvent(EventType.Cancel, PointF.Empty, PointF.Empty, PointF.Empty, 0))
-                    .Select(pe =>
-                    {
-                        if (pe.EventType == EventType.Cancel) throw new Exception("Canceled drag.");
-                        return pe;
-                    })
-                    .Subscribe
-                    (
-                        pe =>
+                var dragLifetime = new Subject<Unit>();
+                dragLifetime.Subscribe(_ => { }, Debugger.Break);
+                Observable.Using(() => window
+                        .Where(pe => pe.EventType == EventType.Move && pe.PointerCount == 1)
+                        .DefaultIfEmpty(new PointerEvent(EventType.Cancel, PointF.Empty, PointF.Empty, PointF.Empty, 0))
+                        .Select((pe, i) =>
                         {
-                            var deltaPoint = pe.Pointer1Position - pe.Pointer1Down;
-                            var delta = SizeF.Create(deltaPoint.X, deltaPoint.Y);
-
-                            // selection onyl counts if width and height are not too small
-                            var dist = Math.Sqrt(Math.Pow(delta.Width, 2) + Math.Pow(delta.Height, 2));
-
-                            if (dist > DragMinDistance)
+                            if (i == 0 && pe.EventType != EventType.Cancel) _recognizedGestures.OnNext(DragGesture.Enter(pe.Pointer1Down));
+                            if (pe.EventType == EventType.Cancel) dragLifetime.OnCompleted();
+                            return pe;
+                        })
+                        .Subscribe
+                        (
+                            pe =>
                             {
-                                _recognizedGestures.OnNext(new DragGesture(pe.Pointer1Position, pe.Pointer1Down, delta, dist));
-                            }
-                        },
-                        ex => { },
-                        () => _recognizedGestures.OnNext(DragGesture.Exit)
-                    );
+                                var deltaPoint = pe.Pointer1Position - pe.Pointer1Down;
+                                var delta = SizeF.Create(deltaPoint.X, deltaPoint.Y);
+
+                                // selection only counts if width and height are not too small
+                                var dist = Math.Sqrt(Math.Pow(delta.Width, 2) + Math.Pow(delta.Height, 2));
+
+                                if (dist > DragMinDistance)
+                                {
+                                    _recognizedGestures.OnNext(new DragGesture(pe.Pointer1Position, pe.Pointer1Down,
+                                        delta, dist));
+                                }
+                            },
+                            ex => { },
+                            () => _recognizedGestures.OnNext(DragGesture.Exit)
+                        ),
+                    _ => dragLifetime)
+                    .Subscribe();
             });
         }
 

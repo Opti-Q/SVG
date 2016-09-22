@@ -139,6 +139,7 @@ namespace Svg.Core.Tools
             IconName = "ic_mode_edit_white_48dp.png";
             ToolUsage = ToolUsage.Explicit;
             ToolType = ToolType.Create;
+            HandleDragExit = true;
 
             #region Init markers
 
@@ -255,7 +256,7 @@ namespace Svg.Core.Tools
 
             if (!IsActive) return;
 
-            if (drag == DragGesture.Exit)
+            if (drag.State == DragState.Exit)
             {
                 _movementHandle = MovementHandle.None;
                 return;

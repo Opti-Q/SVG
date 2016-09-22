@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Svg.Core.Events;
+using Svg.Core.Gestures;
 using Svg.Core.Interfaces;
 using Svg.Core.UndoRedo;
 using Svg.Interfaces;
@@ -10,15 +10,22 @@ namespace Svg.Core.Tools
 {
     public class MoveTool : UndoableToolBase
     {
+        #region Private fields
+
         private readonly Dictionary<object, PointF> _offsets = new Dictionary<object, PointF>();
         private readonly Dictionary<object, PointF> _translates = new Dictionary<object, PointF>();
-        private bool _implicitlyActivated;
         private ITool _activatedFrom;
+
+        #endregion
 
         public MoveTool(IUndoRedoService undoRedoService) : base("Move", undoRedoService)
         {
             ToolType = ToolType.Modify;
+            HandleDragEnter = true;
+            HandleDragExit = true;
         }
+
+        #region Overrides
 
         public override int InputOrder => 200; // must be before pantool as it decides whether or not it is active based on selection
 
@@ -29,103 +36,90 @@ namespace Svg.Core.Tools
             IsActive = false;
         }
 
-        public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
+        protected override async Task OnDrag(DragGesture drag)
         {
-            var p = @event as PointerEvent;
-            if (p != null && p.PointerCount == 1)
+            await base.OnDrag(drag);
+
+            if (drag.State == DragState.Enter)
             {
-                if (p.EventType == EventType.PointerDown)
+                if (Canvas.SelectedElements.Any() &&
+                    Canvas.GetElementsUnderPointer<SvgVisualElement>(drag.Start)
+                        .Any(eup => Canvas.SelectedElements.Contains(eup)))
                 {
-                    // determine if active by searching thorough selection and determining whether pointer was put on selected element
-                    // if there are selected elements and pointer was put down on one of them, activate tool, otherwhise deactivate
-                    if (ws.SelectedElements.Count != 0 &&
-                        ws.GetElementsUnderPointer<SvgVisualElement>(p.Pointer1Position).Any(eup => ws.SelectedElements.Contains(eup)))
-                    {
-                        // move tool is only active, if SelectionTool is the "ActiveTool"
-                        // otherwise we'd move and pan at the same time, yielding confusing results... :)
-                        if (ws.ActiveTool.ToolType == ToolType.Select)
-                        {
-                            // save the active tool for restoring later
-                            _activatedFrom = ws.ActiveTool;
-                            ws.ActiveTool = this;
-                            _implicitlyActivated = true;
-                        }
-                    }
-                    else
-                    {
-                        IsActive = false;
-                    }
+                    // move tool is only active, if SelectionTool is the "ActiveTool"
+                    // otherwise we'd move and pan at the same time, yielding confusing results... :)
+                    if (Canvas.ActiveTool.ToolType != ToolType.Select) return;
+
+                    // save the active tool for restoring later
+                    _activatedFrom = Canvas.ActiveTool;
+                    Canvas.ActiveTool = this;
                 }
-                // clear offsets 
-                else if (p.EventType == EventType.Cancel || p.EventType == EventType.PointerUp)
+                else
                 {
-                    _offsets.Clear();
-                    _translates.Clear();
-
-                    if (_implicitlyActivated)
-                    {
-                        _implicitlyActivated = false;
-                        ws.ActiveTool = _activatedFrom;
-                    }
-
                     IsActive = false;
                 }
+
+                return;
             }
 
-            // skip moving if inactive
-            if (!IsActive)
-                return Task.FromResult(true);
+            if (!IsActive) return;
 
-
-            var e = @event as MoveEvent;
-
-            if (e == null)
+            if (drag.State == DragState.Exit)
             {
                 _offsets.Clear();
                 _translates.Clear();
-            }
-            else if (e.PointerCount == 1)
-            {
-                // if there is no selection, we just skip
-                if (ws.SelectedElements.Any())
+
+                if (_activatedFrom != null)
                 {
-
-                    // check if offsets were cleared, that means we started a new move operation
-                    if (!_offsets.Any())
-                    {
-                        // when we start a move operation, we execute an empty undoable command first,
-                        // so the other ones will be added to this command as on undo step
-                        UndoRedoService.ExecuteCommand(new UndoableActionCommand("Move operation", o => { Canvas.FireInvalidateCanvas(); }, o => { Canvas.FireInvalidateCanvas(); }));
-                    }
-
-                    var absoluteDeltaX = e.AbsoluteDelta.X / ws.ZoomFactor;
-                    var absoluteDeltaY = e.AbsoluteDelta.Y / ws.ZoomFactor;
-
-                    // add translation to every element
-                    foreach (var element in ws.SelectedElements)
-                    {
-                        PointF previousDelta;
-                        if (!_offsets.TryGetValue(element, out previousDelta))
-                        {
-                            previousDelta = PointF.Create(0f, 0f);
-                        }
-
-                        var relativeDeltaX = absoluteDeltaX - previousDelta.X;
-                        var relativeDeltaY = absoluteDeltaY - previousDelta.Y;
-
-                        previousDelta.X = absoluteDeltaX;
-                        previousDelta.Y = absoluteDeltaY;
-                        _offsets[element] = previousDelta;
-
-                        AddTranslate(element, relativeDeltaX, relativeDeltaY);
-                    }
-
-                    ws.FireInvalidateCanvas();
+                    Canvas.ActiveTool = _activatedFrom;
                 }
+
+                IsActive = false;
+
+                return;
             }
 
-            return Task.FromResult(true);
+            // if there is no selection, we just skip
+            if (Canvas.SelectedElements.Any())
+            {
+
+                // check if offsets were cleared, that means we started a new move operation
+                if (!_offsets.Any())
+                {
+                    // when we start a move operation, we execute an empty undoable command first,
+                    // so the other ones will be added to this command as on undo step
+                    UndoRedoService.ExecuteCommand(new UndoableActionCommand("Move operation", o => { Canvas.FireInvalidateCanvas(); }, o => { Canvas.FireInvalidateCanvas(); }));
+                }
+
+                var absoluteDeltaX = drag.Delta.Width / Canvas.ZoomFactor;
+                var absoluteDeltaY = drag.Delta.Height / Canvas.ZoomFactor;
+
+                // add translation to every element
+                foreach (var element in Canvas.SelectedElements)
+                {
+                    PointF previousDelta;
+                    if (!_offsets.TryGetValue(element, out previousDelta))
+                    {
+                        previousDelta = PointF.Create(0f, 0f);
+                    }
+
+                    var relativeDeltaX = absoluteDeltaX - previousDelta.X;
+                    var relativeDeltaY = absoluteDeltaY - previousDelta.Y;
+
+                    previousDelta.X = absoluteDeltaX;
+                    previousDelta.Y = absoluteDeltaY;
+                    _offsets[element] = previousDelta;
+
+                    AddTranslate(element, relativeDeltaX, relativeDeltaY);
+                }
+
+                Canvas.FireInvalidateCanvas();
+            }
         }
+
+        #endregion
+
+        #region Private helpers
 
         private void AddTranslate(SvgVisualElement element, float deltaX, float deltaY)
         {
@@ -157,5 +151,7 @@ namespace Svg.Core.Tools
                 element.SetTransformationMatrix(formerM);
             }), hasOwnUndoRedoScope: false);
         }
+
+        #endregion
     }
 }

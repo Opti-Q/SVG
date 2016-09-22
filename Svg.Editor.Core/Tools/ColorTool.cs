@@ -15,14 +15,14 @@ namespace Svg.Core.Tools
 
     public class ColorTool : UndoableToolBase
     {
+        #region Private fields
+
         private static IColorInputService ColorInputServiceProxy => Engine.Resolve<IColorInputService>();
         private Color _defaultSelectedColor;
 
-        public ColorTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Color", properties, undoRedoService)
-        {
-            IconName = "svg/ic_format_color_fill_white_48px.svg";
-            ToolType = ToolType.Modify;
-        }
+        #endregion
+
+        #region Public properties
 
         public string[] SelectableColors
         {
@@ -63,6 +63,16 @@ namespace Svg.Core.Tools
             set { _defaultSelectedColor = value; }
         }
 
+        #endregion
+
+        public ColorTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Color", properties, undoRedoService)
+        {
+            IconName = "svg/ic_format_color_fill_white_48px.svg";
+            ToolType = ToolType.Modify;
+        }
+
+        #region Overrides
+
         public override async Task Initialize(SvgDrawingCanvas ws)
         {
             await base.Initialize(ws);
@@ -91,6 +101,17 @@ namespace Svg.Core.Tools
             // initialize with callbacks
             WatchDocument(ws.Document);
         }
+
+        public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
+        {
+            // add watch for global colorizing
+            WatchDocument(newDocument);
+            UnWatchDocument(oldDocument);
+        }
+
+        #endregion
+
+        #region Private helpers
 
         private static string StringifyColor(Color color)
         {
@@ -137,13 +158,6 @@ namespace Svg.Core.Tools
             //}
         }
 
-        public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
-        {
-            // add watch for global colorizing
-            WatchDocument(newDocument);
-            UnWatchDocument(oldDocument);
-        }
-
         /// <summary>
         /// Subscribes to the documentss "Add/RemoveChild" handlers.
         /// </summary>
@@ -169,6 +183,10 @@ namespace Svg.Core.Tools
         {
             ColorizeElement(e.NewChild, SelectedColor);
         }
+
+        #endregion
+
+        #region Inner types
 
         /// <summary>
         /// This command changes the color of selected items, or the global selected color, if no items are selected.
@@ -228,5 +246,7 @@ namespace Svg.Core.Tools
                 set { }
             }
         }
+
+        #endregion
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Svg.Core.Events;
 using Svg.Core.Gestures;
 using Svg.Core.Interfaces;
 using Svg.Core.UndoRedo;
@@ -51,6 +50,7 @@ namespace Svg.Core.Tools
             IconName = SelectIconName;
             ToolUsage = ToolUsage.Explicit;
             ToolType = ToolType.Select;
+            HandleDragExit = true;
         }
 
         #region Overrides
@@ -104,10 +104,11 @@ namespace Svg.Core.Tools
 
             if (!IsActive) return;
 
-            if (drag == DragGesture.Exit)
+            if (drag.State == DragState.Exit)
             {
                 // select elements under rectangle
-                SelectElementsUnder(_selectionRectangle, Canvas, SelectionType.Contain);
+                if (_selectionRectangle != null)
+                    SelectElementsUnder(_selectionRectangle, Canvas, SelectionType.Contain);
 
                 Reset();
                 Canvas.FireInvalidateCanvas();
