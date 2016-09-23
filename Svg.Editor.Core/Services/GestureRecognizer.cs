@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reactive;
 using System.Reactive.Concurrency;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading;
 using Svg.Core.Events;
 using Svg.Core.Gestures;
 using Svg.Interfaces;
@@ -37,44 +35,41 @@ namespace Svg.Core.Services
             var interactionWindows = pointerEvents.Window(enterEvents, _ => exitEvents);
 
             // tap gesture
-            _subscriptions["tap"] = interactionWindows.Subscribe(window =>
+            _subscriptions["tap"] = interactionWindows
+            .Select(window =>
             {
-                window.Timeout(TimeSpan.FromSeconds(TapTimeout), _backgroundScheduler)
-                .Aggregate
-                (
-                    (acc, current) =>
-                    {
-                        var delta = current.Pointer1Position - current.Pointer1Down;
-                        if (current.EventType != EventType.PointerDown
-                                && Math.Abs(delta.X) > TouchThreshold && Math.Abs(delta.Y) > TouchThreshold)
-                            throw new Exception("Moved too far.");
-                        return current;
-                    }
-                )
-                // TODO: add throttle for double tap
-                .Subscribe
-                (
-                    pe => _recognizedGestures.OnNext(new TapGesture(pe.Pointer1Position)),
-                    ex => { }
-                );
-            });
+                return window
+                .Timeout(TimeSpan.FromSeconds(TapTimeout), _backgroundScheduler)
+                .Aggregate((acc, current) =>
+                {
+                    var delta = current.Pointer1Position - current.Pointer1Down;
+                    if (current.EventType == EventType.Move
+                        && Math.Abs(delta.X) > TouchThreshold && Math.Abs(delta.Y) > TouchThreshold)
+                        throw new Exception("Moved too far.");
+                    return current;
+                });
+            })
+            .Subscribe(o => o.Subscribe
+            (
+                pe => _recognizedGestures.OnNext(new TapGesture(pe.Pointer1Position)),
+                ex => Debug.WriteLine(ex.Message)
+            ));
 
             // long press gesture
             _subscriptions["longpress"] = interactionWindows.Subscribe(window =>
             {
                 Observable.When
                 (
-                    window
-                        .Scan((acc, current) =>
-                        {
-                            var delta = current.Pointer1Position - current.Pointer1Down;
-                            if (current.EventType == EventType.PointerUp) throw new Exception("Pointer exited.");
-                            if (current.EventType != EventType.PointerDown && Math.Abs(delta.X) > TouchThreshold &&
-                                Math.Abs(delta.Y) > TouchThreshold) throw new Exception("Moved too far.");
-                            return current;
-                        })
-                        .And(Observable.Timer(TimeSpan.FromSeconds(LongPressDuration), _backgroundScheduler))
-                        .Then((pe, __) => pe)
+                    window.Scan((acc, current) =>
+                    {
+                        var delta = current.Pointer1Position - current.Pointer1Down;
+                        if (current.EventType == EventType.PointerUp) throw new Exception("Pointer exited.");
+                        if (current.EventType != EventType.PointerDown && Math.Abs(delta.X) > TouchThreshold &&
+                            Math.Abs(delta.Y) > TouchThreshold) throw new Exception("Moved too far.");
+                        return current;
+                    })
+                    .And(Observable.Timer(TimeSpan.FromSeconds(LongPressDuration), _backgroundScheduler))
+                    .Then((pe, __) => pe)
                 )
                 .ObserveOn(_mainScheduler)
                 .Subscribe
@@ -87,38 +82,43 @@ namespace Svg.Core.Services
             // drag gesture
             _subscriptions["drag"] = interactionWindows.Subscribe(window =>
             {
+                // create this subject for controlling lifetime of the subscription
                 var dragLifetime = new Subject<Unit>();
-                dragLifetime.Subscribe(_ => { }, Debugger.Break);
-                Observable.Using(() => window
-                        .Where(pe => pe.EventType == EventType.Move && pe.PointerCount == 1)
-                        .DefaultIfEmpty(new PointerEvent(EventType.Cancel, PointF.Empty, PointF.Empty, PointF.Empty, 0))
-                        .Select((pe, i) =>
+                var dragSubscription = window
+                    .Where(pe => pe.EventType == EventType.Move && pe.PointerCount == 1)
+                    // if we get a window without move events, we want to dispose subscription entirely,
+                    // else we would propagate an unneccessary DragGesture.Exit gesture
+                    .DefaultIfEmpty(new PointerEvent(EventType.Cancel, PointF.Empty, PointF.Empty, PointF.Empty, 0))
+                    .Select((pe, i) =>
+                    {
+                        if (i == 0 && pe.EventType != EventType.Cancel)
+                            _recognizedGestures.OnNext(DragGesture.Enter(pe.Pointer1Down));
+                        // if we had an empty window, it defaults to EventType.Cancel and we dispose subscription
+                        if (pe.EventType == EventType.Cancel) dragLifetime.OnCompleted();
+                        return pe;
+                    })
+                    .Subscribe
+                    (
+                        pe =>
                         {
-                            if (i == 0 && pe.EventType != EventType.Cancel) _recognizedGestures.OnNext(DragGesture.Enter(pe.Pointer1Down));
-                            if (pe.EventType == EventType.Cancel) dragLifetime.OnCompleted();
-                            return pe;
-                        })
-                        .Subscribe
-                        (
-                            pe =>
+                            var deltaPoint = pe.Pointer1Position - pe.Pointer1Down;
+                            var delta = SizeF.Create(deltaPoint.X, deltaPoint.Y);
+
+                            // selection only counts if width and height are not too small
+                            var dist = Math.Sqrt(Math.Pow(delta.Width, 2) + Math.Pow(delta.Height, 2));
+
+                            if (dist > DragMinDistance)
                             {
-                                var deltaPoint = pe.Pointer1Position - pe.Pointer1Down;
-                                var delta = SizeF.Create(deltaPoint.X, deltaPoint.Y);
+                                _recognizedGestures.OnNext(new DragGesture(pe.Pointer1Position, pe.Pointer1Down,
+                                    delta, dist));
+                            }
+                        },
+                        ex => { },
+                        () => _recognizedGestures.OnNext(DragGesture.Exit)
+                    );
 
-                                // selection only counts if width and height are not too small
-                                var dist = Math.Sqrt(Math.Pow(delta.Width, 2) + Math.Pow(delta.Height, 2));
-
-                                if (dist > DragMinDistance)
-                                {
-                                    _recognizedGestures.OnNext(new DragGesture(pe.Pointer1Position, pe.Pointer1Down,
-                                        delta, dist));
-                                }
-                            },
-                            ex => { },
-                            () => _recognizedGestures.OnNext(DragGesture.Exit)
-                        ),
-                    _ => dragLifetime)
-                    .Subscribe();
+                // bind completion of dragLifetime to disposing of our subscription
+                Observable.Using(() => dragSubscription, _ => dragLifetime).Subscribe();
             });
         }
 
