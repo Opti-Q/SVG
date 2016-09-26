@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Reactive.Testing;
 using NUnit.Framework;
 using Svg.Core.Events;
 using Svg.Core.Tools;
@@ -480,6 +481,7 @@ namespace Svg.Editor.Tests
             _textMock.F = (x, y) => new TextTool.TextProperties { Text = "hello", FontSizeIndex = 0 };
             await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
             await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
+            ((TestScheduler) SchedulerProvider.BackgroundScheduler).AdvanceBy(TimeSpan.FromSeconds(1).Ticks);
 
             // Preassert
             var texts = Canvas.Document.Children.OfType<SvgTextBase>().ToList();
@@ -519,6 +521,7 @@ namespace Svg.Editor.Tests
             _textMock.F = (x, y) => new TextTool.TextProperties { Text = newText, FontSizeIndex = 0 };
             await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
             await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
+            ((TestScheduler) SchedulerProvider.BackgroundScheduler).AdvanceBy(TimeSpan.FromSeconds(1).Ticks);
 
             // Preassert
             var texts = Canvas.Document.Children.OfType<SvgTextBase>().ToList();
@@ -563,6 +566,7 @@ namespace Svg.Editor.Tests
             _textMock.F = (x, y) => new TextTool.TextProperties { Text = theText, FontSizeIndex = 0 };
             await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
             await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, PointF.Create(10, 10), PointF.Create(10, 10), PointF.Create(10, 10), 1));
+            ((TestScheduler) SchedulerProvider.BackgroundScheduler).AdvanceBy(TimeSpan.FromSeconds(1).Ticks);
 
             // Preassert
             var texts = Canvas.Document.Children.OfType<SvgTextBase>().ToList();
@@ -601,6 +605,7 @@ namespace Svg.Editor.Tests
             var pt1 = PointF.Create(370, 260);
             await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, pt1, pt1, pt1, 1));
             await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, pt1, pt1, pt1, 1));
+            ((TestScheduler) SchedulerProvider.BackgroundScheduler).AdvanceBy(TimeSpan.FromSeconds(1).Ticks);
 
             // Preassert
             var texts = Canvas.Document.Children.OfType<SvgTextBase>().ToList();

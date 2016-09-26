@@ -82,7 +82,6 @@ namespace Svg.Core.Services
             .Timestamp()
             .PairWithPrevious()
             .Throttle(TimeSpan.FromSeconds(DoubleTapTimeout), backgroundScheduler)
-            .ObserveOn(mainScheduler)
             .Select
             (
                 tup => 
@@ -92,6 +91,7 @@ namespace Svg.Core.Services
                         ? tup.Item2.Value
                         : new DoubleTapGesture(tup.Item2.Value.Position)
             )
+            .ObserveOn(mainScheduler)
             .Subscribe(tg => _recognizedGestures.OnNext(tg));
 
             #endregion

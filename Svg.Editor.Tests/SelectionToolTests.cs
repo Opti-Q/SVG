@@ -1,7 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Reactive.Testing;
 using NUnit.Framework;
 using Svg.Core.Events;
+using Svg.Core.Services;
 using Svg.Core.Tools;
 using Svg.Interfaces;
 
@@ -30,6 +33,7 @@ namespace Svg.Editor.Tests
             var pt1 = PointF.Create(370, 260);
             await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, pt1, pt1, pt1, 1));
             await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, pt1, pt1, pt1, 1));
+            ((TestScheduler) SchedulerProvider.BackgroundScheduler).AdvanceBy(TimeSpan.FromSeconds(1).Ticks);
 
             // Assert
             Assert.AreEqual(1, Canvas.SelectedElements.Count);
