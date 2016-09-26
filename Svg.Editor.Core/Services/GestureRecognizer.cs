@@ -41,7 +41,7 @@ namespace Svg.Core.Services
         /// <summary>
         /// Maximum distance in pixels that is ignored when tapping, to accomodate tiny shivers.
         /// </summary>
-        public double TouchThreshold { get; set; } = 10.0;
+        public double TouchThreshold { get; set; } = 20.0;
 
         /// <summary>
         /// Maximum time in seconds for a valid tap gesture.
@@ -51,7 +51,7 @@ namespace Svg.Core.Services
         /// <summary>
         /// Maximum time in seconds for a valid double tap gesture.
         /// </summary>
-        public double DoubleTapTimeout { get; set; } = 0.5;
+        public double DoubleTapTimeout { get; set; } = 0.2;
 
         #endregion
 
@@ -63,11 +63,8 @@ namespace Svg.Core.Services
             var enterEvents = pointerEvents.Where(pe => pe.EventType == EventType.PointerDown);
             var exitEvents = pointerEvents.Where(pe => pe.EventType == EventType.PointerUp || pe.EventType == EventType.Cancel);
             var interactionWindows = pointerEvents.Window(enterEvents, _ => exitEvents);
-            var tapGestures = new Subject<TapGesture>();
 
-            _recognizedGestures.Subscribe(ug => Debug.WriteLine(ug.Type));
-
-            #region tap gesture
+            #region tap gestures
 
             _subscriptions["tap"] = interactionWindows
             .SelectMany(window =>
@@ -80,36 +77,21 @@ namespace Svg.Core.Services
                 .Buffer(TimeSpan.FromSeconds(TapTimeout), 1, backgroundScheduler)
                 .Take(1);
             })
-            .ObserveOn(mainScheduler)
-            .Subscribe
-            (
-                l =>
-                {
-                    var pe = l.FirstOrDefault();
-                    if (pe != null) tapGestures.OnNext(new TapGesture(pe.Pointer1Position));
-                },
-                ex => Debug.WriteLine(ex.Message)
-            );
-
-            #endregion
-
-            #region double tap gesture
-
-            _subscriptions["doubletap"] = tapGestures
+            .Where(l => l.Any())
+            .Select(l => new TapGesture(l.First().Pointer1Position))
             .Timestamp()
-            .Scan((acc, current) =>
-            {
-                if (acc.Value?.Type == GestureType.Tap && current.Value.Type == GestureType.Tap
-                    && current.Timestamp - acc.Timestamp <= TimeSpan.FromSeconds(DoubleTapTimeout)
-                    && PositionEquals(acc.Value.Position, current.Value.Position, TouchThreshold))
-                    return
-                        Timestamped.Create<TapGesture>(
-                            new DoubleTapGesture(current.Value.Position), current.Timestamp);
-                return current;
-            })
             .PairWithPrevious()
-            .Where(tup => tup.Item1.Value == null || tup.Item1.Value.Type != GestureType.Tap || tup.Item2.Timestamp - tup.Item1.Timestamp > TimeSpan.FromSeconds(DoubleTapTimeout))
-            .Select(ts => ts.Item2.Value)
+            .Throttle(TimeSpan.FromSeconds(DoubleTapTimeout), backgroundScheduler)
+            .ObserveOn(mainScheduler)
+            .Select
+            (
+                tup => 
+                    tup.Item1.Value == null ||
+                    tup.Item2.Timestamp - tup.Item1.Timestamp > TimeSpan.FromSeconds(DoubleTapTimeout) ||
+                    !PositionEquals(tup.Item1.Value.Position, tup.Item2.Value.Position, TouchThreshold)
+                        ? tup.Item2.Value
+                        : new DoubleTapGesture(tup.Item2.Value.Position)
+            )
             .Subscribe(tg => _recognizedGestures.OnNext(tg));
 
             #endregion
