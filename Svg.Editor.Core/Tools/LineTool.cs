@@ -27,6 +27,8 @@ namespace Svg.Core.Tools
         private bool _isActive;
         private MovementHandle _movementHandle;
         private ITool _activatedFrom;
+        private PointF _offset;
+        private PointF _translate;
 
         #endregion
 
@@ -259,6 +261,8 @@ namespace Svg.Core.Tools
             if (drag.State == DragState.Exit)
             {
                 _movementHandle = MovementHandle.None;
+                _offset = null;
+                _translate = null;
                 return;
             }
 
@@ -298,55 +302,66 @@ namespace Svg.Core.Tools
                 {
                     var canvasPointer1Position = Canvas.ScreenToCanvas(drag.Start);
                     var points = _currentLine.GetTransformedLinePoints();
-                    _movementHandle = Math.Abs(canvasPointer1Position.X - points[1].X) <= MaxPointerDistance &&
-                                 Math.Abs(canvasPointer1Position.Y - points[1].Y) <= MaxPointerDistance ? MovementHandle.End :
-                                 Math.Abs(canvasPointer1Position.X - points[0].X) <= MaxPointerDistance &&
-                                 Math.Abs(canvasPointer1Position.Y - points[0].Y) <= MaxPointerDistance ? MovementHandle.Start :
+                    _movementHandle = Math.Abs(canvasPointer1Position.X - points[1].X) * Canvas.ZoomFactor <= MaxPointerDistance &&
+                                 Math.Abs(canvasPointer1Position.Y - points[1].Y) * Canvas.ZoomFactor <= MaxPointerDistance ? MovementHandle.End :
+                                 Math.Abs(canvasPointer1Position.X - points[0].X) * Canvas.ZoomFactor <= MaxPointerDistance &&
+                                 Math.Abs(canvasPointer1Position.Y - points[0].Y) * Canvas.ZoomFactor <= MaxPointerDistance ? MovementHandle.Start :
                                  _currentLine.GetBoundingBox().Contains(canvasPointer1Position) ? MovementHandle.StartEnd : MovementHandle.None;
-                    if (_movementHandle != MovementHandle.None)
-                    {
-                        UndoRedoService.ExecuteCommand(new UndoableActionCommand("Edit line", o => { }));
-                    }
+
+                    if (_movementHandle == MovementHandle.None) return;
+
+                    UndoRedoService.ExecuteCommand(new UndoableActionCommand("Edit line", o => Canvas.FireInvalidateCanvas(), o => Canvas.FireInvalidateCanvas()));
                 }
+
+                var formerStartY = _currentLine.StartY;
+                var formerStartX = _currentLine.StartX;
+                var formerEndY = _currentLine.EndY;
+                var formerEndX = _currentLine.EndX;
 
                 switch (_movementHandle)
                 {
                     case MovementHandle.End:
                         // capture variables for use in lambda
-                        var formerEndX = _currentLine.EndX;
-                        var formerEndY = _currentLine.EndY;
                         UndoRedoService.ExecuteCommand(new UndoableActionCommand("Move line end", o =>
                         {
                             capturedCurrentLine.EndX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X);
                             capturedCurrentLine.EndY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y);
-                            Canvas.FireInvalidateCanvas();
                         }, o =>
                         {
                             capturedCurrentLine.EndX = formerEndX;
                             capturedCurrentLine.EndY = formerEndY;
-                            Canvas.FireInvalidateCanvas();
                         }), hasOwnUndoRedoScope: false);
                         break;
                     case MovementHandle.Start:
                         // capture variables for use in lambda
-                        var formerStartX = _currentLine.StartX;
-                        var formerStartY = _currentLine.StartY;
                         UndoRedoService.ExecuteCommand(new UndoableActionCommand("Move line start", o =>
                         {
                             capturedCurrentLine.StartX = new SvgUnit(SvgUnitType.Pixel, relativeEnd.X);
                             capturedCurrentLine.StartY = new SvgUnit(SvgUnitType.Pixel, relativeEnd.Y);
-                            Canvas.FireInvalidateCanvas();
                         }, o =>
                         {
                             capturedCurrentLine.StartX = formerStartX;
                             capturedCurrentLine.StartY = formerStartY;
-                            Canvas.FireInvalidateCanvas();
                         }), hasOwnUndoRedoScope: false);
                         break;
                     case MovementHandle.StartEnd:
-                        // TODO: move both start and end points
+                        var absoluteDeltaX = drag.Delta.Width / Canvas.ZoomFactor;
+                        var absoluteDeltaY = drag.Delta.Height / Canvas.ZoomFactor;
+
+                        // add translation to current line
+                        var previousDelta = _offset ?? PointF.Create(0, 0);
+                        var relativeDeltaX = absoluteDeltaX - previousDelta.X;
+                        var relativeDeltaY = absoluteDeltaY - previousDelta.Y;
+
+                        previousDelta.X = absoluteDeltaX;
+                        previousDelta.Y = absoluteDeltaY;
+                        _offset = previousDelta;
+
+                        AddTranslate(_currentLine, relativeDeltaX, relativeDeltaY);
                         break;
                 }
+
+                Canvas.FireInvalidateCanvas();
             }
         }
 
@@ -423,7 +438,7 @@ namespace Svg.Core.Tools
                 definitions.Children.Add(marker);
             }
         }
-        
+
         private SvgLine CreateLine(PointF relativeStart)
         {
             var line = new SvgLine
@@ -445,6 +460,33 @@ namespace Svg.Core.Tools
             }
 
             return line;
+        }
+
+        private void AddTranslate(SvgVisualElement element, float deltaX, float deltaY)
+        {
+            // the movetool stores the last translation explicitly for each element
+            // that way, if another tool manipulates the translation (e.g. the snapping tool)
+            // the movetool is not interfered by that
+            var b = element.GetBoundingBox();
+            var translate = _translate ?? PointF.Create(b.X, b.Y);
+
+            translate.X += deltaX;
+            translate.Y += deltaY;
+
+            _translate = translate;
+
+            var dX = translate.X - b.X;
+            var dY = translate.Y - b.Y;
+
+            var m = element.CreateTranslation(dX, dY);
+            var formerM = element.Transforms.GetMatrix().Clone();
+            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Move object", o =>
+            {
+                element.SetTransformationMatrix(m);
+            }, o =>
+            {
+                element.SetTransformationMatrix(formerM);
+            }), hasOwnUndoRedoScope: false);
         }
 
         private void SelectLine(SvgLine line)
