@@ -7,7 +7,6 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Svg.Core.Events;
-using Svg.Core.Extensions;
 using Svg.Core.Gestures;
 using Svg.Interfaces;
 
@@ -21,35 +20,31 @@ namespace Svg.Core.Services
         public IObservable<UserGesture> RecognizedGestures => _recognizedGestures.AsObservable();
 
         private readonly IDictionary<string, IDisposable> _subscriptions = new Dictionary<string, IDisposable>();
-        private readonly IScheduler _mainScheduler;
-        private readonly IScheduler _backgroundScheduler;
 
         public GestureRecognizer(IObservable<UserInputEvent> detectedInputEvents, IScheduler mainScheduler, IScheduler backgroundScheduler)
         {
             DetectedInputEvents = detectedInputEvents;
-
-            _mainScheduler = mainScheduler;
-            _backgroundScheduler = backgroundScheduler;
 
             var pointerEvents = DetectedInputEvents.OfType<PointerEvent>();
             var enterEvents = pointerEvents.Where(pe => pe.EventType == EventType.PointerDown);
             var exitEvents = pointerEvents.Where(pe => pe.EventType == EventType.PointerUp || pe.EventType == EventType.Cancel);
             var interactionWindows = pointerEvents.Window(enterEvents, _ => exitEvents);
 
+            _recognizedGestures.Subscribe(ug => Debug.WriteLine(ug.Type));
+
             // tap gesture
             _subscriptions["tap"] = interactionWindows
-            .Select(window =>
+            .SelectMany(window =>
             {
                 return window
                 .Where(
                     pe =>
                         pe.EventType == EventType.PointerUp &&
                         PositionEquals(pe.Pointer1Down, pe.Pointer1Position, TouchThreshold))
-                .Buffer(TimeSpan.FromSeconds(TapTimeout), 1)
+                .Buffer(TimeSpan.FromSeconds(TapTimeout), 1, backgroundScheduler)
                 .Take(1);
             })
-            .SelectMany(o => o)
-            .ObserveOn(_mainScheduler)
+            .ObserveOn(mainScheduler)
             .Subscribe
             (
                 l =>
@@ -80,7 +75,9 @@ namespace Svg.Core.Services
 
             //_recognizedGestures.OfType<DoubleTapGesture>().Subscribe(dtg => Debug.WriteLine("Double Tap!"));
 
-            _recognizedGestures.Timestamp().Scan((acc, current) =>
+            _recognizedGestures
+            .Timestamp()
+            .Scan((acc, current) =>
             {
                 var t1 = acc.Value as TapGesture;
                 var t2 = current.Value as TapGesture;
@@ -94,7 +91,8 @@ namespace Svg.Core.Services
                 return current;
             })
             .Select(ts => ts.Value)
-            .Subscribe(ug => Debug.WriteLine(ug.Type));
+            .OfType<DoubleTapGesture>()
+            .Subscribe(dt => _recognizedGestures.OnNext(dt));
             
             // long press gesture
             _subscriptions["longpress"] = interactionWindows
@@ -109,7 +107,7 @@ namespace Svg.Core.Services
                 .Take(1);
             })
             .SelectMany(o => o)
-            .ObserveOn(_mainScheduler)
+            .ObserveOn(mainScheduler)
             .Subscribe
             (
                 l =>

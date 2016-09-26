@@ -14,7 +14,7 @@ namespace Svg.Editor.Tests
         private SvgDrawingCanvas _canvas;
 
         protected SvgDrawingCanvas Canvas => _canvas;
-        protected SchedulerProvider SchedulerProvider { get; } = new SchedulerProvider(new TestScheduler(), new TestScheduler());
+        protected SchedulerProvider SchedulerProvider { get; } = new SchedulerProvider(CurrentThreadScheduler.Instance, new TestScheduler());
 
         [SetUp]
         public virtual void SetUp()
