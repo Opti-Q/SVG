@@ -7,6 +7,6 @@
 
     public enum GestureType
     {
-        Undefined, Tap, LongPress, Drag
+        Undefined, Tap, LongPress, Drag, DoubleTap
     }
 }

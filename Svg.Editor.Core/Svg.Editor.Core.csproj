@@ -43,8 +43,10 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Extensions\ReactiveExtensions.cs" />
     <Compile Include="Gestures\DragGesture.cs" />
     <Compile Include="Gestures\LongPressGesture.cs" />
+    <Compile Include="Gestures\DoubleTapGesture.cs" />
     <Compile Include="Gestures\TapGesture.cs" />
     <Compile Include="Gestures\UserGesture.cs" />
     <Compile Include="Interfaces\IPickImageService.cs" />

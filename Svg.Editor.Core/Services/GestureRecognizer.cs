@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Svg.Core.Events;
+using Svg.Core.Extensions;
 using Svg.Core.Gestures;
 using Svg.Interfaces;
 
@@ -14,7 +16,7 @@ namespace Svg.Core.Services
     public class GestureRecognizer : IDisposable
     {
         private readonly Subject<UserGesture> _recognizedGestures = new Subject<UserGesture>();
-        private IObservable<UserInputEvent> DetectedGestures { get; }
+        private IObservable<UserInputEvent> DetectedInputEvents { get; }
 
         public IObservable<UserGesture> RecognizedGestures => _recognizedGestures.AsObservable();
 
@@ -22,14 +24,14 @@ namespace Svg.Core.Services
         private readonly IScheduler _mainScheduler;
         private readonly IScheduler _backgroundScheduler;
 
-        public GestureRecognizer(IObservable<UserInputEvent> detectedGestures, IScheduler mainScheduler, IScheduler backgroundScheduler)
+        public GestureRecognizer(IObservable<UserInputEvent> detectedInputEvents, IScheduler mainScheduler, IScheduler backgroundScheduler)
         {
-            DetectedGestures = detectedGestures;
+            DetectedInputEvents = detectedInputEvents;
 
             _mainScheduler = mainScheduler;
             _backgroundScheduler = backgroundScheduler;
 
-            var pointerEvents = DetectedGestures.OfType<PointerEvent>();
+            var pointerEvents = DetectedInputEvents.OfType<PointerEvent>();
             var enterEvents = pointerEvents.Where(pe => pe.EventType == EventType.PointerDown);
             var exitEvents = pointerEvents.Where(pe => pe.EventType == EventType.PointerUp || pe.EventType == EventType.Cancel);
             var interactionWindows = pointerEvents.Window(enterEvents, _ => exitEvents);
@@ -39,45 +41,84 @@ namespace Svg.Core.Services
             .Select(window =>
             {
                 return window
-                .Timeout(TimeSpan.FromSeconds(TapTimeout), _backgroundScheduler)
-                .Aggregate((acc, current) =>
-                {
-                    var delta = current.Pointer1Position - current.Pointer1Down;
-                    if (current.EventType == EventType.Move
-                        && Math.Abs(delta.X) > TouchThreshold && Math.Abs(delta.Y) > TouchThreshold)
-                        throw new Exception("Moved too far.");
-                    return current;
-                });
+                .Where(
+                    pe =>
+                        pe.EventType == EventType.PointerUp &&
+                        PositionEquals(pe.Pointer1Down, pe.Pointer1Position, TouchThreshold))
+                .Buffer(TimeSpan.FromSeconds(TapTimeout), 1)
+                .Take(1);
             })
-            .Subscribe(o => o.Subscribe
+            .SelectMany(o => o)
+            .ObserveOn(_mainScheduler)
+            .Subscribe
             (
-                pe => _recognizedGestures.OnNext(new TapGesture(pe.Pointer1Position)),
+                l =>
+                {
+                    var pe = l.FirstOrDefault();
+                    if (pe != null) _recognizedGestures.OnNext(new TapGesture(pe.Pointer1Position));
+                },
                 ex => Debug.WriteLine(ex.Message)
-            ));
+            );
 
-            // long press gesture
-            _subscriptions["longpress"] = interactionWindows.Subscribe(window =>
+            // double tap gesture
+            //_subscriptions["doubletap"] = _recognizedGestures.OfType<TapGesture>()
+            //.Window(_recognizedGestures.Where(g => g.Type == GestureType.Tap), _ => _recognizedGestures.Where(g => g.Type == GestureType.Tap).Skip(1))
+            //.SelectMany(window =>
+            //{
+            //    return window
+            //    .Aggregate((acc, current) => acc == null ? current : PositionEquals(acc.Position, current.Position, TouchThreshold) ? current : null)
+            //    .Do(x => Debug.WriteLine(x?.Type), () => Debug.WriteLine("WINDOW COMPLETE"))
+            //    .Buffer(TimeSpan.FromSeconds(DoubleTapTimeout), 1)
+            //    .Take(1);
+            //})
+            //.ObserveOn(_mainScheduler)
+            //.Subscribe(x =>
+            //{
+            //    var tg = x.FirstOrDefault();
+            //    if (tg != null) _recognizedGestures.OnNext(new DoubleTapGesture(tg.Position));
+            //});
+
+            //_recognizedGestures.OfType<DoubleTapGesture>().Subscribe(dtg => Debug.WriteLine("Double Tap!"));
+
+            _recognizedGestures.Timestamp().Scan((acc, current) =>
             {
-                Observable.When
-                (
-                    window.Scan((acc, current) =>
-                    {
-                        var delta = current.Pointer1Position - current.Pointer1Down;
-                        if (current.EventType == EventType.PointerUp) throw new Exception("Pointer exited.");
-                        if (current.EventType != EventType.PointerDown && Math.Abs(delta.X) > TouchThreshold &&
-                            Math.Abs(delta.Y) > TouchThreshold) throw new Exception("Moved too far.");
-                        return current;
-                    })
-                    .And(Observable.Timer(TimeSpan.FromSeconds(LongPressDuration), _backgroundScheduler))
-                    .Then((pe, __) => pe)
-                )
-                .ObserveOn(_mainScheduler)
-                .Subscribe
-                (
-                    pe => _recognizedGestures.OnNext(new LongPressGesture(pe.Pointer1Position)),
-                    ex => { }
-                );
-            });
+                var t1 = acc.Value as TapGesture;
+                var t2 = current.Value as TapGesture;
+
+                if (t1?.Type == GestureType.Tap && t2?.Type == GestureType.Tap
+                    && current.Timestamp - acc.Timestamp <= TimeSpan.FromSeconds(DoubleTapTimeout)
+                    && PositionEquals(t1.Position, t2.Position, TouchThreshold))
+                    return
+                        Timestamped.Create<UserGesture>(
+                            new DoubleTapGesture(((TapGesture) current.Value).Position), current.Timestamp);
+                return current;
+            })
+            .Select(ts => ts.Value)
+            .Subscribe(ug => Debug.WriteLine(ug.Type));
+            
+            // long press gesture
+            _subscriptions["longpress"] = interactionWindows
+            .Select(window =>
+            {
+                return window
+                .Where(
+                    pe =>
+                        pe.EventType == EventType.PointerDown ||
+                        pe.EventType == EventType.PointerUp && PositionEquals(pe.Pointer1Down, pe.Pointer1Position, TouchThreshold))
+                .Buffer(TimeSpan.FromSeconds(LongPressDuration), 2)
+                .Take(1);
+            })
+            .SelectMany(o => o)
+            .ObserveOn(_mainScheduler)
+            .Subscribe
+            (
+                l =>
+                {
+                    var pe = l.LastOrDefault();
+                    if (pe != null && pe.EventType != EventType.PointerUp) _recognizedGestures.OnNext(new LongPressGesture(pe.Pointer1Position));
+                },
+                ex => Debug.WriteLine(ex.Message)
+            );
 
             // drag gesture
             _subscriptions["drag"] = interactionWindows.Subscribe(window =>
@@ -122,6 +163,12 @@ namespace Svg.Core.Services
             });
         }
 
+        private static bool PositionEquals(PointF start, PointF position, double threshold = 0)
+        {
+            var delta = position - start;
+            return Math.Abs(delta.X) <= threshold && Math.Abs(delta.Y) <= threshold;
+        }
+
         public double DragMinDistance { get; set; } = 10.0;
 
         public double LongPressDuration { get; set; } = 0.66;
@@ -129,6 +176,8 @@ namespace Svg.Core.Services
         public double TouchThreshold { get; set; } = 10.0;
 
         public double TapTimeout { get; set; } = 0.33;
+
+        public double DoubleTapTimeout { get; set; } = 0.5;
 
         public void Dispose()
         {
