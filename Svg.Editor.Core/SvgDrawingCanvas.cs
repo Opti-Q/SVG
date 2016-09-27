@@ -9,7 +9,6 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 using Svg.Core.Annotations;
 using Svg.Core.Events;
@@ -17,6 +16,7 @@ using Svg.Core.Gestures;
 using Svg.Core.Interfaces;
 using Svg.Core.Services;
 using Svg.Core.Tools;
+using Svg.Core.UndoRedo;
 using Svg.Interfaces;
 
 namespace Svg.Core
@@ -35,6 +35,142 @@ namespace Svg.Core
         private bool _documentIsDirty;
         private PointF _zoomFocus;
         private readonly Subject<UserInputEvent> _detectedGestures;
+        private IUndoRedoService UndoRedoService { get; }
+
+        #endregion
+
+        #region Public properties
+
+        public SvgDocument Document
+        {
+            get
+            {
+                if (_document == null)
+                {
+                    _document = new SvgDocument();
+                    _document.ViewBox = SvgViewBox.Empty;
+
+                    OnDocumentChanged(null, _document);
+                }
+                return _document;
+            }
+            set
+            {
+                var oldDocument = _document;
+                _document = value;
+                if (_document != null)
+                {
+                    _document.ViewBox = SvgViewBox.Empty;
+                }
+
+                OnDocumentChanged(oldDocument, _document);
+            }
+        }
+
+        public bool DocumentIsDirty
+        {
+            get { return _documentIsDirty; }
+            private set
+            {
+                if (_documentIsDirty != value)
+                {
+                    _documentIsDirty = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public ObservableCollection<SvgVisualElement> SelectedElements => _selectedElements;
+
+        public ObservableCollection<ITool> Tools => _tools;
+
+        public IEnumerable<IEnumerable<IToolCommand>> ToolCommands
+        {
+            get
+            {
+                // prepare tool commands
+                var commands = Tools.Select(t => t.Commands.OrderBy(tc => tc.Sort))
+                    .OrderBy(t => t.FirstOrDefault()?.Sort ?? int.MaxValue)
+                    .Cast<IEnumerable<IToolCommand>>()
+                    .ToList();
+
+                // prepare tool selectors
+                var toolSelectors = EnsureToolSelectors().OrderBy(s => s.Sort);
+
+                commands.Insert(0, toolSelectors);
+
+                return commands;
+            }
+        }
+
+        public List<Func<SvgVisualElement, Task>> DefaultEditors { get; } = new List<Func<SvgVisualElement, Task>>();
+
+        public PointF Translate { get; set; }
+
+        public float ZoomFactor { get; set; }
+
+        public PointF ZoomFocus
+        {
+            get { return _zoomFocus ?? (_zoomFocus = PointF.Create(0, 0)); }
+            set { _zoomFocus = value; }
+        }
+
+        public int ScreenWidth { get; set; }
+
+        public int ScreenHeight { get; set; }
+
+        public PointF ScreenCenter => PointF.Create((float) ScreenWidth / 2, (float) ScreenHeight / 2);
+
+        public float ConstraintTop { get; set; }
+
+        public float ConstraintLeft { get; set; }
+
+        public float ConstraintRight { get; set; }
+
+        public float ConstraintBottom { get; set; }
+
+        /// <summary>
+        /// If enabled, adds a DebugTool that brings some helpful visualizations
+        /// </summary>
+        public bool IsDebugEnabled
+        {
+            get { return _isDebugEnabled; }
+            set
+            {
+                _isDebugEnabled = value;
+
+                if (_isDebugEnabled)
+                {
+                    var dt = Tools.OfType<DebugTool>().FirstOrDefault();
+                    if (dt == null)
+                        Tools.Add(new DebugTool());
+                }
+                else
+                {
+                    var dt = Tools.OfType<DebugTool>().FirstOrDefault();
+                    if (dt != null)
+                        Tools.Remove(dt);
+                }
+
+            }
+        }
+
+        public ITool ActiveTool
+        {
+            get { return _activeTool; }
+            set
+            {
+                _activeTool = value;
+                if (_activeTool != null)
+                {
+                    _activeTool.IsActive = true;
+                }
+                foreach (var otherTool in Tools.Where(t => t != _activeTool && t.ToolUsage == ToolUsage.Explicit))
+                {
+                    otherTool.IsActive = false;
+                }
+            }
+        }
 
         #endregion
 
@@ -118,161 +254,26 @@ namespace Svg.Core
 
             #endregion
 
-            var undoRedoService = Engine.Resolve<IUndoRedoService>();
+            UndoRedoService = Engine.Resolve<IUndoRedoService>();
 
             _tools = new ObservableCollection<ITool>
             {
-                    new GridTool(gridToolProperties, undoRedoService),
-                    new MoveTool(undoRedoService),
+                    new GridTool(gridToolProperties, UndoRedoService),
+                    new MoveTool(UndoRedoService),
                     new PanTool(panToolProperties),
-                    new RotationTool(undoRedoService),
+                    new RotationTool(UndoRedoService),
                     new ZoomTool(zoomToolProperties),
-                    new SelectionTool(undoRedoService),
-                    new TextTool(textToolProperties, undoRedoService),
-                    new LineTool(lineToolProperties, undoRedoService),
-                    new FreeDrawingTool(freeDrawToolProperties, undoRedoService),
-                    new ColorTool(colorToolProperties, undoRedoService),
-                    new StrokeStyleTool(undoRedoService),
-                    new UndoRedoTool(undoRedoService),
-                    new ArrangeTool(undoRedoService)
+                    new SelectionTool(UndoRedoService),
+                    new TextTool(textToolProperties, UndoRedoService),
+                    new LineTool(lineToolProperties, UndoRedoService),
+                    new FreeDrawingTool(freeDrawToolProperties, UndoRedoService),
+                    new ColorTool(colorToolProperties, UndoRedoService),
+                    new StrokeStyleTool(UndoRedoService),
+                    new UndoRedoTool(UndoRedoService),
+                    new ArrangeTool(UndoRedoService)
             };
             _tools.CollectionChanged += OnToolsChanged;
         }
-
-        #region Public properties
-
-        public SvgDocument Document
-        {
-            get
-            {
-                if (_document == null)
-                {
-                    _document = new SvgDocument();
-                    _document.ViewBox = SvgViewBox.Empty;
-
-                    OnDocumentChanged(null, _document);
-                }
-                return _document;
-            }
-            set
-            {
-                var oldDocument = _document;
-                _document = value;
-                if (_document != null)
-                {
-                    _document.ViewBox = SvgViewBox.Empty;
-                }
-
-                OnDocumentChanged(oldDocument, _document);
-            }
-        }
-
-        public bool DocumentIsDirty
-        {
-            get { return _documentIsDirty; }
-            private set
-            {
-                if (_documentIsDirty != value)
-                {
-                    _documentIsDirty = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        public ObservableCollection<SvgVisualElement> SelectedElements => _selectedElements;
-
-        public ObservableCollection<ITool> Tools => _tools;
-
-        public IEnumerable<IEnumerable<IToolCommand>> ToolCommands
-        {
-            get
-            {
-                // prepare tool commands
-                var commands = Tools.Select(t => t.Commands.OrderBy(tc => tc.Sort))
-                    .OrderBy(t => t.FirstOrDefault()?.Sort ?? int.MaxValue)
-                    .Cast<IEnumerable<IToolCommand>>()
-                    .ToList();
-
-                // prepare tool selectors
-                var toolSelectors = EnsureToolSelectors().OrderBy(s => s.Sort);
-
-                commands.Insert(0, toolSelectors);
-
-                return commands;
-            }
-        }
-
-        public PointF RelativeTranslate => PointF.Create(Translate.X / ZoomFactor, Translate.Y / ZoomFactor);
-
-        public PointF Translate { get; set; }
-
-        public float ZoomFactor { get; set; }
-
-        public PointF ZoomFocus
-        {
-            get { return _zoomFocus ?? (_zoomFocus = PointF.Create(0, 0)); }
-            set { _zoomFocus = value; }
-        }
-
-        public int ScreenWidth { get; set; }
-
-        public int ScreenHeight { get; set; }
-
-        public PointF ScreenCenter => PointF.Create((float) ScreenWidth / 2, (float) ScreenHeight / 2);
-
-        public float ConstraintTop { get; set; }
-
-        public float ConstraintLeft { get; set; }
-
-        public float ConstraintRight { get; set; }
-
-        public float ConstraintBottom { get; set; }
-
-        /// <summary>
-        /// If enabled, adds a DebugTool that brings some helpful visualizations
-        /// </summary>
-        public bool IsDebugEnabled
-        {
-            get { return _isDebugEnabled; }
-            set
-            {
-                _isDebugEnabled = value;
-
-                if (_isDebugEnabled)
-                {
-                    var dt = Tools.OfType<DebugTool>().FirstOrDefault();
-                    if (dt == null)
-                        Tools.Add(new DebugTool());
-                }
-                else
-                {
-                    var dt = Tools.OfType<DebugTool>().FirstOrDefault();
-                    if (dt != null)
-                        Tools.Remove(dt);
-                }
-
-            }
-        }
-
-        public ITool ActiveTool
-        {
-            get { return _activeTool; }
-            set
-            {
-                _activeTool = value;
-                if (_activeTool != null)
-                {
-                    _activeTool.IsActive = true;
-                }
-                foreach (var otherTool in Tools.Where(t => t != _activeTool && t.ToolUsage == ToolUsage.Explicit))
-                {
-                    otherTool.IsActive = false;
-                }
-            }
-        }
-
-        #endregion
 
         /// <summary>
         /// Called by the platform specific input event detector whenever the user interacts with the model
@@ -459,7 +460,7 @@ namespace Svg.Core
             return GetElementsUnder<TElement>(GetPointerRectangle(pointer1Position), SelectionType.Intersect, recursionLevel: recursionLevel);
         }
 
-        public void AddItemInScreenCenter(SvgDocument document)
+        public async Task AddItemInScreenCenter(SvgDocument document)
         {
             var visibleChildren =
                 document.Children.OfType<SvgVisualElement>().Where(e => e.Displayable && e.Visible).ToList();
@@ -479,12 +480,12 @@ namespace Svg.Core
                 element = group;
             }
 
-            AddItemInScreenCenter(element);
+            await AddItemInScreenCenter(element);
 
             MergeSvgDefs(Document, document);
         }
 
-        public void AddItemInScreenCenter(SvgVisualElement element)
+        public async Task AddItemInScreenCenter(SvgVisualElement element)
         {
             var childBounds = element.GetBoundingBox();
             var halfRelChildWidth = childBounds.Width / 2;
@@ -499,22 +500,40 @@ namespace Svg.Core
             if (Math.Abs(childBounds.Y) > float.Epsilon)
                 centerPosY -= childBounds.Y;
 
-
-            if (element.OwnerDocument != null)
-                MergeSvgDefs(Document, element.OwnerDocument);
-
             //SvgTranslate tl = new SvgTranslate(centerPosX, centerPosY);
             //element.Transforms.Add(tl);
             //element.ID = $"{element.ElementName}_{Guid.NewGuid():N}";
             var m = element.CreateTranslation(centerPosX, centerPosY);
             element.SetTransformationMatrix(m);
 
-            Document.Children.Add(element);
+            UndoRedoService.ExecuteCommand(new UndoableActionCommand
+            (
+                "Add child element",
+                o =>
+                {
+                    Document.Children.Add(element);
+                    FireInvalidateCanvas();
+                },
+                o =>
+                {
+                    Document.Children.Remove(element);
+                    FireInvalidateCanvas();
+                })
+            );
 
-            FireInvalidateCanvas();
+            // this has to happen after the element is added, because the undoable command of
+            // the merge is concatenated to the add child command
+            if (element.OwnerDocument != null)
+                MergeSvgDefs(Document, element.OwnerDocument);
+
+            foreach (var defaultEditor in DefaultEditors)
+            {
+                await defaultEditor.Invoke(element);
+            }
+
         }
 
-        private static void MergeSvgDefs(SvgDocument target, SvgDocument source)
+        private void MergeSvgDefs(SvgDocument target, SvgDocument source)
         {
             if (target == null) throw new ArgumentNullException(nameof(target));
 
@@ -537,7 +556,14 @@ namespace Svg.Core
                     {
                         var docDefChild = docDefs.Children.FirstOrDefault(c => c.ID == defChild.ID);
                         if (docDefChild == null)
-                            docDefs.Children.Add(defChild);
+                        {
+                            UndoRedoService.ExecuteCommand(new UndoableActionCommand
+                            (
+                                "Add def",
+                                o => docDefs.Children.Add(defChild),
+                                o => docDefs.Children.Remove(defChild)
+                            ), hasOwnUndoRedoScope: false);
+                        }
                     }
                 }
             }

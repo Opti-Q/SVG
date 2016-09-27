@@ -9,21 +9,15 @@
       <path d="M540.96 769.8 L540.96 210.96 L54.00003 210.96 L54.00003 769.8 L540.96 769.8 z" clip-rule="evenOdd" id="path256" connector-curvature="0" />
     </clipPath>
   </defs>
-  <namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0" pageopacity="0.0" pageshadow="2" zoom="2" cx="373.09444" cy="935.74131" document-units="px" current-layer="layer1" showgrid="true" objecttolerance="10" gridtolerance="10" window-width="1920" window-height="1017" window-x="-8" window-y="-8" window-maximized="1" object-nodes="true" snap-smooth-nodes="true" snap-midpoints="false" snap-intersection-paths="false" object-paths="false" snap-nodes="true">
+  <namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0" pageopacity="0.0" pageshadow="2" zoom="2" cx="590.89667" cy="946.32213" document-units="px" current-layer="svg2" showgrid="true" objecttolerance="10" gridtolerance="10" window-width="1920" window-height="1017" window-x="-8" window-y="-8" window-maximized="1" object-nodes="true" snap-smooth-nodes="true" snap-midpoints="false" snap-intersection-paths="false" object-paths="false" snap-nodes="true">
     <grid id="grid4136" type="axonomgrid" units="px" empspacing="5" spacingy="20.000001" />
   </namedview>
   <metadata id="metadata7"></metadata>
-  <g transform="matrix(1, 0, 0, 1, -519.6152, 7.637814)" id="g4691" stroke="#000000" style="fill:#000000;">
-    <g id="g3568">
-      <g transform="translate(297.4408, 3.267145)" id="g4253-8-6">
-        <rect x="225.1666" y="2.362186" width="34.64102" height="40" id="rect4251-7-1" stroke-opacity="0" style="fill:none;" />
-      </g>
-      <text xml:space="preserve" x="539.346" y="31.11663" letter-spacing="0px" word-spacing="0px" id="text4175" stroke-width="1px" font-family="sans-serif" font-size="20.21053px" font-style="normal" font-weight="400" linespacing="125%" line-height="125%">
-        <tspan text-anchor="middle" x="539.346" y="31.11663" id="tspan4177" role="line" text-align="center">23</tspan>
-      </text>
-      <path d="M258.0247 18.623 A15.93547 15.3807 0 0 1 244.7075 36.14524 A15.93547 15.3807 0 0 1 226.5283 23.32454 A15.93547 15.3807 0 0 1 239.7773 5.754189 A15.93547 15.3807 0 0 1 258.0063 18.50896" transform="translate(297.4408, 3.267145)" id="path4145-7-4" stroke-width="1.84007" type="arc" cx="242.27197" cy="20.945251" rx="15.935473" ry="15.380697" start="6.1316209" end="6.124116" open="true" style="fill:none;" />
-      <path d="M640.8588 42.36219 C675.4999 62.36219 675.4999 62.36219 675.4999 62.36219" transform="translate(-86.60255, -9.999999)" id="path4141-3" fill-rule="evenOdd" stroke-width="2" connector-curvature="0" style="fill:none;" />
-      <rect x="519.6152" y="-7.637814" width="69.28204" height="60" id="rect4685" stroke-opacity="0" style="fill:none;" />
-    </g>
+  <g transform="matrix(1, 0, 0, 1, -433.0127, -122.3622)" id="g4784" stroke="#000000" style="fill:#000000;">
+    <text xml:space="preserve" x="491.9016" y="161.6313" letter-spacing="0px" word-spacing="0px" id="text4207" stroke="none" stroke-width="1px" font-family="sans-serif" font-size="20px" font-style="normal" font-weight="400" linespacing="125%" line-height="125%">
+      <tspan text-anchor="middle" x="470.3929" y="161.6313" id="tspan4209" role="line" text-align="center">W22</tspan>
+    </text>
+    <path d="M437.0952 124.7192 L467.6537 142.3622" id="path4141-9" fill-rule="evenOdd" connector-curvature="0" nodetypes="cc" style="fill:none;" />
+    <rect x="433.0127" y="122.3622" width="86.60254" height="50" id="rect4782" stroke-opacity="0" style="fill:none;" />
   </g>
 </svg>

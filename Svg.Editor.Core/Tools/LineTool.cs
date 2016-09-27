@@ -233,13 +233,13 @@ namespace Svg.Core.Tools
             Canvas.FireInvalidateCanvas();
         }
 
-        protected override async Task OnLongPress(LongPressGesture longPress)
+        protected override async Task OnDoubleTap(DoubleTapGesture doubleTap)
         {
-            await base.OnLongPress(longPress);
+            await base.OnDoubleTap(doubleTap);
 
             if (Canvas.ActiveTool.ToolType != ToolType.Select) return;
 
-            var line = Canvas.GetElementsUnderPointer<SvgLine>(longPress.Position).FirstOrDefault();
+            var line = Canvas.GetElementsUnderPointer<SvgLine>(doubleTap.Position).FirstOrDefault();
             if (line != null)
             {
                 Canvas.SelectedElements.Clear();

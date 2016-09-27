@@ -73,6 +73,9 @@ namespace Svg.Core.Tools
                 case GestureType.Tap:
                     await OnTap((TapGesture) gesture);
                     break;
+                case GestureType.DoubleTap:
+                    await OnDoubleTap((DoubleTapGesture) gesture);
+                    break;
                 case GestureType.LongPress:
                     await OnLongPress((LongPressGesture) gesture);
                     break;
@@ -86,6 +89,11 @@ namespace Svg.Core.Tools
         }
 
         protected virtual Task OnTap(TapGesture tap)
+        {
+            return Task.FromResult(true);
+        }
+
+        protected virtual Task OnDoubleTap(DoubleTapGesture doubleTap)
         {
             return Task.FromResult(true);
         }

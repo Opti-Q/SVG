@@ -59,6 +59,7 @@ namespace Svg.Core.Tools
             IconName = "ic_text_fields_white_48dp.png";
             ToolUsage = ToolUsage.Explicit;
             ToolType = ToolType.Create;
+
             object selectedFontSizeIndex;
             if (Properties.TryGetValue("selectedfontsizeindex", out selectedFontSizeIndex))
                 SelectedFontSize = FontSizes[Convert.ToInt32(selectedFontSizeIndex)];
@@ -71,6 +72,16 @@ namespace Svg.Core.Tools
             await base.Initialize(ws);
 
             IsActive = false;
+
+            Canvas.DefaultEditors.Add(async element =>
+            {
+                var svgText = element as SvgTextBase ?? element.Descendants().OfType<SvgTextBase>().FirstOrDefault();
+                if (svgText != null)
+                {
+                    await ChangeText(svgText);
+                }
+            });
+
         }
 
         protected override async Task OnTap(TapGesture tap)
@@ -100,14 +111,14 @@ namespace Svg.Core.Tools
             }
         }
 
-        protected override async Task OnLongPress(LongPressGesture longPress)
+        protected override async Task OnDoubleTap(DoubleTapGesture doubleTap)
         {
-            await base.OnLongPress(longPress);
+            await base.OnDoubleTap(doubleTap);
 
             if (Canvas.ActiveTool.ToolType != ToolType.Select) return;
 
             // determine if pointer was put down on a text
-            var svgText = Canvas.GetElementsUnderPointer<SvgTextBase>(longPress.Position, 20).FirstOrDefault();
+            var svgText = Canvas.GetElementsUnderPointer<SvgTextBase>(doubleTap.Position, 20).FirstOrDefault();
             if (svgText != null)
             {
                 await ChangeText(svgText);
@@ -226,15 +237,17 @@ namespace Svg.Core.Tools
                 return;
             }
 
-            if (text == svgText.Text && Math.Abs(svgText.FontSize.Value - fontSize) < 0.1f) return;
+            if ((text == svgText.Text || text == svgText.Children.OfType<SvgTextSpan>().FirstOrDefault()?.Text) && Math.Abs(svgText.FontSize.Value - fontSize) < 0.1f) return;
 
             var formerText = svgText.Text;
-            var formerChildren = svgText.Children.OfType<SvgTextSpan>().Select(x =>
+            var formerChildren = svgText.Children.OfType<SvgTextSpan>().Select(span =>
                 new SvgTextSpan
                 {
-                    Nodes = { new SvgContentNode { Content = x.Text } },
-                    X = x.X,
-                    Y = x.Y
+                    Nodes = { new SvgContentNode { Content = span.Text } },
+                    X = span.X,
+                    Y = span.Y,
+                    TextAnchor = span.TextAnchor,
+                    SpaceHandling = span.SpaceHandling
                 }).ToArray();
             var formerFontSize = svgText.FontSize;
             UndoRedoService.ExecuteCommand(new UndoableActionCommand("Edit text", o =>
