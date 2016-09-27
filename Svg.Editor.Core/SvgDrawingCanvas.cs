@@ -202,76 +202,17 @@ namespace Svg.Core
             var gestureRecognizer = new GestureRecognizer(_detectedGestures.AsObservable(), mainScheduler, backgroundScheduler);
             gestureRecognizer.RecognizedGestures.Subscribe(async g => await OnGesture(g));
 
-            #region Tool properties
-
-            // this part should be in the designer, when the iCL is created
-            var gridToolProperties = new Dictionary<string, object>
-            {
-                { "angle", 30.0f },
-                { "stepsizey", 20.0f },
-                { "issnappingenabled", true }
-            };
-
-            var colorToolProperties = new Dictionary<string, object>
-            {
-                { "selectablecolors", new [] { "#000000","#FF0000","#00FF00","#0000FF","#FFFF00","#FF00FF","#00FFFF" } }
-            };
-
-            var lineToolProperties = new Dictionary<string, object>
-            {
-                { "markerstartids", new [] { "none", "arrowStart", "circle" } },
-                { "markerstartnames", new [] { "---", "<--", "O--" } },
-                { "markerendids", new [] { "none", "arrowEnd", "circle" } },
-                { "markerendnames", new [] { "---", "-->", "--O" } },
-                { "linestyles", new [] { "normal", "dashed" } },
-                { "linestylenames", new [] { "-----", "- - -" } }
-            };
-
-            var freeDrawToolProperties = new Dictionary<string, object>
-            {
-                { "linestyles", new [] { "normal", "dashed" } },
-                { "linestylenames", new [] { "-----", "- - -" } },
-                { "strokewidths", new [] { 12, 24, 6 } },
-                { "strokewidthnames", new [] { "normal", "thick", "thin" } }
-            };
-
-            var textToolProperties = new Dictionary<string, object>
-            {
-                { "fontsizes", new [] { 12f, 16f, 20f, 24f, 36f, 48f } },
-                { "selectedfontsizeindex", 1 },
-                { "fontsizenames", new [] { "12px", "16px", "20px", "24px", "36px", "48px" } }
-            };
-
-            //var zoomToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
-            //{
-            //    { "minscale", 1.0f },
-            //    { "maxscale", 5.0f }
-            //}, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
-
-            var zoomToolProperties = new Dictionary<string, object>();
-
-            var panToolProperties = new Dictionary<string, object>();
-
-            #endregion
-
             UndoRedoService = Engine.Resolve<IUndoRedoService>();
 
-            _tools = new ObservableCollection<ITool>
+            var toolProvider = Engine.Resolve<ToolFactoryProvider>();
+
+            _tools = new ObservableCollection<ITool>();
+
+            foreach(var tool in toolProvider.ToolFactories)
             {
-                    new GridTool(gridToolProperties, UndoRedoService),
-                    new MoveTool(UndoRedoService),
-                    new PanTool(panToolProperties),
-                    new RotationTool(UndoRedoService),
-                    new ZoomTool(zoomToolProperties),
-                    new SelectionTool(UndoRedoService),
-                    new TextTool(textToolProperties, UndoRedoService),
-                    new LineTool(lineToolProperties, UndoRedoService),
-                    new FreeDrawingTool(freeDrawToolProperties, UndoRedoService),
-                    new ColorTool(colorToolProperties, UndoRedoService),
-                    new StrokeStyleTool(UndoRedoService),
-                    new UndoRedoTool(UndoRedoService),
-                    new ArrangeTool(UndoRedoService)
-            };
+                _tools.Add(tool.Invoke());
+            }
+
             _tools.CollectionChanged += OnToolsChanged;
         }
 

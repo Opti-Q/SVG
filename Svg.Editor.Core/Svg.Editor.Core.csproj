@@ -53,6 +53,7 @@
     <Compile Include="Services\GestureRecognizer.cs" />
     <Compile Include="Services\SchedulerProvider.cs" />
     <Compile Include="Services\SKCanvasRenderer.cs" />
+    <Compile Include="Services\ToolFactoryProvider.cs" />
     <Compile Include="Tools\ArrangeTool.cs" />
     <Compile Include="UndoRedo\CompositeCommand.cs" />
     <Compile Include="UndoRedo\UndoableActionCommand.cs" />
