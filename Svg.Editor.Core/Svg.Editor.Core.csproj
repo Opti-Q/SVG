@@ -55,6 +55,7 @@
     <Compile Include="Services\SKCanvasRenderer.cs" />
     <Compile Include="Services\ToolFactoryProvider.cs" />
     <Compile Include="Tools\ArrangeTool.cs" />
+    <Compile Include="Tools\PlaceAsBackgroundTool.cs" />
     <Compile Include="UndoRedo\CompositeCommand.cs" />
     <Compile Include="UndoRedo\UndoableActionCommand.cs" />
     <Compile Include="Events\MoveEvent.cs" />

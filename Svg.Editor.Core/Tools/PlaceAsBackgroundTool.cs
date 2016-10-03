@@ -4,11 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Svg.Core;
 using Svg.Core.Interfaces;
-using Svg.Core.Tools;
 
-namespace Svg.Droid.SampleEditor.Core.Tools
+namespace Svg.Core.Tools
 {
     public class PlaceAsBackgroundTool : UndoableToolBase
     {
@@ -25,7 +23,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
             {
                 new ToolCommand(this, "Choose background image", async o =>
                 {
-                    ImagePath = await new AndroidPickImageService().PickImagePath(Canvas.ScreenWidth);
+                    ImagePath = await Engine.Resolve<IPickImageService>().PickImagePathAsync(Canvas.ScreenWidth);
                     if (ImagePath == null) return;
                     PlaceImage(ImagePath);
                 }, iconName: "ic_insert_photo_white_48dp.png"),

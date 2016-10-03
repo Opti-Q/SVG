@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using MvvmCross.Core.ViewModels;
 using Svg.Core;
 using Svg.Core.Interfaces;
@@ -31,7 +30,7 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
             //Canvas.Tools.Add(new SaveTool(false));
             //Canvas.Tools.Add(new PlaceAsBackgroundTool(null, Engine.Resolve<IUndoRedoService>()));
 
-            #region Tool properties
+            #region Init tools
 
             // this part should be in the designer, when the iCL is created
             var gridToolProperties = new Dictionary<string, object>
@@ -81,8 +80,6 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
 
             var panToolProperties = new Dictionary<string, object>();
 
-            #endregion
-
             Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
             {
                 () => new GridTool(gridToolProperties, Engine.Resolve<IUndoRedoService>()),
@@ -103,6 +100,8 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
                 () => new PlaceAsBackgroundTool(null, Engine.Resolve<IUndoRedoService>()),
                 () => new AddRandomItemTool(Canvas) {SourceProvider = GetSource}
             }));
+
+            #endregion
 
             Canvas = new SvgDrawingCanvas { IsDebugEnabled = true };
 

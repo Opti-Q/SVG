@@ -8,7 +8,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
 {
     public class AndroidPickImageService : IPickImageService
     {
-        public async Task<string> PickImagePath(int maxPixelDimension)
+        public async Task<string> PickImagePathAsync(int maxPixelDimension)
         {
             using (var inStream = await Mvx.Resolve<IMvxPictureChooserTask>().ChoosePictureFromLibrary(maxPixelDimension, 80))
             {
