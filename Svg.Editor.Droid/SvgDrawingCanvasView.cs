@@ -16,20 +16,24 @@ namespace Svg.Droid.Editor
 #if !ANDROID
         private Android.Graphics.Bitmap _bitmap;
 #endif
-        private readonly AndroidGestureDetector _detector;
+        private AndroidGestureDetector _detector;
         private SvgDrawingCanvas _drawingCanvas;
 
         public SvgDrawingCanvas DrawingCanvas
         {
             get { return _drawingCanvas; }
-            set { _drawingCanvas = value; }
+            set
+            {
+                _drawingCanvas = value;
+                if (value == null) return;
+                _detector = new AndroidGestureDetector(Context);
+                _detector.DetectedGestures.Subscribe(async uie => await DrawingCanvas.OnEvent(uie));
+            }
         }
 
         public SvgDrawingCanvasView(Context context, IAttributeSet attr) : base(context, attr)
         {
-            _drawingCanvas = new SvgDrawingCanvas();
-            _detector = new AndroidGestureDetector(Context);
-            _detector.DetectedGestures.Subscribe(async uie => await DrawingCanvas.OnEvent(uie));
+            //DrawingCanvas = new SvgDrawingCanvas();
         }
 
         public override bool OnTouchEvent(MotionEvent ev)
