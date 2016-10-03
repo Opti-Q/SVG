@@ -48,10 +48,10 @@ namespace Svg.Core.Tools
             get
             {
                 object rotationStep;
-                Properties.TryGetValue(FilterKey, out rotationStep);
+                Properties.TryGetValue(RotationStepKey, out rotationStep);
                 return Convert.ToSingle(rotationStep);
             }
-            set { Properties[FilterKey] = value; }
+            set { Properties[RotationStepKey] = value; }
         }
 
         #endregion
