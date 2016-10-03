@@ -70,16 +70,18 @@ namespace Svg.Core.Tools
         public string IconGridOn { get; set; } = "ic_grid_on_white_48dp.png";
         public string IconGridOff { get; set; } = "ic_grid_off_white_48dp.png";
 
+        public static readonly string IsSnappingEnabledKey = @"issnappingenabled";
+
         public bool IsSnappingEnabled
         {
             get
             {
                 object isSnappingEnabled;
-                if (!Properties.TryGetValue("issnappingenabled", out isSnappingEnabled))
+                if (!Properties.TryGetValue(IsSnappingEnabledKey, out isSnappingEnabled))
                     isSnappingEnabled = true;
                 return (bool) isSnappingEnabled;
             }
-            set { Properties["issnappingenabled"] = value; }
+            set { Properties[IsSnappingEnabledKey] = value; }
         }
 
         public override int InputOrder => 100; // must be before movetool!
@@ -137,10 +139,11 @@ namespace Svg.Core.Tools
             WatchDocument(ws.Document);
         }
 
-        public override Task OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
+        public override async Task OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
         {
-            if (!IsVisible)
-                return Task.FromResult(true);
+            await base.OnPreDraw(renderer, ws);
+
+            if (!IsVisible) return;
 
             // draw gridlines
             DrawGridLines(renderer, ws);
@@ -153,8 +156,6 @@ namespace Svg.Core.Tools
             const float originLength = 50f;
             renderer.DrawLine(0f, -originLength, 0f, originLength, Pen);
             renderer.DrawLine(-originLength, 0f, originLength, 0f, Pen);
-
-            return Task.FromResult(true);
         }
 
         public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,7 +9,7 @@ namespace Svg.Core.Tools
 {
     public class PlaceAsBackgroundTool : UndoableToolBase
     {
-        public PlaceAsBackgroundTool(IDictionary<string,object> properties, IUndoRedoService undoRedoService) : base("BackgroundScheduler", properties, undoRedoService)
+        public PlaceAsBackgroundTool(IDictionary<string,object> properties, IUndoRedoService undoRedoService) : base("Background Image", properties, undoRedoService)
         {
             IconName = "ic_insert_photo_white_48dp.png";
         }
@@ -26,7 +25,7 @@ namespace Svg.Core.Tools
                     ImagePath = await Engine.Resolve<IPickImageService>().PickImagePathAsync(Canvas.ScreenWidth);
                     if (ImagePath == null) return;
                     PlaceImage(ImagePath);
-                }, iconName: "ic_insert_photo_white_48dp.png"),
+                }, o => ChooseBackgroundEnabled, iconName: "ic_insert_photo_white_48dp.png"),
                 new ToolCommand(this, "Remove background image", o =>
                 {
                     var children = Canvas.Document.Children;
@@ -46,7 +45,7 @@ namespace Svg.Core.Tools
                         Canvas.FireInvalidateCanvas();
                         Canvas.FireToolCommandsChanged();
                     }
-                }, o => Canvas.Document.Children.Any(x => x.CustomAttributes.ContainsKey("iclbackground")), iconName: "ic_delete_white_48dp.png")
+                }, o => ChooseBackgroundEnabled && Canvas.Document.Children.Any(x => x.CustomAttributes.ContainsKey("iclbackground")), iconName: "ic_delete_white_48dp.png")
             };
 
             if (ImagePath != null)
@@ -93,8 +92,20 @@ namespace Svg.Core.Tools
             }
             catch (IOException)
             {
-                Debugger.Break();
             }
+        }
+
+        public static readonly string ChooseBackgroundEnabledKey = @"choosebackgroundenabled";
+        public static readonly string ImagePathKey = @"imagepath";
+
+        public bool ChooseBackgroundEnabled
+        {
+            get
+            {
+                object chooseBackgroundEnabled;
+                return Properties.TryGetValue(ChooseBackgroundEnabledKey, out chooseBackgroundEnabled) && Convert.ToBoolean(chooseBackgroundEnabled);
+            }
+            set { Properties[ChooseBackgroundEnabledKey] = value; }
         }
 
         public string ImagePath
@@ -102,10 +113,10 @@ namespace Svg.Core.Tools
             get
             {
                 object imagePath;
-                Properties.TryGetValue("imagepath", out imagePath);
+                Properties.TryGetValue(ImagePathKey, out imagePath);
                 return imagePath as string;
             }
-            set { Properties["imagepath"] = value; }
+            set { Properties[ImagePathKey] = value; }
         }
     }
 }

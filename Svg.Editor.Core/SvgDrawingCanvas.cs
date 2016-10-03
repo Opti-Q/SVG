@@ -295,7 +295,7 @@ namespace Svg.Core
             {
                 ZoomFactor = Math.Max(ScreenWidth / constraintWidth,
                     ScreenHeight / constraintHeight);
-                ZoomFocus = PointF.Create(0, 0);
+                //ZoomFocus = PointF.Create(0, 0);
                 Translate = PointF.Create(ScreenWidth / ZoomFactor > constraintWidth ? 0 : Translate.X,
                     ScreenHeight / ZoomFactor > constraintHeight ? 0 : Translate.Y);
             }

@@ -30,7 +30,9 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
             //Canvas.Tools.Add(new SaveTool(false));
             //Canvas.Tools.Add(new PlaceAsBackgroundTool(null, Engine.Resolve<IUndoRedoService>()));
 
-            #region Init tools
+            Engine.Register<IPickImageService, AndroidPickImageService>(() => new AndroidPickImageService());
+
+            #region Register tools
 
             // this part should be in the designer, when the iCL is created
             var gridToolProperties = new Dictionary<string, object>
@@ -80,6 +82,15 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
 
             var panToolProperties = new Dictionary<string, object>();
 
+            //var fs = Engine.Resolve<IFileSystem>();
+            //var path = fs.PathCombine(fs.GetDefaultStoragePath(), "background.png");
+
+            var placeAsBackgroundToolProperties = new Dictionary<string, object>
+            {
+                //{ PlaceAsBackgroundTool.ImagePathKey, path },
+                { PlaceAsBackgroundTool.ChooseBackgroundEnabledKey, true }
+            };
+
             Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
             {
                 () => new GridTool(gridToolProperties, Engine.Resolve<IUndoRedoService>()),
@@ -97,7 +108,7 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
                 () => new ArrangeTool(Engine.Resolve<IUndoRedoService>()),
                 () => new AuxiliaryLineTool(),
                 () => new SaveTool(false),
-                () => new PlaceAsBackgroundTool(null, Engine.Resolve<IUndoRedoService>()),
+                () => new PlaceAsBackgroundTool(placeAsBackgroundToolProperties, Engine.Resolve<IUndoRedoService>()),
                 () => new AddRandomItemTool(Canvas) {SourceProvider = GetSource}
             }));
 
