@@ -22,9 +22,30 @@ namespace Svg.Core.Tools
 
         public bool IsDebugEnabled { get; set; }
 
-        public Func<SvgVisualElement, bool> Filter { get; set; }
+        public static readonly string FilterKey = @"filter";
+        public static readonly string RotationStepKey = @"filter";
 
-        public float RotationStep { get; set; }
+        public Func<SvgVisualElement, bool> Filter
+        {
+            get
+            {
+                object filter;
+                Properties.TryGetValue(FilterKey, out filter);
+                return (Func<SvgVisualElement, bool>) filter;
+            }
+            set { Properties[FilterKey] = value; }
+        }
+
+        public float RotationStep
+        {
+            get
+            {
+                object rotationStep;
+                Properties.TryGetValue(FilterKey, out rotationStep);
+                return Convert.ToSingle(rotationStep);
+            }
+            set { Properties[FilterKey] = value; }
+        }
 
         public RotationTool(IUndoRedoService undoRedoService) : base("Rotate", undoRedoService)
         {
@@ -55,7 +76,7 @@ namespace Svg.Core.Tools
                     zt.IsActive = false;
                     _rotations.Clear();
 
-                    UndoRedoService.ExecuteCommand(new UndoableActionCommand("Rotate operation", o => {}));
+                    UndoRedoService.ExecuteCommand(new UndoableActionCommand("Rotate operation", o => { }));
                 }
                 else if (re.Status == RotateStatus.Rotating &&
                          ws.SelectedElements.Count == 1 &&
