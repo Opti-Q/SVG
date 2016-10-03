@@ -30,7 +30,7 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
             //Canvas.Tools.Add(new SaveTool(false));
             //Canvas.Tools.Add(new PlaceAsBackgroundTool(null, Engine.Resolve<IUndoRedoService>()));
 
-            Engine.Register<IPickImageService, AndroidPickImageService>(() => new AndroidPickImageService());
+            Engine.Register<IPickImageService, MvxPickImageService>(() => new MvxPickImageService());
 
             #region Register tools
 

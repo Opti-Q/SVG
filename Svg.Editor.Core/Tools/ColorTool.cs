@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -69,6 +70,11 @@ namespace Svg.Core.Tools
         {
             IconName = "svg/ic_format_color_fill_white_48px.svg";
             ToolType = ToolType.Modify;
+
+            object selectedColorIndex;
+            SelectedColor = Properties.TryGetValue("selectedcolorindex", out selectedColorIndex)
+                ? Color.Create(SelectableColors.ElementAtOrDefault(Convert.ToInt32(selectedColorIndex)) ?? "#000000")
+                : Color.Create(SelectableColors.FirstOrDefault() ?? "#000000");
         }
 
         #region Overrides
@@ -77,15 +83,11 @@ namespace Svg.Core.Tools
         {
             await base.Initialize(ws);
 
-            var selectableColors = SelectableColors;
-
-            SelectedColor = Color.Create(selectableColors.FirstOrDefault() ?? "#000000");
-
             // cache icons
             var cachingService = Engine.TryResolve<ISvgCachingService>();
             if (cachingService != null)
             {
-                foreach (var selectableColor in selectableColors)
+                foreach (var selectableColor in SelectableColors)
                 {
                     var color = Color.Create(selectableColor);
                     cachingService.SaveAsPng(IconName, StringifyColor(color), SvgProcessingUtil.ColorAction(color));

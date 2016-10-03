@@ -6,7 +6,7 @@ using Svg.Interfaces;
 
 namespace Svg.Droid.SampleEditor.Core.Tools
 {
-    public class AndroidPickImageService : IPickImageService
+    public class MvxPickImageService : IPickImageService
     {
         public async Task<string> PickImagePathAsync(int maxPixelDimension)
         {
