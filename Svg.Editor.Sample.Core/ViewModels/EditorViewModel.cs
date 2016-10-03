@@ -96,7 +96,7 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
                 () => new GridTool(gridToolProperties, Engine.Resolve<IUndoRedoService>()),
                 () => new MoveTool(Engine.Resolve<IUndoRedoService>()),
                 () => new PanTool(panToolProperties),
-                () => new RotationTool(Engine.Resolve<IUndoRedoService>()),
+                () => new RotationTool(null, Engine.Resolve<IUndoRedoService>()),
                 () => new ZoomTool(zoomToolProperties),
                 () => new SelectionTool(Engine.Resolve<IUndoRedoService>()),
                 () => new TextTool(textToolProperties, Engine.Resolve<IUndoRedoService>()),

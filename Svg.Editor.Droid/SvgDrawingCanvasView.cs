@@ -26,6 +26,7 @@ namespace Svg.Droid.Editor
             {
                 _drawingCanvas = value;
                 if (value == null) return;
+                _detector?.Dispose();
                 _detector = new AndroidGestureDetector(Context);
                 _detector.DetectedGestures.Subscribe(async uie => await DrawingCanvas.OnEvent(uie));
             }

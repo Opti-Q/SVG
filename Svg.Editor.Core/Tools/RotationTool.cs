@@ -11,6 +11,9 @@ namespace Svg.Core.Tools
 {
     public class RotationTool : UndoableToolBase
     {
+
+        #region Private fields
+
         private bool _wasImplicitlyActivated;
         private PointF _lastRotationCenter;
         private Brush _brush2;
@@ -20,10 +23,14 @@ namespace Svg.Core.Tools
         private readonly Dictionary<SvgElement, float> _rotations = new Dictionary<SvgElement, float>();
         private ITool _activatedFrom;
 
+        #endregion
+
+        #region Public properties
+
         public bool IsDebugEnabled { get; set; }
 
         public static readonly string FilterKey = @"filter";
-        public static readonly string RotationStepKey = @"filter";
+        public static readonly string RotationStepKey = @"rotationstep";
 
         public Func<SvgVisualElement, bool> Filter
         {
@@ -47,7 +54,9 @@ namespace Svg.Core.Tools
             set { Properties[FilterKey] = value; }
         }
 
-        public RotationTool(IUndoRedoService undoRedoService) : base("Rotate", undoRedoService)
+        #endregion
+
+        public RotationTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Rotate", properties, undoRedoService)
         {
             ToolType = ToolType.Modify;
         }
