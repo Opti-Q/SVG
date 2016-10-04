@@ -53,14 +53,14 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
                 { "markerstartnames", new [] { "---", "<--", "O--" } },
                 { "markerendids", new [] { "none", "arrowEnd", "circle" } },
                 { "markerendnames", new [] { "---", "-->", "--O" } },
-                { "linestyles", new [] { "normal", "dashed" } },
+                { "linestyles", new [] { "none", "3 3" } },
                 { "linestylenames", new [] { "-----", "- - -" } }
             };
 
             var freeDrawToolProperties = new Dictionary<string, object>
             {
-                { "linestyles", new [] { "normal", "dashed" } },
-                { "linestylenames", new [] { "-----", "- - -" } },
+                { "linestyles", new [] { "none", "17 17", "34 34" } },
+                { "linestylenames", new [] { "----------", "- - - - - -", "--  --  --" } },
                 { "strokewidths", new [] { 12, 24, 6 } },
                 { "strokewidthnames", new [] { "normal", "thick", "thin" } }
             };
@@ -91,24 +91,26 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
                 { PlaceAsBackgroundTool.ChooseBackgroundEnabledKey, true }
             };
 
+            var undoRedoService = Engine.Resolve<IUndoRedoService>();
+
             Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
             {
-                () => new GridTool(gridToolProperties, Engine.Resolve<IUndoRedoService>()),
-                () => new MoveTool(Engine.Resolve<IUndoRedoService>()),
+                () => new GridTool(gridToolProperties, undoRedoService),
+                () => new MoveTool(undoRedoService),
                 () => new PanTool(panToolProperties),
-                () => new RotationTool(null, Engine.Resolve<IUndoRedoService>()),
+                () => new RotationTool(null, undoRedoService),
                 () => new ZoomTool(zoomToolProperties),
-                () => new SelectionTool(Engine.Resolve<IUndoRedoService>()),
-                () => new TextTool(textToolProperties, Engine.Resolve<IUndoRedoService>()),
-                () => new LineTool(lineToolProperties, Engine.Resolve<IUndoRedoService>()),
-                () => new FreeDrawingTool(freeDrawToolProperties, Engine.Resolve<IUndoRedoService>()),
-                () => new ColorTool(colorToolProperties, Engine.Resolve<IUndoRedoService>()),
-                () => new StrokeStyleTool(Engine.Resolve<IUndoRedoService>()),
-                () => new UndoRedoTool(Engine.Resolve<IUndoRedoService>()),
-                () => new ArrangeTool(Engine.Resolve<IUndoRedoService>()),
+                () => new SelectionTool(undoRedoService),
+                () => new TextTool(textToolProperties, undoRedoService),
+                () => new LineTool(lineToolProperties, undoRedoService),
+                () => new FreeDrawingTool(freeDrawToolProperties, undoRedoService),
+                () => new ColorTool(colorToolProperties, undoRedoService),
+                () => new StrokeStyleTool(undoRedoService),
+                () => new UndoRedoTool(undoRedoService),
+                () => new ArrangeTool(undoRedoService),
                 () => new AuxiliaryLineTool(),
                 () => new SaveTool(false),
-                () => new PlaceAsBackgroundTool(placeAsBackgroundToolProperties, Engine.Resolve<IUndoRedoService>()),
+                () => new PlaceAsBackgroundTool(placeAsBackgroundToolProperties, undoRedoService),
                 () => new AddRandomItemTool(Canvas) {SourceProvider = GetSource}
             }));
 

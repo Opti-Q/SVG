@@ -165,9 +165,9 @@ namespace Svg.Core.Tools
                     FillOpacity = 0
                 };
 
-                if (SelectedLineStyle == "dashed")
+                if (!string.IsNullOrWhiteSpace(SelectedLineStyle) && SelectedLineStyle != "none")
                 {
-                    _currentPath.StrokeDashArray = StrokeDashArray.Clone();
+                    _currentPath.StrokeDashArray = GenerateStrokeDashArray(SelectedLineStyle.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToInt32(s)));
                 }
 
                 _currentPath.CustomAttributes.Add("iclnosnapping", "");
@@ -217,6 +217,13 @@ namespace Svg.Core.Tools
                 _currentPath = null;
                 Canvas.FireInvalidateCanvas();
             }
+        }
+
+        private static SvgUnitCollection GenerateStrokeDashArray(IEnumerable<int> pattern)
+        {
+            var svgUnitCollection = new SvgUnitCollection();
+            svgUnitCollection.AddRange(pattern.Select(element => new SvgUnit(SvgUnitType.Pixel, element)));
+            return svgUnitCollection;
         }
 
         #endregion

@@ -37,7 +37,6 @@ namespace Svg.Core.Tools
         private Brush BlueBrush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
         private Pen BluePen => _pen ?? (_pen = Engine.Factory.CreatePen(BlueBrush, 5));
         private IEnumerable<SvgMarker> Markers { get; }
-        private SvgUnitCollection StrokeDashArray { get; }
 
         #endregion
 
@@ -187,12 +186,6 @@ namespace Svg.Core.Tools
             Markers = markers;
 
             #endregion
-
-            StrokeDashArray = new SvgUnitCollection
-            {
-                new SvgUnit(SvgUnitType.Pixel, 3),
-                new SvgUnit(SvgUnitType.Pixel, 3)
-            };
         }
 
         #region Overrides
@@ -454,12 +447,19 @@ namespace Svg.Core.Tools
                 MarkerEnd = CreateUriFromId(SelectedMarkerEndId)
             };
 
-            if (SelectedLineStyle == "dashed")
+            if (!string.IsNullOrWhiteSpace(SelectedLineStyle) && SelectedLineStyle != "none")
             {
-                line.StrokeDashArray = StrokeDashArray.Clone();
+                line.StrokeDashArray = GenerateStrokeDashArray(SelectedLineStyle.Split(new [] {" "}, StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToInt32(s)));
             }
 
             return line;
+        }
+
+        private static SvgUnitCollection GenerateStrokeDashArray(IEnumerable<int> pattern)
+        {
+            var svgUnitCollection = new SvgUnitCollection();
+            svgUnitCollection.AddRange(pattern.Select(element => new SvgUnit(SvgUnitType.Pixel, element)));
+            return svgUnitCollection;
         }
 
         private void AddTranslate(SvgVisualElement element, float deltaX, float deltaY)
@@ -526,7 +526,7 @@ namespace Svg.Core.Tools
                     ? t._currentLine.MarkerStart?.OriginalString?.Replace("url(#", null)?.TrimEnd(')') ?? "none"
                     : t.SelectedMarkerStartId;
                 var lineStyle = t._currentLine != null
-                    ? string.IsNullOrEmpty(t._currentLine.StrokeDashArray?.ToString()) ? "normal" : "dashed"
+                    ? t._currentLine.StrokeDashArray?.ToString() ?? "none"
                     : t.SelectedLineStyle;
                 var markerEndId = t._currentLine != null
                     ? t._currentLine.MarkerEnd?.OriginalString?.Replace("url(#", null)?.TrimEnd(')') ?? "none"
@@ -560,7 +560,9 @@ namespace Svg.Core.Tools
                         // change the line style of all selected items
                         formerCurrentLine.MarkerStart = CreateUriFromId(selectedMarkerStartId);
                         formerCurrentLine.MarkerEnd = CreateUriFromId(selectedMarkerEndId);
-                        formerCurrentLine.StrokeDashArray = selectedLineStyle == "dashed" ? t.StrokeDashArray.Clone() : null;
+                        formerCurrentLine.StrokeDashArray = !string.IsNullOrWhiteSpace(selectedLineStyle) && selectedLineStyle != "none"
+                            ? GenerateStrokeDashArray(selectedLineStyle.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToInt32(s)))
+                            : null;
                         _canvas.FireInvalidateCanvas();
                     }, o =>
                     {

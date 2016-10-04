@@ -47,13 +47,13 @@ namespace Svg.Editor.Tests
                 { "markerstartnames", new [] { "---", "<--", "O--" } },
                 { "markerendids", new [] { "none", "arrowEnd", "circle" } },
                 { "markerendnames", new [] { "---", "-->", "--O" } },
-                { "linestyles", new [] { "normal", "dashed" } },
+                { "linestyles", new [] { "none", "3 3" } },
                 { "linestylenames", new [] { "-----", "- - -" } }
             };
 
             var freeDrawToolProperties = new Dictionary<string, object>
             {
-                { "linestyles", new [] { "normal", "dashed" } },
+                { "linestyles", new [] { "none", "3 3" } },
                 { "linestylenames", new [] { "-----", "- - -" } },
                 { "strokewidths", new [] { 12, 24, 6 } },
                 { "strokewidthnames", new [] { "normal", "thick", "thin" } }
