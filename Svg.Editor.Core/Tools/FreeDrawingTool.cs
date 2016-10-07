@@ -19,21 +19,11 @@ namespace Svg.Core.Tools
     {
         #region Private fields and properties
 
-        private const double MinMovedDistance = 6.0;
-
         private static IFreeDrawingOptionsInputService FreeDrawingOptionsInputServiceProxy => Engine.Resolve<IFreeDrawingOptionsInputService>();
 
-        private double _movedDistance;
         private SvgPath _currentPath;
-        private bool _drawingEnabled;
         private PointF _lastCanvasPointerPosition;
         private bool _isActive;
-
-        private SvgUnitCollection StrokeDashArray { get; } = new SvgUnitCollection
-        {
-            new SvgUnit(SvgUnitType.Pixel, 25),
-            new SvgUnit(SvgUnitType.Pixel, 25)
-        };
 
         #endregion
 
@@ -144,7 +134,6 @@ namespace Svg.Core.Tools
             {
                 _currentPath = null;
                 _lastCanvasPointerPosition = null;
-                _drawingEnabled = false;
                 return;
             }
 
@@ -170,7 +159,7 @@ namespace Svg.Core.Tools
                     _currentPath.StrokeDashArray = GenerateStrokeDashArray(SelectedLineStyle.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToInt32(s)));
                 }
 
-                _currentPath.CustomAttributes.Add("iclnosnapping", "");
+                _currentPath.CustomAttributes.Add(NoSnappingCustomAttributeKey, "");
 
                 var capturedCurrentPath = _currentPath;
                 UndoRedoService.ExecuteCommand(new UndoableActionCommand("Add new freedrawing path", o =>

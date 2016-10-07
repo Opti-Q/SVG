@@ -29,7 +29,8 @@ namespace Svg.Droid.SampleEditor.Core.Tools
             //"svg/painting-marker-01-f.svg",
             //"svg/rect.svg",
             //"svg/Bends_01.svg", causes StackOverflowException in SvgRectangle.Bounds
-            "isolib/Positions/Positions/Positions_03.svg",
+            //"isolib/Positions/Positions/Positions_03.svg",
+            "svg/findingmarker.svg",
             //"svg/Penetrations.svg",
             //"svg/Positions.svg",
             //"svg/Reducers.svg",

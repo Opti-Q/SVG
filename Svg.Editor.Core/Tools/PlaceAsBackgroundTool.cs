@@ -29,7 +29,7 @@ namespace Svg.Core.Tools
                 new ToolCommand(this, "Remove background image", o =>
                 {
                     var children = Canvas.Document.Children;
-                    var background = children.FirstOrDefault(x => x.CustomAttributes.ContainsKey("iclbackground"));
+                    var background = children.FirstOrDefault(x => x.CustomAttributes.ContainsKey(BackgroundCustomAttributeKey));
                     if (background != null)
                     {
                         children.Remove(background);
@@ -45,7 +45,7 @@ namespace Svg.Core.Tools
                         Canvas.FireInvalidateCanvas();
                         Canvas.FireToolCommandsChanged();
                     }
-                }, o => ChooseBackgroundEnabled && Canvas.Document.Children.Any(x => x.CustomAttributes.ContainsKey("iclbackground")), iconName: "ic_delete_white_48dp.png")
+                }, o => ChooseBackgroundEnabled && Canvas.Document.Children.Any(x => x.CustomAttributes.ContainsKey(BackgroundCustomAttributeKey)), iconName: "ic_delete_white_48dp.png")
             };
 
             if (ImagePath != null)
@@ -68,11 +68,11 @@ namespace Svg.Core.Tools
                 {
                     Href = new Uri($"file://{path}", UriKind.Absolute)
                 };
-                image.CustomAttributes.Add("iclbackground", "");
-                image.CustomAttributes.Add("iclnosnapping", "");
+                image.CustomAttributes.Add(BackgroundCustomAttributeKey, "");
+                image.CustomAttributes.Add(NoSnappingCustomAttributeKey, "");
 
                 // remove already placed background
-                var formerBackground = children.FirstOrDefault(x => x.CustomAttributes.ContainsKey("iclbackground"));
+                var formerBackground = children.FirstOrDefault(x => x.CustomAttributes.ContainsKey(BackgroundCustomAttributeKey));
                 if (formerBackground != null)
                 {
                     children.Remove(formerBackground);
