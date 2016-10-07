@@ -103,6 +103,7 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
                 () => new SelectionTool(undoRedoService),
                 () => new TextTool(textToolProperties, undoRedoService),
                 () => new LineTool(lineToolProperties, undoRedoService),
+                () => new EllipseTool(null, undoRedoService),
                 () => new FreeDrawingTool(freeDrawToolProperties, undoRedoService),
                 () => new ColorTool(colorToolProperties, undoRedoService),
                 () => new StrokeStyleTool(undoRedoService),

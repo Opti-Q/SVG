@@ -23,6 +23,8 @@ namespace Svg.Core.Tools
         protected SvgDrawingCanvas Canvas { get; private set; }
 
         public const string NoSnappingCustomAttributeKey = "iclnosnapping";
+        public const string NoFillCustomAttributeKey = "iclnofill";
+        public const string NoStrokeCustomAttributeKey = "iclnostroke";
         public const string BackgroundCustomAttributeKey = "iclbackground";
 
         public string Name { get; protected set; }

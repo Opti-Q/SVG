@@ -110,5 +110,21 @@ namespace Svg
             line.Transforms.GetMatrix().TransformPoints(points);
             return points;
         }
+
+        /// <summary>
+        /// Calculates all tranformations into start and end points and returns the result.
+        /// </summary>
+        /// <param name="rectangle"></param>
+        /// <returns>an array where [0] = start, [1] = end point.</returns>
+        public static PointF[] GetPoints(this RectangleF rectangle)
+        {
+            return new[]
+            {
+                PointF.Create(rectangle.Left, rectangle.Top),
+                PointF.Create(rectangle.Right, rectangle.Top),
+                PointF.Create(rectangle.Right, rectangle.Bottom),
+                PointF.Create(rectangle.Left, rectangle.Bottom)
+            };
+        }
     }
 }

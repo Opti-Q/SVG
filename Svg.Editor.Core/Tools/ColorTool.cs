@@ -122,42 +122,41 @@ namespace Svg.Core.Tools
 
         private void ColorizeElement(SvgElement element, Color color)
         {
+            var noFill = element.CustomAttributes.ContainsKey(NoFillCustomAttributeKey);
+            var noStroke = element.CustomAttributes.ContainsKey(NoStrokeCustomAttributeKey);
+
             // only colorize visual elements
-            if (!(element is SvgVisualElement)) return;
+            if (!(element is SvgVisualElement) || noFill && noStroke) return;
 
             var oldStroke = ((SvgColourServer) element.Stroke)?.ToString();
             var oldFill = ((SvgColourServer) element.Fill)?.ToString();
-            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Colorize stroke", o =>
+            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Colorize element", _ =>
             {
-                element.Stroke?.Dispose();
-                element.Stroke = new SvgColourServer(color);
-                element.Fill?.Dispose();
-                element.Fill = new SvgColourServer(color);
+                if (!noStroke)
+                {
+                    element.Stroke?.Dispose();
+                    element.Stroke = new SvgColourServer(color);
+                }
+                if (!noFill)
+                {
+                    element.Fill?.Dispose();
+                    element.Fill = new SvgColourServer(color);
+                }
                 Canvas.FireInvalidateCanvas();
-            }, state =>
+            }, _ =>
             {
-                element.Stroke?.Dispose();
-                Engine.Resolve<ISvgElementFactory>().SetPropertyValue(element, "stroke", oldStroke, element.OwnerDocument);
-                element.Fill?.Dispose();
-                Engine.Resolve<ISvgElementFactory>().SetPropertyValue(element, "fill", oldFill, element.OwnerDocument);
+                if (!noStroke)
+                {
+                    element.Stroke?.Dispose();
+                    Engine.Resolve<ISvgElementFactory>().SetPropertyValue(element, "stroke", oldStroke, element.OwnerDocument);
+                }
+                if (!noFill)
+                {
+                    element.Fill?.Dispose();
+                    Engine.Resolve<ISvgElementFactory>().SetPropertyValue(element, "fill", oldFill, element.OwnerDocument);
+                }
                 Canvas.FireInvalidateCanvas();
             }), hasOwnUndoRedoScope: false);
-
-            //if (element is SvgText || element is SvgLine)
-            //{
-            //    var oldFill = ((SvgColourServer) element.Fill)?.ToString();
-            //    UndoRedoService.ExecuteCommand(new UndoableActionCommand("Colorize fill", o =>
-            //    {
-            //        element.Fill?.Dispose();
-            //        element.Fill = new SvgColourServer(color);
-            //        Canvas.FireInvalidateCanvas();
-            //    }, state =>
-            //    {
-            //        element.Fill?.Dispose();
-            //        Engine.Resolve<ISvgElementFactory>().SetPropertyValue(element, "fill", oldFill, element.OwnerDocument);
-            //        Canvas.FireInvalidateCanvas();
-            //    }), hasOwnUndoRedoScope: false);
-            //}
         }
 
         /// <summary>
