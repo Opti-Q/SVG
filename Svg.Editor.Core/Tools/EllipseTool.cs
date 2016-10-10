@@ -23,6 +23,7 @@ namespace Svg.Core.Tools
         private ITool _activatedFrom;
         private PointF _offset;
         private PointF _translate;
+        private PointF _topLeft;
 
         #endregion
 
@@ -209,21 +210,12 @@ namespace Svg.Core.Tools
                 return;
             }
 
-            var relativeStart = Canvas.ScreenToCanvas(drag.Start);
-            var relativeEnd = Canvas.ScreenToCanvas(drag.Position);
-
-            // turn them around if end is more left or top than start
-            var diff = relativeEnd - relativeStart;
-            if (diff.X < 0 || diff.Y < 0)
-            {
-                diff = relativeStart;
-                relativeStart = relativeEnd;
-                relativeEnd = diff;
-            }
+            var canvasStart = Canvas.ScreenToCanvas(drag.Start);
+            var canvasEnd = Canvas.ScreenToCanvas(drag.Position);
 
             if (_currentEllipse == null)
             {
-                SelectEllipse(CreateEllipse(relativeStart));
+                SelectEllipse(CreateEllipse(canvasStart));
 
                 // capture variables for use in lambda
                 var children = Canvas.Document.Children;
@@ -239,31 +231,36 @@ namespace Svg.Core.Tools
                 }));
 
                 _movementHandle = MovementHandle.BottomRight;
+                _topLeft = canvasStart;
             }
             else
             {
-                var matrix = _currentEllipse.Transforms.GetMatrix();
-                matrix.Invert();
-                matrix.TransformPoints(new[] { relativeEnd });
-
                 // capture _currentEllipse for use in lambda
                 var capturedCurrentEllipse = _currentEllipse;
+                var boundingBox = _currentEllipse.GetBoundingBox();
 
                 if (_movementHandle == MovementHandle.None)
                 {
-                    var canvasPointer1Position = Canvas.ScreenToCanvas(drag.Start);
-                    var points = _currentEllipse.GetTransformedPoints();
-                    _movementHandle = Math.Abs(canvasPointer1Position.X - points[0].X) * Canvas.ZoomFactor <= MaxPointerDistance &&
-                                 Math.Abs(canvasPointer1Position.Y - points[0].Y) * Canvas.ZoomFactor <= MaxPointerDistance ? MovementHandle.TopLeft :
-                                 Math.Abs(canvasPointer1Position.X - points[1].X) * Canvas.ZoomFactor <= MaxPointerDistance &&
-                                 Math.Abs(canvasPointer1Position.Y - points[1].Y) * Canvas.ZoomFactor <= MaxPointerDistance ? MovementHandle.TopRight :
-                                 Math.Abs(canvasPointer1Position.X - points[2].X) * Canvas.ZoomFactor <= MaxPointerDistance &&
-                                 Math.Abs(canvasPointer1Position.Y - points[2].Y) * Canvas.ZoomFactor <= MaxPointerDistance ? MovementHandle.BottomRight :
-                                 Math.Abs(canvasPointer1Position.X - points[3].X) * Canvas.ZoomFactor <= MaxPointerDistance &&
-                                 Math.Abs(canvasPointer1Position.Y - points[3].Y) * Canvas.ZoomFactor <= MaxPointerDistance ? MovementHandle.BottomLeft :
+                    var canvasPointer1Position = canvasStart;
+                    // determine the handle (position) where the pointer was put down
+                    _movementHandle = Math.Abs(canvasPointer1Position.X - boundingBox.Left) * Canvas.ZoomFactor <= MaxPointerDistance &&
+                                 Math.Abs(canvasPointer1Position.Y - boundingBox.Top) * Canvas.ZoomFactor <= MaxPointerDistance ? MovementHandle.TopLeft :
+                                 Math.Abs(canvasPointer1Position.X - boundingBox.Right) * Canvas.ZoomFactor <= MaxPointerDistance &&
+                                 Math.Abs(canvasPointer1Position.Y - boundingBox.Top) * Canvas.ZoomFactor <= MaxPointerDistance ? MovementHandle.TopRight :
+                                 Math.Abs(canvasPointer1Position.X - boundingBox.Right) * Canvas.ZoomFactor <= MaxPointerDistance &&
+                                 Math.Abs(canvasPointer1Position.Y - boundingBox.Bottom) * Canvas.ZoomFactor <= MaxPointerDistance ? MovementHandle.BottomRight :
+                                 Math.Abs(canvasPointer1Position.X - boundingBox.Left) * Canvas.ZoomFactor <= MaxPointerDistance &&
+                                 Math.Abs(canvasPointer1Position.Y - boundingBox.Bottom) * Canvas.ZoomFactor <= MaxPointerDistance ? MovementHandle.BottomLeft :
                                  _currentEllipse.GetBoundingBox().Contains(canvasPointer1Position) ? MovementHandle.All : MovementHandle.None;
 
                     if (_movementHandle == MovementHandle.None) return;
+
+                    _topLeft = boundingBox.Location;
+
+                    // transform point with inverse matrix because we want the real canvas position
+                    var matrix1 = _currentEllipse.Transforms.GetMatrix();
+                    matrix1.Invert();
+                    matrix1.TransformPoints(new[] { _topLeft });
 
                     UndoRedoService.ExecuteCommand(new UndoableActionCommand("Edit ellipse", o => Canvas.FireInvalidateCanvas(), o => Canvas.FireInvalidateCanvas()));
                 }
@@ -274,17 +271,26 @@ namespace Svg.Core.Tools
                 var formerRadiusX = _currentEllipse.RadiusX;
                 var formerRadiusY = _currentEllipse.RadiusY;
 
+                // transform point with inverse matrix because we want the real canvas position
+                var matrix = _currentEllipse.Transforms.GetMatrix();
+                matrix.Invert();
+                matrix.TransformPoints(new[] { canvasEnd });
+
+                // the rectangle that is drawn over the two points, which will contain the ellipse
+                var drawnRectangle = RectangleF.FromPoints(new[] { canvasEnd, _topLeft });
+
+                // resize/move ellipse depending on where the pointer was put down
                 switch (_movementHandle)
                 {
                     case MovementHandle.BottomRight:
-                        UndoRedoService.ExecuteCommand(new UndoableActionCommand("Move ellipse bottomright", o =>
+                        UndoRedoService.ExecuteCommand(new UndoableActionCommand("Resize ellipse bottomright", o =>
                         {
-                            var center = (relativeStart + relativeEnd) / 2;
-                            var radius = (relativeEnd - relativeStart) / 2;
+                            var center = PointF.Create(drawnRectangle.X + drawnRectangle.Width / 2, drawnRectangle.Y + drawnRectangle.Height / 2);
+                            var radius = SizeF.Create(drawnRectangle.Width / 2, drawnRectangle.Height / 2);
                             capturedCurrentEllipse.CenterX = new SvgUnit(SvgUnitType.Pixel, center.X);
                             capturedCurrentEllipse.CenterY = new SvgUnit(SvgUnitType.Pixel, center.Y);
-                            capturedCurrentEllipse.RadiusX = new SvgUnit(SvgUnitType.Pixel, radius.X);
-                            capturedCurrentEllipse.RadiusY = new SvgUnit(SvgUnitType.Pixel, radius.Y);
+                            capturedCurrentEllipse.RadiusX = new SvgUnit(SvgUnitType.Pixel, radius.Width);
+                            capturedCurrentEllipse.RadiusY = new SvgUnit(SvgUnitType.Pixel, radius.Height);
                         }, o =>
                         {
                             capturedCurrentEllipse.CenterX = formerCenterX;
@@ -324,8 +330,10 @@ namespace Svg.Core.Tools
 
                 var radius = (int) (MaxPointerDistance / ws.ZoomFactor);
                 var points = _currentEllipse.GetTransformedPoints();
-                //renderer.DrawCircle(points[0].X - (radius >> 1), points[0].Y - (radius >> 1), radius, BluePen);
+                renderer.DrawCircle(points[0].X - (radius >> 1), points[0].Y - (radius >> 1), radius, BluePen);
+                renderer.DrawCircle(points[1].X - (radius >> 1), points[1].Y - (radius >> 1), radius, BluePen);
                 renderer.DrawCircle(points[2].X - (radius >> 1), points[2].Y - (radius >> 1), radius, BluePen);
+                renderer.DrawCircle(points[3].X - (radius >> 1), points[3].Y - (radius >> 1), radius, BluePen);
 
                 renderer.Graphics.Restore();
             }
