@@ -15,6 +15,7 @@ namespace Svg.Editor.Tests
     {
         private MockColorInputService _colorMock;
         private MockTextInputService _textMock;
+        private MockStrokeStyleOptionsInputService _mockStrokeStyle;
 
         [SetUp]
         public override void SetUp()
@@ -28,6 +29,10 @@ namespace Svg.Editor.Tests
             _textMock = new MockTextInputService();
 
             Engine.Register<ITextInputService, MockTextInputService>(() => _textMock);
+
+            _mockStrokeStyle = new MockStrokeStyleOptionsInputService();
+
+            Engine.Register<IStrokeStyleOptionsInputService, MockStrokeStyleOptionsInputService>(() => _mockStrokeStyle);
         }
 
         [Test]
@@ -378,87 +383,31 @@ namespace Svg.Editor.Tests
         {
             // Arrange
             var tool = Canvas.Tools.OfType<StrokeStyleTool>().Single();
-            var rect = new SvgRectangle
+            var ellipse = new SvgEllipse
             {
-                X = 10,
-                Y = 10,
-                Width = 50,
-                Height = 50,
+                CenterX = 10,
+                CenterY = 10,
+                RadiusX = 50,
+                RadiusY = 50,
                 Stroke = new SvgColourServer(Color.Create(0, 0, 0))
             };
-            var stroke = rect.StrokeDashArray?.ToString();
+            var stroke = ellipse.StrokeDashArray?.ToString();
             await Canvas.EnsureInitialized();
+            _mockStrokeStyle.F = (arg1, arg2, arg3, arg4, arg5) => new StrokeStyleTool.StrokeStyleOptions { StrokeDashIndex = 1, StrokeWidthIndex = 1 };
 
-            Canvas.Document.Children.Add(rect);
-            Canvas.SelectedElements.Add(rect);
+            Canvas.Document.Children.Add(ellipse);
+            Canvas.SelectedElements.Add(ellipse);
             tool.Commands.First().Execute(null);
 
             // Preassert
-            Assert.AreEqual("3 3", rect.StrokeDashArray?.ToString());
+            Assert.AreEqual("3 3", ellipse.StrokeDashArray?.ToString());
 
             // Act
             var undoredoTool = Canvas.Tools.OfType<UndoRedoTool>().Single();
             undoredoTool.Commands.First(x => x.Name == "Undo").Execute(null);
 
             // Assert
-            Assert.AreEqual(stroke, rect.StrokeDashArray?.ToString());
-        }
-
-        [Test]
-        public async Task ManyElementsSelected_StrokeStyleCommandExecuted_AllChildStrokesAreChanged_ThenUndo_AllStrokesAreRestored()
-        {
-            // Arrange
-            var tool = Canvas.Tools.OfType<StrokeStyleTool>().Single();
-            var rect = new SvgRectangle
-            {
-                X = 10,
-                Y = 10,
-                Width = 50,
-                Height = 50,
-                Stroke = new SvgColourServer(Color.Create(0, 0, 0))
-            };
-            var stroke = rect.StrokeDashArray?.ToString();
-            var rect1 = new SvgRectangle
-            {
-                X = 100,
-                Y = 100,
-                Width = 50,
-                Height = 50,
-                Stroke = new SvgColourServer(Color.Create(0, 0, 0))
-            };
-            var stroke1 = rect1.StrokeDashArray?.ToString();
-            var rect2 = new SvgRectangle
-            {
-                X = 50,
-                Y = 50,
-                Width = 25,
-                Height = 25,
-                Stroke = new SvgColourServer(Color.Create(0, 0, 0))
-            };
-            var stroke2 = rect2.StrokeDashArray?.ToString();
-            await Canvas.EnsureInitialized();
-
-            Canvas.Document.Children.Add(rect);
-            Canvas.Document.Children.Add(rect1);
-            Canvas.Document.Children.Add(rect2);
-            Canvas.SelectedElements.Add(rect);
-            Canvas.SelectedElements.Add(rect1);
-            Canvas.SelectedElements.Add(rect2);
-            tool.Commands.First().Execute(null);
-
-            // Preassert
-            Assert.AreEqual("3 3", rect.StrokeDashArray?.ToString());
-            Assert.AreEqual("3 3", rect1.StrokeDashArray?.ToString());
-            Assert.AreEqual("3 3", rect2.StrokeDashArray?.ToString());
-
-            // Act
-            var undoredoTool = Canvas.Tools.OfType<UndoRedoTool>().Single();
-            undoredoTool.Commands.First(x => x.Name == "Undo").Execute(null);
-
-            // Assert
-            Assert.AreEqual(stroke, rect.StrokeDashArray?.ToString());
-            Assert.AreEqual(stroke1, rect1.StrokeDashArray?.ToString());
-            Assert.AreEqual(stroke2, rect2.StrokeDashArray?.ToString());
+            Assert.AreEqual(stroke, ellipse.StrokeDashArray?.ToString());
         }
 
         private class MockTextInputService : ITextInputService
@@ -880,6 +829,20 @@ namespace Svg.Editor.Tests
             Assert.True(Canvas.Document.Children.IndexOf(child) < Canvas.Document.Children.IndexOf(child1));
             Assert.True(Canvas.Document.Children.IndexOf(child) < Canvas.Document.Children.IndexOf(child2));
             Assert.True(Canvas.Document.Children.IndexOf(child1) < Canvas.Document.Children.IndexOf(child2));
+        }
+
+        private class MockStrokeStyleOptionsInputService : IStrokeStyleOptionsInputService
+        {
+            public Func<string, IEnumerable<string>, int, IEnumerable<string>, int, StrokeStyleTool.StrokeStyleOptions> F
+            {
+                get; set;
+            } = (arg1, arg2, arg3, arg4, arg5) => null;
+
+            public Task<StrokeStyleTool.StrokeStyleOptions> GetUserInput(string title, IEnumerable<string> strokeDashOptions, int strokeDashSelected, IEnumerable<string> strokeWidthOptions,
+                int strokeWidthSelected)
+            {
+                return Task.FromResult(F(title, strokeDashOptions, strokeDashSelected, strokeWidthOptions, strokeWidthSelected));
+            }
         }
     }
 }

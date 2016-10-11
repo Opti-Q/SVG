@@ -82,7 +82,7 @@ namespace Svg.Droid.Editor
 #endif
         protected override void OnAttachedToWindow()
         {
-            ContextProvider._context = Context;
+            AndroidContextProvider._context = Context;
 
             base.OnAttachedToWindow();
             _drawingCanvas.CanvasInvalidated -= OnCanvasInvalidated;
@@ -97,7 +97,7 @@ namespace Svg.Droid.Editor
             _drawingCanvas.ToolCommandsChanged -= OnToolCommandsChanged;
             base.OnDetachedFromWindow();
 
-            ContextProvider._context = null;
+            AndroidContextProvider._context = null;
         }
 
         private void OnCanvasInvalidated(object sender, EventArgs e)

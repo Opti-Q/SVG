@@ -19,11 +19,14 @@ namespace Svg.Core.Tools
         #region Private fields
 
         private static IColorInputService ColorInputServiceProxy => Engine.Resolve<IColorInputService>();
+
         private Color _defaultSelectedColor;
 
         #endregion
 
         #region Public properties
+
+        public const string SelectedColorIndexKey = "selectedcolorindex";
 
         public string[] SelectableColors
         {
@@ -72,7 +75,7 @@ namespace Svg.Core.Tools
             ToolType = ToolType.Modify;
 
             object selectedColorIndex;
-            SelectedColor = Properties.TryGetValue("selectedcolorindex", out selectedColorIndex)
+            SelectedColor = Properties.TryGetValue(SelectedColorIndexKey, out selectedColorIndex)
                 ? Color.Create(SelectableColors.ElementAtOrDefault(Convert.ToInt32(selectedColorIndex)) ?? "#000000")
                 : Color.Create(SelectableColors.FirstOrDefault() ?? "#000000");
         }
@@ -148,12 +151,12 @@ namespace Svg.Core.Tools
                 if (!noStroke)
                 {
                     element.Stroke?.Dispose();
-                    Engine.Resolve<ISvgElementFactory>().SetPropertyValue(element, "stroke", oldStroke, element.OwnerDocument);
+                    element.SvgElementFactory.SetPropertyValue(element, "stroke", oldStroke, element.OwnerDocument);
                 }
                 if (!noFill)
                 {
                     element.Fill?.Dispose();
-                    Engine.Resolve<ISvgElementFactory>().SetPropertyValue(element, "fill", oldFill, element.OwnerDocument);
+                    element.SvgElementFactory.SetPropertyValue(element, "fill", oldFill, element.OwnerDocument);
                 }
                 Canvas.FireInvalidateCanvas();
             }), hasOwnUndoRedoScope: false);

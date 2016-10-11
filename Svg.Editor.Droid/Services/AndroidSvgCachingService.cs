@@ -4,15 +4,15 @@ using Svg.Core.Interfaces;
 using Svg.Droid.Editor.Services;
 using Svg.Interfaces;
 
-[assembly: SvgService(typeof(ISvgCachingService), typeof(SvgCachingService))]
+[assembly: SvgService(typeof(ISvgCachingService), typeof(AndroidSvgCachingService))]
 
 namespace Svg.Droid.Editor.Services
 {
-    public class SvgCachingService : ISvgCachingService
+    public class AndroidSvgCachingService : ISvgCachingService
     {
         private readonly Func<string, ISvgSource> _sourceProvider;
 
-        public SvgCachingService()
+        public AndroidSvgCachingService()
         {
             _sourceProvider = (src) => Engine.Resolve<ISvgSourceFactory>().Create(src);
         }

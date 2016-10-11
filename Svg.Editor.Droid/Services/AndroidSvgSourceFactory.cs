@@ -5,15 +5,15 @@ using Svg.Droid.Editor.Services;
 using Svg.Interfaces;
 using Svg.Platform;
 
-[assembly: SvgService(typeof(ISvgSourceFactory), typeof(SvgSourceFactory))]
+[assembly: SvgService(typeof(ISvgSourceFactory), typeof(AndroidSvgSourceFactory))]
 
 namespace Svg.Droid.Editor.Services
 {
-    public class SvgSourceFactory : ISvgSourceFactory
+    public class AndroidSvgSourceFactory : ISvgSourceFactory
     {
         private readonly AssetManager _assets;
 
-        public SvgSourceFactory()
+        public AndroidSvgSourceFactory()
         {
             _assets = Android.App.Application.Context.Assets;
         }

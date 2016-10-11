@@ -7,11 +7,11 @@ using Svg;
 using Svg.Core.Tools;
 using Svg.Droid.Editor.Services;
 
-[assembly:SvgService(typeof(IColorInputService), typeof(ColorInputService))]
+[assembly:SvgService(typeof(IColorInputService), typeof(AndroidColorInputService))]
 
 namespace Svg.Droid.Editor.Services
 {
-    public class ColorInputService : IColorInputService
+    public class AndroidColorInputService : IColorInputService
     {
         public Task<int> GetIndexFromUserInput(string title, string[] items, string[] colors)
         {

@@ -66,15 +66,13 @@ namespace Svg.Editor.Tests
                 { "fontsizenames", new [] { "12px", "16px", "20px", "24px", "36px", "48px" } }
             };
 
-            //var zoomToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
-            //{
-            //    { "minscale", 1.0f },
-            //    { "maxscale", 5.0f }
-            //}, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
-
-            var zoomToolProperties = new Dictionary<string, object>();
-
-            var panToolProperties = new Dictionary<string, object>();
+            var strokeStyleToolProperties = new Dictionary<string, object>
+            {
+                { StrokeStyleTool.StrokeDashesKey, new[] {"none", "3 3", "17 17", "34 34"} },
+                { StrokeStyleTool.StrokeDashNamesKey, new [] { "----------", "- - - - - -", "--  --  --", "---   ---" } },
+                { StrokeStyleTool.StrokeWidthsKey, new [] { 2, 6, 12, 24 } },
+                { StrokeStyleTool.StrokeWidthNamesKey, new [] { "thin", "normal", "thick", "ultra-thick" } }
+            };
 
             //var fs = Engine.Resolve<IFileSystem>();
             //var path = fs.PathCombine(fs.GetDefaultStoragePath(), "background.png");
@@ -91,15 +89,15 @@ namespace Svg.Editor.Tests
             {
                 () => new GridTool(gridToolProperties, undoRedoService),
                 () => new MoveTool(undoRedoService),
-                () => new PanTool(panToolProperties),
+                () => new PanTool(null),
                 () => new RotationTool(null, undoRedoService),
-                () => new ZoomTool(zoomToolProperties),
+                () => new ZoomTool(null),
                 () => new SelectionTool(undoRedoService),
                 () => new TextTool(textToolProperties, undoRedoService),
                 () => new LineTool(lineToolProperties, undoRedoService),
                 () => new FreeDrawingTool(freeDrawToolProperties, undoRedoService),
                 () => new ColorTool(colorToolProperties, undoRedoService),
-                () => new StrokeStyleTool(undoRedoService),
+                () => new StrokeStyleTool(strokeStyleToolProperties ,undoRedoService),
                 () => new UndoRedoTool(undoRedoService),
                 () => new ArrangeTool(undoRedoService),
                 () => new AuxiliaryLineTool(),

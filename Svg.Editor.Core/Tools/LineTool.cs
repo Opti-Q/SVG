@@ -10,9 +10,9 @@ using Svg.Pathing;
 
 namespace Svg.Core.Tools
 {
-    public interface ILineOptionsInputService
+    public interface IMarkerOptionsInputService
     {
-        Task<int[]> GetUserInput(string title, IEnumerable<string> markerStartOptions, int markerStartSelected, IEnumerable<string> lineStyleOptions, int dashSelected, IEnumerable<string> markerEndOptions, int markerEndSelected);
+        Task<int[]> GetUserInput(string title, IEnumerable<string> markerStartOptions, int markerStartSelected, IEnumerable<string> markerEndOptions, int markerEndSelected);
     }
 
     public class LineTool : UndoableToolBase
@@ -20,7 +20,8 @@ namespace Svg.Core.Tools
         #region Private fields
 
         private const double MaxPointerDistance = 20.0;
-        private static ILineOptionsInputService LineOptionsInputServiceProxy => Engine.Resolve<ILineOptionsInputService>();
+
+        private static IMarkerOptionsInputService MarkerOptionsInputServiceProxy => Engine.Resolve<IMarkerOptionsInputService>();
         private SvgLine _currentLine;
         private Brush _brush;
         private Pen _pen;
@@ -42,7 +43,10 @@ namespace Svg.Core.Tools
 
         #region Public properties
 
-        public string LineStyleIconName { get; set; } = "ic_line_style_white_48dp.png";
+        public const string SelectedMarkerEndIndexKey = "selectedmarkerendindex";
+        public const string DefaultStrokeWidthKey = "defaultstrokewidth";
+
+        public string LineStyleIconName { get; set; } = "ic_line_endings_white_48dp.png";
 
         public override int InputOrder => 300;
 
@@ -90,28 +94,6 @@ namespace Svg.Core.Tools
             }
         }
 
-        public string[] LineStyles
-        {
-            get
-            {
-                object lineStyles;
-                if (!Properties.TryGetValue("linestyles", out lineStyles))
-                    lineStyles = Enumerable.Empty<string>();
-                return (string[]) lineStyles;
-            }
-        }
-
-        public string[] LineStyleNames
-        {
-            get
-            {
-                object lineStyleNames;
-                if (!Properties.TryGetValue("linestylenames", out lineStyleNames))
-                    lineStyleNames = Enumerable.Empty<string>();
-                return (string[]) lineStyleNames;
-            }
-        }
-
         public override bool IsActive
         {
             get { return _isActive; }
@@ -131,7 +113,15 @@ namespace Svg.Core.Tools
 
         public string SelectedMarkerEndId { get; set; }
 
-        public string SelectedLineStyle { get; set; }
+        public int DefaultStrokeWidth
+        {
+            get
+            {
+                object defaultStrokeWidth;
+                return Properties.TryGetValue(DefaultStrokeWidthKey, out defaultStrokeWidth) ? Convert.ToInt32(defaultStrokeWidth) : 2;
+            }
+            set { Properties[DefaultStrokeWidthKey] = value; }
+        }
 
         #endregion
 
@@ -382,12 +372,14 @@ namespace Svg.Core.Tools
             IsActive = false;
 
             SelectedMarkerStartId = MarkerStartIds.FirstOrDefault();
-            SelectedMarkerEndId = MarkerEndIds.FirstOrDefault();
-            SelectedLineStyle = LineStyles.FirstOrDefault();
+            object selectedMarkerEndIndex;
+            SelectedMarkerEndId = Properties.TryGetValue(SelectedMarkerEndIndexKey, out selectedMarkerEndIndex)
+                ? MarkerEndIds.ElementAtOrDefault(Convert.ToInt32(selectedMarkerEndIndex))
+                : MarkerEndIds.FirstOrDefault();
 
             Commands = new List<IToolCommand>
             {
-                new ChangeLineStyleCommand(ws, this, "Line style")
+                new ChangeLineStyleCommand(ws, this, "Line endings")
             };
         }
 
@@ -438,7 +430,7 @@ namespace Svg.Core.Tools
             {
                 Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
                 Fill = SvgPaintServer.None,
-                StrokeWidth = new SvgUnit(SvgUnitType.Pixel, 2),
+                StrokeWidth = new SvgUnit(SvgUnitType.Pixel, DefaultStrokeWidth),
                 StartX = new SvgUnit(SvgUnitType.Pixel, relativeStart.X),
                 StartY = new SvgUnit(SvgUnitType.Pixel, relativeStart.Y),
                 EndX = new SvgUnit(SvgUnitType.Pixel, relativeStart.X),
@@ -447,19 +439,7 @@ namespace Svg.Core.Tools
                 MarkerEnd = CreateUriFromId(SelectedMarkerEndId)
             };
 
-            if (!string.IsNullOrWhiteSpace(SelectedLineStyle) && SelectedLineStyle != "none")
-            {
-                line.StrokeDashArray = GenerateStrokeDashArray(SelectedLineStyle.Split(new [] {" "}, StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToInt32(s)));
-            }
-
             return line;
-        }
-
-        private static SvgUnitCollection GenerateStrokeDashArray(IEnumerable<int> pattern)
-        {
-            var svgUnitCollection = new SvgUnitCollection();
-            svgUnitCollection.AddRange(pattern.Select(element => new SvgUnit(SvgUnitType.Pixel, element)));
-            return svgUnitCollection;
         }
 
         private void AddTranslate(SvgVisualElement element, float deltaX, float deltaY)
@@ -525,50 +505,38 @@ namespace Svg.Core.Tools
                 var markerStartId = t._currentLine != null
                     ? t._currentLine.MarkerStart?.OriginalString?.Replace("url(#", null)?.TrimEnd(')') ?? "none"
                     : t.SelectedMarkerStartId;
-                var lineStyle = t._currentLine != null
-                    ? t._currentLine.StrokeDashArray?.ToString() ?? "none"
-                    : t.SelectedLineStyle;
                 var markerEndId = t._currentLine != null
                     ? t._currentLine.MarkerEnd?.OriginalString?.Replace("url(#", null)?.TrimEnd(')') ?? "none"
                     : t.SelectedMarkerEndId;
 
                 int markerStartIndex;
-                int lineStyleIndex;
                 int markerEndIndex;
 
                 markerStartIndex = Array.IndexOf(t.MarkerStartIds, markerStartId);
-                lineStyleIndex = Array.IndexOf(t.LineStyles, lineStyle);
                 markerEndIndex = Array.IndexOf(t.MarkerEndIds, markerEndId);
 
-                var selectedOptions = await LineOptionsInputServiceProxy.GetUserInput("Choose line options",
+                var selectedOptions = await MarkerOptionsInputServiceProxy.GetUserInput("Choose line endings",
                     t.MarkerStartNames, markerStartIndex,
-                    t.LineStyleNames, lineStyleIndex,
                     t.MarkerEndNames, markerEndIndex);
 
                 var selectedMarkerStartId = t.MarkerStartIds[selectedOptions[0]];
-                var selectedLineStyle = t.LineStyles[selectedOptions[1]];
-                var selectedMarkerEndId = t.MarkerEndIds[selectedOptions[2]];
+                var selectedMarkerEndId = t.MarkerEndIds[selectedOptions[1]];
 
                 if (t._currentLine != null)
                 {
                     var formerCurrentLine = t._currentLine;
                     var formerMarkerStart = t._currentLine.MarkerStart;
                     var formerMarkerEnd = t._currentLine.MarkerEnd;
-                    var formerStrokeDashArray = t._currentLine.StrokeDashArray;
                     t.UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name, o =>
                     {
                         // change the line style of all selected items
                         formerCurrentLine.MarkerStart = CreateUriFromId(selectedMarkerStartId);
                         formerCurrentLine.MarkerEnd = CreateUriFromId(selectedMarkerEndId);
-                        formerCurrentLine.StrokeDashArray = !string.IsNullOrWhiteSpace(selectedLineStyle) && selectedLineStyle != "none"
-                            ? GenerateStrokeDashArray(selectedLineStyle.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToInt32(s)))
-                            : null;
                         _canvas.FireInvalidateCanvas();
                     }, o =>
                     {
                         formerCurrentLine.MarkerStart = formerMarkerStart;
                         formerCurrentLine.MarkerEnd = formerMarkerEnd;
-                        formerCurrentLine.StrokeDashArray = formerStrokeDashArray;
                         _canvas.FireInvalidateCanvas();
                     }));
                     // don't change the global line style when items are selected
@@ -577,17 +545,14 @@ namespace Svg.Core.Tools
 
                 var formerSelectedMarkerStartId = t.SelectedMarkerStartId;
                 var formerSelectedMarkerEndId = t.SelectedMarkerEndId;
-                var formerSelectedLineStyle = t.SelectedLineStyle;
                 t.UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name, o =>
                 {
                     t.SelectedMarkerStartId = selectedMarkerStartId;
                     t.SelectedMarkerEndId = selectedMarkerEndId;
-                    t.SelectedLineStyle = selectedLineStyle;
                 }, o =>
                 {
                     t.SelectedMarkerStartId = formerSelectedMarkerStartId;
                     t.SelectedMarkerEndId = formerSelectedMarkerEndId;
-                    t.SelectedLineStyle = formerSelectedLineStyle;
                 }));
             }
 

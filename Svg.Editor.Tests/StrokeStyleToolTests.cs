@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -10,76 +11,54 @@ namespace Svg.Editor.Tests
     [TestFixture]
     public class StrokeStyleToolTests : SvgDrawingCanvasTestBase
     {
+        private MockStrokeStyleOptionsInputService _mockStrokeStyle;
+
+        public override void SetUp()
+        {
+            base.SetUp();
+
+            _mockStrokeStyle = new MockStrokeStyleOptionsInputService();
+
+            Engine.Register<IStrokeStyleOptionsInputService, MockStrokeStyleOptionsInputService>(() => _mockStrokeStyle);
+        }
+
         [Test]
         public async Task OneElementSelected_StrokeStyleCommandExecuted_ChildStrokeIsChanged()
         {
             // Arrange
             var tool = Canvas.Tools.OfType<StrokeStyleTool>().Single();
-            var rect = new SvgRectangle
+            var ellipse = new SvgEllipse
             {
-                X = 10,
-                Y = 10,
-                Width = 50,
-                Height = 50,
+                CenterX = 10,
+                CenterY = 10,
+                RadiusX = 50,
+                RadiusY = 50,
                 Stroke = new SvgColourServer(Color.Create(0, 0, 0))
             };
             await Canvas.EnsureInitialized();
-
-            Canvas.Document.Children.Add(rect);
-            Canvas.SelectedElements.Add(rect);
+            _mockStrokeStyle.F = (arg1, arg2, arg3, arg4, arg5) => new StrokeStyleTool.StrokeStyleOptions { StrokeDashIndex = 1, StrokeWidthIndex = 1 };
+            Canvas.Document.Children.Add(ellipse);
+            Canvas.SelectedElements.Add(ellipse);
 
             // Act
             tool.Commands.First().Execute(null);
 
             // Assert
-            Assert.AreEqual("3 3", rect.StrokeDashArray.ToString());
+            Assert.AreEqual("3 3", ellipse.StrokeDashArray.ToString());
         }
 
-        [Test]
-        public async Task ManyElementsSelected_StrokeStyleCommandExecuted_AllChildStrokesAreChanged()
+        private class MockStrokeStyleOptionsInputService : IStrokeStyleOptionsInputService
         {
-            // Arrange
-            var tool = Canvas.Tools.OfType<StrokeStyleTool>().Single();
-            var rect = new SvgRectangle
+            public Func<string, IEnumerable<string>, int, IEnumerable<string>, int, StrokeStyleTool.StrokeStyleOptions> F
             {
-                X = 10,
-                Y = 10,
-                Width = 50,
-                Height = 50,
-                Stroke = new SvgColourServer(Color.Create(0, 0, 0))
-            };
-            var rect1 = new SvgRectangle
+                get; set;
+            } = (arg1, arg2, arg3, arg4, arg5) => null;
+
+            public Task<StrokeStyleTool.StrokeStyleOptions> GetUserInput(string title, IEnumerable<string> strokeDashOptions, int strokeDashSelected, IEnumerable<string> strokeWidthOptions,
+                int strokeWidthSelected)
             {
-                X = 100,
-                Y = 100,
-                Width = 50,
-                Height = 50,
-                Stroke = new SvgColourServer(Color.Create(0, 0, 0))
-            };
-            var rect2 = new SvgRectangle
-            {
-                X = 50,
-                Y = 50,
-                Width = 25,
-                Height = 25,
-                Stroke = new SvgColourServer(Color.Create(0, 0, 0))
-            };
-            await Canvas.EnsureInitialized();
-
-            Canvas.Document.Children.Add(rect);
-            Canvas.Document.Children.Add(rect1);
-            Canvas.Document.Children.Add(rect2);
-            Canvas.SelectedElements.Add(rect);
-            Canvas.SelectedElements.Add(rect1);
-            Canvas.SelectedElements.Add(rect2);
-
-            // Act
-            tool.Commands.First().Execute(null);
-
-            // Assert
-            Assert.AreEqual("3 3", rect.StrokeDashArray.ToString());
-            Assert.AreEqual("3 3", rect1.StrokeDashArray.ToString());
-            Assert.AreEqual("3 3", rect2.StrokeDashArray.ToString());
+                return Task.FromResult(F(title, strokeDashOptions, strokeDashSelected, strokeWidthOptions, strokeWidthSelected));
+            }
         }
     }
 }

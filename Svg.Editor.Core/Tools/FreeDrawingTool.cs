@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Gestures;
 using Svg.Core.Interfaces;
@@ -10,16 +9,9 @@ using Svg.Pathing;
 
 namespace Svg.Core.Tools
 {
-    public interface IFreeDrawingOptionsInputService
-    {
-        Task<int[]> GetUserInput(string title, IEnumerable<string> lineStyleOptions, int lineStyleSelected, IEnumerable<string> strokeWidthOptions, int strokeWidthSelected);
-    }
-
     public class FreeDrawingTool : UndoableToolBase
     {
         #region Private fields and properties
-
-        private static IFreeDrawingOptionsInputService FreeDrawingOptionsInputServiceProxy => Engine.Resolve<IFreeDrawingOptionsInputService>();
 
         private SvgPath _currentPath;
         private PointF _lastCanvasPointerPosition;
@@ -28,6 +20,8 @@ namespace Svg.Core.Tools
         #endregion
 
         #region Public properties
+
+        public const string DefaultStrokeWidthKey = "defaultstrokewidth";
 
         public string LineStyleIconName { get; set; } = "ic_line_style_white_48dp.png";
 
@@ -44,53 +38,15 @@ namespace Svg.Core.Tools
             }
         }
 
-        public string[] LineStyles
+        public int DefaultStrokeWidth
         {
             get
             {
-                object lineStyles;
-                if (!Properties.TryGetValue("linestyles", out lineStyles))
-                    lineStyles = Enumerable.Empty<string>();
-                return (string[]) lineStyles;
+                object defaultStrokeWidth;
+                return Properties.TryGetValue(DefaultStrokeWidthKey, out defaultStrokeWidth) ? Convert.ToInt32(defaultStrokeWidth) : 2;
             }
+            set { Properties[DefaultStrokeWidthKey] = value; }
         }
-
-        public string[] LineStyleNames
-        {
-            get
-            {
-                object lineStyleNames;
-                if (!Properties.TryGetValue("linestylenames", out lineStyleNames))
-                    lineStyleNames = Enumerable.Empty<string>();
-                return (string[]) lineStyleNames;
-            }
-        }
-
-        public int[] StrokeWidths
-        {
-            get
-            {
-                object strokeWidths;
-                if (!Properties.TryGetValue("strokewidths", out strokeWidths))
-                    strokeWidths = Enumerable.Empty<int>();
-                return (int[]) strokeWidths;
-            }
-        }
-
-        public string[] StrokeWidthNames
-        {
-            get
-            {
-                object strokeWidthNames;
-                if (!Properties.TryGetValue("strokewidthnames", out strokeWidthNames))
-                    strokeWidthNames = Enumerable.Empty<string>();
-                return (string[]) strokeWidthNames;
-            }
-        }
-
-        public string SelectedLineStyle { get; set; }
-
-        public int SelectedStrokeWidth { get; set; }
 
         #endregion
 
@@ -108,14 +64,6 @@ namespace Svg.Core.Tools
             await base.Initialize(ws);
 
             IsActive = false;
-
-            SelectedLineStyle = LineStyles.FirstOrDefault();
-            SelectedStrokeWidth = StrokeWidths.FirstOrDefault();
-
-            Commands = new List<IToolCommand>
-            {
-                new ChangeLineStyleCommand(this, "Line style")
-            };
         }
 
         public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
@@ -147,17 +95,12 @@ namespace Svg.Core.Tools
                 {
                     Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
                     Fill = SvgPaintServer.None,
-                    StrokeWidth = new SvgUnit(SvgUnitType.Pixel, SelectedStrokeWidth),
                     PathData = new SvgPathSegmentList(new List<SvgPathSegment> { new SvgMoveToSegment(canvasStartPosition) }),
                     StrokeLineCap = SvgStrokeLineCap.Round,
                     StrokeLineJoin = SvgStrokeLineJoin.Round,
+                    StrokeWidth = new SvgUnit(SvgUnitType.Pixel, DefaultStrokeWidth),
                     FillOpacity = 0
                 };
-
-                if (!string.IsNullOrWhiteSpace(SelectedLineStyle) && SelectedLineStyle != "none")
-                {
-                    _currentPath.StrokeDashArray = GenerateStrokeDashArray(SelectedLineStyle.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToInt32(s)));
-                }
 
                 _currentPath.CustomAttributes.Add(NoSnappingCustomAttributeKey, "");
 
@@ -208,56 +151,9 @@ namespace Svg.Core.Tools
             }
         }
 
-        private static SvgUnitCollection GenerateStrokeDashArray(IEnumerable<int> pattern)
-        {
-            var svgUnitCollection = new SvgUnitCollection();
-            svgUnitCollection.AddRange(pattern.Select(element => new SvgUnit(SvgUnitType.Pixel, element)));
-            return svgUnitCollection;
-        }
-
         #endregion
 
         #region Inner types
-
-        /// <summary>
-        /// This command changes the line style of selected items, or the global line style, if no items are selected.
-        /// </summary>
-        private class ChangeLineStyleCommand : ToolCommand
-        {
-            public ChangeLineStyleCommand(FreeDrawingTool tool, string name)
-                : base(tool, name, o => { }, iconName: tool.LineStyleIconName, sortFunc: tc => 500)
-            {
-            }
-
-            private new FreeDrawingTool Tool => (FreeDrawingTool) base.Tool;
-
-            public override async void Execute(object parameter)
-            {
-                var t = Tool;
-
-                var selectedOptions = await FreeDrawingOptionsInputServiceProxy.GetUserInput("Choose line options",
-                    t.LineStyleNames, Array.IndexOf(t.LineStyles, t.SelectedLineStyle), t.StrokeWidthNames, Array.IndexOf(t.StrokeWidths, t.SelectedStrokeWidth));
-
-                if (selectedOptions?.Length != 2) return;
-
-                var formerSelectedStrokeWidth = t.SelectedStrokeWidth;
-                var formerSelectedLineStyle = t.SelectedLineStyle;
-                t.UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name, o =>
-                {
-                    t.SelectedStrokeWidth = t.StrokeWidths[selectedOptions[0]];
-                    t.SelectedLineStyle = t.LineStyles[selectedOptions[1]];
-                }, o =>
-                {
-                    t.SelectedStrokeWidth = formerSelectedStrokeWidth;
-                    t.SelectedLineStyle = formerSelectedLineStyle;
-                }));
-            }
-
-            public override bool CanExecute(object parameter)
-            {
-                return Tool.IsActive;
-            }
-        }
 
         #endregion
     }

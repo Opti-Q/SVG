@@ -47,22 +47,29 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
                 { "selectablecolors", new [] { "#000000","#FF0000","#00FF00","#0000FF","#FFFF00","#FF00FF","#00FFFF" } }
             };
 
+            var strokeStyleToolProperties = new Dictionary<string, object>
+            {
+                { StrokeStyleTool.StrokeDashesKey, new[] {"none", "3 3", "17 17", "34 34"} },
+                { StrokeStyleTool.StrokeDashNamesKey, new [] { "----------", "- - - - - -", "--  --  --", "---   ---" } },
+                { StrokeStyleTool.StrokeWidthsKey, new [] { 2, 6, 12, 24 } },
+                { StrokeStyleTool.StrokeWidthNamesKey, new [] { "thin", "normal", "thick", "ultra-thick" } }
+            };
+
             var lineToolProperties = new Dictionary<string, object>
             {
                 { "markerstartids", new [] { "none", "arrowStart", "circle" } },
                 { "markerstartnames", new [] { "---", "<--", "O--" } },
                 { "markerendids", new [] { "none", "arrowEnd", "circle" } },
                 { "markerendnames", new [] { "---", "-->", "--O" } },
+                { LineTool.SelectedMarkerEndIndexKey, 1 },
                 { "linestyles", new [] { "none", "3 3" } },
-                { "linestylenames", new [] { "-----", "- - -" } }
+                { "linestylenames", new [] { "-----", "- - -" } },
+                { LineTool.DefaultStrokeWidthKey, 2 }
             };
 
             var freeDrawToolProperties = new Dictionary<string, object>
             {
-                { "linestyles", new [] { "none", "17 17", "34 34" } },
-                { "linestylenames", new [] { "----------", "- - - - - -", "--  --  --" } },
-                { "strokewidths", new [] { 12, 24, 6 } },
-                { "strokewidthnames", new [] { "normal", "thick", "thin" } }
+                { FreeDrawingTool.DefaultStrokeWidthKey, 12 }
             };
 
             var textToolProperties = new Dictionary<string, object>
@@ -106,7 +113,7 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
                 () => new EllipseTool(null, undoRedoService),
                 () => new FreeDrawingTool(freeDrawToolProperties, undoRedoService),
                 () => new ColorTool(colorToolProperties, undoRedoService),
-                () => new StrokeStyleTool(undoRedoService),
+                () => new StrokeStyleTool(strokeStyleToolProperties, undoRedoService),
                 () => new UndoRedoTool(undoRedoService),
                 () => new ArrangeTool(undoRedoService),
                 () => new AuxiliaryLineTool(),

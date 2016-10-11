@@ -2,7 +2,7 @@ using Android.Content;
 using Svg;
 using Svg.Droid.Editor.Services;
 
-[assembly:SvgService(typeof(IContextProvider), typeof(ContextProvider))]
+[assembly:SvgService(typeof(IContextProvider), typeof(AndroidContextProvider))]
 namespace Svg.Droid.Editor.Services
 {
     public interface IContextProvider
@@ -10,7 +10,7 @@ namespace Svg.Droid.Editor.Services
         Context Context { get; }
     }
 
-    public class ContextProvider : IContextProvider
+    public class AndroidContextProvider : IContextProvider
     {
         internal static Context _context;
 

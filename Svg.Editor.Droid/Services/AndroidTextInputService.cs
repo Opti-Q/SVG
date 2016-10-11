@@ -11,10 +11,10 @@ using Svg;
 using Svg.Core.Tools;
 using Svg.Droid.Editor.Services;
 
-[assembly: SvgService(typeof(ITextInputService), typeof(TextInputService))]
+[assembly: SvgService(typeof(ITextInputService), typeof(AndroidTextInputService))]
 namespace Svg.Droid.Editor.Services
 {
-    public class TextInputService : ITextInputService
+    public class AndroidTextInputService : ITextInputService
     {
 
         public async Task<TextTool.TextProperties> GetUserInput(string title, string textValue, IEnumerable<string> textSizeOptions, int textSizeSelected)

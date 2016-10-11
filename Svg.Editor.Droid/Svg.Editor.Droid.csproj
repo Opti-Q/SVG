@@ -73,14 +73,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Services\ContextProvider.cs" />
-    <Compile Include="Services\FreeDrawingOptionsInputService.cs" />
-    <Compile Include="Services\LineOptionsInputService.cs" />
-    <Compile Include="Services\ColorInputService.cs" />
+    <Compile Include="Services\AndroidContextProvider.cs" />
+    <Compile Include="Services\AndroidStrokeStyleOptionsInputService.cs" />
+    <Compile Include="Services\AndroidMarkerOptionsInputService.cs" />
+    <Compile Include="Services\AndroidColorInputService.cs" />
     <Compile Include="Services\AndroidCanvasRenderer.cs" />
-    <Compile Include="Services\SvgCachingService.cs" />
-    <Compile Include="Services\SvgSourceFactory.cs" />
-    <Compile Include="Services\TextInputService.cs" />
+    <Compile Include="Services\AndroidSvgCachingService.cs" />
+    <Compile Include="Services\AndroidSvgSourceFactory.cs" />
+    <Compile Include="Services\AndroidTextInputService.cs" />
     <Compile Include="SvgDrawingCanvasView.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
