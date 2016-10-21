@@ -62,8 +62,6 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
                 { "markerendids", new [] { "none", "arrowEnd", "circle" } },
                 { "markerendnames", new [] { "---", "-->", "--O" } },
                 { LineTool.SelectedMarkerEndIndexKey, 1 },
-                { "linestyles", new [] { "none", "3 3" } },
-                { "linestylenames", new [] { "-----", "- - -" } },
                 { LineTool.DefaultStrokeWidthKey, 2 }
             };
 
