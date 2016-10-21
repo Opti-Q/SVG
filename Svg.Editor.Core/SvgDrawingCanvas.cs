@@ -583,6 +583,24 @@ namespace Svg.Core
             DocumentIsDirty = false;
         }
 
+        public Bitmap CaptureScreenBitmap()
+        {
+            var bmp = Bitmap.Create(ScreenWidth, ScreenHeight);
+
+            using (var renderer = SvgRenderer.FromImage(bmp))
+            {
+
+                renderer.TranslateTransform(Translate.X, Translate.Y);
+                renderer.TranslateTransform(ZoomFocus.X, ZoomFocus.Y);
+                renderer.ScaleTransform(ZoomFactor, ZoomFactor);
+                renderer.TranslateTransform(-ZoomFocus.X, -ZoomFocus.Y);
+
+                Document.Draw(renderer);
+            }
+
+            return bmp;
+        }
+
         public void FireInvalidateCanvas()
         {
             CanvasInvalidated?.Invoke(this, EventArgs.Empty);
