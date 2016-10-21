@@ -157,7 +157,7 @@ namespace Svg
             Engine.Logger.Debug("End SetAttributes");
         }
 
-        private bool IsStyleAttribute(string name)
+        public bool IsStyleAttribute(string name)
         {
             switch (name)
             {

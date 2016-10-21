@@ -46,5 +46,6 @@ namespace Svg.Interfaces
         void SetPropertyValue(SvgElement svgElement, string key, string value, SvgDocument ownerDocument);
         SvgElement CreateElement(XmlReader reader, SvgDocument svgDocument);
         T CreateDocument<T>(XmlReader reader) where T : SvgDocument, new();
+        bool IsStyleAttribute(string name);
     }
 }
