@@ -46,6 +46,9 @@ namespace Svg
             set { this.Attributes["text-anchor"] = value; this.IsPathDirty = true; }
         }
 
+        // TODO: add text-align attribute
+        // TODO: add writing-mode attribute
+
         [SvgAttribute("baseline-shift", true)]
         public virtual string BaselineShift
         {

@@ -162,6 +162,8 @@ namespace Svg
             set { this.Attributes["font-size"] = value; this.IsPathDirty = true; }
         }
 
+        // TODO: add font-stretch attribute
+
         /// <summary>
         /// Refers to the style of the font.
         /// </summary>
