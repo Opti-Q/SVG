@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Interfaces;
+using Svg.Interfaces;
 
 namespace Svg.Core.Tools
 {
@@ -35,10 +36,7 @@ namespace Svg.Core.Tools
                         children.Remove(background);
                         background.Dispose();
 
-                        Canvas.ConstraintLeft = float.MinValue;
-                        Canvas.ConstraintTop = float.MinValue;
-                        Canvas.ConstraintRight = float.MaxValue;
-                        Canvas.ConstraintBottom = float.MaxValue;
+                        Canvas.Constraints = null;
 
                         ImagePath = null;
 
@@ -84,18 +82,7 @@ namespace Svg.Core.Tools
                 // add constraints to the canvas
                 var size = image.GetImageSize();
 
-                // the zoom factor that makes the image fit as a whole
-                var zoomFactor = Math.Min(Canvas.ScreenWidth / size.Width,
-                    Canvas.ScreenHeight / size.Height);
-
-                Canvas.ConstraintLeft = 0;
-                Canvas.ConstraintTop = 0;
-                Canvas.ConstraintRight = Canvas.ScreenWidth / zoomFactor;
-                Canvas.ConstraintBottom = Canvas.ScreenHeight / zoomFactor;
-
-                // center image within constraints
-                image.X = new SvgUnit(SvgUnitType.Pixel, (Canvas.ConstraintRight - size.Width) / 2);
-                image.Y = new SvgUnit(SvgUnitType.Pixel, (Canvas.ConstraintBottom - size.Height) / 2);
+                Canvas.Constraints = RectangleF.Create(0, 0, size.Width, size.Height);
 
                 // insert the background before the first visible element
                 var index = children.IndexOf(children.FirstOrDefault(x => x is SvgVisualElement));

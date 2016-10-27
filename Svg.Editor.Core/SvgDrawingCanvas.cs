@@ -121,13 +121,9 @@ namespace Svg.Core
 
         public PointF ScreenCenter => PointF.Create((float) ScreenWidth / 2, (float) ScreenHeight / 2);
 
-        public float ConstraintTop { get; set; }
+        public RectangleF Constraints { get; set; }
 
-        public float ConstraintLeft { get; set; }
-
-        public float ConstraintRight { get; set; }
-
-        public float ConstraintBottom { get; set; }
+        public ConstraintsMode ConstraintsMode { get; set; }
 
         /// <summary>
         /// If enabled, adds a DebugTool that brings some helpful visualizations
@@ -177,12 +173,10 @@ namespace Svg.Core
         public event EventHandler CanvasInvalidated;
         public event EventHandler ToolCommandsChanged;
 
-        public SvgDrawingCanvas(float constraintLeft = float.MinValue, float constraintTop = float.MinValue, float constraintRight = float.MaxValue, float constraintBottom = float.MaxValue)
+        public SvgDrawingCanvas(RectangleF constraints = null, ConstraintsMode constraintsMode = ConstraintsMode.FitUniform)
         {
-            ConstraintLeft = constraintLeft;
-            ConstraintTop = constraintTop;
-            ConstraintRight = constraintRight;
-            ConstraintBottom = constraintBottom;
+            Constraints = constraints;
+            ConstraintsMode = constraintsMode;
 
             Translate = PointF.Create(0f, 0f);
             ZoomFactor = 1f;
@@ -208,7 +202,7 @@ namespace Svg.Core
 
             _tools = new ObservableCollection<ITool>();
 
-            foreach(var tool in toolProvider.ToolFactories)
+            foreach (var tool in toolProvider.ToolFactories)
             {
                 _tools.Add(tool.Invoke());
             }
@@ -258,7 +252,15 @@ namespace Svg.Core
             ScreenWidth = renderer.Width;
             ScreenHeight = renderer.Height;
 
-            ApplyConstraints();
+            switch (ConstraintsMode)
+            {
+                case ConstraintsMode.FillUniform:
+                    ApplyConstraintsFillUniform();
+                    break;
+                case ConstraintsMode.FitUniform:
+                    ApplyConstraintsFitUniform();
+                    break;
+            }
 
             // apply global panning and zooming
             renderer.Translate(Translate.X, Translate.Y);
@@ -285,23 +287,23 @@ namespace Svg.Core
             }
         }
 
-        private void ApplyConstraints()
+        private void ApplyConstraintsFillUniform()
         {
-            // check the constraints and if we have to zoom in to fit
-            var constraintWidth = ConstraintRight - ConstraintLeft;
-            var constraintHeight = ConstraintBottom - ConstraintTop;
+            if (Constraints == null || Constraints == RectangleF.Empty) return;
 
-            if (ScreenWidth / ZoomFactor > constraintWidth || ScreenHeight / ZoomFactor > constraintHeight)
+            // if zoom is totally out of bounds, reset
+            if (ScreenWidth / ZoomFactor > Constraints.Width || ScreenHeight / ZoomFactor > Constraints.Height)
             {
-                ZoomFactor = Math.Max(ScreenWidth / constraintWidth,
-                    ScreenHeight / constraintHeight);
-                //ZoomFocus = PointF.Create(0, 0);
-                Translate = PointF.Create(ScreenWidth / ZoomFactor > constraintWidth ? 0 : Translate.X,
-                    ScreenHeight / ZoomFactor > constraintHeight ? 0 : Translate.Y);
+                ZoomFactor = Math.Max(ScreenWidth / Constraints.Width,
+                    ScreenHeight / Constraints.Height);
+                Translate = PointF.Create(ScreenWidth / ZoomFactor > Constraints.Width ? 0 : Translate.X,
+                    ScreenHeight / ZoomFactor > Constraints.Height ? 0 : Translate.Y);
             }
 
-            var constraintTopLeft = PointF.Create(ConstraintLeft, ConstraintTop) * ZoomFactor;
-            var constraintBottomRight = PointF.Create(ConstraintRight, ConstraintBottom) * ZoomFactor;
+            // adjust the translate according to the constraints
+
+            var constraintTopLeft = PointF.Create(Constraints.Left, Constraints.Top) * ZoomFactor;
+            var constraintBottomRight = PointF.Create(Constraints.Right, Constraints.Bottom) * ZoomFactor;
             var screenTopLeft = ScreenToCanvas(0, 0) * ZoomFactor;
             var screenBottomRight = ScreenToCanvas(ScreenWidth, ScreenHeight) * ZoomFactor;
 
@@ -323,6 +325,50 @@ namespace Svg.Core
             if (screenBottomRight.Y > constraintBottomRight.Y)
             {
                 Translate.Y += screenBottomRight.Y - constraintBottomRight.Y;
+            }
+        }
+
+        private void ApplyConstraintsFitUniform()
+        {
+            if (Constraints == null || Constraints == RectangleF.Empty) return;
+
+            // if zoom is totally out of bounds, reset
+            if (ScreenWidth / ZoomFactor > Constraints.Width && ScreenHeight / ZoomFactor > Constraints.Height)
+            {
+                ZoomFactor = Math.Min(ScreenWidth / Constraints.Width,
+                    ScreenHeight / Constraints.Height);
+                ZoomFocus = PointF.Create(0, 0);
+                Translate = PointF.Create((ScreenWidth - Constraints.Width * ZoomFactor) / 2, (ScreenHeight - Constraints.Height * ZoomFactor) / 2);
+                return;
+            }
+
+            var constraintTopLeft = PointF.Create(Constraints.Left, Constraints.Top) * ZoomFactor;
+            var constraintBottomRight = PointF.Create(Constraints.Right, Constraints.Bottom) * ZoomFactor;
+            var screenTopLeft = ScreenToCanvas(0, 0) * ZoomFactor;
+            var screenBottomRight = ScreenToCanvas(ScreenWidth, ScreenHeight) * ZoomFactor;
+            var marginX = (ScreenWidth / ZoomFactor - Constraints.Width) / 2;
+            var marginY = (ScreenHeight / ZoomFactor - Constraints.Height) / 2;
+            if (marginX < 0) marginX = 0;
+            if (marginY < 0) marginY = 0;
+
+            // adjust the translate according to the constraints
+            if (screenTopLeft.X < constraintTopLeft.X)
+            {
+                Translate.X += screenTopLeft.X - constraintTopLeft.X + marginX;
+                ZoomFocus.X = 0;
+            }
+            else if (screenBottomRight.X > constraintBottomRight.X)
+            {
+                Translate.X += screenBottomRight.X - constraintBottomRight.X - marginX;
+            }
+
+            if (screenTopLeft.Y < constraintTopLeft.Y)
+            {
+                Translate.Y += screenTopLeft.Y - constraintTopLeft.Y + marginY;
+            }
+            else if (screenBottomRight.Y > constraintBottomRight.Y)
+            {
+                Translate.Y += screenBottomRight.Y - constraintBottomRight.Y - marginY;
             }
         }
 
@@ -719,4 +765,6 @@ namespace Svg.Core
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
+
+    public enum ConstraintsMode { FillUniform, FitUniform }
 }
