@@ -168,6 +168,8 @@ namespace Svg.Core
             }
         }
 
+        public Color BackgroundColor { get; set; }
+
         #endregion
 
         public event EventHandler CanvasInvalidated;
@@ -177,6 +179,8 @@ namespace Svg.Core
         {
             Translate = PointF.Create(0f, 0f);
             ZoomFactor = 1f;
+
+            BackgroundColor = Engine.Factory.Colors.White;
 
             _selectedElements = new ObservableCollection<SvgVisualElement>();
             _selectedElements.CollectionChanged += OnSelectionChanged;
@@ -264,7 +268,7 @@ namespace Svg.Core
             renderer.Scale(ZoomFactor, ZoomFocus.X, ZoomFocus.Y);
 
             // draw default background
-            renderer.FillEntireCanvasWithColor(Engine.Factory.Colors.White);
+            renderer.FillEntireCanvasWithColor(BackgroundColor);
 
             // prerender step (e.g. gridlines, etc.)
             foreach (var tool in Tools.OrderBy(t => t.PreDrawOrder))
