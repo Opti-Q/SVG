@@ -112,7 +112,7 @@ namespace Svg.Core.Services
             (
                 l =>
                 {
-                    if (l.Count == 1) _recognizedGestures.OnNext(new LongPressGesture(l.First().Pointer1Position));
+                    if (l.Count == 1 && l.First().PointerCount == 1) _recognizedGestures.OnNext(new LongPressGesture(l.First().Pointer1Position));
                 },
                 ex => Debug.WriteLine(ex.Message)
             );
