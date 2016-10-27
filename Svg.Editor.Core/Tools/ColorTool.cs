@@ -216,7 +216,7 @@ namespace Svg.Core.Tools
 
                 if (_canvas.SelectedElements.Any())
                 {
-                    t.UndoRedoService.ExecuteCommand(new UndoableActionCommand("Colorize selecte elements", o => { }));
+                    t.UndoRedoService.ExecuteCommand(new UndoableActionCommand("Colorize selected elements", o => { }));
                     // change the color of all selected items
                     foreach (var selectedElement in _canvas.SelectedElements)
                     {

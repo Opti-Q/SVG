@@ -70,6 +70,8 @@ namespace Svg.Core.Tools
                 };
                 image.CustomAttributes.Add(BackgroundCustomAttributeKey, "");
                 image.CustomAttributes.Add(NoSnappingCustomAttributeKey, "");
+                image.CustomAttributes.Add(NoFillCustomAttributeKey, "");
+                image.CustomAttributes.Add(NoStrokeCustomAttributeKey, "");
 
                 // remove already placed background
                 var formerBackground = children.FirstOrDefault(x => x.CustomAttributes.ContainsKey(BackgroundCustomAttributeKey));
