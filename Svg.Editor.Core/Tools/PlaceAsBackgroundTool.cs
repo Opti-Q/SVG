@@ -59,15 +59,15 @@ namespace Svg.Core.Tools
             try
             {
                 var children = Canvas.Document.Children;
-                // insert the background before the first visible element
-                var index = children.IndexOf(children.FirstOrDefault(x => x is SvgVisualElement));
-                // if there are no visual elements, we want to add it to the end of the list
-                if (index == -1) index = children.Count;
+
+                // create image from path
                 if (!path.StartsWith("/")) path = path.Insert(0, "/");
                 var image = new SvgImage
                 {
                     Href = new Uri($"file://{path}", UriKind.Absolute)
                 };
+
+                // add custom icl attributes
                 image.CustomAttributes.Add(BackgroundCustomAttributeKey, "");
                 image.CustomAttributes.Add(NoSnappingCustomAttributeKey, "");
                 image.CustomAttributes.Add(NoFillCustomAttributeKey, "");
@@ -81,13 +81,29 @@ namespace Svg.Core.Tools
                     formerBackground.Dispose();
                 }
 
-                children.Insert(index, image);
-
+                // add constraints to the canvas
                 var size = image.GetImageSize();
+
+                // the zoom factor that makes the image fit as a whole
+                var zoomFactor = Math.Min(Canvas.ScreenWidth / size.Width,
+                    Canvas.ScreenHeight / size.Height);
+
                 Canvas.ConstraintLeft = 0;
                 Canvas.ConstraintTop = 0;
-                Canvas.ConstraintRight = size.Width;
-                Canvas.ConstraintBottom = size.Height;
+                Canvas.ConstraintRight = Canvas.ScreenWidth / zoomFactor;
+                Canvas.ConstraintBottom = Canvas.ScreenHeight / zoomFactor;
+
+                // center image within constraints
+                image.X = new SvgUnit(SvgUnitType.Pixel, (Canvas.ConstraintRight - size.Width) / 2);
+                image.Y = new SvgUnit(SvgUnitType.Pixel, (Canvas.ConstraintBottom - size.Height) / 2);
+
+                // insert the background before the first visible element
+                var index = children.IndexOf(children.FirstOrDefault(x => x is SvgVisualElement));
+                
+                // if there are no visual elements, we want to add it to the end of the list
+                if (index == -1) index = children.Count;
+
+                children.Insert(index, image);
 
                 Canvas.FireInvalidateCanvas();
                 Canvas.FireToolCommandsChanged();
