@@ -173,11 +173,8 @@ namespace Svg.Core
         public event EventHandler CanvasInvalidated;
         public event EventHandler ToolCommandsChanged;
 
-        public SvgDrawingCanvas(RectangleF constraints = null, ConstraintsMode constraintsMode = ConstraintsMode.FitUniform)
+        public SvgDrawingCanvas()
         {
-            Constraints = constraints;
-            ConstraintsMode = constraintsMode;
-
             Translate = PointF.Create(0f, 0f);
             ZoomFactor = 1f;
 
@@ -766,5 +763,5 @@ namespace Svg.Core
         }
     }
 
-    public enum ConstraintsMode { FillUniform, FitUniform }
+    public enum ConstraintsMode { FitUniform, FillUniform }
 }
