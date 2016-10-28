@@ -96,6 +96,12 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
                 { PlaceAsBackgroundTool.ChooseBackgroundEnabledKey, true }
             };
 
+            var rotationToolProperties = new Dictionary<string, object>
+            {
+                { RotationTool.RotationStepKey, 45.0f },
+                { RotationTool.FilterKey, (Func<SvgVisualElement, bool>) (e => e is SvgTextBase) }
+            };
+
             var undoRedoService = Engine.Resolve<IUndoRedoService>();
 
             Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
@@ -103,7 +109,7 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
                 () => new GridTool(gridToolProperties, undoRedoService),
                 () => new MoveTool(undoRedoService),
                 () => new PanTool(panToolProperties),
-                () => new RotationTool(null, undoRedoService),
+                () => new RotationTool(rotationToolProperties, undoRedoService),
                 () => new ZoomTool(zoomToolProperties),
                 () => new SelectionTool(undoRedoService),
                 () => new TextTool(textToolProperties, undoRedoService),

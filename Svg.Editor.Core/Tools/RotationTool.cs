@@ -29,16 +29,19 @@ namespace Svg.Core.Tools
 
         public bool IsDebugEnabled { get; set; }
 
-        public static readonly string FilterKey = @"filter";
-        public static readonly string RotationStepKey = @"rotationstep";
+        public const string FilterKey = @"filter";
+        public const string RotationStepKey = @"rotationstep";
 
         public Func<SvgVisualElement, bool> Filter
         {
             get
             {
                 object filter;
-                Properties.TryGetValue(FilterKey, out filter);
-                return (Func<SvgVisualElement, bool>) filter;
+                if (!Properties.TryGetValue(FilterKey, out filter))
+                {
+                    return element => false;
+                }
+                return (Func<SvgVisualElement, bool>) filter ?? (element => false);
             }
             set { Properties[FilterKey] = value; }
         }
@@ -61,6 +64,19 @@ namespace Svg.Core.Tools
             ToolType = ToolType.Modify;
         }
 
+        #region Overrides
+
+        public override async Task Initialize(SvgDrawingCanvas ws)
+        {
+            await base.Initialize(ws);
+
+            Commands = new[]
+            {
+                new RotateStepCommand(this, "Rotate right", "ic_rotate_right_white_48dp.png", RotationStep),
+                new RotateStepCommand(this, "Rotate left", "ic_rotate_left_white_48dp.png", -RotationStep),
+            };
+        }
+
         public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
         {
             var re = @event as RotateEvent;
@@ -68,19 +84,19 @@ namespace Svg.Core.Tools
             // if a "RotateEvent" comes in
             if (re != null)
             {
-                var zt = ws.Tools.OfType<ZoomTool>().Single();
+                var zt = Canvas.Tools.OfType<ZoomTool>().Single();
 
                 if (re.Status == RotateStatus.Start &&
                     // and there is a single selected element
-                    ws.SelectedElements.Count == 1 &&
+                    Canvas.SelectedElements.Count == 1 &&
                     // and the selectiontool is active
-                    ws.ActiveTool.ToolType == ToolType.Select &&
+                    Canvas.ActiveTool.ToolType == ToolType.Select &&
                     // and the gesture is made with 3 fingers
                     re.PointerCount == 3)
                 {
                     // implicitly activate
-                    _activatedFrom = ws.ActiveTool;
-                    ws.ActiveTool = this;
+                    _activatedFrom = Canvas.ActiveTool;
+                    Canvas.ActiveTool = this;
                     _wasImplicitlyActivated = true;
                     zt.IsActive = false;
                     _rotations.Clear();
@@ -88,16 +104,16 @@ namespace Svg.Core.Tools
                     UndoRedoService.ExecuteCommand(new UndoableActionCommand("Rotate operation", o => { }));
                 }
                 else if (re.Status == RotateStatus.Rotating &&
-                         ws.SelectedElements.Count == 1 &&
+                         Canvas.SelectedElements.Count == 1 &&
                          re.PointerCount == 3)
                 {
-                    RotateElement(ws.SelectedElements[0], re, ws);
+                    RotateElementStepwise(Canvas.SelectedElements[0], re.AbsoluteRotationDegrees);
                 }
                 else if (re.Status == RotateStatus.End)
                 {
-                    if (ws.ActiveTool == this && _wasImplicitlyActivated)
+                    if (Canvas.ActiveTool == this && _wasImplicitlyActivated)
                     {
-                        ws.ActiveTool = _activatedFrom;
+                        Canvas.ActiveTool = _activatedFrom;
                     }
                     zt.IsActive = true;
                     _lastRotationCenter = null;
@@ -116,10 +132,22 @@ namespace Svg.Core.Tools
             return Task.FromResult(true);
         }
 
-        private void RotateElement(SvgVisualElement element, RotateEvent rotateEvent, SvgDrawingCanvas ws)
+        public override void Dispose()
+        {
+            _brush2?.Dispose();
+            _pen2?.Dispose();
+
+            base.Dispose();
+        }
+
+        #endregion
+
+        #region Private helpers
+
+        private void RotateElementStepwise(SvgVisualElement element, float absoluteDegrees)
         {
             // if element must not be rotated
-            if (Filter?.Invoke(element) == false)
+            if (!Filter.Invoke(element))
                 return;
 
             // always rotate by absolute radius!
@@ -129,28 +157,32 @@ namespace Svg.Core.Tools
                 previousAngle = 0f;
             }
 
-            var absoluteAngle = rotateEvent.AbsoluteRotationDegrees;
+            var absoluteAngle = absoluteDegrees;
+            // calculate the next rotation within the stepsize
             var angle = CalculateNewRotation(absoluteAngle);
             var delta = angle - previousAngle;
 
             _rotations[element] = angle;
 
-            if (Math.Abs(delta) > 0.01f)
+            RotateElementForDelta(element, delta);
+        }
+
+        private void RotateElementForDelta(SvgVisualElement element, float delta)
+        {
+            if (Math.Abs(delta) < 0.01f || !Filter.Invoke(element)) return;
+
+            var formerM = element.Transforms.GetMatrix().Clone();
+            var m = element.CreateOriginRotation(delta % 360);
+
+            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Rotate element", o =>
             {
-                var formerM = element.Transforms.GetMatrix().Clone();
-                var m = element.CreateOriginRotation(delta % 360);
-
-                UndoRedoService.ExecuteCommand(new UndoableActionCommand("Rotate element", o =>
-                {
-                    element.SetTransformationMatrix(m);
-                    ws.FireInvalidateCanvas();
-                }, o =>
-                {
-                    element.SetTransformationMatrix(formerM);
-                    ws.FireInvalidateCanvas();
-                }), hasOwnUndoRedoScope: false);
-
-            }
+                element.SetTransformationMatrix(m);
+                Canvas.FireInvalidateCanvas();
+            }, o =>
+            {
+                element.SetTransformationMatrix(formerM);
+                Canvas.FireInvalidateCanvas();
+            }), hasOwnUndoRedoScope: false);
         }
 
         private float CalculateNewRotation(float absoluteAngle)
@@ -171,12 +203,32 @@ namespace Svg.Core.Tools
             return absoluteAngle - rest + RotationStep;
         }
 
-        public override void Dispose()
-        {
-            _brush2?.Dispose();
-            _pen2?.Dispose();
+        #endregion
 
-            base.Dispose();
+        #region Inner types
+
+        private class RotateStepCommand : ToolCommand
+        {
+            private float Step { get; }
+
+            public RotateStepCommand(RotationTool tool, string name, string iconName, float step)
+                : base(tool, name, o => { }, o => true, iconName: iconName)
+            {
+                Step = step;
+            }
+
+            public override void Execute(object parameter)
+            {
+                var tool = (RotationTool) Tool;
+
+                if (tool.Canvas.SelectedElements.Count != 1) return;
+
+                var selected = tool.Canvas.SelectedElements[0];
+
+                tool.UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name, _ => tool.RotateElementForDelta(selected, Step)));
+            }
         }
+
+        #endregion
     }
 }

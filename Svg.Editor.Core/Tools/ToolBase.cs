@@ -53,6 +53,11 @@ namespace Svg.Core.Tools
 
         public string IconName { get; set; }
 
+        /// <summary>
+        /// Initializes this tool with a canvas. The <see cref="Canvas"/> property will be set. Call this at first when overriding!
+        /// </summary>
+        /// <param name="ws">The canvas that this tool should reference.</param>
+        /// <returns></returns>
         public virtual Task Initialize(SvgDrawingCanvas ws)
         {
             Canvas = ws;

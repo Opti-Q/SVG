@@ -147,43 +147,49 @@ namespace Svg.Droid.SampleEditor
 			public const int ic_redo_white_48dp = 2130837523;
 			
 			// aapt resource value: 0x7f020014
-			public const int ic_save_white_48dp = 2130837524;
+			public const int ic_rotate_left_white_48dp = 2130837524;
 			
 			// aapt resource value: 0x7f020015
-			public const int ic_search_black_48dp = 2130837525;
+			public const int ic_rotate_right_white_48dp = 2130837525;
 			
 			// aapt resource value: 0x7f020016
-			public const int ic_select_tool_white_48dp = 2130837526;
+			public const int ic_save_white_48dp = 2130837526;
 			
 			// aapt resource value: 0x7f020017
-			public const int ic_swap_vert_white_48dp = 2130837527;
+			public const int ic_search_black_48dp = 2130837527;
 			
 			// aapt resource value: 0x7f020018
-			public const int ic_text_fields_white_48dp = 2130837528;
+			public const int ic_select_tool_white_48dp = 2130837528;
 			
 			// aapt resource value: 0x7f020019
-			public const int ic_undo_white_48dp = 2130837529;
+			public const int ic_swap_vert_white_48dp = 2130837529;
 			
 			// aapt resource value: 0x7f02001a
-			public const int ic_zoom_100_white_48dp = 2130837530;
+			public const int ic_text_fields_white_48dp = 2130837530;
 			
 			// aapt resource value: 0x7f02001b
-			public const int ic_zoom_200_white_48dp = 2130837531;
+			public const int ic_undo_white_48dp = 2130837531;
 			
 			// aapt resource value: 0x7f02001c
-			public const int ic_zoom_in_white_48dp = 2130837532;
+			public const int ic_zoom_100_white_48dp = 2130837532;
 			
 			// aapt resource value: 0x7f02001d
-			public const int ic_zoom_out_white_48dp = 2130837533;
+			public const int ic_zoom_200_white_48dp = 2130837533;
 			
 			// aapt resource value: 0x7f02001e
-			public const int ic_zoom_white_48dp = 2130837534;
+			public const int ic_zoom_in_white_48dp = 2130837534;
 			
 			// aapt resource value: 0x7f02001f
-			public const int Icon = 2130837535;
+			public const int ic_zoom_out_white_48dp = 2130837535;
 			
 			// aapt resource value: 0x7f020020
-			public const int splash = 2130837536;
+			public const int ic_zoom_white_48dp = 2130837536;
+			
+			// aapt resource value: 0x7f020021
+			public const int Icon = 2130837537;
+			
+			// aapt resource value: 0x7f020022
+			public const int splash = 2130837538;
 			
 			static Drawable()
 			{
