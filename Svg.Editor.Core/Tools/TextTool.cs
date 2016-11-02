@@ -76,10 +76,13 @@ namespace Svg.Core.Tools
             Canvas.DefaultEditors.Add(async element =>
             {
                 var svgText = element as SvgTextBase ?? element.Descendants().OfType<SvgTextBase>().FirstOrDefault();
-                if (svgText != null)
-                {
-                    await ChangeText(svgText);
-                }
+
+                if (svgText == null
+                    || svgText.CustomAttributes.ContainsKey(ImmutableTextCustomAttributeKey)
+                    || svgText.Descendants().OfType<SvgTextBase>().Any(x => x.CustomAttributes.ContainsKey(ImmutableTextCustomAttributeKey)))
+                    return;
+
+                await ChangeText(svgText);
             });
 
         }
@@ -95,6 +98,10 @@ namespace Svg.Core.Tools
 
             if (svgText != null)
             {
+                if (svgText.CustomAttributes.ContainsKey(ImmutableTextCustomAttributeKey)
+                    || svgText.Descendants().OfType<SvgTextBase>().Any(x => x.CustomAttributes.ContainsKey(ImmutableTextCustomAttributeKey)))
+                    return;
+
                 await ChangeText(svgText);
             }
             // else add new text   
@@ -119,10 +126,13 @@ namespace Svg.Core.Tools
 
             // determine if pointer was put down on a text
             var svgText = Canvas.GetElementsUnderPointer<SvgTextBase>(doubleTap.Position, 20).FirstOrDefault();
-            if (svgText != null)
-            {
-                await ChangeText(svgText);
-            }
+
+            if (svgText == null
+                || svgText.CustomAttributes.ContainsKey(ImmutableTextCustomAttributeKey)
+                || svgText.Descendants().OfType<SvgTextBase>().Any(x => x.CustomAttributes.ContainsKey(ImmutableTextCustomAttributeKey)))
+                return;
+
+            await ChangeText(svgText);
         }
 
         #endregion

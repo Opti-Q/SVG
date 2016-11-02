@@ -53,7 +53,7 @@ namespace Svg.Core.Tools
                         var cIndex = children.IndexOf(element);
                         var successor = children.ElementAtOrDefault(cIndex + 1);
                         if (successor != null && !selected.Contains(successor) &&
-                            !successor.CustomAttributes.ContainsKey("iclbackground"))
+                            !successor.CustomAttributes.ContainsKey(BackgroundCustomAttributeKey))
                         {
                             UndoRedoService.ExecuteCommand(new UndoableActionCommand("Move forward", o1 =>
                             {
@@ -76,7 +76,7 @@ namespace Svg.Core.Tools
                     {
                         var cIndex = children.IndexOf(element);
                         var precursor = children.ElementAtOrDefault(cIndex - 1);
-                        if (precursor != null && !selected.Contains(precursor) && !precursor.CustomAttributes.ContainsKey("iclbackground"))
+                        if (precursor != null && !selected.Contains(precursor) && !precursor.CustomAttributes.ContainsKey(BackgroundCustomAttributeKey))
                         {
                             UndoRedoService.ExecuteCommand(new UndoableActionCommand("Send backward", o1 =>
                             {
@@ -103,7 +103,7 @@ namespace Svg.Core.Tools
                             var firstArrangeableIndex =
                                 children.IndexOf(
                                     children.First(
-                                        x => x is SvgVisualElement && !x.CustomAttributes.ContainsKey("iclbackground")));
+                                        x => x is SvgVisualElement && !x.CustomAttributes.ContainsKey(BackgroundCustomAttributeKey)));
                             for (var i = index; i > firstArrangeableIndex; i--)
                             {
                                 children[i] = children[i - 1];

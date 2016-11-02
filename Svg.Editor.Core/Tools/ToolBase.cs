@@ -22,10 +22,30 @@ namespace Svg.Core.Tools
 
         protected SvgDrawingCanvas Canvas { get; private set; }
 
+        #region Custom attributes
+
+        /// <summary>
+        /// Add this to disable snapping operations by <see cref="GridTool"/> for this element.
+        /// </summary>
         public const string NoSnappingCustomAttributeKey = "iclnosnapping";
+        /// <summary>
+        /// Add this to disable the <see cref="ColorTool"/> to fill this element.
+        /// </summary>
         public const string NoFillCustomAttributeKey = "iclnofill";
+        /// <summary>
+        /// Add this to disable the <see cref="ColorTool"/> to set the stroke for this element.
+        /// </summary>
         public const string NoStrokeCustomAttributeKey = "iclnostroke";
+        /// <summary>
+        /// Add this to mark the element as background, making it immutable and stay in the background.
+        /// </summary>
         public const string BackgroundCustomAttributeKey = "iclbackground";
+        /// <summary>
+        /// Add this to disable text editing for this element.
+        /// </summary>
+        public const string ImmutableTextCustomAttributeKey = "iclimmutabletext";
+
+        #endregion
 
         public string Name { get; protected set; }
         public ToolUsage ToolUsage { get; protected set; }
