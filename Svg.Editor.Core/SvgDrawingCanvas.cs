@@ -631,12 +631,18 @@ namespace Svg.Core
 
         public Bitmap CaptureScreenBitmap()
         {
-            var bmp = Bitmap.Create(ScreenWidth, ScreenHeight);
+            var constraintsWidth = Constraints.Width * ZoomFactor;
+            var constraintsHeight = Constraints.Height * ZoomFactor;
+            var bmp = Bitmap.Create((int) Math.Round(Math.Min(ScreenWidth, constraintsWidth)),
+                (int) Math.Round(Math.Min(ScreenHeight, constraintsHeight)));
 
             using (var renderer = SvgRenderer.FromImage(bmp))
             {
-
-                renderer.TranslateTransform(Translate.X, Translate.Y);
+                var translateX = Translate.X;
+                if (ScreenWidth > constraintsWidth) translateX -= (ScreenWidth - constraintsWidth) / 2;
+                var translateY = Translate.Y;
+                if (ScreenHeight > constraintsHeight) translateY -= (ScreenHeight - constraintsHeight) / 2;
+                renderer.TranslateTransform(translateX, translateY);
                 renderer.TranslateTransform(ZoomFocus.X, ZoomFocus.Y);
                 renderer.ScaleTransform(ZoomFactor, ZoomFactor);
                 renderer.TranslateTransform(-ZoomFocus.X, -ZoomFocus.Y);
