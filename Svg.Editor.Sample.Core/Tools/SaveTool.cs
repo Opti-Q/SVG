@@ -203,6 +203,37 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                         using(var stream = fs.OpenRead(path))
                         {
                             var share = Mvx.Resolve<IMvxComposeEmailTaskEx>();
+                            share.ComposeEmail(new [] {"someone@somewhere.com"} , subject:$"SVG {DateTime.Now.ToString()}", attachments: new [] {new EmailAttachment {Content=stream, ContentType = "image/png", FileName = "svg_file.png" } });
+                        }
+                    }
+                },
+                (obj) =>
+                {
+                    var fs = Svg.Engine.Resolve<IFileSystem>();
+                    var path = fs.GetDefaultStoragePath();
+                    var storagePath = fs.PathCombine(path, _fileName());
+                    return fs.FileExists(storagePath);
+                }),
+                new ToolCommand(this, "Share PNG Constraints", (obj) =>
+                {
+                    var fs = Engine.Resolve<IFileSystem>();
+
+                    using (var bmp = ws.CaptureDocumentBitmap())
+                    {
+                        // now save it as PNG
+                        var path = fs.PathCombine(fs.GetDefaultStoragePath(), "svg_image_constraints.png");
+                        if (fs.FileExists(path))
+                            fs.DeleteFile(path);
+
+                        using (var stream = fs.OpenWrite(path))
+                        {
+                            bmp.SavePng(stream);
+                        }
+
+                        // then share it using MVVMCross plugin
+                        using(var stream = fs.OpenRead(path))
+                        {
+                            var share = Mvx.Resolve<IMvxComposeEmailTaskEx>();
                             share.ComposeEmail(new [] {"someone@somewhere.com"} , subject:$"SVG {DateTime.Now.ToString()}", attachments: new [] {new EmailAttachment {Content=stream, ContentType = "image/png", FileName = "svg_file.png"} });
                         }
                     }

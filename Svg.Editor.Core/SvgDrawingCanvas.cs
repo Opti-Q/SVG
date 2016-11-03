@@ -629,6 +629,36 @@ namespace Svg.Core
             DocumentIsDirty = false;
         }
 
+        public Bitmap CaptureDocumentBitmap()
+        {
+            var oldWidth = Document.Width;
+            var oldHeight = Document.Height;
+            var oldViewBox = Document.ViewBox;
+
+            try
+            {
+                var documentSize = Document.CalculateDocumentBounds();
+                var drawingWidth = (int) Math.Round(Math.Min(documentSize.Width, Constraints?.Width ?? float.MaxValue));
+                var drawingHeight =
+                    (int) Math.Round(Math.Min(documentSize.Height, Constraints?.Height ?? float.MaxValue));
+                var bitmap = Bitmap.Create(drawingWidth, drawingHeight);
+                Document.Width = new SvgUnit(SvgUnitType.Pixel, drawingWidth);
+                Document.Height = new SvgUnit(SvgUnitType.Pixel, drawingHeight);
+                Document.ViewBox = new SvgViewBox(Math.Max(documentSize.X, Constraints?.X ?? float.MinValue), Math.Max(documentSize.Y, Constraints?.Y ?? float.MinValue), drawingWidth, drawingHeight);
+                Document.Draw(bitmap, Engine.Factory.Colors.Black);
+
+                FireToolCommandsChanged();
+
+                return bitmap;
+            }
+            finally
+            {
+                Document.ViewBox = oldViewBox;
+                Document.Width = oldWidth;
+                Document.Height = oldHeight;
+            }
+        }
+
         public Bitmap CaptureScreenBitmap()
         {
             var constraintsWidth = Constraints.Width * ZoomFactor;
