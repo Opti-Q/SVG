@@ -429,7 +429,7 @@ namespace Svg.Core.Tools
                 return;
 
             var ve = element as SvgVisualElement;
-            if (ve == null || ve.CustomAttributes.ContainsKey("iclnosnapping"))
+            if (ve == null || ve.HasConstraints(NoSnappingConstraint))
                 return;
 
             try

@@ -25,26 +25,39 @@ namespace Svg.Core.Tools
         #region Custom attributes
 
         /// <summary>
-        /// Add this to disable snapping operations by <see cref="GridTool"/> for this element.
-        /// </summary>
-        public const string NoSnappingCustomAttributeKey = "iclnosnapping";
-        /// <summary>
-        /// Add this to disable the <see cref="ColorTool"/> to fill this element.
-        /// </summary>
-        public const string NoFillCustomAttributeKey = "iclnofill";
-        /// <summary>
-        /// Add this to disable the <see cref="ColorTool"/> to set the stroke for this element.
-        /// </summary>
-        public const string NoStrokeCustomAttributeKey = "iclnostroke";
-        /// <summary>
         /// Add this to mark the element as background, making it immutable and stay in the background.
         /// </summary>
         public const string BackgroundCustomAttributeKey = "iclbackground";
         /// <summary>
+        /// Add this to disable snapping operations by <see cref="GridTool"/> for this element.
+        /// </summary>
+        public const string NoSnappingConstraint = "snapping";
+        /// <summary>
+        /// Add this to disable the <see cref="ColorTool"/> to fill this element.
+        /// </summary>
+        public const string NoFillConstraint = "fill";
+        /// <summary>
+        /// Add this to disable the <see cref="ColorTool"/> to set the stroke for this element.
+        /// </summary>
+        public const string NoStrokeConstraint = "stroke";
+        /// <summary>
         /// Add this to disable text editing for this element.
         /// </summary>
-        public const string ImmutableTextCustomAttributeKey = "iclimmutabletext";
-
+        public const string ImmutableTextConstraint = "text";
+        /// <summary>
+        /// This attribute is place on an element to determine the constraints for editing tools.
+        /// Possible values would be:
+        /// <list type="bullet">
+        /// <item>text: <see cref="ImmutableTextConstraint"/></item>
+        /// <item>font-size</item>
+        /// <item>fill: <see cref="NoFillConstraint"/></item>
+        /// <item>stroke: <see cref="NoStrokeConstraint"/></item>
+        /// <item>snapping: <see cref="NoSnappingConstraint"/></item>
+        /// </list>
+        /// <remarks>The values are treated as opt-out.</remarks>
+        /// </summary>
+        public const string ConstraintsCustomAttributeKey = "iclconstraints";
+        
         #endregion
 
         public string Name { get; protected set; }

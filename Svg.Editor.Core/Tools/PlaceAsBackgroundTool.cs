@@ -10,7 +10,7 @@ namespace Svg.Core.Tools
 {
     public class PlaceAsBackgroundTool : UndoableToolBase
     {
-        public PlaceAsBackgroundTool(IDictionary<string,object> properties, IUndoRedoService undoRedoService) : base("Background Image", properties, undoRedoService)
+        public PlaceAsBackgroundTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Background Image", properties, undoRedoService)
         {
             IconName = "ic_insert_photo_white_48dp.png";
         }
@@ -67,9 +67,7 @@ namespace Svg.Core.Tools
 
                 // add custom icl attributes
                 image.CustomAttributes.Add(BackgroundCustomAttributeKey, "");
-                image.CustomAttributes.Add(NoSnappingCustomAttributeKey, "");
-                image.CustomAttributes.Add(NoFillCustomAttributeKey, "");
-                image.CustomAttributes.Add(NoStrokeCustomAttributeKey, "");
+                image.AddConstraints(NoSnappingConstraint, NoFillConstraint, NoStrokeConstraint);
 
                 // remove already placed background
                 var formerBackground = children.FirstOrDefault(x => x.CustomAttributes.ContainsKey(BackgroundCustomAttributeKey));
@@ -86,7 +84,7 @@ namespace Svg.Core.Tools
 
                 // insert the background before the first visible element
                 var index = children.IndexOf(children.FirstOrDefault(x => x is SvgVisualElement));
-                
+
                 // if there are no visual elements, we want to add it to the end of the list
                 if (index == -1) index = children.Count;
 

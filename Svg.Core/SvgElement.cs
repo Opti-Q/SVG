@@ -601,7 +601,7 @@ namespace Svg
                     //writeStyle = attr.Attribute.Name == "fill";
                     writeStyle = SvgElementFactory.IsStyleAttribute(attr.Attribute.Name);
 
-                    if (writeStyle && (Parent != null))
+                    if (writeStyle && Parent != null)
                     {
                         if (propertyValue == SvgColourServer.NotSet) continue;
 
@@ -617,7 +617,7 @@ namespace Svg
                     }
 
                     //Only write the attribute's value if it is not the default value, not null/empty, or we're forcing the write.
-                    if ((!string.IsNullOrEmpty(value) && !SvgDefaults.IsDefault(attr.Attribute.Name, value)) || forceWrite)
+                    if (!string.IsNullOrEmpty(value) && (!SvgDefaults.IsDefault(attr.Attribute.Name, value) || forceWrite))
                     {
                         if (writeStyle)
                         {

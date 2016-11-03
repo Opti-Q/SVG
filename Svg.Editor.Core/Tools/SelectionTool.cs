@@ -199,7 +199,7 @@ namespace Svg.Core.Tools
 
             foreach (var element in selected)
             {
-                if (element.CustomAttributes.ContainsKey("iclbackground")) continue;
+                if (element.CustomAttributes.ContainsKey(BackgroundCustomAttributeKey)) continue;
                 ws.SelectedElements.Add(element);
             }
         }

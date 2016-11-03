@@ -125,8 +125,8 @@ namespace Svg.Core.Tools
 
         private void ColorizeElement(SvgElement element, Color color)
         {
-            var noFill = element.CustomAttributes.ContainsKey(NoFillCustomAttributeKey);
-            var noStroke = element.CustomAttributes.ContainsKey(NoStrokeCustomAttributeKey);
+            var noFill = element.HasConstraints(NoFillConstraint);
+            var noStroke = element.HasConstraints(NoStrokeConstraint);
 
             // only colorize visual elements
             if (!(element is SvgVisualElement) || noFill && noStroke) return;

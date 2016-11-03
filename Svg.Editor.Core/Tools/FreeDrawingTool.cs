@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Svg.Core.Gestures;
 using Svg.Core.Interfaces;
@@ -102,7 +103,7 @@ namespace Svg.Core.Tools
                     FillOpacity = 0
                 };
 
-                _currentPath.CustomAttributes.Add(NoSnappingCustomAttributeKey, "");
+                _currentPath.AddConstraints(NoSnappingConstraint);
 
                 var capturedCurrentPath = _currentPath;
                 UndoRedoService.ExecuteCommand(new UndoableActionCommand("Add new freedrawing path", o =>

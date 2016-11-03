@@ -78,8 +78,8 @@ namespace Svg.Core.Tools
                 var svgText = element as SvgTextBase ?? element.Descendants().OfType<SvgTextBase>().FirstOrDefault();
 
                 if (svgText == null
-                    || svgText.CustomAttributes.ContainsKey(ImmutableTextCustomAttributeKey)
-                    || svgText.Descendants().OfType<SvgTextBase>().Any(x => x.CustomAttributes.ContainsKey(ImmutableTextCustomAttributeKey)))
+                    || svgText.HasConstraints(ImmutableTextConstraint)
+                    || svgText.Descendants().OfType<SvgTextBase>().Any(x => x.HasConstraints(ImmutableTextConstraint)))
                     return;
 
                 await ChangeText(svgText);
@@ -98,8 +98,8 @@ namespace Svg.Core.Tools
 
             if (svgText != null)
             {
-                if (svgText.CustomAttributes.ContainsKey(ImmutableTextCustomAttributeKey)
-                    || svgText.Descendants().OfType<SvgTextBase>().Any(x => x.CustomAttributes.ContainsKey(ImmutableTextCustomAttributeKey)))
+                if (svgText.HasConstraints(ImmutableTextConstraint)
+                    || svgText.Descendants().OfType<SvgTextBase>().Any(x => x.HasConstraints(ImmutableTextConstraint)))
                     return;
 
                 await ChangeText(svgText);
@@ -128,8 +128,8 @@ namespace Svg.Core.Tools
             var svgText = Canvas.GetElementsUnderPointer<SvgTextBase>(doubleTap.Position, 20).FirstOrDefault();
 
             if (svgText == null
-                || svgText.CustomAttributes.ContainsKey(ImmutableTextCustomAttributeKey)
-                || svgText.Descendants().OfType<SvgTextBase>().Any(x => x.CustomAttributes.ContainsKey(ImmutableTextCustomAttributeKey)))
+                || svgText.HasConstraints(ImmutableTextConstraint)
+                || svgText.Descendants().OfType<SvgTextBase>().Any(x => x.HasConstraints(ImmutableTextConstraint)))
                 return;
 
             await ChangeText(svgText);

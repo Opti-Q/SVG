@@ -37,31 +37,7 @@ namespace Svg.Core.Tools
 
         #region Public properties
 
-        public string LineStyleIconName { get; set; } = "ic_line_style_white_48dp.png";
-
         public override int InputOrder => 300;
-
-        public string[] LineStyles
-        {
-            get
-            {
-                object lineStyles;
-                if (!Properties.TryGetValue("linestyles", out lineStyles))
-                    lineStyles = Enumerable.Empty<string>();
-                return (string[]) lineStyles;
-            }
-        }
-
-        public string[] LineStyleNames
-        {
-            get
-            {
-                object lineStyleNames;
-                if (!Properties.TryGetValue("linestylenames", out lineStyleNames))
-                    lineStyleNames = Enumerable.Empty<string>();
-                return (string[]) lineStyleNames;
-            }
-        }
 
         public override bool IsActive
         {
@@ -77,12 +53,6 @@ namespace Svg.Core.Tools
                 Canvas.FireInvalidateCanvas();
             }
         }
-
-        public string SelectedMarkerStartId { get; set; }
-
-        public string SelectedMarkerEndId { get; set; }
-
-        public string SelectedLineStyle { get; set; }
 
         #endregion
 
@@ -344,8 +314,6 @@ namespace Svg.Core.Tools
             await base.Initialize(ws);
 
             IsActive = false;
-
-            SelectedLineStyle = LineStyles.FirstOrDefault();
         }
 
         #endregion
@@ -398,22 +366,10 @@ namespace Svg.Core.Tools
                 StrokeWidth = new SvgUnit(SvgUnitType.Pixel, 5),
                 CenterX = new SvgUnit(SvgUnitType.Pixel, relativeStart.X),
                 CenterY = new SvgUnit(SvgUnitType.Pixel, relativeStart.Y),
-                CustomAttributes = { { NoFillCustomAttributeKey, "" } }
+                CustomAttributes = { { ConstraintsCustomAttributeKey, NoFillConstraint } }
             };
 
-            if (!string.IsNullOrWhiteSpace(SelectedLineStyle) && SelectedLineStyle != "none")
-            {
-                ellipse.StrokeDashArray = GenerateStrokeDashArray(SelectedLineStyle.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).Select(s => Convert.ToInt32(s)));
-            }
-
             return ellipse;
-        }
-
-        private static SvgUnitCollection GenerateStrokeDashArray(IEnumerable<int> pattern)
-        {
-            var svgUnitCollection = new SvgUnitCollection();
-            svgUnitCollection.AddRange(pattern.Select(element => new SvgUnit(SvgUnitType.Pixel, element)));
-            return svgUnitCollection;
         }
 
         private void AddTranslate(SvgVisualElement element, float deltaX, float deltaY)

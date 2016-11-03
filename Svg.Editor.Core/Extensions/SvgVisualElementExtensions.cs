@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using Svg.Core.Tools;
 using Svg.Interfaces;
 using Svg.Platform;
+using System.Linq;
 
 namespace Svg
 {
@@ -51,6 +53,36 @@ namespace Svg
             {
                 e.Transforms.Clear();
             }
+        }
+
+        public static bool HasConstraints(this SvgElement e, params string[] attributes)
+        {
+            if (!attributes.Any()) return true;
+
+            string constraints;
+            return e.CustomAttributes.TryGetValue(ToolBase.ConstraintsCustomAttributeKey, out constraints) &&
+                   !string.IsNullOrEmpty(constraints) && constraints.Split(',').Any(attributes.Contains);
+        }
+
+        public static void AddConstraints(this SvgElement e, params string[] attributes)
+        {
+            if (!attributes.Any()) return;
+
+            string constraints;
+            if (e.CustomAttributes.TryGetValue(ToolBase.ConstraintsCustomAttributeKey, out constraints) &&
+                !string.IsNullOrEmpty(constraints))
+            {
+                var joined = string.Join(",",
+                    constraints.Split(',')
+                        .Where(x => !attributes.Contains(x)));
+                if (!string.IsNullOrEmpty(joined))
+                    constraints = $"{constraints},{joined}";
+            }
+            else
+            {
+                constraints = $"{string.Join(",", attributes)}";
+            }
+            e.CustomAttributes[ToolBase.ConstraintsCustomAttributeKey] = constraints;
         }
 
         public static SizeF GetImageSize(this SvgImage image)
