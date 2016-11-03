@@ -356,7 +356,6 @@ namespace Svg.Core
             if (screenTopLeft.X < constraintTopLeft.X)
             {
                 Translate.X += screenTopLeft.X - constraintTopLeft.X + marginX;
-                ZoomFocus.X = 0;
             }
             else if (screenBottomRight.X > constraintBottomRight.X)
             {
