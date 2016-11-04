@@ -404,7 +404,7 @@ namespace Svg.Core
         /// <returns></returns>
         public RectangleF GetPointerRectangle(PointF p)
         {
-            float halfFingerThickness = 20 / ZoomFactor;
+            var halfFingerThickness = 20 / ZoomFactor;
             return RectangleF.Create(p.X - halfFingerThickness, p.Y - halfFingerThickness, halfFingerThickness * 2, halfFingerThickness * 2); // "10 pixel fat finger"
         }
 
@@ -746,8 +746,23 @@ namespace Svg.Core
             SelectedElements.Clear();
 
             // also reset translate and zoomfactor
-            Translate = PointF.Create(0f, 0f);
-            ZoomFactor = 1f;
+            if (newDocument == null || newDocument.ViewBox.Equals(SvgViewBox.Empty))
+            {
+                Translate = PointF.Create(0f, 0f);
+                ZoomFactor = 1f;
+            }
+            else
+            {
+                float scaleX;
+                float scaleY;
+                float minX;
+                float minY;
+                newDocument.ViewBox.CalculateTransform(newDocument.AspectRatio, newDocument.Width, newDocument.Height,
+                    out scaleX, out scaleY, out minX, out minY);
+
+                Translate = PointF.Create(minX, minY);
+                ZoomFactor = Math.Min(scaleX, scaleY);
+            }
 
             // re-render
             FireInvalidateCanvas();

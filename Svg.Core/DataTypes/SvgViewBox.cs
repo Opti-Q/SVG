@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Drawing;
-using System.ComponentModel;
-using System.Collections.Generic;
-using System.Text;
-using System.Globalization;
 using Svg.Interfaces;
 
 namespace Svg
@@ -61,7 +56,7 @@ namespace Svg
         {
             return RectangleF.Create(value.MinX, value.MinY, value.Width, value.Height);
         }
-        
+
         /// <summary>
         /// Performs an implicit conversion from <see cref="Svg.Interfaces.RectangleF"/> to <see cref="SvgViewBox"/>.
         /// </summary>
@@ -82,52 +77,53 @@ namespace Svg
         /// <param name="height">The height.</param>
         public SvgViewBox(float minX, float minY, float width, float height) : this()
         {
-            this.MinX = minX;
-            this.MinY = minY;
-            this.Width = width;
-            this.Height = height;
+            MinX = minX;
+            MinY = minY;
+            Width = width;
+            Height = height;
         }
-        
+
         #region Equals and GetHashCode implementation
         public override bool Equals(object obj)
-		{
-			return (obj is SvgViewBox) && Equals((SvgViewBox)obj);
-		}
-        
-		public bool Equals(SvgViewBox other)
-		{
-			return this.MinX == other.MinX 
-				&& this.MinY == other.MinY 
-				&& this.Width == other.Width 
-				&& this.Height == other.Height;
-		}
-        
-		public override int GetHashCode()
-		{
-			int hashCode = 0;
-			unchecked {
-				hashCode += 1000000007 * MinX.GetHashCode();
-				hashCode += 1000000009 * MinY.GetHashCode();
-				hashCode += 1000000021 * Width.GetHashCode();
-				hashCode += 1000000033 * Height.GetHashCode();
-			}
-			return hashCode;
-		}
-        
-		public static bool operator ==(SvgViewBox lhs, SvgViewBox rhs)
-		{
-			return lhs.Equals(rhs);
-		}
-        
-		public static bool operator !=(SvgViewBox lhs, SvgViewBox rhs)
-		{
-			return !(lhs == rhs);
-		}
+        {
+            return (obj is SvgViewBox) && Equals((SvgViewBox) obj);
+        }
+
+        public bool Equals(SvgViewBox other)
+        {
+            return Math.Abs(MinX - other.MinX) < 0.01
+                && Math.Abs(MinY - other.MinY) < 0.01
+                && Math.Abs(Width - other.Width) < 0.01
+                && Math.Abs(Height - other.Height) < 0.01;
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = 0;
+            unchecked
+            {
+                hashCode += 1000000007 * MinX.GetHashCode();
+                hashCode += 1000000009 * MinY.GetHashCode();
+                hashCode += 1000000021 * Width.GetHashCode();
+                hashCode += 1000000033 * Height.GetHashCode();
+            }
+            return hashCode;
+        }
+
+        public static bool operator ==(SvgViewBox lhs, SvgViewBox rhs)
+        {
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(SvgViewBox lhs, SvgViewBox rhs)
+        {
+            return !(lhs == rhs);
+        }
         #endregion
-        
+
         public void AddViewBoxTransform(SvgAspectRatio aspectRatio, ISvgRenderer renderer)
         {
-            AddViewBoxTransform(aspectRatio, renderer, RectangleF.Create(0, 0, this.Width, this.Height));
+            AddViewBoxTransform(aspectRatio, renderer, RectangleF.Create(0, 0, Width, Height));
         }
 
         public void AddViewBoxTransform(SvgAspectRatio aspectRatio, ISvgRenderer renderer, SvgFragment frag)
@@ -135,8 +131,8 @@ namespace Svg
             var x = (frag == null ? 0 : frag.X.ToDeviceValue(renderer, UnitRenderingType.Horizontal, frag));
             var y = (frag == null ? 0 : frag.Y.ToDeviceValue(renderer, UnitRenderingType.Vertical, frag));
 
-            var width = (frag == null ? this.Width : frag.Width.ToDeviceValue(renderer, UnitRenderingType.Horizontal, frag));
-            var height = (frag == null ? this.Height : frag.Height.ToDeviceValue(renderer, UnitRenderingType.Vertical, frag));
+            var width = (frag == null ? Width : frag.Width.ToDeviceValue(renderer, UnitRenderingType.Horizontal, frag));
+            var height = (frag == null ? Height : frag.Height.ToDeviceValue(renderer, UnitRenderingType.Vertical, frag));
 
             AddViewBoxTransform(aspectRatio, renderer, RectangleF.Create(x, y, width, height));
         }
@@ -145,7 +141,7 @@ namespace Svg
         /// Applies the viewbox given the specified bounds
         /// </summary>
         /// <remarks>
-        /// a goot explanation of SVG viewboxes can be found here:
+        /// a good explanation of SVG viewboxes can be found here:
         /// http://tutorials.jenkov.com/svg/svg-viewport-view-box.html
         /// </remarks>
         /// <param name="aspectRatio"></param>
@@ -158,76 +154,84 @@ namespace Svg
             var width = bounds.Width;
             var height = bounds.Height;
 
-            if (this.Equals(SvgViewBox.Empty))
+            if (Equals(Empty))
             {
                 renderer.TranslateTransform(x, y);
                 return;
             }
 
-            var fScaleX = width > this.Width ? this.Width / width : width / this.Width;
-            var fScaleY = height > this.Height ? this.Height / height : height / this.Height; //(this.MinY < 0 ? -1 : 1) * 
-            var fMinX = -this.MinX;
-            var fMinY = -this.MinY;
+            float scaleX;
+            float scaleY;
+            float minX;
+            float minY;
+
+            CalculateTransform(aspectRatio, width, height, out scaleX, out scaleY, out minX, out minY);
+
+            renderer.SetClip(new Region(RectangleF.Create(x, y, width, height)), CombineMode.Intersect);
+            renderer.TranslateTransform(x, y, MatrixOrder.Prepend);
+            renderer.TranslateTransform(minX, minY, MatrixOrder.Prepend);
+            renderer.ScaleTransform(scaleX, scaleY, MatrixOrder.Prepend);
+        }
+
+        public void CalculateTransform(SvgAspectRatio aspectRatio, float width, float height, out float scaleX, out float scaleY, out float minX, out float minY)
+        {
+            scaleX = width > Width ? Width / width : width / Width;
+            scaleY = height > Height ? Height / height : height / Height;
+            minX = -MinX;
+            minY = -MinY;
 
             if (aspectRatio == null) aspectRatio = new SvgAspectRatio(SvgPreserveAspectRatio.xMidYMid, false);
             if (aspectRatio.Align != SvgPreserveAspectRatio.none)
             {
                 if (aspectRatio.Slice)
                 {
-                    fScaleX = Math.Max(fScaleX, fScaleY);
-                    fScaleY = Math.Max(fScaleX, fScaleY);
+                    scaleX = Math.Max(scaleX, scaleY);
+                    scaleY = Math.Max(scaleX, scaleY);
                 }
                 else
                 {
-                    fScaleX = Math.Min(fScaleX, fScaleY);
-                    fScaleY = Math.Min(fScaleX, fScaleY);
+                    scaleX = Math.Min(scaleX, scaleY);
+                    scaleY = Math.Min(scaleX, scaleY);
                 }
-                float fViewMidX = (this.Width / 2) * fScaleX;
-                float fViewMidY = (this.Height / 2) * fScaleY;
-                float fMidX = width / 2;
-                float fMidY = height / 2;
+                var viewMidX = Width / 2 * scaleX;
+                var viewMidY = Height / 2 * scaleY;
+                var midX = width / 2;
+                var midY = height / 2;
 
                 switch (aspectRatio.Align)
                 {
                     case SvgPreserveAspectRatio.xMinYMin:
                         break;
                     case SvgPreserveAspectRatio.xMidYMin:
-                        fMinX += fMidX - fViewMidX;
+                        minX += midX - viewMidX;
                         break;
                     case SvgPreserveAspectRatio.xMaxYMin:
-                        fMinX += width - this.Width * fScaleX;
+                        minX += width - Width * scaleX;
                         break;
                     case SvgPreserveAspectRatio.xMinYMid:
-                        fMinY += fMidY - fViewMidY;
+                        minY += midY - viewMidY;
                         break;
                     case SvgPreserveAspectRatio.xMidYMid:
-                        fMinX += fMidX - fViewMidX;
-                        fMinY += fMidY - fViewMidY;
+                        minX += midX - viewMidX;
+                        minY += midY - viewMidY;
                         break;
                     case SvgPreserveAspectRatio.xMaxYMid:
-                        fMinX += width - this.Width * fScaleX;
-                        fMinY += fMidY - fViewMidY;
+                        minX += width - Width * scaleX;
+                        minY += midY - viewMidY;
                         break;
                     case SvgPreserveAspectRatio.xMinYMax:
-                        fMinY += height - this.Height * fScaleY;
+                        minY += height - Height * scaleY;
                         break;
                     case SvgPreserveAspectRatio.xMidYMax:
-                        fMinX += fMidX - fViewMidX;
-                        fMinY += height - this.Height * fScaleY;
+                        minX += midX - viewMidX;
+                        minY += height - Height * scaleY;
                         break;
                     case SvgPreserveAspectRatio.xMaxYMax:
-                        fMinX += width - this.Width * fScaleX;
-                        fMinY += height - this.Height * fScaleY;
-                        break;
-                    default:
+                        minX += width - Width * scaleX;
+                        minY += height - Height * scaleY;
                         break;
                 }
             }
-
-            renderer.SetClip(new Region(RectangleF.Create(x, y, width, height)), CombineMode.Intersect);
-            renderer.TranslateTransform(x, y, MatrixOrder.Prepend);
-            renderer.TranslateTransform(fMinX, fMinY, MatrixOrder.Prepend);
-            renderer.ScaleTransform(fScaleX, fScaleY, MatrixOrder.Prepend);
         }
     }
 }
