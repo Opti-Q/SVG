@@ -40,7 +40,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
 
                     using (var stream = fs.OpenWrite(storagePath))
                     {
-                        ws.SaveDocument(stream);
+                        ws.SaveDocumentWithBoundsAsViewbox(stream);
                     }
 
                 }, 

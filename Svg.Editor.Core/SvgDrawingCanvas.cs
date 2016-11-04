@@ -58,10 +58,10 @@ namespace Svg.Core
             {
                 var oldDocument = _document;
                 _document = value;
-                if (_document != null)
-                {
-                    _document.ViewBox = SvgViewBox.Empty;
-                }
+                //if (_document != null)
+                //{
+                //    _document.ViewBox = SvgViewBox.Empty;
+                //}
 
                 OnDocumentChanged(oldDocument, _document);
             }
@@ -252,6 +252,8 @@ namespace Svg.Core
 
             ScreenWidth = renderer.Width;
             ScreenHeight = renderer.Height;
+
+            SetInitialZoomFactor();
 
             switch (ConstraintsMode)
             {
@@ -598,7 +600,7 @@ namespace Svg.Core
         /// then resets the viewbox
         /// </summary>
         /// <param name="stream"></param>
-        public void SaveDocument(Stream stream)
+        public void SaveDocumentWithBoundsAsViewbox(Stream stream)
         {
 
             var oldWidth = Document.Width;
@@ -611,6 +613,37 @@ namespace Svg.Core
                 Document.Width = new SvgUnit(SvgUnitType.Pixel, documentSize.Width);
                 Document.Height = new SvgUnit(SvgUnitType.Pixel, documentSize.Height);
                 Document.ViewBox = new SvgViewBox(documentSize.X, documentSize.Y, documentSize.Width, documentSize.Height);
+                Document.Write(stream);
+
+                FireToolCommandsChanged();
+            }
+            finally
+            {
+                Document.ViewBox = oldViewBox;
+                Document.Width = oldWidth;
+                Document.Height = oldHeight;
+            }
+
+            DocumentIsDirty = false;
+        }
+
+        /// <summary>
+        /// Stores the document with a viewbox that surrounds the current screen capture
+        /// then resets the viewbox
+        /// </summary>
+        /// <param name="stream"></param>
+        public void SaveDocumentWithScreenAsViewbox(Stream stream)
+        {
+            var oldWidth = Document.Width;
+            var oldHeight = Document.Height;
+            var oldViewBox = Document.ViewBox;
+            var minXminY = ScreenToCanvas(0, 0);
+
+            try
+            {
+                Document.Width = new SvgUnit(SvgUnitType.Pixel, ScreenWidth / ZoomFactor);
+                Document.Height = new SvgUnit(SvgUnitType.Pixel, ScreenHeight / ZoomFactor);
+                Document.ViewBox = new SvgViewBox(minXminY.X, minXminY.Y, ScreenWidth / ZoomFactor, ScreenHeight / ZoomFactor);
                 Document.Write(stream);
 
                 FireToolCommandsChanged();
@@ -741,7 +774,7 @@ namespace Svg.Core
             // selection is not valid anymore
             SelectedElements.Clear();
 
-            // also reset translate and zoomfactor
+            // check if the document has a viewBox and set translate and zoom accordingly
             if (newDocument == null || newDocument.ViewBox.Equals(SvgViewBox.Empty))
             {
                 Translate = PointF.Create(0f, 0f);
@@ -749,19 +782,35 @@ namespace Svg.Core
             }
             else
             {
-                float scaleX;
-                float scaleY;
-                float minX;
-                float minY;
-                newDocument.ViewBox.CalculateTransform(newDocument.AspectRatio, newDocument.Width, newDocument.Height,
-                    out scaleX, out scaleY, out minX, out minY);
 
-                Translate = PointF.Create(minX, minY);
-                ZoomFactor = Math.Min(scaleX, scaleY);
+                CalculateInitZoomFactor = true;
             }
 
             // re-render
             FireInvalidateCanvas();
+        }
+
+        public bool CalculateInitZoomFactor { get; set; }
+
+        private void SetInitialZoomFactor()
+        {
+            if (!CalculateInitZoomFactor) return;
+
+            float scaleX;
+            float scaleY;
+            float minX;
+            float minY;
+            Document.ViewBox.CalculateTransform(Document.AspectRatio, ScreenWidth, ScreenHeight,
+                out scaleX, out scaleY, out minX, out minY);
+
+            ZoomFactor = Math.Min(1 / scaleX, 1 / scaleY);
+            ZoomFocus = PointF.Empty;
+            Translate = PointF.Create(-Document.ViewBox.MinX * ZoomFactor, -Document.ViewBox.MinY * ZoomFactor);
+
+            // we need to reset the viewBox for correct rendering afterwards
+            Document.ViewBox = SvgViewBox.Empty;
+
+            CalculateInitZoomFactor = false;
         }
 
         private void OnDocumentContentModified(object sender, SvgElement e)
