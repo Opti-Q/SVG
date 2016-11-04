@@ -601,8 +601,6 @@ namespace Svg.Core
         public void SaveDocument(Stream stream)
         {
 
-            var oldX = Document.X;
-            var oldY = Document.Y;
             var oldWidth = Document.Width;
             var oldHeight = Document.Height;
             var oldViewBox = Document.ViewBox;
@@ -622,8 +620,6 @@ namespace Svg.Core
                 Document.ViewBox = oldViewBox;
                 Document.Width = oldWidth;
                 Document.Height = oldHeight;
-                Document.X = oldX;
-                Document.Y = oldY;
             }
 
             DocumentIsDirty = false;
