@@ -39,9 +39,9 @@ namespace Svg.Core.Tools
                 object filter;
                 if (!Properties.TryGetValue(FilterKey, out filter))
                 {
-                    return element => false;
+                    return element => true;
                 }
-                return (Func<SvgVisualElement, bool>) filter ?? (element => false);
+                return (Func<SvgVisualElement, bool>) filter ?? (element => true);
             }
             set { Properties[FilterKey] = value; }
         }
@@ -62,6 +62,7 @@ namespace Svg.Core.Tools
         public RotationTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Rotate", properties, undoRedoService)
         {
             ToolType = ToolType.Modify;
+            IconName = "ic_rotate_right_white_48dp.png";
         }
 
         #region Overrides
