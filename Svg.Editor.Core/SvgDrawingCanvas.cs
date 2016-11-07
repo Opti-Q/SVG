@@ -690,17 +690,25 @@ namespace Svg.Core
 
         public Bitmap CaptureScreenBitmap()
         {
-            var constraintsWidth = Constraints.Width * ZoomFactor;
-            var constraintsHeight = Constraints.Height * ZoomFactor;
-            var bmp = Bitmap.Create((int) Math.Round(Math.Min(ScreenWidth, constraintsWidth)),
-                (int) Math.Round(Math.Min(ScreenHeight, constraintsHeight)));
+            var translateX = Translate.X;
+            var translateY = Translate.Y;
+            Bitmap bmp;
+            if (Constraints != null && Constraints != RectangleF.Empty)
+            {
+                var constraintsWidth = Constraints.Width*ZoomFactor;
+                var constraintsHeight = Constraints.Height*ZoomFactor;
+                bmp = Bitmap.Create((int) Math.Round(Math.Min(ScreenWidth, constraintsWidth)),
+                    (int) Math.Round(Math.Min(ScreenHeight, constraintsHeight)));
+                if (ScreenWidth > constraintsWidth) translateX -= (ScreenWidth - constraintsWidth)/2;
+                if (ScreenHeight > constraintsHeight) translateY -= (ScreenHeight - constraintsHeight)/2;
+            }
+            else
+            {
+                bmp = Bitmap.Create(ScreenWidth, ScreenHeight);
+            }
 
             using (var renderer = SvgRenderer.FromImage(bmp))
             {
-                var translateX = Translate.X;
-                if (ScreenWidth > constraintsWidth) translateX -= (ScreenWidth - constraintsWidth) / 2;
-                var translateY = Translate.Y;
-                if (ScreenHeight > constraintsHeight) translateY -= (ScreenHeight - constraintsHeight) / 2;
                 renderer.TranslateTransform(translateX, translateY);
                 renderer.TranslateTransform(ZoomFocus.X, ZoomFocus.Y);
                 renderer.ScaleTransform(ZoomFactor, ZoomFactor);
