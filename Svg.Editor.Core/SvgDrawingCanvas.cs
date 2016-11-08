@@ -602,7 +602,6 @@ namespace Svg.Core
         /// <param name="stream"></param>
         public void SaveDocumentWithBoundsAsViewbox(Stream stream)
         {
-
             var oldWidth = Document.Width;
             var oldHeight = Document.Height;
             var oldViewBox = Document.ViewBox;
@@ -664,11 +663,7 @@ namespace Svg.Core
             var drawingHeight =
                 (int) Math.Round(Math.Min(documentSize.Height, Constraints?.Height ?? float.MaxValue));
 
-            // reassign document size with constraints
-            documentSize = RectangleF.Create(documentSize.X, documentSize.Y, drawingWidth, drawingHeight);
-
             // adjust width and height of the resulting bitmap to the maxSize parameter
-
             var bitmapWidth = drawingWidth;
             var bitmapHeight = drawingHeight;
 
@@ -733,8 +728,13 @@ namespace Svg.Core
         {
             Document.Width = new SvgUnit(SvgUnitType.Pixel, drawingSize.Width);
             Document.Height = new SvgUnit(SvgUnitType.Pixel, drawingSize.Height);
-            Document.ViewBox = new SvgViewBox(Math.Max(drawingSize.X, Constraints?.X ?? float.MinValue),
-                Math.Max(drawingSize.Y, Constraints?.Y ?? float.MinValue), drawingSize.Width, drawingSize.Height);
+            Document.ViewBox = new SvgViewBox
+            (
+                Math.Max(drawingSize.X, Constraints?.X ?? float.MinValue),
+                Math.Max(drawingSize.Y, Constraints?.Y ?? float.MinValue),
+                Math.Min(drawingSize.Width, Constraints?.Width ?? float.MaxValue),
+                Math.Min(drawingSize.Height, Constraints?.Height ?? float.MaxValue)
+            );
         }
 
         public void FireInvalidateCanvas()
