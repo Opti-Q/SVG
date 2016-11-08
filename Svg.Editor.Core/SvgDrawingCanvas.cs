@@ -735,6 +735,7 @@ namespace Svg.Core
                 Math.Min(drawingSize.Width, Constraints?.Width ?? float.MaxValue),
                 Math.Min(drawingSize.Height, Constraints?.Height ?? float.MaxValue)
             );
+            Document.AspectRatio = new SvgAspectRatio(SvgPreserveAspectRatio.xMidYMid, true);
         }
 
         public void FireInvalidateCanvas()
