@@ -253,7 +253,7 @@ namespace Svg.Core
             ScreenWidth = renderer.Width;
             ScreenHeight = renderer.Height;
 
-            SetInitialZoomFactor();
+            SetInitialTransformation();
 
             switch (ConstraintsMode)
             {
@@ -610,9 +610,7 @@ namespace Svg.Core
             try
             {
                 var documentSize = Document.CalculateDocumentBounds();
-                Document.Width = new SvgUnit(SvgUnitType.Pixel, documentSize.Width);
-                Document.Height = new SvgUnit(SvgUnitType.Pixel, documentSize.Height);
-                Document.ViewBox = new SvgViewBox(documentSize.X, documentSize.Y, documentSize.Width, documentSize.Height);
+                SetDocumentViewbox(documentSize);
                 Document.Write(stream);
 
                 FireToolCommandsChanged();
@@ -638,12 +636,11 @@ namespace Svg.Core
             var oldHeight = Document.Height;
             var oldViewBox = Document.ViewBox;
             var minXminY = ScreenToCanvas(0, 0);
+            var drawingSize = RectangleF.Create(minXminY, SizeF.Create(ScreenWidth/ZoomFactor, ScreenHeight/ZoomFactor));
 
             try
             {
-                Document.Width = new SvgUnit(SvgUnitType.Pixel, ScreenWidth / ZoomFactor);
-                Document.Height = new SvgUnit(SvgUnitType.Pixel, ScreenHeight / ZoomFactor);
-                Document.ViewBox = new SvgViewBox(minXminY.X, minXminY.Y, ScreenWidth / ZoomFactor, ScreenHeight / ZoomFactor);
+                SetDocumentViewbox(drawingSize);
                 Document.Write(stream);
 
                 FireToolCommandsChanged();
@@ -658,66 +655,86 @@ namespace Svg.Core
             DocumentIsDirty = false;
         }
 
-        public Bitmap CaptureDocumentBitmap()
+        public Bitmap CaptureDocumentBitmap(int maxSize = 4096, Color backgroundColor = null)
         {
+            var documentSize = Document.CalculateDocumentBounds();
+
+            // determine width and height of the bitmap by the minimum of the whole document's and the constraint's size
+            var drawingWidth = (int) Math.Round(Math.Min(documentSize.Width, Constraints?.Width ?? float.MaxValue));
+            var drawingHeight =
+                (int) Math.Round(Math.Min(documentSize.Height, Constraints?.Height ?? float.MaxValue));
+
+            // reassign document size with constraints
+            documentSize = RectangleF.Create(documentSize.X, documentSize.Y, drawingWidth, drawingHeight);
+
+            // adjust width and height of the resulting bitmap to the maxSize parameter
+
+            var bitmapWidth = drawingWidth;
+            var bitmapHeight = drawingHeight;
+
+            if (bitmapWidth > maxSize)
+            {
+                var factor = bitmapWidth / maxSize;
+                bitmapWidth /= factor;
+                bitmapHeight /= factor;
+            }
+
+            if (bitmapHeight > maxSize)
+            {
+                var factor = bitmapHeight / maxSize;
+                bitmapWidth /= factor;
+                bitmapHeight /= factor;
+            }
+
+            var bitmap = Bitmap.Create(bitmapWidth, bitmapHeight);
+
+            return RenderBitmap(bitmap, backgroundColor, documentSize);
+        }
+
+        public Bitmap CaptureScreenBitmap(Color backgroundColor = null)
+        {
+            if (ScreenWidth == 0 || ScreenHeight == 0) throw new InvalidOperationException($"Cannot capture screen when {nameof(ScreenWidth)} or {nameof(ScreenHeight)} of {GetType().Name} are not initialized.");
+
+            var drawingWidth = (int) Math.Round(Math.Min(ScreenWidth / ZoomFactor, Constraints?.Width ?? float.MaxValue));
+            var drawingHeight = (int) Math.Round(Math.Min(ScreenHeight / ZoomFactor, Constraints?.Height ?? float.MaxValue));
+            var drawingSize = RectangleF.Create(ScreenToCanvas(0, 0), SizeF.Create(drawingWidth, drawingHeight));
+            // the bitmap should have the original resolution of the screen, so we multiply by zoom factor
+            var bitmap = Bitmap.Create((int) Math.Round(drawingSize.Width * ZoomFactor), (int) Math.Round(drawingSize.Height * ZoomFactor));
+
+            return RenderBitmap(bitmap, backgroundColor, drawingSize);
+        }
+
+        private Bitmap RenderBitmap(Bitmap bitmap, Color backgroundColor, RectangleF drawingSize)
+        {
+            if (drawingSize == null || drawingSize == RectangleF.Empty) return bitmap;
+
+            // stash the old values
             var oldWidth = Document.Width;
             var oldHeight = Document.Height;
             var oldViewBox = Document.ViewBox;
 
             try
             {
-                var documentSize = Document.CalculateDocumentBounds();
-                var drawingWidth = (int) Math.Round(Math.Min(documentSize.Width, Constraints?.Width ?? float.MaxValue));
-                var drawingHeight =
-                    (int) Math.Round(Math.Min(documentSize.Height, Constraints?.Height ?? float.MaxValue));
-                var bitmap = Bitmap.Create(drawingWidth, drawingHeight);
-                Document.Width = new SvgUnit(SvgUnitType.Pixel, drawingWidth);
-                Document.Height = new SvgUnit(SvgUnitType.Pixel, drawingHeight);
-                Document.ViewBox = new SvgViewBox(Math.Max(documentSize.X, Constraints?.X ?? float.MinValue), Math.Max(documentSize.Y, Constraints?.Y ?? float.MinValue), drawingWidth, drawingHeight);
-                Document.Draw(bitmap, Engine.Factory.Colors.Black);
-
-                FireToolCommandsChanged();
+                SetDocumentViewbox(drawingSize);
+                Document.Draw(bitmap, backgroundColor ?? Engine.Factory.Colors.Black);
 
                 return bitmap;
             }
             finally
             {
+                // reset to old values
                 Document.ViewBox = oldViewBox;
                 Document.Width = oldWidth;
                 Document.Height = oldHeight;
             }
         }
 
-        public Bitmap CaptureScreenBitmap()
+        private void SetDocumentViewbox(RectangleF drawingSize)
         {
-            var translateX = Translate.X;
-            var translateY = Translate.Y;
-            Bitmap bmp;
-            if (Constraints != null && Constraints != RectangleF.Empty)
-            {
-                var constraintsWidth = Constraints.Width*ZoomFactor;
-                var constraintsHeight = Constraints.Height*ZoomFactor;
-                bmp = Bitmap.Create((int) Math.Round(Math.Min(ScreenWidth, constraintsWidth)),
-                    (int) Math.Round(Math.Min(ScreenHeight, constraintsHeight)));
-                if (ScreenWidth > constraintsWidth) translateX -= (ScreenWidth - constraintsWidth)/2;
-                if (ScreenHeight > constraintsHeight) translateY -= (ScreenHeight - constraintsHeight)/2;
-            }
-            else
-            {
-                bmp = Bitmap.Create(ScreenWidth, ScreenHeight);
-            }
-
-            using (var renderer = SvgRenderer.FromImage(bmp))
-            {
-                renderer.TranslateTransform(translateX, translateY);
-                renderer.TranslateTransform(ZoomFocus.X, ZoomFocus.Y);
-                renderer.ScaleTransform(ZoomFactor, ZoomFactor);
-                renderer.TranslateTransform(-ZoomFocus.X, -ZoomFocus.Y);
-
-                Document.Draw(renderer);
-            }
-
-            return bmp;
+            Document.Width = new SvgUnit(SvgUnitType.Pixel, drawingSize.Width);
+            Document.Height = new SvgUnit(SvgUnitType.Pixel, drawingSize.Height);
+            Document.ViewBox = new SvgViewBox(Math.Max(drawingSize.X, Constraints?.X ?? float.MinValue),
+                Math.Max(drawingSize.Y, Constraints?.Y ?? float.MinValue), drawingSize.Width, drawingSize.Height);
         }
 
         public void FireInvalidateCanvas()
@@ -790,19 +807,18 @@ namespace Svg.Core
             }
             else
             {
-
-                CalculateInitZoomFactor = true;
+                CalculateInitialTransformation = true;
             }
 
             // re-render
             FireInvalidateCanvas();
         }
 
-        public bool CalculateInitZoomFactor { get; set; }
+        public bool CalculateInitialTransformation { get; set; }
 
-        private void SetInitialZoomFactor()
+        private void SetInitialTransformation()
         {
-            if (!CalculateInitZoomFactor) return;
+            if (!CalculateInitialTransformation) return;
 
             float scaleX;
             float scaleY;
@@ -818,11 +834,13 @@ namespace Svg.Core
             // we need to reset the viewBox for correct rendering afterwards
             Document.ViewBox = SvgViewBox.Empty;
 
-            CalculateInitZoomFactor = false;
+            CalculateInitialTransformation = false;
         }
 
         private void OnDocumentContentModified(object sender, SvgElement e)
         {
+            if (e is SvgFragment || !(e is SvgVisualElement)) return;
+
             DocumentIsDirty = true;
         }
 
