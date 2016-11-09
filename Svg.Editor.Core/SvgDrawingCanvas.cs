@@ -729,15 +729,13 @@ namespace Svg.Core
 
         private void SetDocumentViewbox(RectangleF drawingSize)
         {
-            Document.Width = new SvgUnit(SvgUnitType.Pixel, drawingSize.Width);
-            Document.Height = new SvgUnit(SvgUnitType.Pixel, drawingSize.Height);
-            Document.ViewBox = new SvgViewBox
-            (
-                Math.Max(drawingSize.X, Constraints?.X ?? float.MinValue),
-                Math.Max(drawingSize.Y, Constraints?.Y ?? float.MinValue),
-                Math.Min(drawingSize.Width, Constraints?.Width ?? float.MaxValue),
-                Math.Min(drawingSize.Height, Constraints?.Height ?? float.MaxValue)
-            );
+            var x = Math.Max(drawingSize.X, Constraints?.X ?? float.MinValue);
+            var y = Math.Max(drawingSize.Y, Constraints?.Y ?? float.MinValue);
+            var width = Math.Min(drawingSize.Width, Constraints?.Width ?? float.MaxValue);
+            var height = Math.Min(drawingSize.Height, Constraints?.Height ?? float.MaxValue);
+            Document.Width = new SvgUnit(SvgUnitType.Pixel, width);
+            Document.Height = new SvgUnit(SvgUnitType.Pixel, height);
+            Document.ViewBox = new SvgViewBox(x, y, width, height);
             Document.AspectRatio = new SvgAspectRatio(SvgPreserveAspectRatio.xMidYMid, true);
         }
 
