@@ -352,8 +352,8 @@ namespace Svg.Core
             var constraintBottomRight = PointF.Create(Constraints.Right, Constraints.Bottom) * ZoomFactor;
             var screenTopLeft = ScreenToCanvas(0, 0) * ZoomFactor;
             var screenBottomRight = ScreenToCanvas(ScreenWidth, ScreenHeight) * ZoomFactor;
-            var marginX = (ScreenWidth / ZoomFactor - Constraints.Width) / 2;
-            var marginY = (ScreenHeight / ZoomFactor - Constraints.Height) / 2;
+            var marginX = (ScreenWidth - Constraints.Width * ZoomFactor) / 2;
+            var marginY = (ScreenHeight - Constraints.Height * ZoomFactor) / 2;
             if (marginX < 0) marginX = 0;
             if (marginY < 0) marginY = 0;
 
