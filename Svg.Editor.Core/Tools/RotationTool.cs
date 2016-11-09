@@ -170,7 +170,7 @@ namespace Svg.Core.Tools
 
         private void RotateElementForDelta(SvgVisualElement element, float delta)
         {
-            if (Math.Abs(delta) < 0.01f || !Filter.Invoke(element)) return;
+            if (!CanRotate(element, delta)) return;
 
             var formerM = element.Transforms.GetMatrix().Clone();
             var m = element.CreateOriginRotation(delta % 360);
@@ -184,6 +184,11 @@ namespace Svg.Core.Tools
                 element.SetTransformationMatrix(formerM);
                 Canvas.FireInvalidateCanvas();
             }), hasOwnUndoRedoScope: false);
+        }
+
+        private bool CanRotate(SvgVisualElement element, float delta)
+        {
+            return Math.Abs(delta) >= 0.01f && Filter.Invoke(element);
         }
 
         private float CalculateNewRotation(float absoluteAngle)
@@ -227,6 +232,13 @@ namespace Svg.Core.Tools
                 var selected = tool.Canvas.SelectedElements[0];
 
                 tool.UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name, _ => tool.RotateElementForDelta(selected, Step)));
+            }
+
+            public override bool CanExecute(object parameter)
+            {
+                var tool = (RotationTool) Tool;
+                return tool.Canvas.SelectedElements.Count == 1 &&
+                       tool.CanRotate(tool.Canvas.SelectedElements.First(), Step);
             }
         }
 
