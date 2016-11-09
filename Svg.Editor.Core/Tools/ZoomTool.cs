@@ -10,6 +10,10 @@ namespace Svg.Core.Tools
     {
         public const string MinScaleKey = "minscale";
         public const string MaxScaleKey = "maxscale";
+        public const string ZoomX1CommandKey = "zoomx1";
+        public const string ZoomX2CommandKey = "zoomx2";
+        public const string ZoomInCommandKey = "zoomin";
+        public const string ZoomOutCommandKey = "zoomout";
 
         private bool _focused;
         private float CurrentFocusX { get; set; }
@@ -53,6 +57,46 @@ namespace Svg.Core.Tools
             set { Properties[MaxScaleKey] = value; }
         }
 
+        public bool ZoomX1CommandEnabled
+        {
+            get
+            {
+                object zoomX1;
+                return Properties.TryGetValue(ZoomX1CommandKey, out zoomX1) && Convert.ToBoolean(zoomX1);
+            }
+            set { Properties[ZoomX1CommandKey] = value; }
+        }
+
+        public bool ZoomX2CommandEnabled
+        {
+            get
+            {
+                object zoomX2;
+                return Properties.TryGetValue(ZoomX2CommandKey, out zoomX2) && Convert.ToBoolean(zoomX2);
+            }
+            set { Properties[ZoomX2CommandKey] = value; }
+        }
+
+        public bool ZoomInCommandEnabled
+        {
+            get
+            {
+                object zoomIn;
+                return Properties.TryGetValue(ZoomInCommandKey, out zoomIn) && Convert.ToBoolean(zoomIn);
+            }
+            set { Properties[ZoomInCommandKey] = value; }
+        }
+
+        public bool ZoomOutCommandEnabled
+        {
+            get
+            {
+                object zoomOut;
+                return Properties.TryGetValue(ZoomOutCommandKey, out zoomOut) && Convert.ToBoolean(zoomOut);
+            }
+            set { Properties[ZoomOutCommandKey] = value; }
+        }
+
         public override async Task Initialize(SvgDrawingCanvas ws)
         {
             await base.Initialize(ws);
@@ -85,23 +129,23 @@ namespace Svg.Core.Tools
                     var f = Canvas.ZoomFactor + 0.25f;
                     Canvas.ZoomFactor = Math.Max(MinScale, Math.Min(f, MaxScale));
                     Canvas.FireInvalidateCanvas();
-                }, iconName:"ic_zoom_in_white_48dp.png", sortFunc:x => 1500),
+                }, o => ZoomInCommandEnabled, iconName:"ic_zoom_in_white_48dp.png", sortFunc:x => 1500),
                 new ToolCommand(this, "Zoom out -", x =>
                 {
                     var f = Canvas.ZoomFactor - 0.25f;
                     Canvas.ZoomFactor = Math.Max(MinScale, Math.Min(f, MaxScale));
                     Canvas.FireInvalidateCanvas();
-                }, iconName:"ic_zoom_out_white_48dp.png", sortFunc:x => 1550),
+                }, o => ZoomOutCommandEnabled, iconName:"ic_zoom_out_white_48dp.png", sortFunc:x => 1550),
                 new ToolCommand(this, "100 %", x =>
                 {
                     Canvas.ZoomFactor = Math.Max(MinScale, Math.Min(1, MaxScale));
                     Canvas.FireInvalidateCanvas();
-                }, iconName:"ic_zoom_100_white_48dp.png", sortFunc:x => 1600),
+                }, o => ZoomX1CommandEnabled, iconName:"ic_zoom_100_white_48dp.png", sortFunc:x => 1600),
                 new ToolCommand(this, "200 %", x =>
                 {
                     Canvas.ZoomFactor = Math.Max(MinScale, Math.Min(2, MaxScale));
                     Canvas.FireInvalidateCanvas();
-                }, iconName:"ic_zoom_200_white_48dp.png", sortFunc:x => 1650)
+                }, o => ZoomX2CommandEnabled, iconName:"ic_zoom_200_white_48dp.png", sortFunc:x => 1650)
             };
         }
 
