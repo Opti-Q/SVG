@@ -8,6 +8,9 @@ namespace Svg.Core.Tools
 {
     public sealed class ZoomTool : ToolBase
     {
+        public const string MinScaleKey = "minscale";
+        public const string MaxScaleKey = "maxscale";
+
         private bool _focused;
         private float CurrentFocusX { get; set; }
         private float CurrentFocusY { get; set; }
@@ -31,11 +34,11 @@ namespace Svg.Core.Tools
             get
             {
                 object minScale;
-                if (!Properties.TryGetValue("minscale", out minScale))
+                if (!Properties.TryGetValue(MinScaleKey, out minScale))
                     minScale = .5f;
                 return Convert.ToSingle(minScale);
             }
-            set { Properties["minscale"] = value; }
+            set { Properties[MinScaleKey] = value; }
         }
 
         public float MaxScale
@@ -43,11 +46,11 @@ namespace Svg.Core.Tools
             get
             {
                 object maxScale;
-                if (!Properties.TryGetValue("maxscale", out maxScale))
+                if (!Properties.TryGetValue(MaxScaleKey, out maxScale))
                     maxScale = 5f;
                 return Convert.ToSingle(maxScale);
             }
-            set { Properties["maxscale"] = value; }
+            set { Properties[MaxScaleKey] = value; }
         }
 
         public override async Task Initialize(SvgDrawingCanvas ws)
