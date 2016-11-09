@@ -340,8 +340,11 @@ namespace Svg.Core
             {
                 ZoomFactor = Math.Min(ScreenWidth / Constraints.Width,
                     ScreenHeight / Constraints.Height);
-                ZoomFocus = PointF.Create(0, 0);
-                Translate = PointF.Create((ScreenWidth - Constraints.Width * ZoomFactor) / 2, (ScreenHeight - Constraints.Height * ZoomFactor) / 2);
+                ZoomFocus = PointF.Empty;
+                Translate = PointF.Create((ScreenWidth - Constraints.Width * ZoomFactor) / 2,
+                    (ScreenHeight - Constraints.Height * ZoomFactor) / 2);
+                // this should replace "ZoomFocus = PointF.Empty;" but doesn't work when ZoomFactor < 1
+                //+ (ZoomFocus - ScreenToCanvas(0, 0)) * (ZoomFactor - 1);
                 return;
             }
 
@@ -635,7 +638,7 @@ namespace Svg.Core
             var oldHeight = Document.Height;
             var oldViewBox = Document.ViewBox;
             var minXminY = ScreenToCanvas(0, 0);
-            var drawingSize = RectangleF.Create(minXminY, SizeF.Create(ScreenWidth/ZoomFactor, ScreenHeight/ZoomFactor));
+            var drawingSize = RectangleF.Create(minXminY, SizeF.Create(ScreenWidth / ZoomFactor, ScreenHeight / ZoomFactor));
 
             try
             {
@@ -694,7 +697,7 @@ namespace Svg.Core
             var drawingHeight = (int) Math.Round(Math.Min(ScreenHeight / ZoomFactor, Constraints?.Height ?? float.MaxValue));
             var drawingSize = RectangleF.Create(ScreenToCanvas(0, 0), SizeF.Create(drawingWidth, drawingHeight));
             // the bitmap should have the original resolution of the screen, so we multiply by zoom factor
-            var bitmap = Bitmap.Create((int) Math.Round(drawingSize.Width * ZoomFactor), (int) Math.Round(drawingSize.Height * ZoomFactor));
+            var bitmap = Bitmap.Create(drawingWidth, drawingHeight);
 
             return RenderBitmap(bitmap, backgroundColor, drawingSize);
         }
