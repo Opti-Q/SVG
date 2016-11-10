@@ -638,11 +638,11 @@ namespace Svg.Core
             var oldHeight = Document.Height;
             var oldViewBox = Document.ViewBox;
             var minXminY = ScreenToCanvas(0, 0);
-            var drawingSize = RectangleF.Create(minXminY, SizeF.Create(ScreenWidth / ZoomFactor, ScreenHeight / ZoomFactor));
+            var drawingClip = RectangleF.Create(minXminY, SizeF.Create(ScreenWidth / ZoomFactor, ScreenHeight / ZoomFactor));
 
             try
             {
-                SetDocumentViewbox(drawingSize);
+                SetDocumentViewbox(drawingClip);
                 Document.Write(stream);
 
                 FireToolCommandsChanged();
@@ -659,12 +659,12 @@ namespace Svg.Core
 
         public Bitmap CaptureDocumentBitmap(int maxSize = 4096, Color backgroundColor = null)
         {
-            var documentSize = Document.CalculateDocumentBounds();
+            var documentBounds = Document.CalculateDocumentBounds();
 
             // determine width and height of the bitmap by the minimum of the whole document's and the constraint's size
-            var drawingWidth = (int) Math.Round(Math.Min(documentSize.Width, Constraints?.Width ?? float.MaxValue));
+            var drawingWidth = (int) Math.Round(Math.Min(documentBounds.Width, Constraints?.Width ?? float.MaxValue));
             var drawingHeight =
-                (int) Math.Round(Math.Min(documentSize.Height, Constraints?.Height ?? float.MaxValue));
+                (int) Math.Round(Math.Min(documentBounds.Height, Constraints?.Height ?? float.MaxValue));
 
             // adjust width and height of the resulting bitmap to the maxSize parameter
             var bitmapWidth = drawingWidth;
@@ -686,7 +686,7 @@ namespace Svg.Core
 
             var bitmap = Bitmap.Create(bitmapWidth, bitmapHeight);
 
-            return RenderBitmap(bitmap, backgroundColor, documentSize);
+            return RenderBitmap(bitmap, backgroundColor, documentBounds);
         }
 
         public Bitmap CaptureScreenBitmap(Color backgroundColor = null)
@@ -695,16 +695,15 @@ namespace Svg.Core
 
             var drawingWidth = (int) Math.Round(Math.Min(ScreenWidth / ZoomFactor, Constraints?.Width ?? float.MaxValue));
             var drawingHeight = (int) Math.Round(Math.Min(ScreenHeight / ZoomFactor, Constraints?.Height ?? float.MaxValue));
-            var drawingSize = RectangleF.Create(ScreenToCanvas(0, 0), SizeF.Create(drawingWidth, drawingHeight));
-            // the bitmap should have the original resolution of the screen, so we multiply by zoom factor
+            var drawingClip = RectangleF.Create(ScreenToCanvas(0, 0), SizeF.Create(drawingWidth, drawingHeight));
             var bitmap = Bitmap.Create(drawingWidth, drawingHeight);
 
-            return RenderBitmap(bitmap, backgroundColor, drawingSize);
+            return RenderBitmap(bitmap, backgroundColor, drawingClip);
         }
 
-        private Bitmap RenderBitmap(Bitmap bitmap, Color backgroundColor, RectangleF drawingSize)
+        private Bitmap RenderBitmap(Bitmap bitmap, Color backgroundColor, RectangleF drawingClip)
         {
-            if (drawingSize == null || drawingSize == RectangleF.Empty) return bitmap;
+            if (drawingClip == null || drawingClip == RectangleF.Empty) return bitmap;
 
             // stash the old values
             var oldWidth = Document.Width;
@@ -713,7 +712,7 @@ namespace Svg.Core
 
             try
             {
-                SetDocumentViewbox(drawingSize);
+                SetDocumentViewbox(drawingClip);
                 Document.Draw(bitmap, backgroundColor ?? Engine.Factory.Colors.Black);
 
                 return bitmap;

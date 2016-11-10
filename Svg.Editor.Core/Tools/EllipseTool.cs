@@ -23,7 +23,7 @@ namespace Svg.Core.Tools
         private ITool _activatedFrom;
         private PointF _offset;
         private PointF _translate;
-        private PointF _topLeft;
+        private PointF _anchorPosition;
 
         #endregion
 
@@ -201,7 +201,7 @@ namespace Svg.Core.Tools
                 }));
 
                 _movementHandle = MovementHandle.BottomRight;
-                _topLeft = canvasStart;
+                _anchorPosition = canvasStart;
             }
             else
             {
@@ -223,14 +223,33 @@ namespace Svg.Core.Tools
                                  Math.Abs(canvasPointer1Position.Y - boundingBox.Bottom) * Canvas.ZoomFactor <= MaxPointerDistance ? MovementHandle.BottomLeft :
                                  _currentEllipse.GetBoundingBox().Contains(canvasPointer1Position) ? MovementHandle.All : MovementHandle.None;
 
-                    if (_movementHandle == MovementHandle.None) return;
-
-                    _topLeft = boundingBox.Location;
-
+                    // set the anchor position to the opposite point of the handle
+                    switch (_movementHandle)
+                    {
+                        case MovementHandle.None:
+                            // if no handle was touched, cancel
+                            return;
+                        case MovementHandle.TopLeft:
+                            _anchorPosition = PointF.Create(boundingBox.Right, boundingBox.Bottom);
+                            break;
+                        case MovementHandle.TopRight:
+                            _anchorPosition = PointF.Create(boundingBox.Left, boundingBox.Bottom);
+                            break;
+                        case MovementHandle.BottomLeft:
+                            _anchorPosition = PointF.Create(boundingBox.Right, boundingBox.Top);
+                            break;
+                        case MovementHandle.BottomRight:
+                        case MovementHandle.All:
+                            _anchorPosition = boundingBox.Location;
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(_movementHandle));
+                    }
+                    
                     // transform point with inverse matrix because we want the real canvas position
                     var matrix1 = _currentEllipse.Transforms.GetMatrix();
                     matrix1.Invert();
-                    matrix1.TransformPoints(new[] { _topLeft });
+                    matrix1.TransformPoints(new[] { _anchorPosition });
 
                     UndoRedoService.ExecuteCommand(new UndoableActionCommand("Edit ellipse", o => Canvas.FireInvalidateCanvas(), o => Canvas.FireInvalidateCanvas()));
                 }
@@ -247,13 +266,17 @@ namespace Svg.Core.Tools
                 matrix.TransformPoints(new[] { canvasEnd });
 
                 // the rectangle that is drawn over the two points, which will contain the ellipse
-                var drawnRectangle = RectangleF.FromPoints(new[] { canvasEnd, _topLeft });
+                var drawnRectangle = RectangleF.FromPoints(new[] { canvasEnd, _anchorPosition });
 
                 // resize/move ellipse depending on where the pointer was put down
                 switch (_movementHandle)
                 {
+                    case MovementHandle.TopRight:
+                    case MovementHandle.BottomLeft:
                     case MovementHandle.BottomRight:
-                        UndoRedoService.ExecuteCommand(new UndoableActionCommand("Resize ellipse bottomright", o =>
+                    case MovementHandle.TopLeft:
+
+                        UndoRedoService.ExecuteCommand(new UndoableActionCommand("Resize ellipse topleft", o =>
                         {
                             var center = PointF.Create(drawnRectangle.X + drawnRectangle.Width / 2, drawnRectangle.Y + drawnRectangle.Height / 2);
                             var radius = SizeF.Create(drawnRectangle.Width / 2, drawnRectangle.Height / 2);
@@ -268,8 +291,11 @@ namespace Svg.Core.Tools
                             capturedCurrentEllipse.RadiusX = formerRadiusX;
                             capturedCurrentEllipse.RadiusY = formerRadiusY;
                         }), hasOwnUndoRedoScope: false);
+
                         break;
+
                     case MovementHandle.All:
+
                         var absoluteDeltaX = drag.Delta.Width / Canvas.ZoomFactor;
                         var absoluteDeltaY = drag.Delta.Height / Canvas.ZoomFactor;
 
@@ -283,7 +309,13 @@ namespace Svg.Core.Tools
                         _offset = previousDelta;
 
                         AddTranslate(_currentEllipse, relativeDeltaX, relativeDeltaY);
+
                         break;
+
+                    case MovementHandle.None:
+                        throw new ArgumentOutOfRangeException(nameof(_movementHandle), "Cannot be none at this point.");
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(_movementHandle));
                 }
 
                 Canvas.FireInvalidateCanvas();
@@ -301,9 +333,9 @@ namespace Svg.Core.Tools
                 var radius = (int) (MaxPointerDistance / ws.ZoomFactor);
                 var points = _currentEllipse.GetTransformedPoints();
                 renderer.DrawCircle(points[0].X - (radius >> 1), points[0].Y - (radius >> 1), radius, BluePen);
-                //renderer.DrawCircle(points[1].X - (radius >> 1), points[1].Y - (radius >> 1), radius, BluePen);
+                renderer.DrawCircle(points[1].X - (radius >> 1), points[1].Y - (radius >> 1), radius, BluePen);
                 renderer.DrawCircle(points[2].X - (radius >> 1), points[2].Y - (radius >> 1), radius, BluePen);
-                //renderer.DrawCircle(points[3].X - (radius >> 1), points[3].Y - (radius >> 1), radius, BluePen);
+                renderer.DrawCircle(points[3].X - (radius >> 1), points[3].Y - (radius >> 1), radius, BluePen);
 
                 renderer.Graphics.Restore();
             }
