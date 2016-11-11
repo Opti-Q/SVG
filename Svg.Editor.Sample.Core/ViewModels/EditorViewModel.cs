@@ -44,7 +44,8 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
 
             var colorToolProperties = new Dictionary<string, object>
             {
-                { "selectablecolors", new [] { "#000000","#FF0000","#00FF00","#0000FF","#FFFF00","#FF00FF","#00FFFF" } }
+                { ColorTool.SelectableColorsKey, new [] { "#000000","#FF0000","#00FF00","#0000FF","#FFFF00","#FF00FF","#00FFFF", "#FFFFFF" } },
+                { ColorTool.SelectableColorNamesKey, new [] { "Black","Red","Green","Blue","Cyan","Magenta","Yellow","White" } }
             };
 
             var strokeStyleToolProperties = new Dictionary<string, object>

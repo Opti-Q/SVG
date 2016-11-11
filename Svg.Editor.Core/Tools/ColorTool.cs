@@ -27,15 +27,28 @@ namespace Svg.Core.Tools
         #region Public properties
 
         public const string SelectedColorIndexKey = "selectedcolorindex";
+        public const string SelectableColorsKey = "selectablecolors";
+        public const string SelectableColorNamesKey = "selectablecolornames";
 
         public string[] SelectableColors
         {
             get
             {
                 object selectableColors;
-                if (!Properties.TryGetValue("selectablecolors", out selectableColors))
+                if (!Properties.TryGetValue(SelectableColorsKey, out selectableColors))
                     selectableColors = Enumerable.Empty<string>();
                 return (string[]) selectableColors;
+            }
+        }
+
+        public string[] SelectableColorNames
+        {
+            get
+            {
+                object selectableColorNames;
+                if (!Properties.TryGetValue(SelectableColorNamesKey, out selectableColorNames))
+                    selectableColorNames = Enumerable.Empty<string>();
+                return (string[]) selectableColorNames;
             }
         }
 
@@ -211,8 +224,7 @@ namespace Svg.Core.Tools
             {
                 var t = Tool;
 
-                var colorNames = new[] { "Black", "Red", "Green", "Blue", "Yellow", "Magenta", "Cyan" };
-                var color = Color.Create(t.SelectableColors[await ColorInputServiceProxy.GetIndexFromUserInput("Choose color", colorNames, t.SelectableColors)]);
+                var color = Color.Create(t.SelectableColors[await ColorInputServiceProxy.GetIndexFromUserInput("Choose color", t.SelectableColorNames, t.SelectableColors)]);
 
                 if (_canvas.SelectedElements.Any())
                 {
