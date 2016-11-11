@@ -30,3 +30,6 @@ Svg.Editor.Tests.Win/Assets
 *.user
 /Svg.Droid.sln.DotSettings
 *.user
+*Resource.Designer.cs
+*project.lock.json
+*packages_old.config
