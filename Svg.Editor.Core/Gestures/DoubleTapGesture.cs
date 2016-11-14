@@ -1,6 +1,6 @@
 ﻿using Svg.Interfaces;
 
-namespace Svg.Core.Gestures
+namespace Svg.Editor.Gestures
 {
     public class DoubleTapGesture : TapGesture
     {

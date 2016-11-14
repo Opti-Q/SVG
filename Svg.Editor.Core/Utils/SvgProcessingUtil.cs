@@ -2,7 +2,7 @@
 using System.Linq;
 using Svg.Interfaces;
 
-namespace Svg.Core.Utils
+namespace Svg.Editor.Utils
 {
     public static class SvgProcessingUtil
     {

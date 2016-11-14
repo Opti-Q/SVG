@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Svg.Core.Events;
+using Svg.Editor.Events;
 using Svg.Interfaces;
 
-namespace Svg.Core.Tools
+namespace Svg.Editor.Tools
 {
     public sealed class ZoomTool : ToolBase
     {

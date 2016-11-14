@@ -1,5 +1,5 @@
 ﻿
-namespace Svg.Core.Events
+namespace Svg.Editor.Events
 {
     public abstract class UserInputEvent
     {

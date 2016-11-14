@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-using Svg.Core.Interfaces;
+using Svg.Editor.Interfaces;
 
-namespace Svg.Core.UndoRedo
+namespace Svg.Editor.UndoRedo
 {
     /// <summary>
     /// Base class for undoable actions based on delegates.

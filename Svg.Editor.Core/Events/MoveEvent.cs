@@ -1,8 +1,7 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Svg.Interfaces;
 
-namespace Svg.Core.Events
+namespace Svg.Editor.Events
 {
     [DebuggerDisplay("{DebuggerDisplay}")]
     public class MoveEvent : PointerEvent

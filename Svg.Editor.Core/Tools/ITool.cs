@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Svg.Core.Events;
-using Svg.Core.Gestures;
-using Svg.Core.Interfaces;
+using Svg.Editor.Events;
+using Svg.Editor.Gestures;
+using Svg.Editor.Interfaces;
 
-namespace Svg.Core.Tools
+namespace Svg.Editor.Tools
 {
     public enum ToolUsage
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reactive.Linq;
 
-namespace Svg.Core.Extensions
+namespace Svg.Editor.Extensions
 {
     public static class ReactiveExtensions
     {

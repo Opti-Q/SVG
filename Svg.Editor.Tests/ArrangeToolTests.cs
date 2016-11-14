@@ -1,8 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using Svg.Core.Events;
-using Svg.Core.Tools;
+using Svg.Editor.Tools;
 using Svg.Interfaces;
 
 namespace Svg.Editor.Tests

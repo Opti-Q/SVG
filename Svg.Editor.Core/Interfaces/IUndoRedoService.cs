@@ -1,7 +1,7 @@
 using System;
-using Svg.Core.UndoRedo;
+using Svg.Editor.UndoRedo;
 
-namespace Svg.Core.Interfaces
+namespace Svg.Editor.Interfaces
 {
     public interface IUndoRedoService
     {

@@ -1,4 +1,4 @@
-﻿namespace Svg.Core.Gestures
+﻿namespace Svg.Editor.Gestures
 {
     public abstract class UserGesture
     {

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Svg.Core.Interfaces;
+using Svg.Editor.Extensions;
+using Svg.Editor.Interfaces;
 using Svg.Interfaces;
 
-namespace Svg.Core.Tools
+namespace Svg.Editor.Tools
 {
     public class PlaceAsBackgroundTool : UndoableToolBase
     {

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Svg.Core.Events;
-using Svg.Interfaces;
+using Svg.Editor.Events;
 
-namespace Svg.Core.Tools
+namespace Svg.Editor.Tools
 {
     public class PanTool : ToolBase
     {

@@ -1,7 +1,7 @@
 ﻿
 using Svg.Interfaces;
 
-namespace Svg.Core.Interfaces
+namespace Svg.Editor.Interfaces
 {
     public interface IRenderer
     {

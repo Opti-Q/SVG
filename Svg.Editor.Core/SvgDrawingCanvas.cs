@@ -10,16 +10,17 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Svg.Core.Annotations;
-using Svg.Core.Events;
-using Svg.Core.Gestures;
-using Svg.Core.Interfaces;
-using Svg.Core.Services;
-using Svg.Core.Tools;
-using Svg.Core.UndoRedo;
+using Svg.Editor.Events;
+using Svg.Editor.Extensions;
+using Svg.Editor.Gestures;
+using Svg.Editor.Interfaces;
+using Svg.Editor.Properties;
+using Svg.Editor.Services;
+using Svg.Editor.Tools;
+using Svg.Editor.UndoRedo;
 using Svg.Interfaces;
 
-namespace Svg.Core
+namespace Svg.Editor
 {
     public sealed class SvgDrawingCanvas : IDisposable, ICanInvalidateCanvas, INotifyPropertyChanged
     {

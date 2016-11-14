@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using MvvmCross.Core.ViewModels;
-using Svg.Core;
-using Svg.Core.Interfaces;
-using Svg.Core.Services;
-using Svg.Core.Tools;
 using Svg.Droid.SampleEditor.Core.Tools;
+using Svg.Editor;
+using Svg.Editor.Interfaces;
+using Svg.Editor.Services;
+using Svg.Editor.Tools;
 using Svg.Interfaces;
 
 namespace Svg.Droid.SampleEditor.Core.ViewModels

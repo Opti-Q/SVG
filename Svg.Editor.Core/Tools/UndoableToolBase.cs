@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Svg.Core.Interfaces;
-using Svg.Core.UndoRedo;
+using Svg.Editor.Interfaces;
+using Svg.Editor.UndoRedo;
 
-namespace Svg.Core.Tools
+namespace Svg.Editor.Tools
 {
     public abstract class UndoableToolBase : ToolBase
     {

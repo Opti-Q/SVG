@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Svg.Core.Interfaces;
-using Svg.Core.UndoRedo;
+using Svg.Editor.Interfaces;
+using Svg.Editor.UndoRedo;
 
-namespace Svg.Core.Tools
+namespace Svg.Editor.Tools
 {
     public class ArrangeTool : UndoableToolBase
     {

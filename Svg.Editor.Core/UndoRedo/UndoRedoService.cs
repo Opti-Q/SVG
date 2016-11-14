@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Svg;
-using Svg.Core.Interfaces;
-using Svg.Core.UndoRedo;
+using Svg.Editor.Interfaces;
+using Svg.Editor.UndoRedo;
 
 [assembly: SvgService(typeof(IUndoRedoService), typeof(UndoRedoService))]
-namespace Svg.Core.UndoRedo
+namespace Svg.Editor.UndoRedo
 {
     public class UndoRedoService : IUndoRedoService
     {

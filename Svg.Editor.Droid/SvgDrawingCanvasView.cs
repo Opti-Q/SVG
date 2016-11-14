@@ -5,9 +5,8 @@ using Android.Graphics;
 using Android.Util;
 using Android.Views;
 using SkiaSharp;
-using Svg.Core;
-using Svg.Core.Services;
 using Svg.Droid.Editor.Services;
+using Svg.Editor;
 
 namespace Svg.Droid.Editor
 {

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using MvvmCross.Platform;
 using MvvmCross.Plugins.PictureChooser;
-using Svg.Core.Interfaces;
+using Svg.Editor.Interfaces;
 using Svg.Interfaces;
 
 namespace Svg.Droid.SampleEditor.Core.Tools

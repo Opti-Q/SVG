@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
+using Svg.Editor.Extensions;
 using Svg.Interfaces;
 using Svg.Transforms;
 

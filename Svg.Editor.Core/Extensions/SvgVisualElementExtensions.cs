@@ -1,11 +1,10 @@
 ﻿using System;
 using System.IO;
-using Svg.Core.Tools;
-using Svg.Interfaces;
-using Svg.Platform;
 using System.Linq;
+using Svg.Editor.Tools;
+using Svg.Interfaces;
 
-namespace Svg
+namespace Svg.Editor.Extensions
 {
     public static class SvgVisualElementExtensions
     {

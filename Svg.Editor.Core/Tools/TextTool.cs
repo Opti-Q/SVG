@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Svg.Core.Gestures;
-using Svg.Core.Interfaces;
-using Svg.Core.UndoRedo;
+using Svg.Editor.Extensions;
+using Svg.Editor.Gestures;
+using Svg.Editor.Interfaces;
+using Svg.Editor.UndoRedo;
 using Svg.Interfaces;
 using Svg.Transforms;
 
-namespace Svg.Core.Tools
+namespace Svg.Editor.Tools
 {
     public interface ITextInputService
     {

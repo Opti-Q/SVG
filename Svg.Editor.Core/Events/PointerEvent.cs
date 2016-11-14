@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using Svg.Interfaces;
 
-namespace Svg.Core.Events
+namespace Svg.Editor.Events
 {
     public enum EventType
     {

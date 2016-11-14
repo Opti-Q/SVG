@@ -8,8 +8,8 @@
     <ProjectGuid>{4CF34D1C-662C-400D-BEAF-E87CE1D08FAB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Svg.Core</RootNamespace>
-    <AssemblyName>Svg.Core</AssemblyName>
+    <RootNamespace>Svg.Editor</RootNamespace>
+    <AssemblyName>Svg.Editor</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>

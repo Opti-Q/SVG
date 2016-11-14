@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Svg.Core;
-using Svg.Core.Tools;
+using Svg.Editor;
+using Svg.Editor.Tools;
 
 namespace Svg.Droid.SampleEditor.Core.Tools
 {

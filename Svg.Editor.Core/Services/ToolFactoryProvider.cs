@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Svg.Core.Tools;
+using Svg.Editor.Tools;
 
-namespace Svg.Core.Services
+namespace Svg.Editor.Services
 {
     public class ToolFactoryProvider
     {

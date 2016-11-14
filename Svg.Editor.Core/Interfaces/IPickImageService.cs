@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Svg.Core.Interfaces
+namespace Svg.Editor.Interfaces
 {
     public interface IPickImageService
     {

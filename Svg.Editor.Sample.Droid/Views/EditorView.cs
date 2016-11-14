@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using Android.App;
@@ -7,13 +6,8 @@ using Android.Views;
 using System.Linq;
 using Android.Graphics.Drawables;
 using MvvmCross.Droid.Views;
-using Svg.Core.Interfaces;
-using Svg.Core.Tools;
 using Svg.Droid.Editor;
-using Svg.Droid.Editor.Services;
-using Svg.Droid.SampleEditor.Core;
 using Svg.Droid.SampleEditor.Core.ViewModels;
-using Svg.Interfaces;
 using Path = System.IO.Path;
 
 namespace Svg.Droid.SampleEditor.Views

@@ -1,6 +1,6 @@
 ﻿using System.Reactive.Concurrency;
 
-namespace Svg.Core.Services
+namespace Svg.Editor.Services
 {
     public class SchedulerProvider
     {

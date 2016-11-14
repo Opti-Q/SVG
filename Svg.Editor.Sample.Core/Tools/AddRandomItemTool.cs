@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Svg.Core;
-using Svg.Core.Tools;
+using Svg.Editor;
+using Svg.Editor.Tools;
 using Svg.Interfaces;
 
 namespace Svg.Droid.SampleEditor.Core.Tools

@@ -6,12 +6,12 @@ using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using Svg.Core.Events;
-using Svg.Core.Extensions;
-using Svg.Core.Gestures;
+using Svg.Editor.Events;
+using Svg.Editor.Extensions;
+using Svg.Editor.Gestures;
 using Svg.Interfaces;
 
-namespace Svg.Core.Services
+namespace Svg.Editor.Services
 {
     public class GestureRecognizer : IDisposable
     {

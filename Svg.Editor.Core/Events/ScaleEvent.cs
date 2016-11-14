@@ -1,8 +1,7 @@
-﻿
-using System;
+﻿using System;
 using System.Diagnostics;
 
-namespace Svg.Core.Events
+namespace Svg.Editor.Events
 {
     public enum ScaleStatus
     {

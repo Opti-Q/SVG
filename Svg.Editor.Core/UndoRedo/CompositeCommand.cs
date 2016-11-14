@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Svg.Core.Interfaces;
+using Svg.Editor.Interfaces;
 
-namespace Svg.Core.UndoRedo
+namespace Svg.Editor.UndoRedo
 {
     public class CompositeCommand : UndoableActionCommand
     {

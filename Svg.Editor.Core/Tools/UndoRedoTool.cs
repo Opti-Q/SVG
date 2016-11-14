@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Svg.Core.Interfaces;
+using Svg.Editor.Interfaces;
 
-namespace Svg.Core.Tools
+namespace Svg.Editor.Tools
 {
     public class UndoRedoTool : UndoableToolBase
     {

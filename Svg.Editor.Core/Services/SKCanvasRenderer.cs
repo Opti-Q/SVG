@@ -1,10 +1,10 @@
 using SkiaSharp;
-using Svg.Core.Interfaces;
+using Svg.Editor.Interfaces;
 using Svg.Interfaces;
 using Svg.Platform;
 using PointF = Svg.Interfaces.PointF;
 
-namespace Svg.Core.Services
+namespace Svg.Editor.Services
 {
     public class SKCanvasRenderer : IRenderer
     {

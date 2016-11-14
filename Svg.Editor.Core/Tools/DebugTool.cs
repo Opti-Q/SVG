@@ -1,9 +1,8 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Svg.Core.Events;
-using Svg.Core.Interfaces;
+using Svg.Editor.Interfaces;
 
-namespace Svg.Core.Tools
+namespace Svg.Editor.Tools
 {
     /// <summary>
     /// Adds some visualizations useful for debugging
