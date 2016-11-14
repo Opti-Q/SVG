@@ -3,8 +3,8 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Android.Content;
 using Android.Views;
-using Svg.Core.Events;
-using Svg.Core.Services;
+using Svg.Editor.Events;
+using Svg.Editor.Services;
 
 namespace Svg.Droid.Editor.Services
 {
