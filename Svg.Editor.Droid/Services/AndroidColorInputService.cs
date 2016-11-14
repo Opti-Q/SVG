@@ -5,6 +5,7 @@ using Android.Views;
 using Android.Widget;
 using Svg;
 using Svg.Editor.Droid.Services;
+using Svg.Editor.Tools;
 
 [assembly:SvgService(typeof(IColorInputService), typeof(AndroidColorInputService))]
 

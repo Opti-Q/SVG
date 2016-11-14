@@ -1,6 +1,7 @@
 using Android.Content.Res;
 using Svg;
 using Svg.Editor.Droid.Services;
+using Svg.Editor.Interfaces;
 using Svg.Interfaces;
 using Svg.Platform;
 

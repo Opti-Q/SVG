@@ -9,6 +9,7 @@ using Android.Views.InputMethods;
 using Android.Widget;
 using Svg;
 using Svg.Editor.Droid.Services;
+using Svg.Editor.Tools;
 
 [assembly: SvgService(typeof(ITextInputService), typeof(AndroidTextInputService))]
 namespace Svg.Editor.Droid.Services

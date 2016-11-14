@@ -1,4 +1,5 @@
 using Android.Graphics;
+using Svg.Editor.Interfaces;
 using Svg.Interfaces;
 using Svg.Platform;
 using PointF = Svg.Interfaces.PointF;
