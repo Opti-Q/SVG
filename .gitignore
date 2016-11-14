@@ -35,3 +35,4 @@ Svg.Editor.Tests.Win/Assets
 *packages_old.config
 Resource.Designer.cs
 Resource.Designer.cs
+*.user
