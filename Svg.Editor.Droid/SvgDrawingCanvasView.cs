@@ -7,6 +7,7 @@ using Android.Views;
 using SkiaSharp;
 using Svg.Droid.Editor.Services;
 using Svg.Editor;
+using Svg.Editor.Services;
 
 namespace Svg.Droid.Editor
 {
