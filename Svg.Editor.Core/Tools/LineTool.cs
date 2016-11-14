@@ -45,6 +45,10 @@ namespace Svg.Core.Tools
 
         public const string SelectedMarkerEndIndexKey = "selectedmarkerendindex";
         public const string DefaultStrokeWidthKey = "defaultstrokewidth";
+        public const string MarkerStartIdsKey = "markerstartids";
+        public const string MarkerStartNamesKey = "markerstartnames";
+        public const string MarkerEndIdsKey = "markerendids";
+        public const string MarkerEndNamesKey = "markerendnames";
 
         public string LineStyleIconName { get; set; } = "ic_line_endings_white_48dp.png";
 
@@ -55,7 +59,7 @@ namespace Svg.Core.Tools
             get
             {
                 object markerIds;
-                if (!Properties.TryGetValue("markerstartids", out markerIds))
+                if (!Properties.TryGetValue(MarkerStartIdsKey, out markerIds))
                     markerIds = Enumerable.Empty<string>();
                 return (string[]) markerIds;
             }
@@ -66,7 +70,7 @@ namespace Svg.Core.Tools
             get
             {
                 object markerNames;
-                if (!Properties.TryGetValue("markerstartnames", out markerNames))
+                if (!Properties.TryGetValue(MarkerStartNamesKey, out markerNames))
                     markerNames = Enumerable.Empty<string>();
                 return (string[]) markerNames;
             }
@@ -77,7 +81,7 @@ namespace Svg.Core.Tools
             get
             {
                 object markerIds;
-                if (!Properties.TryGetValue("markerendids", out markerIds))
+                if (!Properties.TryGetValue(MarkerEndIdsKey, out markerIds))
                     markerIds = Enumerable.Empty<string>();
                 return (string[]) markerIds;
             }
@@ -88,7 +92,7 @@ namespace Svg.Core.Tools
             get
             {
                 object markerNames;
-                if (!Properties.TryGetValue("markerendnames", out markerNames))
+                if (!Properties.TryGetValue(MarkerEndNamesKey, out markerNames))
                     markerNames = Enumerable.Empty<string>();
                 return (string[]) markerNames;
             }

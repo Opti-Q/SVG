@@ -26,6 +26,10 @@ namespace Svg.Core.Tools
 
         #region Public properties
 
+        public const string FontSizesKey = "fontsizes";
+        public const string FontSizeNamesKey = "fontsizenames";
+        public const string SelectedFontSizeIndexKey = "selectedfontsizeindex";
+
         public override int InputOrder => 300;
 
         public float[] FontSizes
@@ -33,7 +37,7 @@ namespace Svg.Core.Tools
             get
             {
                 object fontSizes;
-                if (!Properties.TryGetValue("fontsizes", out fontSizes))
+                if (!Properties.TryGetValue(FontSizesKey, out fontSizes))
                     fontSizes = Enumerable.Empty<float>();
                 return (float[]) fontSizes;
             }
@@ -46,7 +50,7 @@ namespace Svg.Core.Tools
             get
             {
                 object fontSizeNames;
-                if (!Properties.TryGetValue("fontsizenames", out fontSizeNames))
+                if (!Properties.TryGetValue(FontSizeNamesKey, out fontSizeNames))
                     fontSizeNames = Enumerable.Empty<string>();
                 return (string[]) fontSizeNames;
             }
@@ -61,7 +65,7 @@ namespace Svg.Core.Tools
             ToolType = ToolType.Create;
 
             object selectedFontSizeIndex;
-            if (Properties.TryGetValue("selectedfontsizeindex", out selectedFontSizeIndex))
+            if (Properties.TryGetValue(SelectedFontSizeIndexKey, out selectedFontSizeIndex))
                 SelectedFontSize = FontSizes[Convert.ToInt32(selectedFontSizeIndex)];
         }
 
