@@ -1,12 +1,11 @@
 using System;
 using Svg;
-using Svg.Core.Interfaces;
-using Svg.Droid.Editor.Services;
+using Svg.Editor.Droid.Services;
 using Svg.Interfaces;
 
 [assembly: SvgService(typeof(ISvgCachingService), typeof(AndroidSvgCachingService))]
 
-namespace Svg.Droid.Editor.Services
+namespace Svg.Editor.Droid.Services
 {
     public class AndroidSvgCachingService : ISvgCachingService
     {

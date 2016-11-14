@@ -4,12 +4,11 @@ using Android.Content;
 using Android.Views;
 using Android.Widget;
 using Svg;
-using Svg.Core.Tools;
-using Svg.Droid.Editor.Services;
+using Svg.Editor.Droid.Services;
 
 [assembly:SvgService(typeof(IColorInputService), typeof(AndroidColorInputService))]
 
-namespace Svg.Droid.Editor.Services
+namespace Svg.Editor.Droid.Services
 {
     public class AndroidColorInputService : IColorInputService
     {

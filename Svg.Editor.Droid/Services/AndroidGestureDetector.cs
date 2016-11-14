@@ -6,7 +6,7 @@ using Android.Views;
 using Svg.Editor.Events;
 using Svg.Editor.Services;
 
-namespace Svg.Droid.Editor.Services
+namespace Svg.Editor.Droid.Services
 {
     public class AndroidGestureDetector : IGestureDetector, IDisposable
     {

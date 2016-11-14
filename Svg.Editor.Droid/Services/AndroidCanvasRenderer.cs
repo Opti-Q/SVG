@@ -1,10 +1,9 @@
 using Android.Graphics;
-using Svg.Core.Interfaces;
 using Svg.Interfaces;
 using Svg.Platform;
 using PointF = Svg.Interfaces.PointF;
 
-namespace Svg.Droid.Editor.Services
+namespace Svg.Editor.Droid.Services
 {
     public class AndroidCanvasRenderer : IRenderer
     {

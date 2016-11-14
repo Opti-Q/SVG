@@ -5,11 +5,10 @@ using Android.App;
 using Android.Views;
 using Android.Widget;
 using Svg;
-using Svg.Core.Tools;
-using Svg.Droid.Editor.Services;
+using Svg.Editor.Droid.Services;
 
 [assembly: SvgService(typeof(IMarkerOptionsInputService), typeof(AndroidMarkerOptionsInputService))]
-namespace Svg.Droid.Editor.Services
+namespace Svg.Editor.Droid.Services
 {
     public class AndroidMarkerOptionsInputService : IMarkerOptionsInputService
     {

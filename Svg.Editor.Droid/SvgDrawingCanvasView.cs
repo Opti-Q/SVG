@@ -5,11 +5,10 @@ using Android.Graphics;
 using Android.Util;
 using Android.Views;
 using SkiaSharp;
-using Svg.Droid.Editor.Services;
-using Svg.Editor;
+using Svg.Editor.Droid.Services;
 using Svg.Editor.Services;
 
-namespace Svg.Droid.Editor
+namespace Svg.Editor.Droid
 {
     public class SvgDrawingCanvasView : View
     {

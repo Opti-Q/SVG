@@ -1,13 +1,12 @@
 using Android.Content.Res;
 using Svg;
-using Svg.Core.Interfaces;
-using Svg.Droid.Editor.Services;
+using Svg.Editor.Droid.Services;
 using Svg.Interfaces;
 using Svg.Platform;
 
 [assembly: SvgService(typeof(ISvgSourceFactory), typeof(AndroidSvgSourceFactory))]
 
-namespace Svg.Droid.Editor.Services
+namespace Svg.Editor.Droid.Services
 {
     public class AndroidSvgSourceFactory : ISvgSourceFactory
     {

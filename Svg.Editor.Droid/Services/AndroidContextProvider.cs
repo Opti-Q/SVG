@@ -1,9 +1,9 @@
 using Android.Content;
 using Svg;
-using Svg.Droid.Editor.Services;
+using Svg.Editor.Droid.Services;
 
 [assembly:SvgService(typeof(IContextProvider), typeof(AndroidContextProvider))]
-namespace Svg.Droid.Editor.Services
+namespace Svg.Editor.Droid.Services
 {
     public interface IContextProvider
     {
