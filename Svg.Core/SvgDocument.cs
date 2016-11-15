@@ -232,12 +232,6 @@ namespace Svg
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            var settings = new XmlReaderSettings { NameTable = new NameTable() };
-            var xmlns = new XmlNamespaceManager(settings.NameTable);
-            foreach (var @namespace in SvgAttributeAttribute.Namespaces)
-                xmlns.AddNamespace(@namespace.Key, @namespace.Value);
-            var context = new XmlParserContext(null, xmlns, "", XmlSpace.Default);
-
             // Don't close the stream via a dispose: that is the client's job.
             //var reader = new SvgTextReader(stream, entities);
             //reader.XmlResolver = new SvgDtdResolver();
