@@ -211,7 +211,7 @@ namespace Svg.Tests.Win
                 doc2 = SvgDocument.Open<SvgDocument>(ms);
             }
 
-            return;
+            Assert.True(doc2.Children.First(c => c.ElementName == "sodipodi:namedview").Children.Any(c => c.ElementName == "inkscape:grid"));
         }
 
         private static void AssertInheritedAttribute(SvgRectangle r, string attributeName)
