@@ -115,7 +115,7 @@ namespace Svg
             else
             {
                 // All non svg element (html, ...)
-                createdElement = new NonSvgElement(elementName);
+                createdElement = new NonSvgElement(reader.Name);
                 SetAttributes(createdElement, reader, document);
             }
 

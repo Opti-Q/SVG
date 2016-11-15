@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.ComponentModel;
 
 namespace Svg
 {
@@ -18,14 +16,21 @@ namespace Svg
 		public const string SvgNamespace = "http://www.w3.org/2000/svg";
 		public const string XLinkPrefix = "xlink";
 		public const string XLinkNamespace = "http://www.w3.org/1999/xlink";
+		public const string InkscapePrefix = "inkscape";
+		public const string InkscapeNamespace = "http://www.inkscape.org/namespaces/inkscape";
+		public const string SodipodiPrefix = "sodipodi";
+		public const string SodipodiNamespace = "http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd";
         public const string XmlNamespace = "http://www.w3.org/XML/1998/namespace";
 
-		public static readonly List<KeyValuePair<string, string>> Namespaces = new List<KeyValuePair<string, string>>()
-    	                                                                	{
-																				new KeyValuePair<string, string>("", SvgNamespace),
-																				new KeyValuePair<string, string>(XLinkPrefix, XLinkNamespace),
-																				new KeyValuePair<string, string>("xml", XmlNamespace)
-		                                                                    };
+		public static readonly List<KeyValuePair<string, string>> Namespaces = new List<KeyValuePair<string, string>>
+    	{
+			new KeyValuePair<string, string>("", SvgNamespace),
+			new KeyValuePair<string, string>(XLinkPrefix, XLinkNamespace),
+			new KeyValuePair<string, string>(InkscapePrefix, InkscapeNamespace),
+			new KeyValuePair<string, string>(SodipodiPrefix, SodipodiNamespace),
+			new KeyValuePair<string, string>("xml", XmlNamespace)
+		};
+
         private bool _inAttrDictionary;
         private string _name;
         private string _namespace;

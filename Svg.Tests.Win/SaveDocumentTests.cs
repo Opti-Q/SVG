@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using NUnit.Framework;
+using Svg.Editor.Tests;
 using Svg.Interfaces;
 
 namespace Svg.Tests.Win
@@ -194,6 +195,24 @@ namespace Svg.Tests.Win
         /*
          * style="fill:none;fill-opacity:0;stroke:none"
          */
+
+        [Test]
+        public void WhenSavingDocument_KeepNamespacesIntact()
+        {
+            var fileLoader = Engine.Resolve<IFileLoader>();
+            var document = fileLoader.Load("Bends_01.svg");
+            SvgDocument doc2 = null;
+
+            // Act
+            using (var ms = new MemoryStream())
+            {
+                document.Write(ms);
+                ms.Seek(0, SeekOrigin.Begin);
+                doc2 = SvgDocument.Open<SvgDocument>(ms);
+            }
+
+            return;
+        }
 
         private static void AssertInheritedAttribute(SvgRectangle r, string attributeName)
         {
