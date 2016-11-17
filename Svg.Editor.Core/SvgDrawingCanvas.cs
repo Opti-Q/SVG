@@ -116,6 +116,8 @@ namespace Svg.Editor
             set { _zoomFocus = value; }
         }
 
+        public bool ZoomEnabled { get; set; } = true;
+
         public int ScreenWidth { get; set; }
 
         public int ScreenHeight { get; set; }
@@ -519,6 +521,7 @@ namespace Svg.Editor
             if (element.OwnerDocument != null)
                 MergeSvgDefs(Document, element.OwnerDocument);
 
+            // invoke the defaulteditors for the element
             foreach (var defaultEditor in DefaultEditors)
             {
                 await defaultEditor.Invoke(element);

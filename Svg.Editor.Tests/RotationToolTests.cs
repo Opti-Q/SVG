@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Svg.Editor.Events;
+using Svg.Editor.Interfaces;
+using Svg.Editor.Services;
 using Svg.Editor.Tools;
 using Svg.Interfaces;
 
@@ -11,6 +13,24 @@ namespace Svg.Editor.Tests
     [TestFixture]
     public class RotationToolTests : SvgDrawingCanvasTestBase
     {
+        [SetUp]
+        public override void SetUp()
+        {
+
+            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            {
+                () => new GridTool(null, Engine.Resolve<IUndoRedoService>()),
+
+                () => new MoveTool(Engine.Resolve<IUndoRedoService>()),
+
+                () => new SelectionTool(Engine.Resolve<IUndoRedoService>()),
+
+                () => new RotationTool(null, Engine.Resolve<IUndoRedoService>()), 
+            }));
+
+            base.SetUp();
+        }
+
         [Test]
         public async Task NoElementSelected_Rotate_HasNoEffect()
         {
@@ -24,7 +44,6 @@ namespace Svg.Editor.Tests
                 Height = new SvgUnit(SvgUnitType.Pixel, 20),
             };
             Canvas.Document.Children.Add(element1);
-            var b1 = element1.GetBoundingBox(Canvas.GetCanvasTransformationMatrix());
             var matrix = element1.Transforms.GetMatrix();
 
             // Act
@@ -246,19 +265,19 @@ namespace Svg.Editor.Tests
         }
 
 
-        private void AssertAreEqual(Matrix expected, Matrix actual)
+        private static void AssertAreEqual(Matrix expected, Matrix actual)
         {
-            AssertAreEqual(expected.ScaleX, actual.ScaleX, $"{expected} but was \n{actual}");
-            AssertAreEqual(expected.ScaleY, actual.ScaleY, $"{expected} but was \n{actual}");
-            AssertAreEqual(expected.OffsetX, actual.OffsetX, $"{expected} but was \n{actual}");
-            AssertAreEqual(expected.OffsetY, actual.OffsetY, $"{expected} but was \n{actual}");
-            AssertAreEqual(expected.SkewX, actual.SkewX, $"{expected} but was \n{actual}");
-            AssertAreEqual(expected.SkewY, actual.SkewY, $"{expected} but was \n{actual}");
+            AssertAreEqual(expected.ScaleX, actual.ScaleX);
+            AssertAreEqual(expected.ScaleY, actual.ScaleY);
+            AssertAreEqual(expected.OffsetX, actual.OffsetX);
+            AssertAreEqual(expected.OffsetY, actual.OffsetY);
+            AssertAreEqual(expected.SkewX, actual.SkewX);
+            AssertAreEqual(expected.SkewY, actual.SkewY);
         }
 
-        private void AssertAreEqual(float a, float b, string msg)
+        private static void AssertAreEqual(float a, float b)
         {
-            Assert.IsTrue(Math.Abs(a - b) < 0.05, $"{a} differs {b} - {msg}");
+            Assert.AreEqual(a, b, 0.01);
         }
     }
 }

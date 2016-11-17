@@ -84,43 +84,40 @@ namespace Svg.Editor.Tools
             var re = @event as RotateEvent;
 
             // if a "RotateEvent" comes in
-            if (re != null)
+            if (re == null) return Task.FromResult(true);
+
+            if (re.Status == RotateStatus.Start &&
+                // and there is a single selected element
+                Canvas.SelectedElements.Count == 1 &&
+                // and the selectiontool is active
+                Canvas.ActiveTool.ToolType == ToolType.Select &&
+                // and the gesture is made with 3 fingers
+                re.PointerCount == 3)
             {
-                var zt = Canvas.Tools.OfType<ZoomTool>().Single();
+                // implicitly activate
+                _activatedFrom = Canvas.ActiveTool;
+                Canvas.ActiveTool = this;
+                _wasImplicitlyActivated = true;
+                Canvas.ZoomEnabled = false;
+                _rotations.Clear();
 
-                if (re.Status == RotateStatus.Start &&
-                    // and there is a single selected element
-                    Canvas.SelectedElements.Count == 1 &&
-                    // and the selectiontool is active
-                    Canvas.ActiveTool.ToolType == ToolType.Select &&
-                    // and the gesture is made with 3 fingers
-                    re.PointerCount == 3)
+                UndoRedoService.ExecuteCommand(new UndoableActionCommand("Rotate operation", o => { }));
+            }
+            else if (re.Status == RotateStatus.Rotating &&
+                     Canvas.SelectedElements.Count == 1 &&
+                     re.PointerCount == 3)
+            {
+                RotateElementStepwise(Canvas.SelectedElements[0], re.AbsoluteRotationDegrees);
+            }
+            else if (re.Status == RotateStatus.End)
+            {
+                if (Canvas.ActiveTool == this && _wasImplicitlyActivated)
                 {
-                    // implicitly activate
-                    _activatedFrom = Canvas.ActiveTool;
-                    Canvas.ActiveTool = this;
-                    _wasImplicitlyActivated = true;
-                    zt.IsActive = false;
-                    _rotations.Clear();
-
-                    UndoRedoService.ExecuteCommand(new UndoableActionCommand("Rotate operation", o => { }));
+                    Canvas.ActiveTool = _activatedFrom;
                 }
-                else if (re.Status == RotateStatus.Rotating &&
-                         Canvas.SelectedElements.Count == 1 &&
-                         re.PointerCount == 3)
-                {
-                    RotateElementStepwise(Canvas.SelectedElements[0], re.AbsoluteRotationDegrees);
-                }
-                else if (re.Status == RotateStatus.End)
-                {
-                    if (Canvas.ActiveTool == this && _wasImplicitlyActivated)
-                    {
-                        Canvas.ActiveTool = _activatedFrom;
-                    }
-                    zt.IsActive = true;
-                    _lastRotationCenter = null;
-                    _rotations.Clear();
-                }
+                Canvas.ZoomEnabled = true;
+                _lastRotationCenter = null;
+                _rotations.Clear();
             }
 
             return Task.FromResult(true);

@@ -15,6 +15,7 @@ namespace Svg.Editor.Tools
         public const string ZoomInCommandKey = "zoomin";
         public const string ZoomOutCommandKey = "zoomout";
 
+        #region Private fields and properties
         private bool _focused;
         private float CurrentFocusX { get; set; }
         private float CurrentFocusY { get; set; }
@@ -27,11 +28,15 @@ namespace Svg.Editor.Tools
         //private Brush OrangeBrush => _orangeBrush ?? (_orangeBrush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 220, 160, 60)));
         //private Pen OrangePen => _orangePen ?? (_orangePen = Engine.Factory.CreatePen(OrangeBrush, 5));
 
+        #endregion
+
         public ZoomTool(IDictionary<string, object> properties) : base("Zoom", properties)
         {
             IconName = "ic_zoom_white_48dp.png";
             ToolType = ToolType.View;
         }
+
+        #region Public properties
 
         public float MinScale
         {
@@ -96,6 +101,13 @@ namespace Svg.Editor.Tools
             }
             set { Properties[ZoomOutCommandKey] = value; }
         }
+
+        #endregion
+
+
+        #region Overides
+
+        public override bool IsActive => Canvas?.ZoomEnabled ?? false;
 
         public override async Task Initialize(SvgDrawingCanvas ws)
         {
@@ -259,13 +271,6 @@ namespace Svg.Editor.Tools
             return Task.FromResult(true);
         }
 
-        private float GetBoundedZoomFactor(ScaleEvent se, SvgDrawingCanvas ws)
-        {
-            var newZoomFactor = ws.ZoomFactor * se.ScaleFactor;
-
-            return Math.Max(MinScale, Math.Min(newZoomFactor, MaxScale));
-        }
-
         //public override async Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
         //{
         //    await base.OnDraw(renderer, ws);
@@ -289,5 +294,18 @@ namespace Svg.Editor.Tools
 
         //    renderer.Graphics.Restore();
         //}
+
+        #endregion
+
+        #region Private helpers
+
+        private float GetBoundedZoomFactor(ScaleEvent se, SvgDrawingCanvas ws)
+        {
+            var newZoomFactor = ws.ZoomFactor * se.ScaleFactor;
+
+            return Math.Max(MinScale, Math.Min(newZoomFactor, MaxScale));
+        }
+
+        #endregion
     }
 }

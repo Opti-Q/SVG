@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using Svg.Editor.Interfaces;
+using Svg.Editor.Services;
 using Svg.Editor.Tools;
 using Svg.Interfaces;
 
@@ -15,11 +17,26 @@ namespace Svg.Editor.Tests
 
         public override void SetUp()
         {
-            base.SetUp();
 
+            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            {
+                () => new SelectionTool(Engine.Resolve<IUndoRedoService>()),
+
+                () => new StrokeStyleTool(new Dictionary<string, object>
+                {
+                    { StrokeStyleTool.StrokeDashesKey, new[] {"none", "3 3", "17 17", "34 34"} },
+                    { StrokeStyleTool.StrokeDashNamesKey, new [] { "----------", "- - - - - -", "--  --  --", "---   ---" } },
+                    { StrokeStyleTool.StrokeWidthsKey, new [] { 2, 6, 12, 24 } },
+                    { StrokeStyleTool.StrokeWidthNamesKey, new [] { "thin", "normal", "thick", "ultra-thick" } }
+                }, Engine.Resolve<IUndoRedoService>()),
+            }));
+
+            // register stroke style options input service
             _mockStrokeStyle = new MockStrokeStyleOptionsInputService();
-
             Engine.Register<IStrokeStyleOptionsInputService, MockStrokeStyleOptionsInputService>(() => _mockStrokeStyle);
+
+            // set up canvas
+            base.SetUp();
         }
 
         [Test]

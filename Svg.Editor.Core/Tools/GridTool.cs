@@ -24,7 +24,7 @@ namespace Svg.Editor.Tools
             get
             {
                 object stepSizeY;
-                if (!Properties.TryGetValue("stepsizey", out stepSizeY))
+                if (!Properties.TryGetValue(StepSizeYKey, out stepSizeY))
                     stepSizeY = 20.0f;
                 return Convert.ToSingle(stepSizeY);
             }
@@ -37,7 +37,7 @@ namespace Svg.Editor.Tools
             get
             {
                 object alpha;
-                if (!Properties.TryGetValue("alpha", out alpha))
+                if (!Properties.TryGetValue(AlphaAngleKey, out alpha))
                     alpha = 30.0f;
                 return Convert.ToSingle(alpha);
             }
@@ -71,7 +71,9 @@ namespace Svg.Editor.Tools
         public string IconGridOn { get; set; } = "ic_grid_on_white_48dp.png";
         public string IconGridOff { get; set; } = "ic_grid_off_white_48dp.png";
 
-        public static readonly string IsSnappingEnabledKey = @"issnappingenabled";
+        public const string IsSnappingEnabledKey = "issnappingenabled";
+        public const string StepSizeYKey = "stepsizey";
+        public const string AlphaAngleKey = "alpha";
 
         public bool IsSnappingEnabled
         {
@@ -359,56 +361,61 @@ namespace Svg.Editor.Tools
             var line = sender as SvgLine;
             if (line != null && Regex.IsMatch(e.Attribute, @"^y[12]$"))
             {
-                _isSnappingInProgress = true;
-
-                float absoluteDeltaX, absoluteDeltaY;
-
-                // Get start and end points from line in canvas space
-                var points = line.GetTransformedLinePoints();
-
-                // Matrix for transforming the calculated delta back to line space
-                var m = line.Transforms.GetMatrix();
-                m.Invert();
-
-                switch (e.Attribute)
+                try
                 {
-                    case "y1":
-                        SnapPointToGrid(points[0].X, points[0].Y, out absoluteDeltaX, out absoluteDeltaY);
-                        points[0].X += absoluteDeltaX;
-                        points[0].Y += absoluteDeltaY;
-                        m.TransformPoints(points);
-                        var formerLineStartX = line.StartX.Clone();
-                        var formerLineStartY = line.StartY.Clone();
-                        UndoRedoService.ExecuteCommand(new UndoableActionCommand("Snap line start to grid", o =>
-                        {
-                            line.StartX = points[0].X;
-                            line.StartY = points[0].Y;
-                        }, o =>
-                        {
-                            line.StartX = formerLineStartX;
-                            line.StartY = formerLineStartY;
-                        }), hasOwnUndoRedoScope: false);
-                        break;
-                    case "y2":
-                        SnapPointToGrid(points[1].X, points[1].Y, out absoluteDeltaX, out absoluteDeltaY);
-                        points[1].X += absoluteDeltaX;
-                        points[1].Y += absoluteDeltaY;
-                        m.TransformPoints(points);
-                        var formerLineEndX = line.EndX.Clone();
-                        var formerLineEndY = line.EndY.Clone();
-                        UndoRedoService.ExecuteCommand(new UndoableActionCommand("Snap line end to grid", o =>
-                        {
-                            line.EndX = points[1].X;
-                            line.EndY = points[1].Y;
-                        }, o =>
-                        {
-                            line.EndX = formerLineEndX;
-                            line.EndY = formerLineEndY;
-                        }), hasOwnUndoRedoScope: false);
-                        break;
-                }
+                    _isSnappingInProgress = true;
 
-                _isSnappingInProgress = false;
+                    float absoluteDeltaX, absoluteDeltaY;
+
+                    // Get start and end points from line in canvas space
+                    var points = line.GetTransformedLinePoints();
+
+                    // Matrix for transforming the calculated delta back to line space
+                    var m = line.Transforms.GetMatrix();
+                    m.Invert();
+
+                    switch (e.Attribute)
+                    {
+                        case "y1":
+                            SnapPointToGrid(points[0].X, points[0].Y, out absoluteDeltaX, out absoluteDeltaY);
+                            points[0].X += absoluteDeltaX;
+                            points[0].Y += absoluteDeltaY;
+                            m.TransformPoints(points);
+                            var formerLineStartX = line.StartX.Clone();
+                            var formerLineStartY = line.StartY.Clone();
+                            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Snap line start to grid", o =>
+                            {
+                                line.StartX = points[0].X;
+                                line.StartY = points[0].Y;
+                            }, o =>
+                            {
+                                line.StartX = formerLineStartX;
+                                line.StartY = formerLineStartY;
+                            }), hasOwnUndoRedoScope: false);
+                            break;
+                        case "y2":
+                            SnapPointToGrid(points[1].X, points[1].Y, out absoluteDeltaX, out absoluteDeltaY);
+                            points[1].X += absoluteDeltaX;
+                            points[1].Y += absoluteDeltaY;
+                            m.TransformPoints(points);
+                            var formerLineEndX = line.EndX.Clone();
+                            var formerLineEndY = line.EndY.Clone();
+                            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Snap line end to grid", o =>
+                            {
+                                line.EndX = points[1].X;
+                                line.EndY = points[1].Y;
+                            }, o =>
+                            {
+                                line.EndX = formerLineEndX;
+                                line.EndY = formerLineEndY;
+                            }), hasOwnUndoRedoScope: false);
+                            break;
+                    }
+                }
+                finally
+                {
+                    _isSnappingInProgress = false;
+                }
 
             }
         }

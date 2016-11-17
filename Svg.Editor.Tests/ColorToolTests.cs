@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using Svg.Editor.Interfaces;
 using Svg.Editor.Services;
 using Svg.Editor.Tools;
 using Svg.Editor.UndoRedo;
@@ -18,17 +19,30 @@ namespace Svg.Editor.Tests
         [SetUp]
         public override void SetUp()
         {
-            base.SetUp();
+            // register the tool provder with a single color tool
+            var selectableColors = new[] { "#000000", "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF" };
+            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            {
+                () => new ColorTool(new Dictionary<string, object>
+                {
+                    { ColorTool.SelectableColorsKey, selectableColors },
+                    { ColorTool.SelectableColorNamesKey, new [] { "Black","Red","Green","Blue", "Yellow", "Magenta", "Cyan" } }
+                }, Engine.Resolve<IUndoRedoService>())
+            }));
 
+            // register the mock color input service
             _colorMock = new MockColorInputService();
-
             Engine.Register<IColorInputService, MockColorInputService>(() => _colorMock);
+
+            // set up the canvas
+            base.SetUp();
         }
 
         [Test]
         public async Task WhenUserCreatesText_FillAndStrokeHasSelectedColor()
         {
             // Arrange
+
             await Canvas.EnsureInitialized();
             var colorTool = Canvas.Tools.OfType<ColorTool>().Single();
             var text = new SvgText("hello");
@@ -67,16 +81,19 @@ namespace Svg.Editor.Tests
         public async Task WhenUserSelectsColorAndCreatesText_StrokeAndFillHasSelectedColor()
         {
             // Arrange
+
             await Canvas.EnsureInitialized();
             var colorTool = Canvas.Tools.OfType<ColorTool>().Single();
             var color = Color.Create(0, 255, 0);
             var text = new SvgText("hello");
 
             // Act
+
             colorTool.SelectedColor = color;
             await Canvas.AddItemInScreenCenter(text);
 
             // Assert
+
             Assert.True(colorTool.SelectedColor.Equals(((SvgColourServer) text.Stroke).Colour));
             Assert.True(colorTool.SelectedColor.Equals(((SvgColourServer) text.Fill).Colour));
         }
@@ -85,16 +102,19 @@ namespace Svg.Editor.Tests
         public async Task WhenUserSelectsColorAndCreatesRectangle_StrokeHasSelectedColor()
         {
             // Arrange
+
             await Canvas.EnsureInitialized();
             var colorTool = Canvas.Tools.OfType<ColorTool>().Single();
             var color = Color.Create(0, 255, 0);
             var rectangle = new SvgRectangle();
 
             // Act
+
             colorTool.SelectedColor = color;
             await Canvas.AddItemInScreenCenter(rectangle);
 
             // Assert
+
             Assert.True(colorTool.SelectedColor.Equals(((SvgColourServer) rectangle.Stroke).Colour));
         }
 
@@ -102,6 +122,7 @@ namespace Svg.Editor.Tests
         public async Task WhenUserSelectsTextAndSelectsColor_StrokeAndFillHasSelectedColor()
         {
             // Arrange
+
             await Canvas.EnsureInitialized();
             var color = Color.Create(Canvas.Tools.OfType<ColorTool>().Single().SelectableColors[1]);
             _colorMock.F = () => 1;
@@ -110,10 +131,12 @@ namespace Svg.Editor.Tests
             var changeColorCommand = Canvas.ToolCommands.Single(x => x.FirstOrDefault()?.Name == "Change color").First();
 
             // Act
+
             Canvas.SelectedElements.Add(text);
             changeColorCommand.Execute(null);
 
             // Assert
+
             Assert.True(color.Equals(((SvgColourServer) text.Stroke).Colour));
             Assert.True(color.Equals(((SvgColourServer) text.Fill).Colour));
         }
@@ -122,6 +145,7 @@ namespace Svg.Editor.Tests
         public async Task WhenUserSelectsRectangleAndSelectsColor_StrokeHasSelectedColor()
         {
             // Arrange
+
             await Canvas.EnsureInitialized();
             var color = Color.Create(Canvas.Tools.OfType<ColorTool>().Single().SelectableColors[1]);
             _colorMock.F = () => 1;
@@ -130,10 +154,12 @@ namespace Svg.Editor.Tests
             var changeColorCommand = Canvas.ToolCommands.Single(x => x.FirstOrDefault()?.Name == "Change color").First();
 
             // Act
+
             Canvas.SelectedElements.Add(rectangle);
             changeColorCommand.Execute(null);
 
             // Assert
+
             Assert.True(color.Equals(((SvgColourServer) rectangle.Stroke).Colour));
         }
 
@@ -141,6 +167,7 @@ namespace Svg.Editor.Tests
         public async Task ChildStrokeSetToNone_WhenUserSelectsParentAndSelectsColor_ChildStrokeIsStillNone()
         {
             // Arrange
+
             await Canvas.EnsureInitialized();
             _colorMock.F = () => 1;
             var parent = new SvgGroup();
@@ -150,10 +177,12 @@ namespace Svg.Editor.Tests
             var changeColorCommand = Canvas.ToolCommands.Single(x => x.FirstOrDefault()?.Name == "Change color").First();
 
             // Act
+
             Canvas.SelectedElements.Add(parent);
             changeColorCommand.Execute(null);
 
             // Assert
+
             Assert.True(child.Stroke == SvgPaintServer.None);
         }
 
@@ -161,6 +190,7 @@ namespace Svg.Editor.Tests
         public async Task ChildStrokeNotSet_WhenUserSelectsParentAndSelectsColor_ChildStrokeEqualsParentStroke()
         {
             // Arrange
+
             await Canvas.EnsureInitialized();
             _colorMock.F = () => 1;
             var parent = new SvgGroup();
@@ -170,10 +200,12 @@ namespace Svg.Editor.Tests
             var changeColorCommand = Canvas.ToolCommands.Single(x => x.FirstOrDefault()?.Name == "Change color").First();
 
             // Act
+
             Canvas.SelectedElements.Add(parent);
             changeColorCommand.Execute(null);
 
             // Assert
+
             Assert.True(child.Stroke.Equals(parent.Stroke));
         }
 
@@ -181,6 +213,7 @@ namespace Svg.Editor.Tests
         public async Task ChildStrokeInherit_WhenUserSelectsParentAndSelectsColor_ChildStrokeEqualsParentStroke()
         {
             // Arrange
+
             await Canvas.EnsureInitialized();
             _colorMock.F = () => 1;
             var parent = new SvgGroup();
@@ -190,10 +223,12 @@ namespace Svg.Editor.Tests
             var changeColorCommand = Canvas.ToolCommands.Single(x => x.FirstOrDefault()?.Name == "Change color").First();
 
             // Act
+
             Canvas.SelectedElements.Add(parent);
             changeColorCommand.Execute(null);
 
             // Assert
+
             Assert.True(child.Stroke.Equals(parent.Stroke));
         }
 

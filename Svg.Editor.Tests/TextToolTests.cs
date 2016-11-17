@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Reactive.Testing;
 using NUnit.Framework;
 using Svg.Editor.Events;
+using Svg.Editor.Interfaces;
+using Svg.Editor.Services;
 using Svg.Editor.Tools;
 using Svg.Interfaces;
 
@@ -18,11 +20,22 @@ namespace Svg.Editor.Tests
 
         public override void SetUp()
         {
-            base.SetUp();
+            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            {
+                () => new TextTool(new Dictionary<string, object>
+                {
+                    { TextTool.FontSizesKey, new [] { 12f, 16f, 20f, 24f, 36f, 48f } },
+                    { TextTool.FontSizeNamesKey, new [] { "12px", "16px", "20px", "24px", "36px", "48px" } },
+                    { TextTool.SelectedFontSizeIndexKey, 1 },
+                }, Engine.Resolve<IUndoRedoService>()),
+            }));
 
+            // register mock text input service
             _textMock = new MockTextInputService();
-
             Engine.Register<ITextInputService, MockTextInputService>(() => _textMock);
+
+            // set up canvas
+            base.SetUp();
         }
 
         [Test]

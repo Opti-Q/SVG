@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.Reactive.Testing;
 using NUnit.Framework;
 using Svg.Editor.Events;
+using Svg.Editor.Interfaces;
+using Svg.Editor.Services;
 using Svg.Editor.Tools;
 using Svg.Interfaces;
 
@@ -20,19 +22,48 @@ namespace Svg.Editor.Tests
         [SetUp]
         public override void SetUp()
         {
-            base.SetUp();
+            var textToolProperties = new Dictionary<string, object>
+            {
+                { "fontsizes", new [] { 12f, 16f, 20f, 24f, 36f, 48f } },
+                { "selectedfontsizeindex", 1 },
+                { "fontsizenames", new [] { "12px", "16px", "20px", "24px", "36px", "48px" } }
+            };
+
+            var undoRedoService = Engine.Resolve<IUndoRedoService>();
+
+            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            {
+                () => new GridTool(null, undoRedoService),
+                () => new MoveTool(undoRedoService),
+                () => new PanTool(null),
+                () => new RotationTool(null, undoRedoService),
+                () => new ZoomTool(null),
+                () => new SelectionTool(undoRedoService),
+                () => new TextTool(textToolProperties, undoRedoService),
+                () => new UndoRedoTool(undoRedoService),
+                () => new ArrangeTool(undoRedoService),
+                () => new LineTool(null, undoRedoService),
+                () => new FreeDrawingTool(null, undoRedoService),
+                () => new StrokeStyleTool(new Dictionary<string, object>
+                {
+                    { StrokeStyleTool.StrokeDashesKey, new[] {"1", "3"} }
+                }, undoRedoService),
+                () => new ColorTool(new Dictionary<string, object>
+                {
+                    { ColorTool.SelectableColorsKey, new[] {"#000000", "#FF0000"} }
+                }, undoRedoService), 
+            }));
 
             _colorMock = new MockColorInputService();
-
             Engine.Register<IColorInputService, MockColorInputService>(() => _colorMock);
 
             _textMock = new MockTextInputService();
-
             Engine.Register<ITextInputService, MockTextInputService>(() => _textMock);
 
             _mockStrokeStyle = new MockStrokeStyleOptionsInputService();
-
             Engine.Register<IStrokeStyleOptionsInputService, MockStrokeStyleOptionsInputService>(() => _mockStrokeStyle);
+
+            base.SetUp();
         }
 
         [Test]
@@ -42,11 +73,11 @@ namespace Svg.Editor.Tests
             await Canvas.EnsureInitialized();
             var colorTool = Canvas.Tools.OfType<ColorTool>().Single();
             var text = new SvgText("hello");
-            colorTool.SelectedColor = Color.Create(colorTool.SelectableColors[2]);
+            colorTool.SelectedColor = Color.Create(colorTool.SelectableColors[1]);
             var color = colorTool.SelectedColor;
             var oldStroke = text.Stroke?.ToString();
             var oldFill = text.Fill?.ToString();
-            Canvas.AddItemInScreenCenter(text);
+            await Canvas.AddItemInScreenCenter(text);
 
             // Preassert
             Assert.AreEqual(color, ((SvgColourServer) text.Fill)?.Colour);
@@ -69,7 +100,7 @@ namespace Svg.Editor.Tests
             var colorTool = Canvas.Tools.OfType<ColorTool>().Single();
             var rectangle = new SvgRectangle();
             var oldStroke = rectangle.Stroke?.ToString();
-            Canvas.AddItemInScreenCenter(rectangle);
+            await Canvas.AddItemInScreenCenter(rectangle);
 
             // Preassert
             var color = colorTool.SelectedColor;
@@ -91,7 +122,7 @@ namespace Svg.Editor.Tests
             var color = Color.Create(Canvas.Tools.OfType<ColorTool>().Single().SelectableColors[1]);
             _colorMock.F = () => 1;
             var text = new SvgText("hello");
-            Canvas.AddItemInScreenCenter(text);
+            await Canvas.AddItemInScreenCenter(text);
             var oldStroke = text.Stroke?.ToString();
             var oldFill = text.Fill?.ToString();
             var changeColorCommand = Canvas.ToolCommands.Single(x => x.FirstOrDefault()?.Name == "Change color").First();
@@ -119,7 +150,7 @@ namespace Svg.Editor.Tests
             var color = Color.Create(Canvas.Tools.OfType<ColorTool>().Single().SelectableColors[1]);
             _colorMock.F = () => 1;
             var rectangle = new SvgRectangle();
-            Canvas.AddItemInScreenCenter(rectangle);
+            await Canvas.AddItemInScreenCenter(rectangle);
             var oldStroke = rectangle.Stroke?.ToString();
             var changeColorCommand = Canvas.ToolCommands.Single(x => x.FirstOrDefault()?.Name == "Change color").First();
             Canvas.SelectedElements.Add(rectangle);
@@ -358,7 +389,7 @@ namespace Svg.Editor.Tests
             Canvas.Document.Children.Add(element1);
             var d = LoadDocument("nested_transformed_text.svg");
             var element2 = d.Children.OfType<SvgVisualElement>().Single(c => c.Visible && c.Displayable);
-            Canvas.AddItemInScreenCenter(element2);
+            await Canvas.AddItemInScreenCenter(element2);
             Canvas.SelectedElements.Add(element1);
             Canvas.SelectedElements.Add(element2);
             selectionTool.Commands.First().Execute(null);
@@ -391,16 +422,17 @@ namespace Svg.Editor.Tests
                 RadiusY = 50,
                 Stroke = new SvgColourServer(Color.Create(0, 0, 0))
             };
-            var stroke = ellipse.StrokeDashArray?.ToString();
             await Canvas.EnsureInitialized();
             _mockStrokeStyle.F = (arg1, arg2, arg3, arg4, arg5) => new StrokeStyleTool.StrokeStyleOptions { StrokeDashIndex = 1, StrokeWidthIndex = 1 };
 
             Canvas.Document.Children.Add(ellipse);
             Canvas.SelectedElements.Add(ellipse);
+            var stroke = ellipse.StrokeDashArray?.ToString();
+
             tool.Commands.First().Execute(null);
 
             // Preassert
-            Assert.AreEqual("3 3", ellipse.StrokeDashArray?.ToString());
+            Assert.AreEqual("3", ellipse.StrokeDashArray?.ToString());
 
             // Act
             var undoredoTool = Canvas.Tools.OfType<UndoRedoTool>().Single();

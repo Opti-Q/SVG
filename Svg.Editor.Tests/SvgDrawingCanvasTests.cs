@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using Svg.Droid.SampleEditor.Core.Tools;
+using Svg.Editor.Interfaces;
+using Svg.Editor.Services;
 using Svg.Editor.Tools;
 using Svg.Interfaces;
 
@@ -10,6 +14,39 @@ namespace Svg.Editor.Tests
     [TestFixture]
     public class SvgDrawingCanvasTests : SvgDrawingCanvasTestBase
     {
+        private MockTextInputService _textMock;
+
+        [SetUp]
+        public override void SetUp()
+        {
+            // set up tools
+            var textToolProperties = new Dictionary<string, object>
+            {
+                { "fontsizes", new [] { 12f, 16f, 20f, 24f, 36f, 48f } },
+                { "selectedfontsizeindex", 1 },
+                { "fontsizenames", new [] { "12px", "16px", "20px", "24px", "36px", "48px" } }
+            };
+
+            var undoRedoService = Engine.Resolve<IUndoRedoService>();
+
+            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            {
+                () => new GridTool(null, undoRedoService),
+                () => new MoveTool(undoRedoService),
+                () => new PanTool(null),
+                () => new RotationTool(null, undoRedoService),
+                () => new ZoomTool(null),
+                () => new SelectionTool(undoRedoService),
+                () => new TextTool(textToolProperties, undoRedoService),
+            }));
+
+            // register mock text input service for text tool
+            _textMock = new MockTextInputService();
+            Engine.Register<ITextInputService, MockTextInputService>(() => _textMock);
+
+            base.SetUp();
+        }
+
         [Test]
         public async Task HasOneActiveExplicitTool()
         {
@@ -149,6 +186,16 @@ namespace Svg.Editor.Tests
             // Assert
             Assert.AreEqual(expectedScreenX, screenPoint.X);
             Assert.AreEqual(expectedScreenY, screenPoint.Y);
+        }
+
+        private class MockTextInputService : ITextInputService
+        {
+            public Func<string, string, TextTool.TextProperties> F { get; set; } = (x, y) => null;
+
+            public Task<TextTool.TextProperties> GetUserInput(string title, string textValue, IEnumerable<string> textSizeOptions, int textSizeSelected)
+            {
+                return Task.FromResult(F(title, textValue));
+            }
         }
     }
 }

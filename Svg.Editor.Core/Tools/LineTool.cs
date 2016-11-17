@@ -38,7 +38,6 @@ namespace Svg.Editor.Tools
 
         private Brush BlueBrush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
         private Pen BluePen => _pen ?? (_pen = Engine.Factory.CreatePen(BlueBrush, 5));
-        private IEnumerable<SvgMarker> Markers { get; }
 
         #endregion
 
@@ -136,51 +135,6 @@ namespace Svg.Editor.Tools
             ToolUsage = ToolUsage.Explicit;
             ToolType = ToolType.Create;
             HandleDragExit = true;
-
-            #region Init markers
-
-            var markers = new List<SvgMarker>();
-            var marker = new SvgMarker { ID = "arrowStart", Orient = new SvgOrient() { IsAuto = true }, RefX = new SvgUnit(SvgUnitType.Pixel, -2.5f), MarkerWidth = 2 };
-            marker.Children.Add(new SvgPath
-            {
-                PathData = new SvgPathSegmentList(new SvgPathSegment[]
-                {
-                    new SvgMoveToSegment(PointF.Create(0, -2.0f)),
-                    new SvgLineSegment(PointF.Create(0, -2.0f), PointF.Create(0, 2f)),
-                    new SvgLineSegment(PointF.Create(0, 2.0f), PointF.Create(-4.0f, 0)),
-                    new SvgClosePathSegment()
-                }),
-                Stroke = SvgColourServer.ContextStroke, // inherit stroke color from parent/aka context
-                Fill = SvgColourServer.ContextFill, // inherit stroke color from parent/aka context
-            });
-            markers.Add(marker);
-            marker = new SvgMarker { ID = "arrowEnd", Orient = new SvgOrient() { IsAuto = true }, RefX = new SvgUnit(SvgUnitType.Pixel, 2.5f), MarkerWidth = 2 };
-            marker.Children.Add(new SvgPath
-            {
-                PathData = new SvgPathSegmentList(new SvgPathSegment[]
-                {
-                    new SvgMoveToSegment(PointF.Create(0, -2.0f)),
-                    new SvgLineSegment(PointF.Create(0, -2.0f), PointF.Create(0, 2.0f)),
-                    new SvgLineSegment(PointF.Create(0, 2.0f), PointF.Create(4.0f, 0)),
-                    new SvgClosePathSegment()
-                }),
-                Stroke = SvgColourServer.ContextStroke, // inherit stroke color from parent/aka context
-                Fill = SvgColourServer.ContextFill, // inherit stroke color from parent/aka context
-            });
-            markers.Add(marker);
-            marker = new SvgMarker { ID = "circle", Orient = new SvgOrient() { IsAuto = true }/*, RefX = new SvgUnit(SvgUnitType.Pixel, -1.5f)*/, MarkerWidth = 2 };
-            marker.Children.Add(new SvgEllipse
-            {
-                RadiusX = 1.5f,
-                RadiusY = 1.5f,
-                Stroke = SvgColourServer.ContextStroke, // inherit stroke color from parent/aka context
-                Fill = SvgColourServer.ContextFill, // inherit stroke color from parent/aka context
-            });
-            markers.Add(marker);
-
-            Markers = markers;
-
-            #endregion
         }
 
         #region Overrides
@@ -421,7 +375,7 @@ namespace Svg.Editor.Tools
                 document.Children.Insert(0, definitions);
             }
 
-            foreach (var marker in Markers)
+            foreach (var marker in EnumerateMarkers())
             {
                 if (document.GetElementById(marker.ID) != null) continue;
 
@@ -484,6 +438,47 @@ namespace Svg.Editor.Tools
         private static Uri CreateUriFromId(string markerEndId, string exception = "none")
         {
             return markerEndId != exception ? new Uri($"url(#{markerEndId})", UriKind.Relative) : null;
+        }
+
+        private static IEnumerable<SvgMarker> EnumerateMarkers()
+        {
+            var marker = new SvgMarker { ID = "arrowStart", Orient = new SvgOrient() { IsAuto = true }, RefX = new SvgUnit(SvgUnitType.Pixel, -2.5f), MarkerWidth = 2 };
+            marker.Children.Add(new SvgPath
+            {
+                PathData = new SvgPathSegmentList(new SvgPathSegment[]
+                {
+                    new SvgMoveToSegment(PointF.Create(0, -2.0f)),
+                    new SvgLineSegment(PointF.Create(0, -2.0f), PointF.Create(0, 2f)),
+                    new SvgLineSegment(PointF.Create(0, 2.0f), PointF.Create(-4.0f, 0)),
+                    new SvgClosePathSegment()
+                }),
+                Stroke = SvgColourServer.ContextStroke, // inherit stroke color from parent/aka context
+                Fill = SvgColourServer.ContextFill, // inherit stroke color from parent/aka context
+            });
+            yield return marker;
+            marker = new SvgMarker { ID = "arrowEnd", Orient = new SvgOrient() { IsAuto = true }, RefX = new SvgUnit(SvgUnitType.Pixel, 2.5f), MarkerWidth = 2 };
+            marker.Children.Add(new SvgPath
+            {
+                PathData = new SvgPathSegmentList(new SvgPathSegment[]
+                {
+                    new SvgMoveToSegment(PointF.Create(0, -2.0f)),
+                    new SvgLineSegment(PointF.Create(0, -2.0f), PointF.Create(0, 2.0f)),
+                    new SvgLineSegment(PointF.Create(0, 2.0f), PointF.Create(4.0f, 0)),
+                    new SvgClosePathSegment()
+                }),
+                Stroke = SvgColourServer.ContextStroke, // inherit stroke color from parent/aka context
+                Fill = SvgColourServer.ContextFill, // inherit stroke color from parent/aka context
+            });
+            yield return marker;
+            marker = new SvgMarker { ID = "circle", Orient = new SvgOrient() { IsAuto = true }/*, RefX = new SvgUnit(SvgUnitType.Pixel, -1.5f)*/, MarkerWidth = 2 };
+            marker.Children.Add(new SvgEllipse
+            {
+                RadiusX = 1.5f,
+                RadiusY = 1.5f,
+                Stroke = SvgColourServer.ContextStroke, // inherit stroke color from parent/aka context
+                Fill = SvgColourServer.ContextFill, // inherit stroke color from parent/aka context
+            });
+            yield return marker;
         }
 
         #endregion

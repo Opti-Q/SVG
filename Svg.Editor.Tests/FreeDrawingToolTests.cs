@@ -3,15 +3,28 @@ using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Svg.Editor.Events;
+using Svg.Editor.Interfaces;
+using Svg.Editor.Services;
 using Svg.Editor.Tools;
 using Svg.Interfaces;
-using Svg.Transforms;
 
 namespace Svg.Editor.Tests
 {
     [TestFixture]
     public class FreeDrawingToolTests : SvgDrawingCanvasTestBase
     {
+        [SetUp]
+        public override void SetUp()
+        {
+
+            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            {
+                () => new FreeDrawingTool(null, Engine.Resolve<IUndoRedoService>())
+            }));
+
+            base.SetUp();
+        }
+
         [Test]
         public async Task IfUserTapsCanvas_AndDoesNotMove_NoPathIsDrawn()
         {

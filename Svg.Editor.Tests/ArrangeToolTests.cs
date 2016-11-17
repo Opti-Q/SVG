@@ -1,14 +1,27 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using Svg.Editor.Interfaces;
+using Svg.Editor.Services;
 using Svg.Editor.Tools;
-using Svg.Interfaces;
 
 namespace Svg.Editor.Tests
 {
     [TestFixture]
     public class ArrangeToolTests : SvgDrawingCanvasTestBase
     {
+        [SetUp]
+        public override void SetUp()
+        {
+
+            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            {
+                () => new ArrangeTool(Engine.Resolve<IUndoRedoService>()), 
+            }));
+
+            base.SetUp();
+        }
 
         [Test]
         public async Task IfNoElementIsSelected_ArrangeNotAvailable()

@@ -21,7 +21,7 @@ namespace Svg.Editor.Tools
         #region Private fields
 
         private bool _dialogShown;
-        private static ITextInputService TextInputService => Engine.Resolve<ITextInputService>();
+        private ITextInputService TextInputService { get; set; }
 
         #endregion
 
@@ -90,6 +90,9 @@ namespace Svg.Editor.Tools
                 await ChangeText(svgText);
             });
 
+            TextInputService = Engine.TryResolve<ITextInputService>();
+
+            if (TextInputService == null) throw new InvalidOperationException("Text input service needs to be registered before initializing this tool.");
         }
 
         protected override async Task OnTap(TapGesture tap)

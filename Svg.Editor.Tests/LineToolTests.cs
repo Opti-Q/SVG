@@ -1,8 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Svg.Editor.Events;
 using Svg.Editor.Extensions;
+using Svg.Editor.Interfaces;
+using Svg.Editor.Services;
 using Svg.Editor.Tools;
 using Svg.Interfaces;
 
@@ -11,6 +15,31 @@ namespace Svg.Editor.Tests
     [TestFixture]
     public class LineToolTests : SvgDrawingCanvasTestBase
     {
+        [SetUp]
+        public override void SetUp()
+        {
+
+            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            {
+                () => new SelectionTool(Engine.Resolve<IUndoRedoService>()), 
+                () => new GridTool(new Dictionary<string, object>
+                {
+                    { GridTool.AlphaAngleKey, 30.0f },
+                    { GridTool.StepSizeYKey, 20.0f },
+                    { GridTool.IsSnappingEnabledKey, true }
+                }, Engine.Resolve<IUndoRedoService>()),
+
+                () => new LineTool(new Dictionary<string, object>
+                {
+                    { LineTool.MarkerStartIdsKey, new [] { "none", "arrowStart", "circle" } },
+                    { LineTool.MarkerStartNamesKey, new [] { "---", "<--", "O--" } },
+                    { LineTool.MarkerEndIdsKey, new [] { "none", "arrowEnd", "circle" } },
+                    { LineTool.MarkerEndNamesKey, new [] { "---", "-->", "--O" } }
+                }, Engine.Resolve<IUndoRedoService>()),
+            }));
+
+            base.SetUp();
+        }
 
         [Test]
         public async Task IfUserTapsCanvas_AndDoesNotMove_NoLineIsDrawn()

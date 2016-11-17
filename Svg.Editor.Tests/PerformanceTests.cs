@@ -13,6 +13,7 @@ namespace Svg.Editor.Tests
     public class PerformanceTests : SvgDrawingCanvasTestBase
     {
         [Test]
+        [Ignore("")]
         public async Task IfPointerIsMoved_AndNoElementIsSelected_NothingIsMoved()
         {
             // Arrange
@@ -49,6 +50,7 @@ namespace Svg.Editor.Tests
 
 
         [Test]
+        [Ignore("")]
         public async Task IfPointerIsMoved_AndNoElementIsSelected_NothingIsMoved_OpenGL()
         {
             // Arrange
