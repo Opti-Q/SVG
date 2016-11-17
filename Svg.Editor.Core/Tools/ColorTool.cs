@@ -48,7 +48,7 @@ namespace Svg.Editor.Tools
             {
                 object selectableColorNames;
                 if (!Properties.TryGetValue(SelectableColorNamesKey, out selectableColorNames))
-                    selectableColorNames = Enumerable.Empty<string>();
+                    selectableColorNames = SelectableColors.Clone();
                 return (string[]) selectableColorNames;
             }
         }

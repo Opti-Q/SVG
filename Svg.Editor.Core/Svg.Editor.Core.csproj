@@ -101,7 +101,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\" />
-    <Folder Include="Tools\Properties\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />

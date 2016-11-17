@@ -11,6 +11,8 @@ namespace Svg.Editor.Tools
 
         protected UndoableToolBase(string name, IDictionary<string,object> properties, IUndoRedoService undoRedoService) : base(name, properties)
         {
+            if (undoRedoService == null) throw new ArgumentNullException(nameof(undoRedoService));
+
             UndoRedoService = undoRedoService;
             UndoRedoService.ActionExecuted += UndoRedoServiceOnActionExecuted;
             UndoRedoService.CanUndoChanged += UndoRedoServiceOnCanUndoRedoChanged;

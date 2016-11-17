@@ -15,9 +15,8 @@ namespace Svg.Editor.Tests
 {
     public abstract class SvgDrawingCanvasTestBase
     {
-        private SvgDrawingCanvas _canvas;
+        protected SvgDrawingCanvas Canvas { get; set; }
 
-        protected SvgDrawingCanvas Canvas => _canvas;
         protected SchedulerProvider SchedulerProvider { get; } = new SchedulerProvider(CurrentThreadScheduler.Instance, new TestScheduler());
 
         [SetUp]
@@ -37,7 +36,8 @@ namespace Svg.Editor.Tests
 
             var colorToolProperties = new Dictionary<string, object>
             {
-                { "selectablecolors", new [] { "#000000","#FF0000","#00FF00","#0000FF","#FFFF00","#FF00FF","#00FFFF" } }
+                { "selectablecolors", new [] { "#000000","#FF0000","#00FF00","#0000FF","#FFFF00","#FF00FF","#00FFFF" } },
+                { ColorTool.SelectableColorNamesKey, new [] { "Black","Red","Green","Blue", "Yellow", "Magenta", "Cyan" } }
             };
 
             var lineToolProperties = new Dictionary<string, object>
@@ -106,13 +106,13 @@ namespace Svg.Editor.Tests
 
             #endregion
 
-            _canvas = new SvgDrawingCanvas();
+            Canvas = new SvgDrawingCanvas();
         }
 
         [TearDown]
         public virtual void TearDown()
         {
-            _canvas.Dispose();
+            Canvas.Dispose();
         }
 
         protected SvgDocument LoadDocument(string fileName)

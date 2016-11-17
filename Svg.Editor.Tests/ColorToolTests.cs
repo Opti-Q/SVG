@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using Svg.Editor.Services;
 using Svg.Editor.Tools;
+using Svg.Editor.UndoRedo;
 using Svg.Interfaces;
 
 namespace Svg.Editor.Tests
@@ -57,7 +60,7 @@ namespace Svg.Editor.Tests
 
             // Assert
             var color = colorTool.SelectedColor;
-            Assert.True(color.Equals(((SvgColourServer)rectangle.Stroke).Colour));
+            Assert.True(color.Equals(((SvgColourServer) rectangle.Stroke).Colour));
         }
 
         [Test]
@@ -74,8 +77,8 @@ namespace Svg.Editor.Tests
             await Canvas.AddItemInScreenCenter(text);
 
             // Assert
-            Assert.True(colorTool.SelectedColor.Equals(((SvgColourServer)text.Stroke).Colour));
-            Assert.True(colorTool.SelectedColor.Equals(((SvgColourServer)text.Fill).Colour));
+            Assert.True(colorTool.SelectedColor.Equals(((SvgColourServer) text.Stroke).Colour));
+            Assert.True(colorTool.SelectedColor.Equals(((SvgColourServer) text.Fill).Colour));
         }
 
         [Test]
@@ -92,7 +95,7 @@ namespace Svg.Editor.Tests
             await Canvas.AddItemInScreenCenter(rectangle);
 
             // Assert
-            Assert.True(colorTool.SelectedColor.Equals(((SvgColourServer)rectangle.Stroke).Colour));
+            Assert.True(colorTool.SelectedColor.Equals(((SvgColourServer) rectangle.Stroke).Colour));
         }
 
         [Test]
@@ -111,8 +114,8 @@ namespace Svg.Editor.Tests
             changeColorCommand.Execute(null);
 
             // Assert
-            Assert.True(color.Equals(((SvgColourServer)text.Stroke).Colour));
-            Assert.True(color.Equals(((SvgColourServer)text.Fill).Colour));
+            Assert.True(color.Equals(((SvgColourServer) text.Stroke).Colour));
+            Assert.True(color.Equals(((SvgColourServer) text.Fill).Colour));
         }
 
         [Test]
@@ -131,7 +134,7 @@ namespace Svg.Editor.Tests
             changeColorCommand.Execute(null);
 
             // Assert
-            Assert.True(color.Equals(((SvgColourServer)rectangle.Stroke).Colour));
+            Assert.True(color.Equals(((SvgColourServer) rectangle.Stroke).Colour));
         }
 
         [Test]
@@ -195,23 +198,31 @@ namespace Svg.Editor.Tests
         }
 
         [Test]
-        public async Task ChildStrokeInherit_WhenUserSelectsParentAndSelectsColor_ChildStrokeEqualsParentStroke()
+        public async Task SetSelectableColorsButNoNamesInProperties_DefaultNamesWillBeUsed()
         {
             // Arrange
+
+            var selectableColors = new[] {"#000000", "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF"};
+
+            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            {
+                () => new ColorTool(new Dictionary<string, object>
+                {
+                    { "selectablecolors", selectableColors }
+                }, new UndoRedoService())
+            }));
+
+            Canvas = new SvgDrawingCanvas();
             await Canvas.EnsureInitialized();
-            _colorMock.F = () => 1;
-            var parent = new SvgGroup();
-            var child = new SvgRectangle { X = 10, Y = 10, Width = 60, Height = 40, Stroke = SvgColourServer.Inherit };
-            parent.Children.Add(child);
-            await Canvas.AddItemInScreenCenter(parent);
-            var changeColorCommand = Canvas.ToolCommands.Single(x => x.FirstOrDefault()?.Name == "Change color").First();
 
             // Act
-            Canvas.SelectedElements.Add(parent);
-            changeColorCommand.Execute(null);
+
+            var selectableColorNames = Canvas.Tools.OfType<ColorTool>().First().SelectableColorNames;
 
             // Assert
-            Assert.True(child.Stroke.Equals(parent.Stroke));
+
+            Assert.AreEqual(selectableColors.Length, selectableColorNames.Length);
+            Assert.True(selectableColors.All(s => selectableColorNames.Contains(s)));
         }
 
         private class MockColorInputService : IColorInputService

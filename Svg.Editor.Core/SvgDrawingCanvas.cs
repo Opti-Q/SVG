@@ -24,7 +24,7 @@ namespace Svg.Editor
 {
     public sealed class SvgDrawingCanvas : IDisposable, ICanInvalidateCanvas, INotifyPropertyChanged
     {
-        #region Private fields
+        #region Private fields and properties
 
         private readonly ObservableCollection<SvgVisualElement> _selectedElements;
         private readonly ObservableCollection<ITool> _tools;
