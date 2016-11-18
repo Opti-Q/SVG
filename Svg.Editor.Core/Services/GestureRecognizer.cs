@@ -57,6 +57,10 @@ namespace Svg.Editor.Services
 
         public GestureRecognizer(IObservable<UserInputEvent> detectedInputEvents, IScheduler mainScheduler, IScheduler backgroundScheduler)
         {
+            if (detectedInputEvents == null) throw new ArgumentNullException(nameof(detectedInputEvents));
+            if (mainScheduler == null) throw new ArgumentNullException(nameof(mainScheduler));
+            if (backgroundScheduler == null) throw new ArgumentNullException(nameof(backgroundScheduler));
+
             DetectedInputEvents = detectedInputEvents;
 
             var pointerEvents = DetectedInputEvents.OfType<PointerEvent>();
