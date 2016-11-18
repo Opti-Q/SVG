@@ -127,7 +127,7 @@ namespace Svg.Editor.Tools
 
         #region Overrides
 
-        public override async Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(ISvgDrawingCanvas ws)
         {
             await base.Initialize(ws);
 
@@ -142,7 +142,7 @@ namespace Svg.Editor.Tools
             WatchDocument(ws.Document);
         }
 
-        public override async Task OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
+        public override async Task OnPreDraw(IRenderer renderer, ISvgDrawingCanvas ws)
         {
             await base.OnPreDraw(renderer, ws);
 
@@ -168,7 +168,7 @@ namespace Svg.Editor.Tools
             UnWatchDocument(oldDocument);
         }
 
-        public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
+        public override Task OnUserInput(UserInputEvent @event, ISvgDrawingCanvas ws)
         {
             var me = @event as MoveEvent;
             if (me != null)
@@ -198,7 +198,7 @@ namespace Svg.Editor.Tools
 
         #region GridLines
 
-        private void DrawGridLines(IRenderer renderer, SvgDrawingCanvas ws)
+        private void DrawGridLines(IRenderer renderer, ISvgDrawingCanvas ws)
         {
             var screenTopLeft = ws.ScreenToCanvas(0, 0);
 
@@ -602,9 +602,9 @@ namespace Svg.Editor.Tools
 
         private class ToggleGridCommand : ToolCommand
         {
-            private readonly SvgDrawingCanvas _canvas;
+            private readonly ISvgDrawingCanvas _canvas;
 
-            public ToggleGridCommand(SvgDrawingCanvas canvas, GridTool tool, string name)
+            public ToggleGridCommand(ISvgDrawingCanvas canvas, GridTool tool, string name)
                 : base(tool, name, (o) => { }, iconName: tool.IconGridOff, sortFunc: (tc) => 2000)
             {
                 _canvas = canvas;
@@ -622,9 +622,9 @@ namespace Svg.Editor.Tools
 
         private class ToggleSnappingCommand : ToolCommand
         {
-            private readonly SvgDrawingCanvas _canvas;
+            private readonly ISvgDrawingCanvas _canvas;
 
-            public ToggleSnappingCommand(SvgDrawingCanvas canvas, GridTool tool, string name)
+            public ToggleSnappingCommand(ISvgDrawingCanvas canvas, GridTool tool, string name)
                 : base(tool, name, (o) => { }, iconName: tool.IconGridOff, sortFunc: (tc) => 2000)
             {
                 _canvas = canvas;

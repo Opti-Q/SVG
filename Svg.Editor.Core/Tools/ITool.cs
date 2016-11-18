@@ -54,10 +54,10 @@ namespace Svg.Editor.Tools
         /// </summary>
         int GestureOrder { get; }
         string IconName { get; }
-        Task Initialize(SvgDrawingCanvas ws);
-        Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws);
-        Task OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws);
-        Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws);
+        Task Initialize(ISvgDrawingCanvas ws);
+        Task OnDraw(IRenderer renderer, ISvgDrawingCanvas ws);
+        Task OnPreDraw(IRenderer renderer, ISvgDrawingCanvas ws);
+        Task OnUserInput(UserInputEvent @event, ISvgDrawingCanvas ws);
         Task OnGesture(UserGesture gesture);
         void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument);
         void Reset();

@@ -55,7 +55,7 @@ namespace Svg.Editor.Tools
 
         #region Overrides
 
-        public override async Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(ISvgDrawingCanvas ws)
         {
             await base.Initialize(ws);
 
@@ -140,7 +140,7 @@ namespace Svg.Editor.Tools
             Canvas.FireInvalidateCanvas();
         }
 
-        public override Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
+        public override Task OnDraw(IRenderer renderer, ISvgDrawingCanvas ws)
         {
             // we draw the selection rectangle
             if (_selectionRectangle != null)
@@ -189,7 +189,7 @@ namespace Svg.Editor.Tools
 
         #region Private helpers
 
-        private static void SelectElementsUnder(RectangleF selectionRectangle, SvgDrawingCanvas ws, SelectionType selectionType, int maxItems = int.MaxValue)
+        private static void SelectElementsUnder(RectangleF selectionRectangle, ISvgDrawingCanvas ws, SelectionType selectionType, int maxItems = int.MaxValue)
         {
             ws.SelectedElements.Clear();
 

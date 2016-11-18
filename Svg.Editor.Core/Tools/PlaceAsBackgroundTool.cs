@@ -16,7 +16,7 @@ namespace Svg.Editor.Tools
             IconName = "ic_insert_photo_white_48dp.png";
         }
 
-        public override async Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(ISvgDrawingCanvas ws)
         {
             await base.Initialize(ws);
 

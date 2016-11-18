@@ -20,7 +20,7 @@ namespace Svg.Editor.Tools
             Properties = properties ?? new Dictionary<string, object>();
         }
 
-        protected SvgDrawingCanvas Canvas { get; private set; }
+        protected ISvgDrawingCanvas Canvas { get; private set; }
 
         #region Custom attributes
 
@@ -91,21 +91,24 @@ namespace Svg.Editor.Tools
         /// </summary>
         /// <param name="ws">The canvas that this tool should reference.</param>
         /// <returns></returns>
-        public virtual Task Initialize(SvgDrawingCanvas ws)
+        public virtual Task Initialize(ISvgDrawingCanvas ws)
         {
             Canvas = ws;
 
             return Task.FromResult(true);
         }
-        public virtual Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
+
+        public virtual Task OnDraw(IRenderer renderer, ISvgDrawingCanvas ws)
         {
             return Task.FromResult(true);
         }
-        public virtual Task OnPreDraw(IRenderer renderer, SvgDrawingCanvas ws)
+
+        public virtual Task OnPreDraw(IRenderer renderer, ISvgDrawingCanvas ws)
         {
             return Task.FromResult(true);
         }
-        public virtual Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
+
+        public virtual Task OnUserInput(UserInputEvent @event, ISvgDrawingCanvas ws)
         {
             return Task.FromResult(true);
         }

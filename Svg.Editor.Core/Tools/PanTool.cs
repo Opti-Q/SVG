@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Svg.Editor.Events;
+using Svg.Editor.Interfaces;
 
 namespace Svg.Editor.Tools
 {
@@ -13,7 +14,7 @@ namespace Svg.Editor.Tools
             ToolType = ToolType.View;
         }
 
-        public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
+        public override Task OnUserInput(UserInputEvent @event, ISvgDrawingCanvas ws)
         {
             if (!IsActive)
                 return Task.FromResult(true);

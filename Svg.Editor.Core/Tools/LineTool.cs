@@ -307,7 +307,7 @@ namespace Svg.Editor.Tools
             }
         }
 
-        public override async Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
+        public override async Task OnDraw(IRenderer renderer, ISvgDrawingCanvas ws)
         {
             await base.OnDraw(renderer, ws);
 
@@ -324,7 +324,7 @@ namespace Svg.Editor.Tools
             }
         }
 
-        public override async Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(ISvgDrawingCanvas ws)
         {
             await base.Initialize(ws);
 
@@ -490,9 +490,9 @@ namespace Svg.Editor.Tools
         /// </summary>
         private class ChangeLineStyleCommand : ToolCommand
         {
-            private readonly SvgDrawingCanvas _canvas;
+            private readonly ISvgDrawingCanvas _canvas;
 
-            public ChangeLineStyleCommand(SvgDrawingCanvas canvas, LineTool tool, string name)
+            public ChangeLineStyleCommand(ISvgDrawingCanvas canvas, LineTool tool, string name)
                 : base(tool, name, o => { }, iconName: tool.LineStyleIconName, sortFunc: tc => 500)
             {
                 _canvas = canvas;

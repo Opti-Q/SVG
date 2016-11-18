@@ -96,7 +96,7 @@ namespace Svg.Editor.Tools
 
         #region Overrides
 
-        public override async Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(ISvgDrawingCanvas ws)
         {
             await base.Initialize(ws);
 
@@ -211,9 +211,9 @@ namespace Svg.Editor.Tools
         /// </summary>
         private class ChangeColorCommand : ToolCommand
         {
-            private readonly SvgDrawingCanvas _canvas;
+            private readonly ISvgDrawingCanvas _canvas;
 
-            public ChangeColorCommand(SvgDrawingCanvas canvas, ColorTool tool, string name)
+            public ChangeColorCommand(ISvgDrawingCanvas canvas, ColorTool tool, string name)
                 : base(tool, name, o => { }, iconName: tool.IconName, sortFunc: tc => 500)
             {
                 _canvas = canvas;

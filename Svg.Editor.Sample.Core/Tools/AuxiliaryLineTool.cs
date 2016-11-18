@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Svg.Editor;
+using Svg.Editor.Interfaces;
 using Svg.Editor.Tools;
 
 namespace Svg.Droid.SampleEditor.Core.Tools
@@ -32,7 +33,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
         {
         }
 
-        public override async Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(ISvgDrawingCanvas ws)
         {
             await base.Initialize(ws);
 

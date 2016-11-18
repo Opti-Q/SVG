@@ -6,6 +6,7 @@ using Android.Util;
 using Android.Views;
 using SkiaSharp;
 using Svg.Editor.Droid.Services;
+using Svg.Editor.Interfaces;
 using Svg.Editor.Services;
 
 namespace Svg.Editor.Droid
@@ -16,9 +17,9 @@ namespace Svg.Editor.Droid
         private Android.Graphics.Bitmap _bitmap;
 #endif
         private AndroidGestureDetector _detector;
-        private SvgDrawingCanvas _drawingCanvas;
+        private ISvgDrawingCanvas _drawingCanvas;
 
-        public SvgDrawingCanvas DrawingCanvas
+        public ISvgDrawingCanvas DrawingCanvas
         {
             get { return _drawingCanvas; }
             set

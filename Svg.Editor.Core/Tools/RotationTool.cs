@@ -68,7 +68,7 @@ namespace Svg.Editor.Tools
 
         #region Overrides
 
-        public override async Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(ISvgDrawingCanvas ws)
         {
             await base.Initialize(ws);
 
@@ -79,7 +79,7 @@ namespace Svg.Editor.Tools
             };
         }
 
-        public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
+        public override Task OnUserInput(UserInputEvent @event, ISvgDrawingCanvas ws)
         {
             var re = @event as RotateEvent;
 
@@ -123,7 +123,7 @@ namespace Svg.Editor.Tools
             return Task.FromResult(true);
         }
 
-        public override Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
+        public override Task OnDraw(IRenderer renderer, ISvgDrawingCanvas ws)
         {
             if (IsDebugEnabled && _lastRotationCenter != null)
                 renderer.DrawCircle(_lastRotationCenter.X, _lastRotationCenter.Y, 2, RedPen);

@@ -50,6 +50,7 @@
     <Compile Include="Gestures\TapGesture.cs" />
     <Compile Include="Gestures\UserGesture.cs" />
     <Compile Include="Interfaces\IPickImageService.cs" />
+    <Compile Include="Interfaces\ISvgDrawingCanvas.cs" />
     <Compile Include="Services\GestureRecognizer.cs" />
     <Compile Include="Services\SchedulerProvider.cs" />
     <Compile Include="Services\SKCanvasRenderer.cs" />

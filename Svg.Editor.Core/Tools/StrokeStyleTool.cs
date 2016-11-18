@@ -74,7 +74,7 @@ namespace Svg.Editor.Tools
             ToolType = ToolType.Modify;
         }
 
-        public override async Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(ISvgDrawingCanvas ws)
         {
             await base.Initialize(ws);
 

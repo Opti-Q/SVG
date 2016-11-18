@@ -11,7 +11,7 @@ namespace Svg.Editor.Tools
             IconName = "ic_undo_white_48dp.png";
         }
 
-        public override async Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(ISvgDrawingCanvas ws)
         {
             await base.Initialize(ws);
             // add tool commands

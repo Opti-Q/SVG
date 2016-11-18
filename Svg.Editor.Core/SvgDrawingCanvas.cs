@@ -22,7 +22,7 @@ using Svg.Interfaces;
 
 namespace Svg.Editor
 {
-    public sealed class SvgDrawingCanvas : IDisposable, ICanInvalidateCanvas, INotifyPropertyChanged
+    public sealed class SvgDrawingCanvas : IDisposable, ICanInvalidateCanvas, INotifyPropertyChanged, ISvgDrawingCanvas
     {
         #region Private fields and properties
 
@@ -819,7 +819,7 @@ namespace Svg.Editor
             FireInvalidateCanvas();
         }
 
-        public bool CalculateInitialTransformation { get; set; }
+        private bool CalculateInitialTransformation { get; set; }
 
         private void SetInitialTransformation()
         {
@@ -851,10 +851,10 @@ namespace Svg.Editor
 
         private class SelectToolCommand : ToolCommand
         {
-            private readonly SvgDrawingCanvas _canvas;
+            private readonly ISvgDrawingCanvas _canvas;
 
-            public SelectToolCommand(SvgDrawingCanvas canvas, ITool tool, string name, string iconName)
-                : base(tool, name, (o) => { }, iconName: iconName)
+            public SelectToolCommand(ISvgDrawingCanvas canvas, ITool tool, string name, string iconName)
+                : base(tool, name, _ => { }, iconName: iconName)
             {
                 if (canvas == null) throw new ArgumentNullException(nameof(canvas));
                 _canvas = canvas;

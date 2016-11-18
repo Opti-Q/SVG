@@ -323,7 +323,7 @@ namespace Svg.Editor.Tools
             }
         }
 
-        public override async Task OnDraw(IRenderer renderer, SvgDrawingCanvas ws)
+        public override async Task OnDraw(IRenderer renderer, ISvgDrawingCanvas ws)
         {
             await base.OnDraw(renderer, ws);
 
@@ -342,7 +342,7 @@ namespace Svg.Editor.Tools
             }
         }
 
-        public override async Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(ISvgDrawingCanvas ws)
         {
             await base.Initialize(ws);
 

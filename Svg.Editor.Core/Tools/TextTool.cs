@@ -72,7 +72,7 @@ namespace Svg.Editor.Tools
 
         #region Overrides
 
-        public override async Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(ISvgDrawingCanvas ws)
         {
             await base.Initialize(ws);
 

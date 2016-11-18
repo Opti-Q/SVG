@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Svg.Editor.Events;
+using Svg.Editor.Interfaces;
 using Svg.Interfaces;
 
 namespace Svg.Editor.Tools
@@ -109,7 +110,7 @@ namespace Svg.Editor.Tools
 
         public override bool IsActive => Canvas?.ZoomEnabled ?? false;
 
-        public override async Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(ISvgDrawingCanvas ws)
         {
             await base.Initialize(ws);
 
@@ -161,7 +162,7 @@ namespace Svg.Editor.Tools
             };
         }
 
-        public override Task OnUserInput(UserInputEvent @event, SvgDrawingCanvas ws)
+        public override Task OnUserInput(UserInputEvent @event, ISvgDrawingCanvas ws)
         {
             if (!IsActive)
                 return Task.FromResult(true);
@@ -299,7 +300,7 @@ namespace Svg.Editor.Tools
 
         #region Private helpers
 
-        private float GetBoundedZoomFactor(ScaleEvent se, SvgDrawingCanvas ws)
+        private float GetBoundedZoomFactor(ScaleEvent se, ISvgDrawingCanvas ws)
         {
             var newZoomFactor = ws.ZoomFactor * se.ScaleFactor;
 

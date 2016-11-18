@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MvvmCross.Platform;
 using MvvmCross.Plugins.Email;
 using Svg.Editor;
+using Svg.Editor.Interfaces;
 using Svg.Editor.Tools;
 using Svg.Interfaces;
 
@@ -21,7 +22,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
             IconName = "ic_save_white_48dp.png";
         }
 
-        public override async Task Initialize(SvgDrawingCanvas ws)
+        public override async Task Initialize(ISvgDrawingCanvas ws)
         {
             await base.Initialize(ws);
 

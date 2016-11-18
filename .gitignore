@@ -1,18 +1,6 @@
 
-Source/**/bin/
-Source/**/obj/
-Source/**/*.csproj.user
-Source/**/*.suo
-Source/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
-Samples/SVGViewer/obj/
-Samples/SVGViewer/bin/
 Samples/SVGViewer/SVGViewer.OpenCover.Settings
-Source/**/*.dll
-Source/**/*.pdb
-Tests/**/bin/
-Tests/**/obj/
-Tests/**/*.csproj.user
-Tests/**/*.suo
+*.cache
 *.trx
 Source/TestResults/
 /Tests/IsoTestRunnder.Droid/Assets
@@ -22,17 +10,16 @@ obj/
 *.pdb
 *.mdb
 *.suo
-packages/
-Tests/SvgW3CTestSuite.Droid/Assets
-Tests/SvgW3CTestRunner.Droid/Assets
-Svg.Editor.Tests.Droid/Assets
-Svg.Editor.Tests.Win/Assets
+Assets/
 *.user
-/Svg.Droid.sln.DotSettings
+*.sln.DotSettings
 *.user
-*Resource.Designer.cs
+Resource.Designer.cs
 *project.lock.json
 *packages_old.config
-Resource.Designer.cs
-Resource.Designer.cs
 *.user
+
+packages/
+# NuGet v3's project.json files produces more ignoreable files
+*.nuget.props
+*.nuget.targets

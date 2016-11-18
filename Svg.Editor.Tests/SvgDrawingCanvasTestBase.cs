@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Reactive.Testing;
 using NUnit.Framework;
 using Svg.Editor.Events;
+using Svg.Editor.Interfaces;
 using Svg.Editor.Services;
 using Svg.Interfaces;
 
@@ -10,7 +11,7 @@ namespace Svg.Editor.Tests
 {
     public abstract class SvgDrawingCanvasTestBase
     {
-        protected SvgDrawingCanvas Canvas { get; set; }
+        protected ISvgDrawingCanvas Canvas { get; set; }
 
         protected SchedulerProvider SchedulerProvider { get; } = new SchedulerProvider(CurrentThreadScheduler.Instance, new TestScheduler());
 
