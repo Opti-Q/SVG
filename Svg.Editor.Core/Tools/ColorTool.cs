@@ -17,9 +17,13 @@ namespace Svg.Editor.Tools
 
     public class ColorTool : UndoableToolBase
     {
-        #region Private fields
+        #region Private fields and properties
 
-        private static IColorInputService ColorInputServiceProxy => Engine.Resolve<IColorInputService>();
+        private static IColorInputService ColorInputService => Engine.Resolve<IColorInputService>();
+
+        private static ISvgCachingService SvgCachingService => Engine.Resolve<ISvgCachingService>();
+
+        private static IFileSystem FileSystemService => Engine.Resolve<IFileSystem>();
 
         private Color _defaultSelectedColor;
 
@@ -225,7 +229,7 @@ namespace Svg.Editor.Tools
             {
                 var t = Tool;
 
-                var color = Color.Create(t.SelectableColors[await ColorInputServiceProxy.GetIndexFromUserInput("Choose color", t.SelectableColorNames, t.SelectableColors)]);
+                var color = Color.Create(t.SelectableColors[await ColorInputService.GetIndexFromUserInput("Choose color", t.SelectableColorNames, t.SelectableColors)]);
 
                 if (_canvas.SelectedElements.Any())
                 {
@@ -251,17 +255,7 @@ namespace Svg.Editor.Tools
                 }));
             }
 
-            public override string IconName
-            {
-                get
-                {
-                    var fs = Engine.Resolve<IFileSystem>();
-                    var svgCachingService = Engine.Resolve<ISvgCachingService>();
-                    var path = svgCachingService.GetCachedPngPath(Tool.IconName, StringifyColor(Tool.SelectedColor), fs);
-                    return path;
-                }
-                set { }
-            }
+            public override string IconName => SvgCachingService.GetCachedPngPath(Tool.IconName, StringifyColor(Tool.SelectedColor), FileSystemService);
         }
 
         #endregion

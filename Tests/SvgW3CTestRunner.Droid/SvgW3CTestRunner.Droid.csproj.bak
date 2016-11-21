@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -18,14 +18,16 @@
     <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
     <DevInstrumentationEnabled>True</DevInstrumentationEnabled>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
-    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v6.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AndroidUseSharedRuntime>True</AndroidUseSharedRuntime>
@@ -434,7 +436,6 @@
     <AndroidAsset Include="Assets\resources\ZCSB.svg" />
     <AndroidAsset Include="Assets\resources\ZCXB.svg" />
     <AndroidAsset Include="Assets\resources\ZSSB.svg" />
-    <AndroidAsset Include="Assets\resources\Plane1\Tribase.svg" />
     <AndroidAsset Include="Assets\resources\Baselines\Tribase.svg" />
     <AndroidAsset Include="Assets\png\__AJ_Digital_Camera.png" />
     <AndroidAsset Include="Assets\png\__issue-015-01.png" />
@@ -1488,12 +1489,15 @@
     <Content Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Svg.Core\Svg.Core.csproj">
+      <Project>{13edb4db-3977-4c2e-998a-6103ca015881}</Project>
+      <Name>Svg.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Svg.Droid\Svg.Droid.csproj">
       <Project>{03f31ec9-4f97-46da-b8f1-dce99c6954de}</Project>
       <Name>Svg.Droid</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <AndroidAsset Include="Assets\svg\conform-viewers-01-t.svgz" />
   </ItemGroup>
@@ -1508,9 +1512,6 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\resources\ScheherazadeRegOT.ttf" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\resources\Plane1\Tribase.sfd" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\resources\Baselines\Tribase.sfd" />
@@ -1530,7 +1531,14 @@
   <ItemGroup>
     <AndroidAsset Include="Assets\images\PngSuite\pngsuite.doc" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="project.json" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>xcopy "$(SolutionDir)Tests\W3CTestSuite\*.*" "$(ProjectDir)Assets\" /Y/D/E</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
      Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

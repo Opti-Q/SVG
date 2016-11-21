@@ -59,11 +59,6 @@ namespace Svg.Editor
             {
                 var oldDocument = _document;
                 _document = value;
-                //if (_document != null)
-                //{
-                //    _document.ViewBox = SvgViewBox.Empty;
-                //}
-
                 OnDocumentChanged(oldDocument, _document);
             }
         }
