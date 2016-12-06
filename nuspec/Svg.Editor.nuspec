@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
     <metadata>
         <id>Svg.Editor</id>
-        <version>1.0.1-beta</version>
+        <version>1.0.2-beta</version>
         <title>SVG Editor - Opti-Q</title>
         <authors>gentledepp,bruzkovsky</authors>
         <owners>vvvv.org</owners>
@@ -16,7 +16,7 @@
             <dependency id="SkiaSharp" version="1.54.0" />
             <dependency id="Newtonsoft.Json" version="9.0.1" />
             <dependency id="System.Reactive" version="3.0.0" />
-            <dependency id="Svg" version="1.7.1.6-beta" />
+            <dependency id="Svg" version="2.0.0.1-beta" />
         </dependencies>
     </metadata>
     <files>

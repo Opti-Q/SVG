@@ -24,3 +24,4 @@ packages/
 *.nuget.props
 *.nuget.targets
 *.nupkg
+/nuspec/nuget.exe

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
     <metadata>
         <id>Svg</id>
-        <version>2.0.0.0-beta</version>
+        <version>2.0.0.1-beta</version>
         <title>SVG Rendering Library - Opti-Q</title>
         <authors>gentledepp,davescriven,jvenema,owaits,ddpruitt,Ralf1108,Tebjan Halm,and others</authors>
         <owners>vvvv.org</owners>
