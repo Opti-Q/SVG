@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+    <metadata>
+        <id>Svg</id>
+        <version>2.0.0.0-beta</version>
+        <title>SVG Rendering Library - Opti-Q</title>
+        <authors>gentledepp,davescriven,jvenema,owaits,ddpruitt,Ralf1108,Tebjan Halm,and others</authors>
+        <owners>vvvv.org</owners>
+        <licenseUrl>http://opensource.org/licenses/MS-PL.html</licenseUrl>
+        <projectUrl>https://github.com/gentledepp/SVG</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Public fork of the C# SVG rendering library on codeplex: https://svg.codeplex.com/
+
+This started out as a minor modification to enable the writing of proper SVG strings. But now after almost two years we have so many fixes and improvements that we decided to share our current codebase to the public in order to improve it even further.
+
+So please feel free to fork it and open pull requests for any fix, improvement or feature you add.
+
+License: Microsoft Public License: https://svg.codeplex.com/license</description>
+        <releaseNotes />
+        <tags>svg, vector graphics, rendering</tags>
+        <dependencies>
+            <dependency id="SkiaSharp" version="1.54.0" />
+        </dependencies>
+    </metadata>
+    <files>
+		<!-- src -->
+		<file src="..\Svg.Core\**\*.cs" 
+			target="src\Svg.Core" />
+		<file src="..\Svg.Droid\**\*.cs" 
+			target="src\Svg.Droid" />
+
+		<!-- PCL -->
+		<file src="..\Svg.Core\bin\Release\Svg.Portable.dll" 
+			target="lib\portable-net45+win+wpa81" />
+		<file src="..\Svg.Core\bin\Release\Svg.Portable.pdb" 
+			target="lib\portable-net45+win+wpa81" />
+
+		<!-- dotnet -->
+		<file src="..\Svg.Core\bin\Release\Svg.Portable.dll" 
+			target="lib\dotnet" />
+		<file src="..\Svg.Core\bin\Release\Svg.Portable.pdb" 
+			target="lib\dotnet" />
+
+        <!-- droid -->
+		<file src="..\Svg.Core\bin\Release\Svg.Portable.dll" 
+			target="lib\MonoAndroid" />
+		<file src="..\Svg.Core\bin\Release\Svg.Portable.pdb" 
+			target="lib\MonoAndroid" />
+		<file src="..\Svg.Droid\bin\Release\Svg.Droid.dll" 
+			target="lib\MonoAndroid" />
+		<file src="..\Svg.Droid\bin\Release\Svg.Droid.pdb" 
+			target="lib\MonoAndroid" />
+
+         <!-- win -->
+		<file src="..\Svg.Core\bin\Release\Svg.Portable.dll" 
+			target="lib\win81" />
+		<file src="..\Svg.Core\bin\Release\Svg.Portable.pdb" 
+			target="lib\win81" />
+		<file src="..\Svg.Win\bin\Release\Svg.Win.dll" 
+			target="lib\win81" />
+		<file src="..\Svg.Win\bin\Release\Svg.Win.pdb" 
+			target="lib\win81" />
+
+		<file src="..\Svg.Core\bin\Release\Svg.Portable.dll" 
+			target="lib\wpa81" />
+		<file src="..\Svg.Core\bin\Release\Svg.Portable.pdb" 
+			target="lib\wpa81" />
+		<file src="..\Svg.Win\bin\Release\Svg.Win.dll" 
+			target="lib\wpa81" />
+		<file src="..\Svg.Win\bin\Release\Svg.Win.pdb" 
+			target="lib\wpa81" />
+
+		<!-- wpf -->
+		<file src="..\Svg.Core\bin\Release\Svg.Portable.dll" 
+			target="lib\net45" />
+		<file src="..\Svg.Core\bin\Release\Svg.Portable.pdb" 
+			target="lib\net45" />
+		<file src="..\Svg.Win\bin\Release\Svg.Win.dll" 
+			target="lib\net45" />
+		<file src="..\Svg.Win\bin\Release\Svg.Win.pdb" 
+			target="lib\net45" />
+    </files>
+</package>
