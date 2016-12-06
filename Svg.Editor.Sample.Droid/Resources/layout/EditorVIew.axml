@@ -4,13 +4,12 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-
-  <Svg.Droid.Editor.SvgDrawingCanvasView
-      android:id="@+id/pad"
-      android:clickable="true"
-      android:gravity="center|center_vertical"
-      android:layout_gravity="center|center_vertical"
-      android:layout_width="fill_parent"
-      android:layout_height="fill_parent"
-      android:background="#FFFFFF" />
+    <Svg.Editor.Droid.SvgDrawingCanvasView
+        android:id="@+id/pad"
+        android:clickable="true"
+        android:gravity="center|center_vertical"
+        android:layout_gravity="center|center_vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#FFFFFF" />
 </LinearLayout>

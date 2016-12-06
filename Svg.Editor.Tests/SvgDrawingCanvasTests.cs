@@ -188,6 +188,16 @@ namespace Svg.Editor.Tests
             Assert.AreEqual(expectedScreenY, screenPoint.Y);
         }
 
+        [Test]
+        public async Task GetToolPropertiesJson_ReturnsJson()
+        {
+            await Canvas.EnsureInitialized();
+
+            var json = Canvas.GetToolPropertiesJson();
+
+            Assert.False(string.IsNullOrWhiteSpace(json));
+        }
+
         private class MockTextInputService : ITextInputService
         {
             public Func<string, string, TextTool.TextProperties> F { get; set; } = (x, y) => null;

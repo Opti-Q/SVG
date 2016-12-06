@@ -154,6 +154,7 @@ namespace Svg.Editor.Tools
             var txtProperties =
                 await TextInputService.GetUserInput(title, text, FontSizeNames, index);
             _dialogShown = false;
+            SelectedFontSize = FontSizes[txtProperties.FontSizeIndex];
             return txtProperties;
         }
 

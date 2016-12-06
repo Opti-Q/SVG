@@ -115,5 +115,6 @@ namespace Svg.Editor.Interfaces
         void FireToolCommandsChanged();
         void Dispose();
         event PropertyChangedEventHandler PropertyChanged;
+        string GetToolPropertiesJson();
     }
 }

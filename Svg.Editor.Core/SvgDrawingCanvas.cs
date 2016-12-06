@@ -10,6 +10,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Svg.Editor.Events;
 using Svg.Editor.Extensions;
 using Svg.Editor.Gestures;
@@ -654,6 +655,12 @@ namespace Svg.Editor
             }
 
             DocumentIsDirty = false;
+        }
+
+        public string GetToolPropertiesJson()
+        {
+            var properties = Tools.ToDictionary(t => t.GetType().FullName, t => t.Properties);
+            return JsonConvert.SerializeObject(properties);
         }
 
         public Bitmap CaptureDocumentBitmap(int maxSize = 4096, Color backgroundColor = null)
