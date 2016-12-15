@@ -25,3 +25,4 @@ packages/
 *.nuget.targets
 *.nupkg
 /nuspec/nuget.exe
+*.csproj.bak
