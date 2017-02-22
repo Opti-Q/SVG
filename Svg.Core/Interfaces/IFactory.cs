@@ -45,8 +45,8 @@ namespace Svg
 
         IXmlTextWriter CreateXmlTextWriter(StringWriter writer);
         IXmlTextWriter CreateXmlTextWriter(Stream stream, Encoding utf8);
-        XmlReader CreateSvgTextReader(Stream stream, Dictionary<string, string> entities);
-        XmlReader CreateSvgTextReader(StringReader reader, Dictionary<string, string> entities);
+        IXmlReader CreateSvgTextReader(Stream stream, Dictionary<string, string> entities);
+        IXmlReader CreateSvgTextReader(StringReader reader, Dictionary<string, string> entities);
         ISortedList<TKey, TValue> CreateSortedList<TKey, TValue>();
         IDictionary<TKey, TValue> CreateSortedDictionary<TKey, TValue>();
     }

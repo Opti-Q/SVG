@@ -213,8 +213,8 @@ namespace Svg
         public abstract IXmlTextWriter CreateXmlTextWriter(StringWriter writer);
 
         public abstract IXmlTextWriter CreateXmlTextWriter(Stream stream, Encoding utf8);
-        public abstract XmlReader CreateSvgTextReader(Stream stream, Dictionary<string, string> entities);
+        public abstract IXmlReader CreateSvgTextReader(Stream stream, Dictionary<string, string> entities);
 
-        public abstract XmlReader CreateSvgTextReader(StringReader r, Dictionary<string, string> entities);
+        public abstract IXmlReader CreateSvgTextReader(StringReader r, Dictionary<string, string> entities);
     }
 }

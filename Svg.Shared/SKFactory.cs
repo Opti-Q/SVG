@@ -26,20 +26,14 @@ namespace Svg
             w.Formatting = Formatting.None;
             return w;
         }
-        public override XmlReader CreateSvgTextReader(Stream stream, Dictionary<string, string> entities)
+        public override IXmlReader CreateSvgTextReader(Stream stream, Dictionary<string, string> entities)
         {
-            var reader = new SvgTextReader(stream, entities);
-            reader.XmlResolver = new SvgDtdResolver();
-            reader.WhitespaceHandling = WhitespaceHandling.Significant;
-            return reader;
+            return new SvgXmlReader(stream, entities);
         }
 
-        public override XmlReader CreateSvgTextReader(StringReader r, Dictionary<string, string> entities)
+        public override IXmlReader CreateSvgTextReader(StringReader r, Dictionary<string, string> entities)
         {
-            var reader = new SvgTextReader(r, entities);
-            reader.XmlResolver = new SvgDtdResolver();
-            reader.WhitespaceHandling = WhitespaceHandling.Significant;
-            return reader;
+            return new SvgXmlReader(r, entities);
         }
 
     }

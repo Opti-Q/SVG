@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using Svg.Interfaces.Xml;
 
 namespace Svg.Interfaces
 {
@@ -44,8 +45,8 @@ namespace Svg.Interfaces
     {
         Dictionary<string, ElementInfo> AvailableElements { get; }
         void SetPropertyValue(SvgElement svgElement, string key, string value, SvgDocument ownerDocument);
-        SvgElement CreateElement(XmlReader reader, SvgDocument svgDocument);
-        T CreateDocument<T>(XmlReader reader) where T : SvgDocument, new();
+        SvgElement CreateElement(IXmlReader reader, SvgDocument svgDocument);
+        T CreateDocument<T>(IXmlReader reader) where T : SvgDocument, new();
         bool IsStyleAttribute(string name);
     }
 }

@@ -240,7 +240,7 @@ namespace Svg
                 return Open<T>(reader);
         }
 
-        private static T Open<T>(XmlReader reader) where T : SvgDocument, new()
+        private static T Open<T>(IXmlReader reader) where T : SvgDocument, new()
         {
             var elementStack = new Stack<SvgElement>();
             bool elementEmpty;

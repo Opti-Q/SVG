@@ -249,7 +249,7 @@
     <Compile Include="Interfaces\TextRenderingHint.cs" />
     <Compile Include="Interfaces\TextureBrush.cs" />
     <Compile Include="Interfaces\WrapMode.cs" />
-    <Compile Include="Interfaces\Xml\ISvgTextReader.cs" />
+    <Compile Include="Interfaces\Xml\IXmlReader.cs" />
     <Compile Include="Interfaces\Xml\IXmlDocument.cs" />
     <Compile Include="Interfaces\Xml\IXmlTextWriter.cs" />
     <Compile Include="IWebRequest.cs" />

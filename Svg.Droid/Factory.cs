@@ -199,20 +199,14 @@ namespace Svg
             w.Formatting = Formatting.Indented;
             return w;
         }
-        public XmlReader CreateSvgTextReader(Stream stream, Dictionary<string, string> entities)
+        public IXmlReader CreateSvgTextReader(Stream stream, Dictionary<string, string> entities)
         {
-            var reader = new SvgTextReader(stream, entities);
-            reader.XmlResolver = new SvgDtdResolver();
-            reader.WhitespaceHandling = WhitespaceHandling.Significant;
-            return reader;
+            return new SvgXmlReader(stream, entities);
         }
 
-        public XmlReader CreateSvgTextReader(StringReader r, Dictionary<string, string> entities)
+        public IXmlReader CreateSvgTextReader(StringReader r, Dictionary<string, string> entities)
         {
-            var reader = new SvgTextReader(r, entities);
-            reader.XmlResolver = new SvgDtdResolver();
-            reader.WhitespaceHandling = WhitespaceHandling.Significant;
-            return reader;
+            return new SvgXmlReader(r, entities);
         }
 
         public ISortedList<TKey, TValue> CreateSortedList<TKey, TValue>()

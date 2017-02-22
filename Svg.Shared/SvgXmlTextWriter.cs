@@ -1,15 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Xml;
-using System.Xml.Serialization;
-using Svg.Interfaces;
 using Svg.Interfaces.Xml;
+
+#if WINDOWS_UWP
+using XmlTextWriter = System.Xml.XmlWriter;
+
+namespace System.Xml
+{
+  /// <summary>To be added.</summary>
+  /// <remarks>To be added.</remarks>
+  public enum Formatting
+  {
+    None,
+    Indented,
+  }
+}
+#endif
 
 namespace Svg
 {
@@ -19,15 +26,28 @@ namespace Svg
 
         public SvgXmlTextWriter(Stream stream, Encoding encoding)
         {
+#if WINDOWS_UWP
+            _w = XmlWriter.Create(stream, new XmlWriterSettings() {Encoding = encoding});
+#else
             _w = new XmlTextWriter(stream, encoding);
+#endif
         }
 
         public SvgXmlTextWriter(StringWriter writer)
         {
+#if WINDOWS_UWP
+            _w = XmlWriter.Create(writer);
+#else
             _w = new XmlTextWriter(writer);
+#endif
         }
 
+#if WINDOWS_UWP
+        public Formatting Formatting { get { return _w.Settings.Indent?Formatting.Indented:Formatting.None; } set { _w.Settings.Indent = (value == Formatting.Indented); } }
+
+#else
         public Formatting Formatting { get { return _w.Formatting; } set { _w.Formatting = value; } }
+#endif
 
         public void WriteAttributeString(string xmlns, string value)
         {
