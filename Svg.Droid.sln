@@ -41,11 +41,24 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Svg.Tests.Win", "Svg.Tests.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Svg.UWP", "Svg.UWP\Svg.UWP.csproj", "{934B0E99-C2C9-4B41-8705-E79C223362CA}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Svg.Platform.Shared", "Svg.Platform.Shared\Svg.Platform.Shared.shproj", "{4094535B-5358-456B-87F5-DEACEC0EF6FA}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Svg.Shared", "Svg.Shared\Svg.Shared.shproj", "{17F551BD-15EB-4B9F-9FEE-018100D0F8C8}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Svg.Platform.Shared\Svg.Platform.Shared.projitems*{03f31ec9-4f97-46da-b8f1-dce99c6954de}*SharedItemsImports = 4
+		Svg.Shared\Svg.Shared.projitems*{03f31ec9-4f97-46da-b8f1-dce99c6954de}*SharedItemsImports = 4
+		Svg.Shared\Svg.Shared.projitems*{13edb4db-3977-4c2e-998a-6103ca015881}*SharedItemsImports = 4
+		Svg.Shared\Svg.Shared.projitems*{17f551bd-15eb-4b9f-9fee-018100d0f8c8}*SharedItemsImports = 13
+		Svg.Platform.Shared\Svg.Platform.Shared.projitems*{1a9890ab-e4b4-4282-89ac-cef2610e30b0}*SharedItemsImports = 4
+		Svg.Shared\Svg.Shared.projitems*{1a9890ab-e4b4-4282-89ac-cef2610e30b0}*SharedItemsImports = 4
+		Svg.Platform.Shared\Svg.Platform.Shared.projitems*{4094535b-5358-456b-87f5-deacec0ef6fa}*SharedItemsImports = 13
 		Svg.Editor.Tests\Svg.Editor.Tests.projitems*{64e91d01-e670-4374-a30d-33585a1dc127}*SharedItemsImports = 4
 		Svg.Editor.Tests\Svg.Editor.Tests.projitems*{7eb296ed-b7e1-4929-9224-7469c00cfd6e}*SharedItemsImports = 13
 		Svg.Tests\Svg.Tests.projitems*{92bce9d4-6968-4533-9785-a240ee123faa}*SharedItemsImports = 13
+		Svg.Platform.Shared\Svg.Platform.Shared.projitems*{934b0e99-c2c9-4b41-8705-e79c223362ca}*SharedItemsImports = 4
+		Svg.Shared\Svg.Shared.projitems*{934b0e99-c2c9-4b41-8705-e79c223362ca}*SharedItemsImports = 4
 		Svg.Editor.Tests\Svg.Editor.Tests.projitems*{c312d7d6-5fb7-4133-b735-99eb971c91a0}*SharedItemsImports = 4
 		Svg.Tests\Svg.Tests.projitems*{ed6ab6fc-ad44-4dfa-afc4-b0f127b87d5e}*SharedItemsImports = 4
 	EndGlobalSection
@@ -442,5 +455,7 @@ Global
 		{92BCE9D4-6968-4533-9785-A240EE123FAA} = {2CE3355A-1A9F-4DAF-8797-25D70D26D9DB}
 		{ED6AB6FC-AD44-4DFA-AFC4-B0F127B87D5E} = {2CE3355A-1A9F-4DAF-8797-25D70D26D9DB}
 		{934B0E99-C2C9-4B41-8705-E79C223362CA} = {88A8760B-A830-4EF1-A4C0-4957F2365FA9}
+		{4094535B-5358-456B-87F5-DEACEC0EF6FA} = {88A8760B-A830-4EF1-A4C0-4957F2365FA9}
+		{17F551BD-15EB-4B9F-9FEE-018100D0F8C8} = {88A8760B-A830-4EF1-A4C0-4957F2365FA9}
 	EndGlobalSection
 EndGlobal

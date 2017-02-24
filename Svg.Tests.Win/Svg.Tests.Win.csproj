@@ -62,10 +62,6 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Svg.Core\Svg.Core.csproj">
-      <Project>{13EDB4DB-3977-4C2E-998A-6103CA015881}</Project>
-      <Name>Svg.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Svg.Win\Svg.Win.csproj">
       <Project>{1A9890AB-E4B4-4282-89AC-CEF2610E30B0}</Project>
       <Name>Svg.Win</Name>

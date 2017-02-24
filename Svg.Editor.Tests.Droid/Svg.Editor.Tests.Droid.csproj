@@ -78,10 +78,6 @@
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Svg.Core\Svg.Core.csproj">
-      <Project>{13EDB4DB-3977-4C2E-998A-6103CA015881}</Project>
-      <Name>Svg.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Svg.Droid\Svg.Droid.csproj">
       <Project>{03F31EC9-4F97-46DA-B8F1-DCE99C6954DE}</Project>
       <Name>Svg.Droid</Name>

@@ -108,54 +108,10 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Svg.Shared\CharConverter.cs">
-      <Link>CharConverter.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\CultureHelper.cs">
-      <Link>CultureHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\DefaultLogger.cs">
-      <Link>DefaultLogger.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\FileSystem.cs">
-      <Link>FileSystem.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\Marshal.cs">
-      <Link>Marshal.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SKFactory.cs">
-      <Link>SKFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgDtdResolver.cs">
-      <Link>SvgDtdResolver.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgPlatformSetup.cs">
-      <Link>SvgPlatformSetup.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgPlatformSetupBase.cs">
-      <Link>SvgPlatformSetupBase.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgSortedList.cs">
-      <Link>SvgSortedList.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgTextReader.cs">
-      <Link>SvgTextReader.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgXmlTextWriter.cs">
-      <Link>SvgXmlTextWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\WebRequestSvc.cs">
-      <Link>WebRequestSvc.cs</Link>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Svg.UWP.rd.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Svg.Core\Svg.Core.csproj">
-      <Project>{13edb4db-3977-4c2e-998a-6103ca015881}</Project>
-      <Name>Svg.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <Import Project="..\Svg.Shared\Svg.Shared.projitems" Label="Shared" />
+  <Import Project="..\Svg.Platform.Shared\Svg.Platform.Shared.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
