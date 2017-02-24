@@ -1,6 +1,5 @@
 using System;
 using System.Globalization;
-using System.Runtime.InteropServices;
 using System.Threading;
 using Svg.Interfaces;
 
@@ -16,7 +15,19 @@ namespace Svg
         private class CultureHelperDisposable : IDisposable
         {
             private CultureInfo _old;
+#if WINDOWS_UWP
+            public CultureHelperDisposable(CultureInfo culture)
+            {
+                _old = CultureInfo.DefaultThreadCurrentCulture;
+                CultureInfo.DefaultThreadCurrentCulture = culture;
+            }
 
+            public void Dispose()
+            {
+                CultureInfo.DefaultThreadCurrentCulture = _old;
+            }
+
+#else
             public CultureHelperDisposable(CultureInfo culture)
             {
                 _old = Thread.CurrentThread.CurrentCulture;
@@ -27,6 +38,7 @@ namespace Svg
             {
                 Thread.CurrentThread.CurrentCulture = _old;
             }
+#endif
         }
     }
 }

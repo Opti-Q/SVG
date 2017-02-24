@@ -112,22 +112,19 @@ namespace Svg.Editor.Extensions
             //// should work with http: and file: protocol urls
             //var httpRequest = WebRequest.Create(uri);
             //using (WebResponse webResponse = httpRequest.GetResponse())
-            using (var webResponse = Engine.Resolve<IWebRequest>().GetResponse(image.Href))
+            using (var stream = Engine.Resolve<IWebRequest>().GetResponse(image.Href))
             {
-                using (var stream = webResponse.GetResponseStream())
+                stream.Position = 0;
+                if (image.Href.LocalPath.ToLowerInvariant().EndsWith(".svg"))
                 {
-                    stream.Position = 0;
-                    if (image.Href.LocalPath.ToLowerInvariant().EndsWith(".svg"))
-                    {
-                        var doc = SvgDocument.Open<SvgDocument>(stream);
-                        doc.BaseUri = image.Href;
-                        return doc.GetDimensions();
-                    }
-                    else
-                    {
-                        var img = Engine.Factory.CreateBitmapFromStream(stream);
-                        return SizeF.Create(img.Width, img.Height);
-                    }
+                    var doc = SvgDocument.Open<SvgDocument>(stream);
+                    doc.BaseUri = image.Href;
+                    return doc.GetDimensions();
+                }
+                else
+                {
+                    var img = Engine.Factory.CreateBitmapFromStream(stream);
+                    return SizeF.Create(img.Width, img.Height);
                 }
             }
         }

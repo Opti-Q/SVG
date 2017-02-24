@@ -33,7 +33,11 @@ namespace Svg
 
         public string GetDefaultStoragePath()
         {
+#if WINDOWS_UWP
+            return Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
+#else
             return System.Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+#endif
         }
 
         public string PathCombine(params string[] segments)

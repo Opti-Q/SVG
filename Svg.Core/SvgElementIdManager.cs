@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Net;
-using System.IO;
-using Svg.Interfaces;
 
 namespace Svg
 {
@@ -73,9 +68,9 @@ namespace Svg
                     case "https":
                         //var httpRequest = WebRequest.Create(uri);
                         //using (WebResponse webResponse = httpRequest.GetResponse())
-                        using(var webResponse = Svg.Engine.Resolve<IWebRequest>().GetResponse(uri))
+                        using(var stream = Svg.Engine.Resolve<IWebRequest>().GetResponse(uri))
                         {
-                            doc = SvgDocument.Open<SvgDocument>(webResponse.GetResponseStream());
+                            doc = SvgDocument.Open<SvgDocument>(stream);
                             return doc.IdManager.GetElementById(hash);
                         }
                     default:

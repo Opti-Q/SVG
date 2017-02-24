@@ -61,7 +61,6 @@
     <Compile Include="Services\AndroidStrokeStyleOptionsInputService.cs" />
     <Compile Include="Services\AndroidMarkerOptionsInputService.cs" />
     <Compile Include="Services\AndroidColorInputService.cs" />
-    <Compile Include="Services\AndroidCanvasRenderer.cs" />
     <Compile Include="Services\AndroidSvgCachingService.cs" />
     <Compile Include="Services\AndroidSvgSourceFactory.cs" />
     <Compile Include="Services\AndroidTextInputService.cs" />

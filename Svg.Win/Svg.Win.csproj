@@ -70,24 +70,6 @@
     <Compile Include="..\Svg.Shared\CultureHelper.cs">
       <Link>CultureHelper.cs</Link>
     </Compile>
-    <Compile Include="..\Svg.Shared\DataTypes\SvgAspectRatioConverter.cs">
-      <Link>DataTypes\SvgAspectRatioConverter.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\DataTypes\SvgOrientConverter.cs">
-      <Link>DataTypes\SvgOrientConverter.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\DataTypes\SvgPointCollection.cs">
-      <Link>DataTypes\SvgPointCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\DataTypes\SvgUnitCollection.cs">
-      <Link>DataTypes\SvgUnitCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\DataTypes\SvgUnitConverter.cs">
-      <Link>DataTypes\SvgUnitConverter.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\DataTypes\SvgViewBox.cs">
-      <Link>DataTypes\SvgViewBox.cs</Link>
-    </Compile>
     <Compile Include="..\Svg.Shared\DefaultLogger.cs">
       <Link>DefaultLogger.cs</Link>
     </Compile>
@@ -97,32 +79,11 @@
     <Compile Include="..\Svg.Shared\Marshal.cs">
       <Link>Marshal.cs</Link>
     </Compile>
-    <Compile Include="..\Svg.Shared\Painting\EnumConverters.cs">
-      <Link>Painting\EnumConverters.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\Painting\SvgColourConverter.cs">
-      <Link>Painting\SvgColourConverter.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\Painting\SvgPaintServerFactory.cs">
-      <Link>Painting\SvgPaintServerFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\Paths\SvgPathBuilder.cs">
-      <Link>Paths\SvgPathBuilder.cs</Link>
-    </Compile>
     <Compile Include="..\Svg.Shared\SKFactory.cs">
       <Link>SKFactory.cs</Link>
     </Compile>
     <Compile Include="..\Svg.Shared\SvgDtdResolver.cs">
       <Link>SvgDtdResolver.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgElementAttributeProvider.cs">
-      <Link>SvgElementAttributeProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgElementFactory.cs">
-      <Link>SvgElementFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgNodeReader.cs">
-      <Link>SvgNodeReader.cs</Link>
     </Compile>
     <Compile Include="..\Svg.Shared\SvgPlatformSetup.cs">
       <Link>SvgPlatformSetup.cs</Link>
@@ -136,14 +97,8 @@
     <Compile Include="..\Svg.Shared\SvgTextReader.cs">
       <Link>SvgTextReader.cs</Link>
     </Compile>
-    <Compile Include="..\Svg.Shared\SvgTypeDescriptor.cs">
-      <Link>SvgTypeDescriptor.cs</Link>
-    </Compile>
     <Compile Include="..\Svg.Shared\SvgXmlTextWriter.cs">
       <Link>SvgXmlTextWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\Transforms\SvgTransformConverter.cs">
-      <Link>Transforms\SvgTransformConverter.cs</Link>
     </Compile>
     <Compile Include="..\Svg.Shared\WebRequestSvc.cs">
       <Link>WebRequestSvc.cs</Link>

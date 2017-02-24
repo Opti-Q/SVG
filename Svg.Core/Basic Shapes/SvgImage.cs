@@ -1,8 +1,5 @@
 using System;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Net;
 using Svg.Interfaces;
 
 namespace Svg
@@ -275,25 +272,19 @@ namespace Svg
                 {
                     uri = new Uri(OwnerDocument.BaseUri, uri);
                 }
-
-                //// should work with http: and file: protocol urls
-                //var httpRequest = WebRequest.Create(uri);
-                //using (WebResponse webResponse = httpRequest.GetResponse())
-                using (var webResponse = Engine.Resolve<IWebRequest>().GetResponse(uri))
+                
+                using (var stream = Engine.Resolve<IWebRequest>().GetResponse(uri))
                 {
-                    using (var stream = webResponse.GetResponseStream())
+                    stream.Position = 0;
+                    if (uri.LocalPath.ToLowerInvariant().EndsWith(".svg"))
                     {
-                        stream.Position = 0;
-                        if (uri.LocalPath.ToLowerInvariant().EndsWith(".svg"))
-                        {
-                            var doc = SvgDocument.Open<SvgDocument>(stream);
-                            doc.BaseUri = uri;
-                            return doc;
-                        }
-                        else
-                        {
-                            return Engine.Factory.CreateBitmapFromStream(stream);
-                        }
+                        var doc = SvgDocument.Open<SvgDocument>(stream);
+                        doc.BaseUri = uri;
+                        return doc;
+                    }
+                    else
+                    {
+                        return Engine.Factory.CreateBitmapFromStream(stream);
                     }
                 }
             }

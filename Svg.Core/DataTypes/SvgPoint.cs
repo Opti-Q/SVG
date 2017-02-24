@@ -53,8 +53,8 @@ namespace Svg
 
             ITypeConverter converter = _typeDescriptor.GetConverter(typeof(SvgUnit));
 
-            this.x = (SvgUnit)converter.ConvertFrom(x);
-            this.y = (SvgUnit)converter.ConvertFrom(y);
+            this.x = (SvgUnit)converter.ConvertFromString(x, typeof(SvgUnit), null);
+            this.y = (SvgUnit)converter.ConvertFromString(y, typeof(SvgUnit), null);
         }
 
         public SvgPoint(SvgUnit x, SvgUnit y)

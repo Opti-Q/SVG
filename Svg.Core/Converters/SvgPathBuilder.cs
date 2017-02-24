@@ -1,16 +1,18 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
+using System.Text;
+using System.Threading.Tasks;
+using Svg.Converters.Svg;
+using Svg.Interfaces;
 using Svg.Pathing;
-using PointF = Svg.Interfaces.PointF;
 
-namespace Svg
+namespace Svg.Converters
 {
-    public class SvgPathBuilder : TypeConverter
+    internal class SvgPathBuilder : BaseConverter
     {
+
         /// <summary>
         /// Parses the specified string into a collection of path segments.
         /// </summary>
@@ -81,8 +83,8 @@ namespace Svg
                     {
                         // A|a rx ry x-axis-rotation large-arc-flag sweep-flag x y
                         segments.Add(new SvgArcSegment(segments.Last.End, coords[0], coords[1], coords[2],
-                            (size ? SvgArcSize.Large : SvgArcSize.Small), 
-                            (sweep ? SvgArcSweep.Positive : SvgArcSweep.Negative), 
+                            (size ? SvgArcSize.Large : SvgArcSize.Small),
+                            (sweep ? SvgArcSweep.Positive : SvgArcSweep.Negative),
                             ToAbsolute(coords[3], coords[4], segments, isRelative)));
                     }
                     break;
@@ -276,262 +278,28 @@ namespace Svg
             }
         }
 
-        
 
-        //private static IEnumerable<float> ParseCoordinates(string coords)
-        //{
-        //    if (string.IsNullOrEmpty(coords) || coords.Length < 2) yield break;
 
-        //    var pos = 0;
-        //    var currState = NumState.separator;
-        //    var newState = NumState.separator;
 
-        //    for (int i = 1; i < coords.Length; i++)
-        //    {
-        //        switch (currState)
-        //        {
-        //            case NumState.separator:
-        //                if (char.IsNumber(coords[i]))
-        //                {
-        //                    newState = NumState.integer;
-        //                }
-        //                else if (IsCoordSeparator(coords[i]))
-        //                {
-        //                    newState = NumState.separator;
-        //                }
-        //                else
-        //                {
-        //                    switch (coords[i])
-        //                    {
-        //                        case '.':
-        //                            newState = NumState.decPlace;
-        //                            break;
-        //                        case '+':
-        //                        case '-':
-        //                            newState = NumState.prefix;
-        //                            break;
-        //                        default:
-        //                            newState = NumState.invalid;
-        //                            break;
-        //                    }
-        //                }
-        //                break;
-        //            case NumState.prefix:
-        //                if (char.IsNumber(coords[i]))
-        //                {
-        //                    newState = NumState.integer;
-        //                }
-        //                else if (coords[i] == '.')
-        //                {
-        //                    newState = NumState.decPlace;
-        //                }
-        //                else
-        //                {
-        //                    newState = NumState.invalid;
-        //                }
-        //                break;
-        //            case NumState.integer:
-        //                if (char.IsNumber(coords[i]))
-        //                {
-        //                    newState = NumState.integer;
-        //                }
-        //                else if (IsCoordSeparator(coords[i]))
-        //                {
-        //                    newState = NumState.separator;
-        //                }
-        //                else
-        //                {
-        //                    switch (coords[i])
-        //                    {
-        //                        case '.':
-        //                            newState = NumState.decPlace;
-        //                            break;
-        //                        case 'e':
-        //                            newState = NumState.exponent;
-        //                            break;
-        //                        case '+':
-        //                        case '-':
-        //                            newState = NumState.prefix;
-        //                            break;
-        //                        default:
-        //                            newState = NumState.invalid;
-        //                            break;
-        //                    }
-        //                }
-        //                break;
-        //            case NumState.decPlace:
-        //                if (char.IsNumber(coords[i]))
-        //                {
-        //                    newState = NumState.fraction;
-        //                }
-        //                else if (IsCoordSeparator(coords[i]))
-        //                {
-        //                    newState = NumState.separator;
-        //                }
-        //                else
-        //                {
-        //                    switch (coords[i])
-        //                    {
-        //                        case 'e':
-        //                            newState = NumState.exponent;
-        //                            break;
-        //                        case '+':
-        //                        case '-':
-        //                            newState = NumState.prefix;
-        //                            break;
-        //                        default:
-        //                            newState = NumState.invalid;
-        //                            break;
-        //                    }
-        //                }
-        //                break;
-        //            case NumState.fraction:
-        //                if (char.IsNumber(coords[i]))
-        //                {
-        //                    newState = NumState.fraction;
-        //                }
-        //                else if (IsCoordSeparator(coords[i]))
-        //                {
-        //                    newState = NumState.separator;
-        //                }
-        //                else
-        //                {
-        //                    switch (coords[i])
-        //                    {
-        //                        case '.':
-        //                            newState = NumState.decPlace;
-        //                            break;
-        //                        case 'e':
-        //                            newState = NumState.exponent;
-        //                            break;
-        //                        case '+':
-        //                        case '-':
-        //                            newState = NumState.prefix;
-        //                            break;
-        //                        default:
-        //                            newState = NumState.invalid;
-        //                            break;
-        //                    }
-        //                }
-        //                break;
-        //            case NumState.exponent:
-        //                if (char.IsNumber(coords[i]))
-        //                {
-        //                    newState = NumState.expValue;
-        //                }
-        //                else if (IsCoordSeparator(coords[i]))
-        //                {
-        //                    newState = NumState.invalid;
-        //                }
-        //                else
-        //                {
-        //                    switch (coords[i])
-        //                    {
-        //                        case '+':
-        //                        case '-':
-        //                            newState = NumState.expPrefix;
-        //                            break;
-        //                        default:
-        //                            newState = NumState.invalid;
-        //                            break;
-        //                    }
-        //                }
-        //                break;
-        //            case NumState.expPrefix:
-        //                if (char.IsNumber(coords[i]))
-        //                {
-        //                    newState = NumState.expValue;
-        //                }
-        //                else
-        //                {
-        //                    newState = NumState.invalid;
-        //                }
-        //                break;
-        //            case NumState.expValue:
-        //                if (char.IsNumber(coords[i]))
-        //                {
-        //                    newState = NumState.expValue;
-        //                }
-        //                else if (IsCoordSeparator(coords[i]))
-        //                {
-        //                    newState = NumState.separator;
-        //                }
-        //                else
-        //                {
-        //                    switch (coords[i])
-        //                    {
-        //                        case '.':
-        //                            newState = NumState.decPlace;
-        //                            break;
-        //                        case '+':
-        //                        case '-':
-        //                            newState = NumState.prefix;
-        //                            break;
-        //                        default:
-        //                            newState = NumState.invalid;
-        //                            break;
-        //                    }
-        //                }
-        //                break;
-        //        }
-
-        //        if (newState < currState)
-        //        {
-        //            yield return float.Parse(coords.Substring(pos, i - pos), NumberStyles.Float, CultureInfo.InvariantCulture);
-        //            pos = i;
-        //        }
-        //        else if (newState != currState && currState == NumState.separator)
-        //        {
-        //            pos = i;
-        //        }
-
-        //        if (newState == NumState.invalid) yield break;
-        //        currState = newState;
-        //    }
-
-        //    if (currState != NumState.separator)
-        //    {
-        //        yield return float.Parse(coords.Substring(pos, coords.Length - pos), NumberStyles.Float, CultureInfo.InvariantCulture);
-        //    }
-        //}
-
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        public override object ConvertFromString(string value, Type targetType, SvgDocument document)
         {
-            if (value is string)
-            {
-                return Parse((string)value);
-            }
-
-            return base.ConvertFrom(context, culture, value);
+            return Parse(value);
         }
 
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        public override string ConvertToString(object value)
         {
-            if (destinationType == typeof(string))
-            {
-                var paths = value as SvgPathSegmentList;
+            var paths = value as SvgPathSegmentList;
 
-                if (paths != null)
-                {
-                    var curretCulture = CultureInfo.CurrentCulture;
-                    Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-                    var s = string.Join(" ", paths.Select(p => p.ToString()).ToArray());
-                    Thread.CurrentThread.CurrentCulture = curretCulture;
-                    return s;
-                }
+            if (paths != null)
+            {
+                var curretCulture = CultureInfo.CurrentCulture;
+                CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+                var s = string.Join(" ", paths.Select(p => p.ToString()).ToArray());
+                CultureInfo.DefaultThreadCurrentCulture = curretCulture;
+                return s;
             }
 
-            return base.ConvertTo(context, culture, value, destinationType);
-        }
-
-        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
-        {
-            if (destinationType == typeof(string))
-            {
-                return true;
-            }
-
-            return base.CanConvertTo(context, destinationType);
+            return null;
         }
     }
 }

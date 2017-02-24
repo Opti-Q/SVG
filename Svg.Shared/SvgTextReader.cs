@@ -18,7 +18,9 @@ namespace Svg
         {
             var settings = new XmlReaderSettings()
             {
+#if !WINDOWS_UWP
                 XmlResolver = new SvgDtdResolver(),
+#endif
                 IgnoreWhitespace = false,
                 //WhitespaceHandling = WhitespaceHandling.Significant,
             };
@@ -30,7 +32,9 @@ namespace Svg
         {
             var settings = new XmlReaderSettings()
             {
+#if !WINDOWS_UWP
                 XmlResolver = new SvgDtdResolver(),
+#endif
                 IgnoreWhitespace = false,
                 //WhitespaceHandling = WhitespaceHandling.Significant,
             };

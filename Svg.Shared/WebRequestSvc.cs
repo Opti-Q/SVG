@@ -1,14 +1,19 @@
 using System;
+using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace Svg
 {
     public class WebRequestSvc : IWebRequest
     {
-        public WebResponse GetResponse(Uri uri)
+        public Stream GetResponse(Uri uri)
         {
-            var httpRequest = WebRequest.Create(uri);
-            return httpRequest.GetResponse();
+            return Task.Run(async () =>
+            {
+                var httpRequest = WebRequest.Create(uri);
+                return await httpRequest.GetRequestStreamAsync();
+            }).Result;
         }
     }
 }

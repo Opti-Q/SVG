@@ -53,6 +53,15 @@ namespace Svg
             }
         }
 
+        public static ISvgTypeConverterRegistry TypeConverterRegistry
+        {
+            get
+            {
+                EnsureInitialized();
+                return _typeConverterRegistry;
+            }
+        }
+
         public static void Register<TInterface, TImplementation>(Func<TImplementation> factory)
             where TInterface : class
             where TImplementation : class, TInterface
@@ -114,6 +123,8 @@ namespace Svg
 
             lock (_lock)
             {
+                RegisterBaseServices();
+
                 var assemblies = GetAppDomainAssemblies();
 
                 // run setup
@@ -123,6 +134,15 @@ namespace Svg
                 // register platform-specific services
                 RegisterPlatformSpecificServices(assemblies);
             }
+        }
+
+        private static readonly SvgElementFactory _elementFactory = new SvgElementFactory();
+        private static readonly SvgTypeConverterRegistry _typeConverterRegistry = new SvgTypeConverterRegistry();
+
+        private static void RegisterBaseServices()
+        {
+            Engine.Register<ISvgElementFactory, SvgElementFactory>(() => _elementFactory);
+            Engine.Register<ISvgTypeConverterRegistry, SvgTypeConverterRegistry>(() => _typeConverterRegistry);
         }
 
         private static void ResolveAndRunPlatformSetup(Assembly[] assemblies)

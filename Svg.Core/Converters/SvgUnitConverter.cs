@@ -1,18 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
+﻿using System;
 using System.Globalization;
-using System.Text;
-using System.Text.RegularExpressions;
-using Svg.Interfaces;
+using Svg.Converters.Svg;
 
-namespace Svg
+namespace Svg.Converters
 {
-    public sealed class SvgUnitConverter : TypeConverter, ISvgUnitConverter
+    public class SvgUnitConverter : BaseConverter
     {
-        public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture,
-            object value)
+        public override object ConvertFromString(string value, Type targetType, SvgDocument document)
         {
             if (value == null)
             {
@@ -27,7 +21,7 @@ namespace Svg
             // http://www.w3.org/TR/CSS21/syndata.html#values
             // http://www.w3.org/TR/SVG11/coords.html#Units
 
-            string unit = (string) value;
+            string unit = (string)value;
             int identifierIndex = -1;
 
             if (unit == "none")
@@ -79,35 +73,9 @@ namespace Svg
             }
         }
 
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        public override string ConvertToString(object value)
         {
-            if (sourceType == typeof(string))
-            {
-                return true;
-            }
-
-            return base.CanConvertFrom(context, sourceType);
-        }
-
-        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
-        {
-            if (destinationType == typeof(string))
-            {
-                return true;
-            }
-
-            return base.CanConvertTo(context, destinationType);
-        }
-
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
-            Type destinationType)
-        {
-            if (destinationType == typeof(string))
-            {
-                return ((SvgUnit) value).ToString();
-            }
-
-            return base.ConvertTo(context, culture, value, destinationType);
+            return ((SvgUnit)value).ToString();
         }
     }
 }

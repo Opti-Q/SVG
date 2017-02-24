@@ -9,11 +9,11 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Svg</RootNamespace>
-    <AssemblyName>Svg.Portable</AssemblyName>
+    <AssemblyName>Svg</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
@@ -60,6 +60,17 @@
     <Compile Include="Clipping and Masking\SvgClipPath.cs" />
     <Compile Include="Clipping and Masking\SvgClipRule.cs" />
     <Compile Include="Clipping and Masking\SvgMask.cs" />
+    <Compile Include="Converters\BaseConverter.cs" />
+    <Compile Include="Converters\SvgColourConverter.cs" />
+    <Compile Include="Converters\SvgOrientConverter.cs" />
+    <Compile Include="Converters\SvgPaintServerFactory.cs" />
+    <Compile Include="Converters\SvgPathBuilder.cs" />
+    <Compile Include="Converters\SvgPointCollectionConverter.cs" />
+    <Compile Include="Converters\SvgPreserveAspectRationConverter.cs" />
+    <Compile Include="Converters\SvgTransformConverter.cs" />
+    <Compile Include="Converters\SvgUnitCollectionConverter.cs" />
+    <Compile Include="Converters\SvgUnitConverter.cs" />
+    <Compile Include="Converters\SvgViewBoxConverter.cs" />
     <Compile Include="Css\CssQuery.cs" />
     <Compile Include="Css\SvgElementOps.cs" />
     <Compile Include="DataTypes\ISvgSupportsCoordinateUnits.cs" />
@@ -228,7 +239,6 @@
     <Compile Include="Interfaces\ISvgSource.cs" />
     <Compile Include="Interfaces\ISvgTypeDescriptor.cs" />
     <Compile Include="Interfaces\ISvgUnitConverter.cs" />
-    <Compile Include="Interfaces\ITypeConverter.cs" />
     <Compile Include="Interfaces\LinearGradientBrush.cs" />
     <Compile Include="Interfaces\LineCap.cs" />
     <Compile Include="Interfaces\LineJoin.cs" />
@@ -246,6 +256,7 @@
     <Compile Include="Interfaces\SolidBrush.cs" />
     <Compile Include="Interfaces\StringFormat.cs" />
     <Compile Include="Interfaces\StringFormatFlags.cs" />
+    <Compile Include="Interfaces\SystemColors.cs" />
     <Compile Include="Interfaces\TextRenderingHint.cs" />
     <Compile Include="Interfaces\TextureBrush.cs" />
     <Compile Include="Interfaces\WrapMode.cs" />
@@ -303,6 +314,7 @@
     <Compile Include="Platform\SkiaTextRenderer.cs" />
     <Compile Include="Platform\SkiaTextureBrush.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyDescriptor.cs" />
     <Compile Include="Rendering\IGraphicsProvider.cs" />
     <Compile Include="Rendering\ISvgRenderer.cs" />
     <Compile Include="Rendering\SvgRenderer.cs" />
@@ -315,10 +327,13 @@
     <Compile Include="SvgDocument.cs" />
     <Compile Include="SvgElement.cs" />
     <Compile Include="SvgElementAttribute.cs" />
+    <Compile Include="SvgElementAttributeProvider.cs" />
     <Compile Include="SvgElementCollection.cs" />
+    <Compile Include="SvgElementFactory.cs" />
     <Compile Include="SvgElementIdManager.cs" />
     <Compile Include="SvgElementStyle.cs" />
     <Compile Include="SvgExtentions.cs" />
+    <Compile Include="SvgTypeConverterRegistry.cs" />
     <Compile Include="SvgPlatformAttribute.cs" />
     <Compile Include="SvgServiceAttribute.cs" />
     <Compile Include="SvgUnknownElement.cs" />

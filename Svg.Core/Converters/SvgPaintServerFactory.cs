@@ -1,13 +1,14 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using Svg.Converters.Svg;
 using Svg.Interfaces;
 
-namespace Svg
+namespace Svg.Converters
 {
-    internal class SvgPaintServerFactory : TypeConverter
+    internal class SvgPaintServerFactory : BaseConverter
     {
         private static readonly SvgColourConverter _colourConverter;
 
@@ -53,7 +54,7 @@ namespace Svg
                         servers.Add((SvgPaintServer)document.IdManager.GetElementById(id));
                     }
                     // If referenced to to a different (linear or radial) gradient
-                    else if (document.IdManager.GetElementById(value) != null && document.IdManager.GetElementById(value).GetType().BaseType == typeof(SvgGradientServer))
+                    else if (document.IdManager.GetElementById(value) != null && document.IdManager.GetElementById(value).GetType().GetTypeInfo().BaseType == typeof(SvgGradientServer))
                     {
                         return (SvgPaintServer)document.IdManager.GetElementById(value);
                     }
@@ -62,11 +63,11 @@ namespace Svg
                         switch (CountHexDigits(value, 1))
                         {
                             case 3:
-                                servers.Add(new SvgColourServer((Svg.Interfaces.Color)_colourConverter.ConvertFrom(value.Substring(0, 4))));
+                                servers.Add(new SvgColourServer((Color)_colourConverter.ConvertFromString(value.Substring(0, 4), typeof(Color), document)));
                                 value = value.Substring(4).Trim();
                                 break;
                             case 6:
-                                servers.Add(new SvgColourServer((Svg.Interfaces.Color)_colourConverter.ConvertFrom(value.Substring(0, 7))));
+                                servers.Add(new SvgColourServer((Color)_colourConverter.ConvertFromString(value.Substring(0, 7), typeof(Color), document)));
                                 value = value.Substring(7).Trim();
                                 break;
                             default:
@@ -75,7 +76,7 @@ namespace Svg
                     }
                     else
                     {
-                        return new SvgColourServer((Svg.Interfaces.Color)_colourConverter.ConvertFrom(value.Trim()));
+                        return new SvgColourServer((Color)_colourConverter.ConvertFromString(value.Trim(), typeof(Color), document));
                     }
                 }
 
@@ -104,13 +105,13 @@ namespace Svg
             return count;
         }
 
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        public override object ConvertFromString(string value, Type targetType, SvgDocument document)
         {
             var s = value as string;
             if (string.IsNullOrWhiteSpace(s))
                 return SvgColourServer.NotSet;
-            //if (string.Equals(s.Trim(), "none", StringComparison.OrdinalIgnoreCase))
-            //    return SvgPaintServer.None;
+
+
             switch (s.Trim().ToLowerInvariant())
             {
                 case "none":
@@ -122,63 +123,38 @@ namespace Svg
                 case "context-stroke":
                     return SvgColourServer.ContextStroke;
             }
-            return Create(s, ((ISvgDocumentProvider)context).Document);
+            return Create(s, document);
         }
 
-        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        public override string ConvertToString(object value)
         {
-            if (sourceType == typeof(string))
+            //check for none
+            if (value == SvgPaintServer.None) return "none";
+            if (value == SvgColourServer.Inherit) return "inherit";
+            if (value == SvgColourServer.ContextFill) return "context-fill";
+            if (value == SvgColourServer.ContextStroke) return "context-stroke";
+            if (value == SvgColourServer.NotSet) return "";
+
+            var colourServer = value as SvgColourServer;
+            if (colourServer != null)
             {
-                return true;
+                return new SvgColourConverter().ConvertToString(colourServer.Colour);
             }
 
-            return base.CanConvertFrom(context, sourceType);
-        }
-
-        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
-        {
-            if (destinationType == typeof(string))
+            var deferred = value as SvgDeferredPaintServer;
+            if (deferred != null)
             {
-                return true;
+                return deferred.ToString();
             }
 
-            return base.CanConvertTo(context, destinationType);
-        }
-
-        public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
-        {
-            if (destinationType == typeof(string))
+            if (value != null)
             {
-                //check for none
-                if (value == SvgPaintServer.None) return "none";
-                if (value == SvgColourServer.Inherit) return "inherit";
-                if (value == SvgColourServer.ContextFill) return "context-fill";
-                if (value == SvgColourServer.ContextStroke) return "context-stroke";
-                if (value == SvgColourServer.NotSet) return "";
-
-                var colourServer = value as SvgColourServer;
-                if (colourServer != null)
-                {
-                    return new SvgColourConverter().ConvertTo(colourServer.Colour, typeof(string));
-                }
-
-                var deferred = value as SvgDeferredPaintServer;
-                if (deferred != null)
-                {
-                    return deferred.ToString();
-                }
-
-                if (value != null)
-                {
-                    return string.Format(CultureInfo.InvariantCulture, "url(#{0})", ((SvgPaintServer)value).ID);
-                }
-                else
-                {
-                    return "none";
-                }
+                return string.Format(CultureInfo.InvariantCulture, "url(#{0})", ((SvgPaintServer)value).ID);
             }
-
-            return base.ConvertTo(context, culture, value, destinationType);
+            else
+            {
+                return "none";
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Xml;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using ExCSS;
 using Svg.Interfaces;
@@ -17,32 +18,29 @@ namespace Svg
     /// </summary>
     public class SvgElementFactory : ISvgElementFactory
     {
-        private static Dictionary<string, ElementInfo> availableElements;
+        private static readonly Lazy<Dictionary<string, ElementInfo>> _availableElements = new Lazy<Dictionary<string,ElementInfo>>(
+            () =>
+            {
+                var svgTypes = from t in typeof(SvgDocument).GetTypeInfo().Assembly.ExportedTypes
+                                where t.GetTypeInfo().GetCustomAttributes(typeof(SvgElementAttribute), true).Any()
+                                && t.GetTypeInfo().IsSubclassOf(typeof(SvgElement))
+                                select new ElementInfo { ElementName = ((SvgElementAttribute)t.GetTypeInfo().GetCustomAttributes(typeof(SvgElementAttribute), true).First()).ElementName, ElementType = t };
+
+                var availableElements = (from t in svgTypes
+                                        where t.ElementName != "svg"
+                                        group t by t.ElementName into types
+                                        select types).ToDictionary(e => e.Key, e => e.SingleOrDefault());
+
+                return availableElements;
+            });
         private static Parser cssParser = new Parser();
+        private static Dictionary<Type, Dictionary<string, List<IPropertyDescriptor>>> _propertyDescriptors = new Dictionary<Type, Dictionary<string, List<IPropertyDescriptor>>>();
+        private static object syncLock = new object();
 
         /// <summary>
         /// Gets a list of available types that can be used when creating an <see cref="SvgElement"/>.
         /// </summary>
-        public Dictionary<string, ElementInfo> AvailableElements
-        {
-            get
-            {
-                if (availableElements == null)
-                {
-                    var svgTypes = from t in typeof(SvgDocument).Assembly.GetExportedTypes()
-                                   where t.GetCustomAttributes(typeof(SvgElementAttribute), true).Length > 0
-                                   && t.IsSubclassOf(typeof(SvgElement))
-                                   select new ElementInfo { ElementName = ((SvgElementAttribute)t.GetCustomAttributes(typeof(SvgElementAttribute), true)[0]).ElementName, ElementType = t };
-
-                    availableElements = (from t in svgTypes
-                                         where t.ElementName != "svg"
-                                         group t by t.ElementName into types
-                                         select types).ToDictionary(e => e.Key, e => e.SingleOrDefault());
-                }
-
-                return availableElements;
-            }
-        }
+        public Dictionary<string, ElementInfo> AvailableElements => _availableElements.Value;
 
         /// <summary>
         /// Creates an <see cref="SvgDocument"/> from the current node in the specified <see cref="SvgXmlReader"/>.
@@ -236,14 +234,13 @@ namespace Svg
             return false;
         }
 
-        private static Dictionary<Type, Dictionary<string, PropertyDescriptorCollection>> _propertyDescriptors = new Dictionary<Type, Dictionary<string, PropertyDescriptorCollection>>();
-        private static object syncLock = new object();
+
 
         public void SetPropertyValue(SvgElement element, string attributeName, string attributeValue, SvgDocument document)
         {
             var elementType = element.GetType();
 
-            PropertyDescriptorCollection properties;
+            List<IPropertyDescriptor> properties;
             lock (syncLock)
             {
                 if (_propertyDescriptors.Keys.Contains(elementType))
@@ -254,14 +251,14 @@ namespace Svg
                     }
                     else
                     {
-                        properties = TypeDescriptor.GetProperties(elementType, new[] { new SvgAttributeAttribute(attributeName) });
+                        properties = TypeDescriptor.GetProperties(elementType, attributeName);
                         _propertyDescriptors[elementType].Add(attributeName, properties);
                     }
                 }
                 else
                 {
-                    properties = TypeDescriptor.GetProperties(elementType, new[] { new SvgAttributeAttribute(attributeName) });
-                    _propertyDescriptors.Add(elementType, new Dictionary<string, PropertyDescriptorCollection>());
+                    properties = TypeDescriptor.GetProperties(elementType, attributeName);
+                    _propertyDescriptors.Add(elementType, new Dictionary<string, List<IPropertyDescriptor>>());
 
                     _propertyDescriptors[elementType].Add(attributeName, properties);
                 } 
@@ -269,7 +266,7 @@ namespace Svg
 
             if (properties.Count > 0)
             {
-                PropertyDescriptor descriptor = properties[0];
+                IPropertyDescriptor descriptor = properties[0];
 
                 try
                 {
@@ -277,19 +274,16 @@ namespace Svg
 					{
 						attributeValue = "1";
 					}
-
-                    var ctx = new SvgDocumentTypeDescriptorContext(document);
-
+                    
                     if (attributeName == "visibility")
                     {
                         bool visible = string.Equals(attributeValue, "visible",
-                            StringComparison.InvariantCultureIgnoreCase);
+                            StringComparison.CurrentCultureIgnoreCase);
                         descriptor.SetValue(element, visible);
                     }
                     else
                     {
-                        descriptor.SetValue(element,
-                            descriptor.Converter.ConvertFrom(ctx, CultureInfo.InvariantCulture, attributeValue));
+                        descriptor.SetValue(element, descriptor.Converter.ConvertFromString(attributeValue, descriptor.PropertyType, document));
                     }
 
                 }
@@ -324,59 +318,5 @@ namespace Svg
             }
         }
 
-    }
-
-    internal class SvgDocumentTypeDescriptorContext : ITypeDescriptorContext, ISvgDocumentProvider
-    {
-        private readonly SvgDocument _document;
-
-        public SvgDocumentTypeDescriptorContext(SvgDocument document)
-        {
-            _document = document;
-        }
-
-        #region ITypeDescriptorContext Members
-
-        IContainer ITypeDescriptorContext.Container
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        object ITypeDescriptorContext.Instance
-        {
-            get { return Document; }
-        }
-
-        void ITypeDescriptorContext.OnComponentChanged()
-        {
-            throw new NotImplementedException();
-        }
-
-        bool ITypeDescriptorContext.OnComponentChanging()
-        {
-            throw new NotImplementedException();
-        }
-
-        PropertyDescriptor ITypeDescriptorContext.PropertyDescriptor
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public SvgDocument Document
-        {
-            get { return _document; }
-        }
-
-        object IServiceProvider.GetService(Type serviceType)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
-        public static explicit operator SvgDocument(SvgDocumentTypeDescriptorContext other)
-        {
-            return other.Document;
-        }
     }
 }

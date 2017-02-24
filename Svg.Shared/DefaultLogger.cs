@@ -14,22 +14,22 @@ namespace Svg
 
         public void Info(string txt)
         {
-            Trace.Write(txt);
+            System.Diagnostics.Debug.WriteLine(txt);
         }
 
         public void Warn(string txt)
         {
-            Trace.Write(txt);
+            System.Diagnostics.Debug.WriteLine(txt);
         }
 
         public void Error(string txt)
         {
-            Trace.TraceError(txt);
+            System.Diagnostics.Debug.WriteLine(txt);
         }
 
         public void Fatal(string txt)
         {
-            Trace.TraceError(txt);
+            System.Diagnostics.Debug.WriteLine(txt);
         }
     }
 }

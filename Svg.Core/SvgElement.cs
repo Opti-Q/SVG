@@ -584,15 +584,14 @@ namespace Svg
             //properties
             foreach (var attr in _svgPropertyAttributes)
             {
-                if (attr.Property.Converter.CanConvertTo(typeof(string)) &&
-                    (!attr.Attribute.InAttributeDictionary || _attributes.ContainsKey(attr.Attribute.Name)))
+                if ((!attr.Attribute.InAttributeDictionary || _attributes.ContainsKey(attr.Attribute.Name)))
                 {
                     object propertyValue = _attributes.GetAttribute<object>(attr.Attribute.Name);
 
                     if (propertyValue == null)
                         continue;
 
-                    string value = (string) attr.Property.Converter.ConvertTo(propertyValue, typeof(string));
+                    string value = (string) attr.Property.Converter.ConvertToString(propertyValue);
 
                     forceWrite = false;
                     //writeStyle = attr.Attribute.Name == "fill";
