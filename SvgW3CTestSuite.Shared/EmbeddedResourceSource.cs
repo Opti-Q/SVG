@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Svg.Interfaces;
 
@@ -23,7 +24,43 @@ namespace SvgW3CTestSuite.Assets
 
         public Stream GetFileRelativeTo(Uri relativePath)
         {
-            throw new NotImplementedException();
+            var str = relativePath.OriginalString;
+            if (str.StartsWith("#"))
+                return null;
+
+            var path = Path.GetDirectoryName(_name);
+
+            // remove hash if there is any
+            var hash = relativePath.OriginalString.Substring(relativePath.OriginalString.LastIndexOf('#'));
+
+            if (!string.IsNullOrWhiteSpace(hash))
+            {
+                str = str.Contains(hash)
+                    ? str.Substring(0, str.Length - hash.Length)
+                    : str;
+            }
+
+            while (str.StartsWith("../"))
+            {
+                path = Path.GetDirectoryName(path);
+                str = str.Substring(3);
+            }
+
+            var fullPath = path == null ? str : Path.Combine(path, str);
+            try
+            {
+                return _assembly.GetManifestResourceStream(fullPath);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        private string GetParent(string resourceString)
+        {
+            var arr = resourceString.Split('.');
+            return string.Join(".", arr.Take(arr.Length - 1));
         }
 
         public static ISvgSource Create(string name)

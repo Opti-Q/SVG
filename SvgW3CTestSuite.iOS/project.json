@@ -3,8 +3,9 @@
     "NUnit": "3.0.1",
     "nunit.xamarin": "3.0.1",
     "SkiaSharp": "1.56.1",
-    "Toasts.Forms.Plugin": "2.0.4",
-    "Xamarin.Forms": "1.5.0.6447"
+    "SkiaSharp.Views.Forms": "1.56.1",
+    "Toasts.Forms.Plugin": "3.1.4",
+    "Xamarin.Forms": "2.3.3.193"
   },
   "frameworks": {
     "Xamarin.iOS,Version=v1.0.0": {}

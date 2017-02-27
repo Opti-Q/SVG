@@ -49,6 +49,7 @@ namespace Svg
 
         public virtual Bitmap CreateBitmap(Image inputImage)
         {
+            if (inputImage == null) throw new ArgumentNullException(nameof(inputImage));
             return new SkiaBitmap(inputImage);
         }
 

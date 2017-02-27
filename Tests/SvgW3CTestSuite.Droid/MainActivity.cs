@@ -27,8 +27,8 @@ namespace SvgW3CTestSuite.Droid
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
             // register Xamarin.Form.Toasts plugin so we can see the progress of our test
-            DependencyService.Register<ToastNotificatorImplementation>();
-            ToastNotificatorImplementation.Init(this);
+            DependencyService.Register<ToastNotification>();
+            ToastNotification.Init(this);
 
             if (nunit == null)
             {
