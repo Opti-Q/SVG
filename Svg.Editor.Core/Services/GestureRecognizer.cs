@@ -180,9 +180,4 @@ namespace Svg.Editor.Services
             foreach (var disposable in _subscriptions.Values) disposable.Dispose();
         }
     }
-
-    public interface IGestureDetector
-    {
-        IObservable<UserInputEvent> DetectedGestures { get; }
-    }
 }
