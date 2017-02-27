@@ -7,8 +7,8 @@
     <ProjectGuid>{1A9890AB-E4B4-4282-89AC-CEF2610E30B0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Svg.Win</RootNamespace>
-    <AssemblyName>Svg.Win</AssemblyName>
+    <RootNamespace>Svg</RootNamespace>
+    <AssemblyName>Svg</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
