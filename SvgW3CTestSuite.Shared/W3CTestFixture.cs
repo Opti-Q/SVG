@@ -6,6 +6,7 @@ using NUnit.Framework;
 using Plugin.Toasts;
 using SkiaSharp;
 using Svg;
+using Svg.Interfaces;
 using Svg.Platform;
 using Xamarin.Forms;
 
@@ -24,7 +25,7 @@ namespace SvgW3CTestSuite.Droid
         }
         
         public static object[] SvgTestCases = {};
-        public static Func<string, SvgAssetSource> FileSourceProvider { get; set; }
+        public static Func<string, ISvgSource> FileSourceProvider { get; set; }
 
         [Test, TestCaseSource(nameof(SvgTestCases))]
         public async Task W3CTestSuiteCompare(string svgPath, string pngPath)

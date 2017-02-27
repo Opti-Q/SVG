@@ -53,7 +53,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
-    <Compile Include="W3CTestFixture.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -4361,6 +4360,7 @@
   <ItemGroup>
     <AndroidAsset Include="Assets\resources\Plane1\svgtestsuite-woffmeta.xml" />
   </ItemGroup>
+  <Import Project="..\..\SvgW3CTestSuite.Shared\SvgW3CTestSuite.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>xcopy "$(SolutionDir)Tests\W3CTestSuite\*.*" "$(ProjectDir)Assets\" /Y/D/E</PreBuildEvent>
