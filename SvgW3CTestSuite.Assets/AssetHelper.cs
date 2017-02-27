@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Svg.Interfaces;
 
 namespace SvgW3CTestSuite.Assets
 {
@@ -39,11 +36,6 @@ namespace SvgW3CTestSuite.Assets
             return pngName;
             //var assembly = typeof(AssetHelper).GetTypeInfo().Assembly;
             //return assembly.GetManifestResourceStream(pngName);
-        }
-
-        public static ISvgSource GetSource(string name)
-        {
-            return new EmbeddedResourceSource(name, typeof(AssetHelper).GetTypeInfo().Assembly);
         }
     }
 }

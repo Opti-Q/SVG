@@ -10,14 +10,16 @@ using Svg.Platform;
 using SvgW3CTestSuite.Assets;
 #if xUNIT
 using Xunit;
-#else
-using Xamarin.Forms;
+#elif WIN
 using NUnit.Framework;
+#else
+using NUnit.Framework;
+using Xamarin.Forms;
 using Plugin.Toasts;
 #endif
 
 
-namespace SvgW3CTestSuite.Droid
+namespace SvgW3CTestSuite
 {
 #if xUNIT
 #else
@@ -37,11 +39,11 @@ namespace SvgW3CTestSuite.Droid
 
             SvgTestCases = svgFiles.Select(path => new object[]
                                                     {
-                                                            path,
-                                                            AssetHelper.GetPngForSvg(path)
+                                                        path,
+                                                        AssetHelper.GetPngForSvg(path)
                                                     })
                                                     .ToArray();
-            FileSourceProvider = (path) => AssetHelper.GetSource(path);
+            FileSourceProvider = (path) => EmbeddedResourceSource.Create(path);
         }
 
 #if xUNIT
@@ -132,7 +134,7 @@ namespace SvgW3CTestSuite.Droid
 
         private static void NotifySuccess(string svgPath)
         {
-#if !WINDOWS_UWP
+#if !WINDOWS_UWP && !WIN
             Xamarin.Forms.Device.BeginInvokeOnMainThread(async () =>
             {
                 Interlocked.Increment(ref _succeededCount);
@@ -147,7 +149,7 @@ namespace SvgW3CTestSuite.Droid
 
         private static void NotifyError(string svgPath)
         {
-#if !WINDOWS_UWP
+#if !WINDOWS_UWP && !WIN
             Xamarin.Forms.Device.BeginInvokeOnMainThread(async () =>
             {
                 var message = $"{svgPath} failed ({_succeededCount} / {_testCount})";
@@ -163,7 +165,7 @@ namespace SvgW3CTestSuite.Droid
             var src = FileSourceProvider(svgPath);
 
             using (SvgDocument doc = SvgDocument.Open<SvgDocument>(src))
-            using (var surface = SKSurface.Create(width, height, SKColorType.Rgba8888, SKAlphaType.Premul))
+            using (var surface = SKSurface.Create(width, height, SKImageInfo.PlatformColorType, SKAlphaType.Premul))
             {
                 doc.Draw(SvgRenderer.FromGraphics(new SkiaGraphics(surface)));
                 var img = surface.Snapshot();

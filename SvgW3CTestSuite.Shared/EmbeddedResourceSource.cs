@@ -25,5 +25,10 @@ namespace SvgW3CTestSuite.Assets
         {
             throw new NotImplementedException();
         }
+
+        public static ISvgSource Create(string name)
+        {
+            return new EmbeddedResourceSource(name, typeof(AssetHelper).GetTypeInfo().Assembly);
+        }
     }
 }
