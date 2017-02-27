@@ -20,8 +20,7 @@
     "System.Runtime.Extensions": "4.1.0",
     "System.Runtime.InteropServices.WindowsRuntime": "4.0.1",
     "System.Threading": "4.0.11",
-    "System.Threading.Tasks": "4.0.11",
-    "System.Xml.ReaderWriter": "4.3.0" 
+    "System.Threading.Tasks": "4.0.11"
   },
   "frameworks": {
     "uap10.0": {}

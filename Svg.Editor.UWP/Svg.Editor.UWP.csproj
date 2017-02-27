@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{934B0E99-C2C9-4B41-8705-E79C223362CA}</ProjectGuid>
+    <ProjectGuid>{D93C5B6A-7F1C-4904-89EF-4679784C7AD1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Svg</RootNamespace>
-    <AssemblyName>Svg</AssemblyName>
+    <RootNamespace>Svg.Editor.UWP</RootNamespace>
+    <AssemblyName>Svg.Editor.UWP</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
@@ -104,14 +104,18 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <None Include="app.config" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\Svg.UWP.rd.xml" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Properties\Svg.Editor.UWP.rd.xml" />
   </ItemGroup>
-  <Import Project="..\Svg.Shared\Svg.Shared.projitems" Label="Shared" />
-  <Import Project="..\Svg.Platform.Shared\Svg.Platform.Shared.projitems" Label="Shared" />
+  <ItemGroup>
+    <ProjectReference Include="..\Svg.UWP\Svg.UWP.csproj">
+      <Project>{934b0e99-c2c9-4b41-8705-e79c223362ca}</Project>
+      <Name>Svg.UWP</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
