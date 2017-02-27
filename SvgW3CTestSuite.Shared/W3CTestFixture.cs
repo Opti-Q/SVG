@@ -1,33 +1,55 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using NUnit.Framework;
-using Plugin.Toasts;
 using SkiaSharp;
 using Svg;
 using Svg.Interfaces;
 using Svg.Platform;
+using SvgW3CTestSuite.Assets;
+#if xUNIT
+using Xunit;
+#else
 using Xamarin.Forms;
+using NUnit.Framework;
+using Plugin.Toasts;
+#endif
 
 
 namespace SvgW3CTestSuite.Droid
 {
+#if xUNIT
+#else
     [TestFixture]
+#endif
     public class W3CTestFixture
     {
         private static int _testCount = 0;
         private static int _succeededCount = 0;
 
-        [SetUp]
-        public void Setup()
-        {
-        }
-        
+       
         public static object[] SvgTestCases = {};
         public static Func<string, ISvgSource> FileSourceProvider { get; set; }
+        static W3CTestFixture()
+        {
+            var svgFiles = AssetHelper.GetAllSvgFiles().Take(400)/*.Where(s => !s.StartsWith("struct-image"))*/;
 
+            SvgTestCases = svgFiles.Select(path => new object[]
+                                                    {
+                                                            path,
+                                                            AssetHelper.GetPngForSvg(path)
+                                                    })
+                                                    .ToArray();
+            FileSourceProvider = (path) => AssetHelper.GetSource(path);
+        }
+
+#if xUNIT
+        [Theory]
+        [MemberData(nameof(SvgTestCases), MemberType=typeof(W3CTestFixture))]
+#else
         [Test, TestCaseSource(nameof(SvgTestCases))]
+#endif
         public async Task W3CTestSuiteCompare(string svgPath, string pngPath)
         {
             await RunTest(() =>
@@ -41,7 +63,11 @@ namespace SvgW3CTestSuite.Droid
                         // Assert
                         using (var c = ImageCompare(svgBitmap, pngBitmap))
                         {
+#if xUNIT
+                            Assert.True(c.Similarity >= 90, $"{svgPath}");
+#else
                             Assert.GreaterOrEqual(c.Similarity, 90, $"{svgPath}");
+#endif
                         }
                     }
                 }
@@ -67,12 +93,13 @@ namespace SvgW3CTestSuite.Droid
             }
         }
 
-        private Task RunTest(Action test, string name, int timeout = 10000)
+        private async Task RunTest(Action test, string name, int timeout = 10000)
         {
-            var tcs = new TaskCompletionSource<bool>();
             try
             {
-                var thread = new Thread(() =>
+                var cancel = new CancellationTokenSource();
+                cancel.CancelAfter(timeout);
+                await Task.Run(() =>
                 {
                     try
                     {
@@ -82,39 +109,30 @@ namespace SvgW3CTestSuite.Droid
                         
 
                         NotifySuccess(name);
-                        tcs.TrySetResult(true);
                     }
                     catch (Exception x)
                     {
                         NotifyError(name);
-                        tcs.TrySetException(x);
+                        throw x;
                     }
 
-                });
-                thread.Start();
-                Task.Run(async () =>
-                {
-                    await Task.Delay(timeout);
-                    thread.Abort();
-                    tcs.TrySetCanceled();
-                }).ConfigureAwait(false);
+                }, cancel.Token);
 
             }
             catch (TaskCanceledException)
             {
                 NotifyError(name);
+#if xUNIT
+                Assert.True(false, $"test {name} took too much time");
+#else
                 Assert.Fail($"test {name} took too much time");
+#endif
             }
-            catch (ThreadAbortException)
-            {
-                NotifyError(name);
-                Assert.Fail($"test {name} took too much time");
-            }
-            return tcs.Task;
         }
 
         private static void NotifySuccess(string svgPath)
         {
+#if !WINDOWS_UWP
             Xamarin.Forms.Device.BeginInvokeOnMainThread(async () =>
             {
                 Interlocked.Increment(ref _succeededCount);
@@ -124,10 +142,12 @@ namespace SvgW3CTestSuite.Droid
                 var notificator = DependencyService.Get<IToastNotificator>();
                 await notificator.Notify(ToastNotificationType.Success, "Finished test", message, TimeSpan.FromMilliseconds(200));
             });
+#endif
         }
 
         private static void NotifyError(string svgPath)
         {
+#if !WINDOWS_UWP
             Xamarin.Forms.Device.BeginInvokeOnMainThread(async () =>
             {
                 var message = $"{svgPath} failed ({_succeededCount} / {_testCount})";
@@ -135,6 +155,7 @@ namespace SvgW3CTestSuite.Droid
                 var notificator = DependencyService.Get<IToastNotificator>();
                 await notificator.Notify(ToastNotificationType.Error, "Failed test", message, TimeSpan.FromMilliseconds(200));
             });
+#endif
         }
 
         private static SKBitmap RenderSvg(string svgPath, int width, int height)
@@ -157,8 +178,14 @@ namespace SvgW3CTestSuite.Droid
 
         private static ImageCompareResult ImageCompare(SKBitmap i1, SKBitmap i2)
         {
-            if(i1.Height != i2.Height || i1.Width != i2.Width)
+            if (i1.Height != i2.Height || i1.Width != i2.Width)
+            {
+#if xUNIT
+                Assert.True(false, $"SKBitmap dimensions differ! rendered:{i1.Width}x{i1.Height} vs png:{i2.Width}x{i2.Height}");
+#else
                 Assert.Fail($"SKBitmap dimensions differ! rendered:{i1.Width}x{i1.Height} vs png:{i2.Width}x{i2.Height}");
+#endif
+            }
 
             float correctPixel = 0;
             float pixelAmount = i1.Height * i1.Width;

@@ -87,6 +87,10 @@
       <Project>{03f31ec9-4f97-46da-b8f1-dce99c6954de}</Project>
       <Name>Svg.Droid</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\SvgW3CTestSuite.Assets\SvgW3CTestSuite.Assets.csproj">
+      <Project>{0167BE14-CABE-48DD-A530-2B93F834F601}</Project>
+      <Name>SvgW3CTestSuite.Assets</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\images\20x20.png" />

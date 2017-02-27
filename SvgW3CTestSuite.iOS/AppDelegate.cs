@@ -1,9 +1,5 @@
-﻿using System.Linq;
-
-using Foundation;
+﻿using Foundation;
 using Plugin.Toasts;
-using SvgW3CTestSuite.Assets;
-using SvgW3CTestSuite.Droid;
 using UIKit;
 using Xamarin.Forms;
 
@@ -46,17 +42,6 @@ namespace SvgW3CTestSuite.iOS
 
             if (nunit == null)
             {
-                // get all SVG assets
-                var svgFiles = AssetHelper.GetAllSvgFiles().Take(400)/*.Where(s => !s.StartsWith("struct-image"))*/;
-                
-                W3CTestFixture.SvgTestCases = svgFiles.Select(path => new object[]
-                                                        {
-                                                            path,
-                                                            AssetHelper.GetPngForSvg(path)
-                                                        })
-                                                        .ToArray();
-                W3CTestFixture.FileSourceProvider = (path) => AssetHelper.GetSource(path);
-
                 // This will load all tests within the current project
                 nunit = new NUnit.Runner.App();
 

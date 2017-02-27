@@ -53,7 +53,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
-    <Compile Include="W3CTestFixture.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -84,13 +83,13 @@
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Svg.Core\Svg.Core.csproj">
-      <Project>{13edb4db-3977-4c2e-998a-6103ca015881}</Project>
-      <Name>Svg.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Svg.Droid\Svg.Droid.csproj">
       <Project>{03f31ec9-4f97-46da-b8f1-dce99c6954de}</Project>
       <Name>Svg.Droid</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SvgW3CTestSuite.Assets\SvgW3CTestSuite.Assets.csproj">
+      <Project>{0167BE14-CABE-48DD-A530-2B93F834F601}</Project>
+      <Name>SvgW3CTestSuite.Assets</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -4365,6 +4364,7 @@
   <ItemGroup>
     <AndroidAsset Include="Assets\resources\Plane1\svgtestsuite-woffmeta.xml" />
   </ItemGroup>
+  <Import Project="..\..\SvgW3CTestSuite.Shared\SvgW3CTestSuite.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>xcopy "$(SolutionDir)Tests\W3CTestSuite\*.*" "$(ProjectDir)Assets\" /Y/D/E</PreBuildEvent>
