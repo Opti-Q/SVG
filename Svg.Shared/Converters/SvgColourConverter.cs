@@ -76,6 +76,13 @@ namespace Svg.Converters
 
                 if (!colour.StartsWith("#"))
                 {
+                    // skip animation values
+                    if (string.Equals(colour, "freeze", StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(colour, "remove", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return Engine.Factory.Colors.Black;
+                    }
+
                     return Engine.Factory.Colors.FromName(colour.ToLowerInvariant());
                 }
             }

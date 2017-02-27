@@ -306,6 +306,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SvgPlatformAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgServiceAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgTypeConverterRegistry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SvgTypeDescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgUnknownElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Text\FontFamily.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Text\GdiFontDefn.cs" />

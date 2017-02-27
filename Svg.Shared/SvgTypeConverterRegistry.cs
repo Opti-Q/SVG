@@ -15,6 +15,7 @@ namespace Svg
         {
             {typeof(SvgClipRule), new SvgClipRuleConverter()},
             {typeof(SvgAspectRatio), new SvgPreserveAspectRatioConverter()},
+            {typeof(XmlSpaceHandling), new XmlSpaceHandlingConverter()},
             {typeof(SvgPreserveAspectRatio), new SvgPreserveAspectRatioConverter()},
             {typeof(SvgColourInterpolation), new SvgColourInterpolationConverter()},
             {typeof(SvgCoordinateUnits), new SvgCoordinateUnitsConverter()},
@@ -49,6 +50,8 @@ namespace Svg
             {typeof(long), new BaseConverter()},
             {typeof(double), new BaseConverter()},
             {typeof(float), new BaseConverter()},
+            {typeof(Uri), new BaseConverter()},
+            {typeof(Guid), new BaseConverter()},
         };
 
         public void Register<TType>(ITypeConverter parser)

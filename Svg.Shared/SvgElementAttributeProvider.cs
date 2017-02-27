@@ -46,11 +46,13 @@ namespace Svg
             }
             //attrs = from EventInfo a in TypeDescriptor.GetEvents(instance?.GetType())
             //       select new SvgElement.EventAttributeTuple { Event = a..ComponentType.GetField(a.Name, BindingFlags.Instance | BindingFlags.NonPublic), Attribute = attribute };
-            throw new NotImplementedException("not implemented yet!");
+            //throw new NotImplementedException("not implemented yet!");
 
-            EventCache.AddOrUpdate(instance.GetType(), attrs, (key, oldValue) => attrs);
+            //EventCache.AddOrUpdate(instance.GetType(), attrs, (key, oldValue) => attrs);
 
-            return attrs;
+            //return attrs;
+
+            return Enumerable.Empty<SvgElement.EventAttributeTuple>();
         }
     }
 

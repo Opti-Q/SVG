@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using Svg.Interfaces;
+using Svg.Shared;
 
 namespace Svg
 {
@@ -11,8 +12,10 @@ namespace Svg
     {
         private static readonly object _lock = new object();
         private static readonly Dictionary<Type, Func<object>> _serviceRegistry = new Dictionary<Type, Func<object>>();
+        private static readonly SvgElementFactory _elementFactory = new SvgElementFactory();
+        private static readonly SvgTypeConverterRegistry _typeConverterRegistry = new SvgTypeConverterRegistry();
+        private static ISvgTypeDescriptor _typeDescriptor = new SvgTypeDescriptor(_typeConverterRegistry);
         private static IFactory _factory = null;
-        private static ISvgTypeDescriptor _typeDescriptor = null;
         private static ISvgElementAttributeProvider _attributeProvider = null;
         private static ILogger _logger = null;
         private static bool _initialized = false;
@@ -136,13 +139,11 @@ namespace Svg
             }
         }
 
-        private static readonly SvgElementFactory _elementFactory = new SvgElementFactory();
-        private static readonly SvgTypeConverterRegistry _typeConverterRegistry = new SvgTypeConverterRegistry();
-
         private static void RegisterBaseServices()
         {
             _serviceRegistry[typeof(ISvgElementFactory)] = () => _elementFactory;
             _serviceRegistry[typeof(ISvgTypeConverterRegistry)] = () => _typeConverterRegistry;
+            _serviceRegistry[typeof(ISvgTypeDescriptor)] = () => _typeDescriptor;
         }
 
         private static void ResolveAndRunPlatformSetup(Assembly[] assemblies)

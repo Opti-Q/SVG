@@ -25,6 +25,10 @@ namespace Svg.Converters
                     return Convert.ToDouble(value);
                 if (targetType == typeof(float))
                     return Convert.ToSingle(value);
+                if (targetType == typeof(Uri))
+                    return new Uri(value, UriKind.RelativeOrAbsolute);
+                if (targetType == typeof(Guid))
+                    return new Guid(value);
 
                 throw new NotSupportedException($"No ITypeConverter registered for targetType {targetType} - cannot parse value '{value}'");
             }
@@ -32,6 +36,32 @@ namespace Svg.Converters
             public virtual string ConvertToString(object value)
             {
                 return value?.ToString();
+            }
+        }
+
+        public class XmlSpaceHandlingConverter : BaseConverter
+        {
+            public override object ConvertFromString(string value, Type targetType, SvgDocument document)
+            {
+                if (string.IsNullOrEmpty(value))
+                    return XmlSpaceHandling.@default;
+                if (string.Equals("default", value, StringComparison.CurrentCultureIgnoreCase))
+                    return XmlSpaceHandling.@default;
+                if (string.Equals("preserve", value, StringComparison.CurrentCultureIgnoreCase))
+                    return XmlSpaceHandling.preserve;
+                
+                throw new NotSupportedException($"svg attribute had wrong value: '{value}'");
+            }
+
+            public override string ConvertToString(object value)
+            {
+                var e = value == null ? XmlSpaceHandling.@default : (XmlSpaceHandling)value;
+
+                if (e == XmlSpaceHandling.@default)
+                    return "default";
+                if (e == XmlSpaceHandling.preserve)
+                    return "preserve";
+                throw new NotSupportedException($"svg attribute had wrong value: '{value}'");
             }
         }
 

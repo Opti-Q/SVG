@@ -171,6 +171,17 @@ namespace Svg
                 return CreateColorFromArgb(255, r, g, b);
             }
 
+
+            if (Regex.IsMatch(hex.ToLowerInvariant(), @"^#[a-f0-9]{3}$"))
+            {
+                var c = string.Format("#{0}{0}{1}{1}{2}{2}", hex[1], hex[2], hex[3]);
+                var r = int.Parse(c.Substring(1, 2), NumberStyles.HexNumber);
+                var g = int.Parse(c.Substring(3, 2), NumberStyles.HexNumber);
+                var b = int.Parse(c.Substring(5, 2), NumberStyles.HexNumber);
+
+                return CreateColorFromArgb(255, r, g, b);
+            }
+
             throw new ArgumentException("Not a valid hex string.", nameof(hex));
 
         }

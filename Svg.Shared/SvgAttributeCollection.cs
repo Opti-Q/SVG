@@ -84,7 +84,7 @@ namespace Svg
                    value is SvgTextAnchor && (SvgTextAnchor)value == SvgTextAnchor.Inherit ||
                    value is SvgFontVariant && (SvgFontVariant)value == SvgFontVariant.Inherit || 
                    value is SvgTextDecoration && (SvgTextDecoration)value == SvgTextDecoration.Inherit ||
-                   value is XmlSpaceHandling && (XmlSpaceHandling)value == XmlSpaceHandling.inherit ||
+                   //value is XmlSpaceHandling && (XmlSpaceHandling)value == XmlSpaceHandling.inherit ||
                    value is SvgOverflow && (SvgOverflow)value == SvgOverflow.Inherit ||
                    value == SvgColourServer.Inherit ||
                    value == SvgColourServer.NotSet ||
