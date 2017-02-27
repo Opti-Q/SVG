@@ -37,11 +37,11 @@ namespace SvgW3CTestSuite.Droid
 
             SvgTestCases = svgFiles.Select(path => new object[]
                                                     {
-                                                            path,
-                                                            AssetHelper.GetPngForSvg(path)
+                                                        path,
+                                                        AssetHelper.GetPngForSvg(path)
                                                     })
                                                     .ToArray();
-            FileSourceProvider = (path) => AssetHelper.GetSource(path);
+            FileSourceProvider = (path) => EmbeddedResourceSource.Create(path);
         }
 
 #if xUNIT

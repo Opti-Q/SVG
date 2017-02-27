@@ -9,6 +9,7 @@
     <Import_RootNamespace>SvgW3CTestSuite.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddedResourceSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)W3CTestFixture.cs" />
   </ItemGroup>
 </Project>

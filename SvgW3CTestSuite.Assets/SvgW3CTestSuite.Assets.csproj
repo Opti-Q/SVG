@@ -4313,7 +4313,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssetHelper.cs" />
-    <Compile Include="EmbeddedResourceSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -4353,12 +4352,6 @@
     <EmbeddedResource Include="..\Tests\W3CTestSuite\resources\Plane1\PlaneOne.sfd">
       <Link>resources\Plane1\PlaneOne.sfd</Link>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Svg.Core\Svg.Core.csproj">
-      <Project>{13EDB4DB-3977-4C2E-998A-6103CA015881}</Project>
-      <Name>Svg.Core</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
