@@ -15,18 +15,15 @@ namespace Svg.Editor.Services
 {
     public class GestureRecognizer : IDisposable
     {
-        #region Private fields
-
         private readonly Subject<UserGesture> _recognizedGestures = new Subject<UserGesture>();
-        private IObservable<UserInputEvent> DetectedInputEvents { get; }
-
-        public IObservable<UserGesture> RecognizedGestures => _recognizedGestures.AsObservable();
-
         private readonly IDictionary<string, IDisposable> _subscriptions = new Dictionary<string, IDisposable>();
 
-        #endregion
-
         #region Public properties
+
+        /// <summary>
+        /// Observable for recognized gestures.
+        /// </summary>
+        public IObservable<UserGesture> RecognizedGestures => _recognizedGestures.AsObservable();
 
         /// <summary>
         /// Minimum distance in pixels that is required to start a drag gesture.
@@ -61,9 +58,7 @@ namespace Svg.Editor.Services
             if (mainScheduler == null) throw new ArgumentNullException(nameof(mainScheduler));
             if (backgroundScheduler == null) throw new ArgumentNullException(nameof(backgroundScheduler));
 
-            DetectedInputEvents = detectedInputEvents;
-
-            var pointerEvents = DetectedInputEvents.OfType<PointerEvent>();
+            var pointerEvents = detectedInputEvents.OfType<PointerEvent>();
             var enterEvents = pointerEvents.Where(pe => pe.EventType == EventType.PointerDown);
             var exitEvents = pointerEvents.Where(pe => pe.EventType == EventType.PointerUp || pe.EventType == EventType.Cancel);
             var interactionWindows = pointerEvents.Window(enterEvents, _ => exitEvents);

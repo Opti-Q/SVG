@@ -28,7 +28,6 @@ namespace Svg.Droid.SampleEditor.Views
             _padView = FindViewById<SvgDrawingCanvasView>(Resource.Id.pad);
 
             _padView.DrawingCanvas = ViewModel.Canvas;
-
         }
 
         private void SetupIconCache()

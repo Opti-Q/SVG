@@ -287,7 +287,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IGraphicsProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\ISvgRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\SvgRenderer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Resources\Resource.Designer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SKFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgAttributeAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgAttributeCollection.cs" />
