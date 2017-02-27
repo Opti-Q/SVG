@@ -42,7 +42,7 @@ namespace Svg
             _entities = entities;
         }
 
-        public bool IsEmptyElement { get; }
+        public bool IsEmptyElement => _xml.IsEmptyElement;
 
         /// <summary>
         /// Gets the text value of the current node.
@@ -137,7 +137,7 @@ namespace Svg
             return read;
         }
 
-        public XmlNodeType NodeType { get; }
+        public XmlNodeType NodeType => _xml.NodeType;
 
         private void ParseEntities()
         {

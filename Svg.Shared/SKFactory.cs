@@ -15,7 +15,7 @@ namespace Svg
 {
     public abstract class SKFactoryBase : IFactory
     {
-        private static readonly Colors _colors = new SkiaColors();
+        private static readonly Lazy<Colors> _colors = new Lazy<Colors>(() => new SkiaColors());
 
         public virtual GraphicsPath CreateGraphicsPath()
         {
@@ -137,7 +137,7 @@ namespace Svg
             return new SkiaRectangleF(left, top, width, height);
         }
 
-        public virtual Colors Colors => _colors;
+        public virtual Colors Colors => _colors.Value;
         public virtual Color CreateColorFromArgb(int alpha, Color colour)
         {
             return new SkiaColor((byte)alpha, colour);

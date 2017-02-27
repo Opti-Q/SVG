@@ -24,11 +24,7 @@ namespace Svg
                 _enableFastTextRendering = value;
                 if (_enableFastTextRendering)
                 {
-#if ANDROID
-                    Engine.Register<IAlternativeSvgTextRenderer, AndroidTextRenderer>(() => new AndroidTextRenderer());
-#else
                     Engine.Register<IAlternativeSvgTextRenderer, SkiaTextRenderer>(() => new SkiaTextRenderer());
-#endif
                 }
             }
         }
@@ -37,15 +33,6 @@ namespace Svg
         {
             base.Initialize();
 
-#if ANDROID
-            Engine.Register<IFactory, IFactory>(() => new Factory());
-
-            var ops = (SvgAndroidPlatformOptions)options;
-            if (ops.EnableFastTextRendering)
-            {
-                Engine.Register<IAlternativeSvgTextRenderer, AndroidTextRenderer>(() => new AndroidTextRenderer());
-            }
-#else
             Engine.Register<IFactory, IFactory>(() => new SKFactory());
             var context = SynchronizationContext.Current;
             if (context != null)
@@ -58,7 +45,6 @@ namespace Svg
             {
                 Engine.Register<IAlternativeSvgTextRenderer, SkiaTextRenderer>(() => new SkiaTextRenderer());
             }
-#endif
         }
     }
 }

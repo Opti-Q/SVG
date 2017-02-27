@@ -141,8 +141,8 @@ namespace Svg
 
         private static void RegisterBaseServices()
         {
-            Engine.Register<ISvgElementFactory, SvgElementFactory>(() => _elementFactory);
-            Engine.Register<ISvgTypeConverterRegistry, SvgTypeConverterRegistry>(() => _typeConverterRegistry);
+            _serviceRegistry[typeof(ISvgElementFactory)] = () => _elementFactory;
+            _serviceRegistry[typeof(ISvgTypeConverterRegistry)] = () => _typeConverterRegistry;
         }
 
         private static void ResolveAndRunPlatformSetup(Assembly[] assemblies)
