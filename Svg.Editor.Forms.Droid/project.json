@@ -6,10 +6,11 @@
     "System.Reactive.Core": "3.0.0",
     "System.Reactive.Interfaces": "3.0.0",
     "System.Reactive.Linq": "3.0.0",
-    "System.Reactive.PlatformServices": "3.0.0"
+    "System.Reactive.PlatformServices": "3.0.0",
+    "Xamarin.Forms": "2.3.3.193"
   },
   "frameworks": {
-    "MonoAndroid,Version=v4.4": {}
+    "monoandroid71": {}
   },
   "runtimes": {
     "win-anycpu": {},

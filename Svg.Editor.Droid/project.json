@@ -1,6 +1,7 @@
 ﻿{
   "dependencies": {
     "SkiaSharp": "1.56.1",
+    "SkiaSharp.Views": "1.56.1",
     "System.Collections": "4.0.11",
     "System.Collections.Concurrent": "4.0.12",
     "System.ComponentModel": "4.0.1",
