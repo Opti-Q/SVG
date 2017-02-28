@@ -9,7 +9,7 @@
     "System.Reactive.PlatformServices": "3.0.0"
   },
   "frameworks": {
-    "MonoAndroid,Version=v4.4": {}
+    "MonoAndroid,Version=v7.1": {}
   },
   "runtimes": {
     "win-anycpu": {},

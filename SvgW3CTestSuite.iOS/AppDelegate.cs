@@ -28,8 +28,8 @@ namespace SvgW3CTestSuite.iOS
             global::Xamarin.Forms.Forms.Init();
 
             // register Xamarin.Form.Toasts plugin so we can see the progress of our test
-            DependencyService.Register<ToastNotificatorImplementation>();
-            ToastNotificatorImplementation.Init();
+            DependencyService.Register<ToastNotification>();
+            ToastNotification.Init();
 
             // create a new window instance based on the screen size
             window = new UIWindow(UIScreen.MainScreen.Bounds);
