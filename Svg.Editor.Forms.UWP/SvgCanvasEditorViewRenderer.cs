@@ -6,10 +6,10 @@ using Svg.Editor.Forms;
 using Svg.Editor.UWP;
 using Xamarin.Forms.Platform.UWP;
 
-[assembly: ExportRenderer(typeof(SvgCanvasEditorRenderer), typeof(SvgCanvasEditorView))]
-namespace Svg.Editor.UWP
+[assembly: ExportRenderer(typeof(SvgCanvasEditorViewRenderer), typeof(SvgCanvasEditorView))]
+namespace Svg.Editor.Forms
 {
-    public class SvgCanvasEditorRenderer : SKCanvasViewRenderer
+    internal class SvgCanvasEditorViewRenderer : SKCanvasViewRenderer
     {
         private UwpGestureDetector _gestureDetector;
         private IDisposable _pressedToken;
