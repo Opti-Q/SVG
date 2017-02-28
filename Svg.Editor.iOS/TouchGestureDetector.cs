@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Svg.Editor.Events;
-using Svg.Editor.Services;
+using Svg.Editor.Interfaces;
 using UIKit;
 
 namespace Svg.Editor.iOS
@@ -59,7 +60,7 @@ namespace Svg.Editor.iOS
             throw new NotImplementedException();
         }
 
-        public IObservable<UserInputEvent> DetectedGestures => _gestureSubject;
+        public IObservable<UserInputEvent> DetectedGestures => _gestureSubject.AsObservable();
 
         internal void OnBegin(UITouch e)
         {
