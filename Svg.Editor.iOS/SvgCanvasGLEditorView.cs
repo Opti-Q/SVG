@@ -5,11 +5,12 @@ using UIKit;
 
 namespace Svg.Editor.iOS
 {
-    public class SvgCanvasGLEditorView : SKGLView
+    [Register(nameof(SvgCanvasGlEditorView))]
+    public class SvgCanvasGlEditorView : SKGLView
     {
         private TouchGestureDetector _detector;
 
-        public SvgCanvasGLEditorView()
+        public SvgCanvasGlEditorView()
         {
             _detector = new TouchGestureDetector(this);
         }

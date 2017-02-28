@@ -4,6 +4,7 @@ using UIKit;
 
 namespace Svg.Editor.iOS
 {
+    [Register(nameof(SvgCanvasEditorView))]
     public class SvgCanvasEditorView
         : SKCanvasView
     {
