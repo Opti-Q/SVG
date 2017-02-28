@@ -7,8 +7,8 @@
     <ProjectGuid>{D93C5B6A-7F1C-4904-89EF-4679784C7AD1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Svg.Editor.UWP</RootNamespace>
-    <AssemblyName>Svg.Editor.UWP</AssemblyName>
+    <RootNamespace>Svg.Editor.Forms</RootNamespace>
+    <AssemblyName>Svg.Editor.Forms</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
@@ -107,20 +107,18 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SvgCanvasEditorRenderer.cs" />
+    <Compile Include="SvgCanvasEditorViewRenderer.cs" />
+    <Compile Include="SvgGlEditorViewRenderer.cs" />
     <EmbeddedResource Include="Properties\Svg.Editor.UWP.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Svg.Editor.Forms\Svg.Editor.Forms.csproj">
-      <Project>{2c90ee6d-52e3-4ba0-92d4-8162800f698d}</Project>
-      <Name>Svg.Editor.Forms</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Svg.UWP\Svg.UWP.csproj">
       <Project>{934b0e99-c2c9-4b41-8705-e79c223362ca}</Project>
       <Name>Svg.UWP</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="..\Svg.Editor.Forms.Shared\Svg.Editor.Forms.Shared.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

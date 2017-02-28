@@ -8,9 +8,9 @@
     <ProjectGuid>{F99C92C2-1192-4CB8-8CE1-F90874669246}</ProjectGuid>
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
-    <RootNamespace>Svg.Editor.iOS</RootNamespace>
+    <RootNamespace>Svg.Editor.Forms</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>Svg.Editor.iOS</AssemblyName>
+    <AssemblyName>Svg.Editor.Forms</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -37,19 +37,13 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Properties\" />
     <Folder Include="Resources\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Svg.Editor.Core\Svg.Editor.Core.csproj">
       <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
       <Name>Svg.Editor.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Svg.Editor.Forms\Svg.Editor.Forms.csproj">
-      <Project>{2c90ee6d-52e3-4ba0-92d4-8162800f698d}</Project>
-      <Name>Svg.Editor.Forms</Name>
     </ProjectReference>
     <ProjectReference Include="..\Svg.Editor.iOS\Svg.Editor.iOS.csproj">
       <Project>{1a4f1238-2571-4e51-9834-d2432f1d9c35}</Project>
@@ -67,5 +61,10 @@
   <ItemGroup>
     <None Include="project.json" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="SvgCanvasEditorViewRenderer.cs" />
+    <Compile Include="SvgGlEditorViewRenderer.cs" />
+  </ItemGroup>
+  <Import Project="..\Svg.Editor.Forms.Shared\Svg.Editor.Forms.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
