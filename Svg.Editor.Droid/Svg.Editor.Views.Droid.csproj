@@ -9,8 +9,8 @@
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Svg.Editor.Droid</RootNamespace>
-    <AssemblyName>Svg.Editor.Droid</AssemblyName>
+    <RootNamespace>Svg.Editor.Views.Droid</RootNamespace>
+    <AssemblyName>Svg.Editor.Views.Droid</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
@@ -69,16 +69,6 @@
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AndroidGestureDetector.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Svg.Droid\Svg.Droid.csproj">
-      <Project>{03f31ec9-4f97-46da-b8f1-dce99c6954de}</Project>
-      <Name>Svg.Droid</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Svg.Editor.Core\Svg.Editor.Core.csproj">
-      <Project>{54d4ad34-c83e-4bc0-ae9f-4f5269606e7a}</Project>
-      <Name>Svg.Editor.Core</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

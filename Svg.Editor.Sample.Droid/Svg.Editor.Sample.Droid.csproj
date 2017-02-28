@@ -241,9 +241,9 @@
       <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
       <Name>Svg.Editor.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Svg.Editor.Droid\Svg.Editor.Droid.csproj">
+    <ProjectReference Include="..\Svg.Editor.Droid\Svg.Editor.Views.Droid.csproj">
       <Project>{ec21b42f-da0d-4e7b-a2f4-757abc917e07}</Project>
-      <Name>Svg.Editor.Droid</Name>
+      <Name>Svg.Editor.Views.Droid</Name>
     </ProjectReference>
     <ProjectReference Include="..\Svg.Editor.Sample.Core\Svg.Editor.Sample.Core.csproj">
       <Project>{8739ced3-5844-4f18-b2e3-c99036b31b33}</Project>

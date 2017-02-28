@@ -10,41 +10,35 @@
       <Platform>AnyCPU</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Svg.Editor.Core\Svg.Editor.Core.csproj" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>b7393442-daf5-4a3b-9c94-7ae1d75ed1bd</ProjectGuid>
+    <ProjectGuid>c88d3804-bc6b-42e2-8fe0-1b77a3751d4b</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup>
     <NuProjPath Condition=" '$(NuProjPath)' == '' ">$(MSBuildExtensionsPath)\NuProj\</NuProjPath>
   </PropertyGroup>
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
-    <Id>Svg.Editor.Forms</Id>
+    <Id>Svg.Editor</Id>
     <Version>2.0.1</Version>
-    <Title>Svg.Editor.Forms</Title>
+    <Title>Svg.Editor</Title>
     <Authors>alexa</Authors>
     <Owners>alexa</Owners>
-    <Summary>Svg.Editor.Forms</Summary>
-    <Description>Svg.Editor.Forms</Description>
+    <Summary>Svg.Editor</Summary>
+    <Description>Svg.Editor</Description>
     <ReleaseNotes>
     </ReleaseNotes>
     <ProjectUrl>
     </ProjectUrl>
     <LicenseUrl>
     </LicenseUrl>
-    <Copyright>Copyright © gentledepp</Copyright>
-    <Tags>Svg.Editor.Forms</Tags>
+    <Copyright>Copyright © alexa</Copyright>
+    <Tags>Svg.Editor</Tags>
     <GenerateSymbolPackage>true</GenerateSymbolPackage>
     <EmbedSourceFiles>true</EmbedSourceFiles>
     <OutputPath>..\nuget\$(Configuration)\</OutputPath>
   </PropertyGroup>
-  <ItemGroup>
-    <Content Include="Readme.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Svg.Editor.Forms.Droid\Svg.Editor.Forms.Droid.csproj" />
-    <ProjectReference Include="..\Svg.Editor.Forms.iOS\Svg.Editor.Forms.iOS.csproj" />
-    <ProjectReference Include="..\Svg.Editor.Forms.UWP\Svg.Editor.Forms.UWP.csproj" />
-    <ProjectReference Include="..\Svg.Editor.Forms\Svg.Editor.Forms.csproj" />
-  </ItemGroup>
   <Import Project="$(NuProjPath)\NuProj.targets" />
 </Project>

@@ -112,12 +112,6 @@
     <Compile Include="SvgGlEditorViewRenderer.cs" />
     <EmbeddedResource Include="Properties\Svg.Editor.UWP.rd.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Svg.UWP\Svg.UWP.csproj">
-      <Project>{934b0e99-c2c9-4b41-8705-e79c223362ca}</Project>
-      <Name>Svg.UWP</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="..\Svg.Editor.Forms.Shared\Svg.Editor.Forms.Shared.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

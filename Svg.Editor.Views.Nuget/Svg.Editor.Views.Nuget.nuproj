@@ -10,41 +10,39 @@
       <Platform>AnyCPU</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Svg.Editor.Droid\Svg.Editor.Views.Droid.csproj" />
+    <ProjectReference Include="..\Svg.Editor.iOS\Svg.Editor.Views.iOS.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Readme.txt" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>b7393442-daf5-4a3b-9c94-7ae1d75ed1bd</ProjectGuid>
+    <ProjectGuid>339fc8ee-f80e-4758-9b91-3ce21fd933b9</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup>
     <NuProjPath Condition=" '$(NuProjPath)' == '' ">$(MSBuildExtensionsPath)\NuProj\</NuProjPath>
   </PropertyGroup>
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
-    <Id>Svg.Editor.Forms</Id>
+    <Id>Svg.Editor.Views</Id>
     <Version>2.0.1</Version>
-    <Title>Svg.Editor.Forms</Title>
+    <Title>Svg.Editor.Views</Title>
     <Authors>alexa</Authors>
     <Owners>alexa</Owners>
-    <Summary>Svg.Editor.Forms</Summary>
-    <Description>Svg.Editor.Forms</Description>
+    <Summary>Svg.Editor.Views</Summary>
+    <Description>Svg.Editor.Views</Description>
     <ReleaseNotes>
     </ReleaseNotes>
     <ProjectUrl>
     </ProjectUrl>
     <LicenseUrl>
     </LicenseUrl>
-    <Copyright>Copyright © gentledepp</Copyright>
-    <Tags>Svg.Editor.Forms</Tags>
+    <Copyright>Copyright © alexa</Copyright>
+    <Tags>Svg.Editor.Views</Tags>
     <GenerateSymbolPackage>true</GenerateSymbolPackage>
     <EmbedSourceFiles>true</EmbedSourceFiles>
     <OutputPath>..\nuget\$(Configuration)\</OutputPath>
   </PropertyGroup>
-  <ItemGroup>
-    <Content Include="Readme.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Svg.Editor.Forms.Droid\Svg.Editor.Forms.Droid.csproj" />
-    <ProjectReference Include="..\Svg.Editor.Forms.iOS\Svg.Editor.Forms.iOS.csproj" />
-    <ProjectReference Include="..\Svg.Editor.Forms.UWP\Svg.Editor.Forms.UWP.csproj" />
-    <ProjectReference Include="..\Svg.Editor.Forms\Svg.Editor.Forms.csproj" />
-  </ItemGroup>
   <Import Project="$(NuProjPath)\NuProj.targets" />
 </Project>

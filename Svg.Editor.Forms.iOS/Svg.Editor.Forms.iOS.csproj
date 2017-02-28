@@ -32,31 +32,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core" />
-    <Reference Include="Xamarin.iOS" />
+    <Reference Include="Xamarin.iOS">
+      <ExcludeFromNuPkg>true</ExcludeFromNuPkg>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
     <Folder Include="Resources\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Svg.Editor.Core\Svg.Editor.Core.csproj">
-      <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
-      <Name>Svg.Editor.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Svg.Editor.iOS\Svg.Editor.iOS.csproj">
-      <Project>{1a4f1238-2571-4e51-9834-d2432f1d9c35}</Project>
-      <Name>Svg.Editor.iOS</Name>
-      <IsAppExtension>false</IsAppExtension>
-      <IsWatchApp>false</IsWatchApp>
-    </ProjectReference>
-    <ProjectReference Include="..\Svg.iOS\Svg.iOS.csproj">
-      <Project>{46070862-fd10-4154-861a-657d4d9dde36}</Project>
-      <Name>Svg.iOS</Name>
-      <IsAppExtension>false</IsAppExtension>
-      <IsWatchApp>false</IsWatchApp>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />

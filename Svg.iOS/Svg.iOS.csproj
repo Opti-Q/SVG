@@ -31,10 +31,10 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core" />
-    <Reference Include="Xamarin.iOS" />
+    <Reference Include="System" ><ExcludeFromNuPkg>true</ExcludeFromNuPkg></Reference>
+    <Reference Include="System.Xml" ><ExcludeFromNuPkg>true</ExcludeFromNuPkg></Reference>
+    <Reference Include="System.Core" ><ExcludeFromNuPkg>true</ExcludeFromNuPkg></Reference>
+    <Reference Include="Xamarin.iOS" ><ExcludeFromNuPkg>true</ExcludeFromNuPkg></Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
