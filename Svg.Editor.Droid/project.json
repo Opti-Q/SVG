@@ -23,7 +23,7 @@
     "System.Threading.Tasks": "4.0.11"
   },
   "frameworks": {
-    "MonoAndroid,Version=v4.0.3": {}
+    "monoandroid71": {}
   },
   "runtimes": {
     "win-anycpu": {},

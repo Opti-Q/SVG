@@ -9,14 +9,17 @@ using System.Reactive.Subjects;
 using Svg.Editor.Events;
 using Svg.Editor.Extensions;
 using Svg.Editor.Gestures;
+using Svg.Editor.Interfaces;
 using Svg.Interfaces;
 
 namespace Svg.Editor.Services
 {
-    public class GestureRecognizer : IDisposable
+    public class GestureRecognizer : IDisposable, IGestureRecognizer
     {
         private readonly Subject<UserGesture> _recognizedGestures = new Subject<UserGesture>();
         private readonly IDictionary<string, IDisposable> _subscriptions = new Dictionary<string, IDisposable>();
+        private readonly IScheduler _mainScheduler;
+        private readonly IScheduler _backgroundScheduler;
 
         #region Public properties
 
@@ -52,11 +55,17 @@ namespace Svg.Editor.Services
 
         #endregion
 
-        public GestureRecognizer(IObservable<UserInputEvent> detectedInputEvents, IScheduler mainScheduler, IScheduler backgroundScheduler)
+        public GestureRecognizer(ISchedulerProvider schedulerProvider)
+        {
+            if (schedulerProvider == null) throw new ArgumentNullException(nameof(schedulerProvider));
+
+            _mainScheduler = schedulerProvider.MainScheduer;
+            _backgroundScheduler = schedulerProvider.BackgroundScheduler;
+        }
+
+        public void SubscribeTo(IObservable<UserInputEvent> detectedInputEvents)
         {
             if (detectedInputEvents == null) throw new ArgumentNullException(nameof(detectedInputEvents));
-            if (mainScheduler == null) throw new ArgumentNullException(nameof(mainScheduler));
-            if (backgroundScheduler == null) throw new ArgumentNullException(nameof(backgroundScheduler));
 
             var pointerEvents = detectedInputEvents.OfType<PointerEvent>();
             var enterEvents = pointerEvents.Where(pe => pe.EventType == EventType.PointerDown);
@@ -73,24 +82,24 @@ namespace Svg.Editor.Services
                     pe =>
                         pe.EventType == EventType.PointerUp &&
                         PositionEquals(pe.Pointer1Down, pe.Pointer1Position, TouchThreshold))
-                .Buffer(TimeSpan.FromSeconds(TapTimeout), 1, backgroundScheduler)
+                .Buffer(TimeSpan.FromSeconds(TapTimeout), 1, _backgroundScheduler)
                 .Take(1);
             })
             .Where(l => l.Any())
             .Select(l => new TapGesture(l.First().Pointer1Position))
             .Timestamp()
             .PairWithPrevious()
-            .Throttle(TimeSpan.FromSeconds(DoubleTapTimeout), backgroundScheduler)
+            .Throttle(TimeSpan.FromSeconds(DoubleTapTimeout), _backgroundScheduler)
             .Select
             (
-                tup => 
+                tup =>
                     tup.Item1.Value == null ||
                     tup.Item2.Timestamp - tup.Item1.Timestamp > TimeSpan.FromSeconds(DoubleTapTimeout) ||
                     !PositionEquals(tup.Item1.Value.Position, tup.Item2.Value.Position, TouchThreshold)
                         ? tup.Item2.Value
                         : new DoubleTapGesture(tup.Item2.Value.Position)
             )
-            .ObserveOn(mainScheduler)
+            .ObserveOn(_mainScheduler)
             .Subscribe(tg => _recognizedGestures.OnNext(tg));
 
             #endregion
@@ -106,7 +115,7 @@ namespace Svg.Editor.Services
                 .Buffer(TimeSpan.FromSeconds(LongPressDuration), 2)
                 .Take(1);
             })
-            .ObserveOn(mainScheduler)
+            .ObserveOn(_mainScheduler)
             .Subscribe
             (
                 l =>

@@ -1,4 +1,6 @@
 using System;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using Android.App;
 using Android.Content;
 using Android.Graphics;
@@ -6,6 +8,7 @@ using Android.Util;
 using Android.Views;
 using SkiaSharp;
 using Svg.Editor.Droid.Services;
+using Svg.Editor.Events;
 using Svg.Editor.Interfaces;
 using Svg.Editor.Services;
 
@@ -18,6 +21,7 @@ namespace Svg.Editor.Droid
 #endif
         private AndroidGestureDetector _detector;
         private ISvgDrawingCanvas _drawingCanvas;
+        private readonly Subject<UserInputEvent> _detectedGestures = new Subject<UserInputEvent>();
 
         public ISvgDrawingCanvas DrawingCanvas
         {
@@ -29,12 +33,15 @@ namespace Svg.Editor.Droid
                 _detector?.Dispose();
                 _detector = new AndroidGestureDetector(Context);
                 _detector.DetectedGestures.Subscribe(async uie => await DrawingCanvas.OnEvent(uie));
+                _detector.DetectedGestures.Subscribe(_detectedGestures.OnNext);
             }
         }
 
         public SvgDrawingCanvasView(Context context, IAttributeSet attr) : base(context, attr)
         {
             //DrawingCanvas = new SvgDrawingCanvas();
+            var gestureRecognizer = Engine.Resolve<IGestureRecognizer>() as GestureRecognizer;
+            gestureRecognizer?.SubscribeTo(_detectedGestures.AsObservable());
         }
 
         public override bool OnTouchEvent(MotionEvent ev)
