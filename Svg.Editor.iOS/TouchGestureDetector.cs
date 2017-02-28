@@ -35,28 +35,60 @@ namespace Svg.Editor.iOS
 
         private void OnZoom(UIPinchGestureRecognizer r)
         {
-            switch (r.State)
+            var state = r.State;
+            
+            if (state == UIGestureRecognizerState.Began)
             {
-                case UIGestureRecognizerState.Began:
-                    var s = new ScaleEvent(ScaleStatus.Start, (float)r.Scale, 0f, 0f);
-                    _gestureSubject.OnNext(s);
-                    break;
-
-                case UIGestureRecognizerState.Changed:
-                    var c = new ScaleEvent(ScaleStatus.Scaling, (float)r.Scale, 0f, 0f);
-                    _gestureSubject.OnNext(c);
-                    break;
-
-                case UIGestureRecognizerState.Ended:
-                    var e = new ScaleEvent(ScaleStatus.End, (float)r.Scale, 0f, 0f);
-                    _gestureSubject.OnNext(e);
-                    break;
+                var s = new ScaleEvent(ScaleStatus.Start, (float) r.Scale, 0f, 0f);
+                _gestureSubject.OnNext(s);
+            }
+            else if (state == UIGestureRecognizerState.Changed)
+            {
+                var c = new ScaleEvent(ScaleStatus.Scaling, (float) r.Scale, 0f, 0f);
+                _gestureSubject.OnNext(c);
+            }
+            else if( state == UIGestureRecognizerState.Cancelled ||
+                state == UIGestureRecognizerState.Ended ||
+                state ==UIGestureRecognizerState.Recognized)
+            {
+                var e = new ScaleEvent(ScaleStatus.End, (float)r.Scale, 0f, 0f);
+                _gestureSubject.OnNext(e);
             }
         }
 
+        private float _absoluteRotation = 0;
+
         private void OnRotate(UIRotationGestureRecognizer r)
         {
-            throw new NotImplementedException();
+            var state = r.State;
+
+            if (state == UIGestureRecognizerState.Began)
+            {
+                _absoluteRotation = RadianToDegree(r.Rotation);
+                var relativeRotation = RadianToDegree(r.Rotation);
+                var s = new RotateEvent(relativeRotation, _absoluteRotation, RotateStatus.Start, (int)r.NumberOfTouches);
+                _gestureSubject.OnNext(s);
+            }
+            else if (state == UIGestureRecognizerState.Changed)
+            {
+                _absoluteRotation += RadianToDegree(r.Rotation);
+                var relativeRotation = RadianToDegree(r.Rotation);
+                var s = new RotateEvent(relativeRotation, _absoluteRotation, RotateStatus.Rotating, (int)r.NumberOfTouches);
+                _gestureSubject.OnNext(s);
+            }
+            else if (state == UIGestureRecognizerState.Cancelled ||
+                state == UIGestureRecognizerState.Ended ||
+                state == UIGestureRecognizerState.Recognized)
+            {
+                _absoluteRotation += RadianToDegree(r.Rotation);
+                var relativeRotation = RadianToDegree(r.Rotation);
+                var s = new RotateEvent(relativeRotation, _absoluteRotation, RotateStatus.End, (int)r.NumberOfTouches);
+                _gestureSubject.OnNext(s);
+            }
+        }
+        private static float RadianToDegree(double angle)
+        {
+            return (float)(angle * (180.0 / Math.PI));
         }
 
         public IObservable<UserInputEvent> DetectedGestures => _gestureSubject;
