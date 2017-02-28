@@ -112,6 +112,10 @@
     <EmbeddedResource Include="Properties\Svg.Editor.UWP.rd.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Svg.Editor.Core\Svg.Editor.Core.csproj">
+      <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
+      <Name>Svg.Editor.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Svg.Editor.Forms\Svg.Editor.Forms.csproj">
       <Project>{2c90ee6d-52e3-4ba0-92d4-8162800f698d}</Project>
       <Name>Svg.Editor.Forms</Name>

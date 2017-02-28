@@ -11,19 +11,37 @@ namespace Svg.Editor.UWP
 {
     public class SvgCanvasEditorRenderer : SKCanvasViewRenderer
     {
-        private readonly UwpGestureDetector _gestureDetector = new UwpGestureDetector();
+        private UwpGestureDetector _gestureDetector;
         private IDisposable _pressedToken;
+        private IDisposable _releasedToken;
+        private IDisposable _movedToken;
 
 
         protected override void OnElementChanged(ElementChangedEventArgs<SKCanvasView> e)
         {
             base.OnElementChanged(e);
 
+            _gestureDetector = new UwpGestureDetector(Control);
+
             _pressedToken = Observable.FromEvent<PointerEventHandler, PointerRoutedEventArgs>
             (
                 h => (_, args) => h(args),
                 h => Control.PointerPressed += h,
                 h => Control.PointerPressed -= h
+            ).Subscribe(args => _gestureDetector.OnTouch(args));
+
+            _releasedToken = Observable.FromEvent<PointerEventHandler, PointerRoutedEventArgs>
+            (
+                h => (_, args) => h(args),
+                h => Control.PointerReleased += h,
+                h => Control.PointerReleased -= h
+            ).Subscribe(args => _gestureDetector.OnTouch(args));
+
+            _movedToken = Observable.FromEvent<PointerEventHandler, PointerRoutedEventArgs>
+            (
+                h => (_, args) => h(args),
+                h => Control.PointerMoved += h,
+                h => Control.PointerMoved -= h
             ).Subscribe(args => _gestureDetector.OnTouch(args));
         }
 
@@ -32,6 +50,8 @@ namespace Svg.Editor.UWP
             base.Dispose(disposing);
 
             _pressedToken.Dispose();
+            _releasedToken.Dispose();
+            _movedToken.Dispose();
         }
     }
 }

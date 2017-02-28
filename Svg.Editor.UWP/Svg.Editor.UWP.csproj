@@ -116,6 +116,10 @@
       <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
       <Name>Svg.Editor.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Svg.UWP\Svg.UWP.csproj">
+      <Project>{934b0e99-c2c9-4b41-8705-e79c223362ca}</Project>
+      <Name>Svg.UWP</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\Svg.Editor.Shared\Svg.Editor.Shared.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
