@@ -107,7 +107,6 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SvgCanvasEditorRenderer.cs" />
     <Compile Include="SvgCanvasEditorViewRenderer.cs" />
     <Compile Include="SvgGlEditorViewRenderer.cs" />
     <EmbeddedResource Include="Properties\Svg.Editor.UWP.rd.xml" />
