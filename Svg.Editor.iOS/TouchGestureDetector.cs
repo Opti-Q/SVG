@@ -23,13 +23,14 @@ namespace Svg.Editor.iOS
             _owner.UserInteractionEnabled = true;
             _owner.MultipleTouchEnabled = true;
 
-            _zoomRecognizer = new UIPinchGestureRecognizer(this.OnZoom);
-            _zoomRecognizer.CancelsTouchesInView = false;
-            _zoomRecognizer.ShouldRecognizeSimultaneously += (r1, r2) => true;
             _rotationRecognizer = new UIRotationGestureRecognizer(this.OnRotate);
             _rotationRecognizer.CancelsTouchesInView = false;
             _rotationRecognizer.ShouldRecognizeSimultaneously += (r1, r2) => true;
-            _rotationRecognizer.RequireGestureRecognizerToFail(_zoomRecognizer);
+
+            _zoomRecognizer = new UIPinchGestureRecognizer(this.OnZoom);
+            _zoomRecognizer.CancelsTouchesInView = false;
+            _zoomRecognizer.ShouldRecognizeSimultaneously += (r1, r2) => true;
+            _zoomRecognizer.RequireGestureRecognizerToFail(_rotationRecognizer);
         }
 
         private void OnZoom(UIPinchGestureRecognizer r)

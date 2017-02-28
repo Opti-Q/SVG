@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F99C92C2-1192-4CB8-8CE1-F90874669246}</ProjectGuid>
+    <ProjectGuid>{1A4F1238-2571-4E51-9834-D2432F1D9C35}</ProjectGuid>
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <RootNamespace>Svg.Editor.iOS</RootNamespace>
@@ -31,6 +31,14 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="SkiaSharp, Version=1.56.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\SkiaSharp.1.56.1\lib\XamariniOS\SkiaSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SkiaSharp.Views.iOS, Version=1.56.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\SkiaSharp.Views.1.56.1\lib\XamariniOS\SkiaSharp.Views.iOS.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -41,21 +49,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SvgCanvasEditorView.cs" />
+    <Compile Include="SvgCanvasGLEditorView.cs" />
+    <Compile Include="TouchGestureDetector.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Svg.Editor.Core\Svg.Editor.Core.csproj">
       <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
       <Name>Svg.Editor.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Svg.Editor.Forms\Svg.Editor.Forms.csproj">
-      <Project>{2c90ee6d-52e3-4ba0-92d4-8162800f698d}</Project>
-      <Name>Svg.Editor.Forms</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Svg.Editor.iOS\Svg.Editor.iOS.csproj">
-      <Project>{1a4f1238-2571-4e51-9834-d2432f1d9c35}</Project>
-      <Name>Svg.Editor.iOS</Name>
-      <IsAppExtension>false</IsAppExtension>
-      <IsWatchApp>false</IsWatchApp>
     </ProjectReference>
     <ProjectReference Include="..\Svg.iOS\Svg.iOS.csproj">
       <Project>{46070862-fd10-4154-861a-657d4d9dde36}</Project>
@@ -63,9 +67,6 @@
       <IsAppExtension>false</IsAppExtension>
       <IsWatchApp>false</IsWatchApp>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="project.json" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
