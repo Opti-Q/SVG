@@ -1,4 +1,5 @@
 ﻿{
+  "supports": {},
   "dependencies": {
     "Newtonsoft.Json": "9.0.1",
     "SkiaSharp": "1.56.1",
@@ -9,10 +10,6 @@
     "System.Reactive.PlatformServices": "3.0.0"
   },
   "frameworks": {
-    ".NETPortable,Version=v4.5,Profile=Profile259": {}
-  },
-  "runtimes": {
-    "win-anycpu": {},
-    "win": {}
+    ".NETPortable,Version=v4.5,Profile=Profile111": {}
   }
 }
