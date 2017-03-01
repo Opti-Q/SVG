@@ -63,15 +63,12 @@ namespace Svg
 
         public static void RegisterSingleton<TInterface, TImplementation>(Func<TImplementation> factory)
             where TInterface : class
-            where TImplementation : TInterface
+            where TImplementation : class, TInterface
         {
             EnsureInitialized();
-
-            lock (_lock)
-            {
-                var singleton = factory();
-                _serviceRegistry[typeof(TInterface)] = () => singleton;
-            }
+            
+            var singleton = factory();
+            RegisterInternal<TInterface, TImplementation>(() => singleton);
         }
 
         public static void Register<TInterface, TImplementation>(Func<TImplementation> factory)
@@ -79,20 +76,26 @@ namespace Svg
             where TImplementation : class, TInterface
         {
             EnsureInitialized();
-            
+
+            RegisterInternal<TInterface, TImplementation>(factory);
+        }
+
+        private static void RegisterInternal<TInterface, TImplementation>(Func<TImplementation> factory) where TInterface : class
+            where TImplementation : class, TInterface
+        {
             lock (_lock)
             {
                 _serviceRegistry[typeof(TInterface)] = factory;
 
                 // store IFactory separatly as it is used more often
                 if (typeof(TInterface) == typeof(IFactory))
-                    _factory = (IFactory)factory();
+                    _factory = (IFactory) factory();
                 if (typeof(TInterface) == typeof(ISvgTypeDescriptor))
-                    _typeDescriptor = (ISvgTypeDescriptor)factory();
+                    _typeDescriptor = (ISvgTypeDescriptor) factory();
                 if (typeof(TInterface) == typeof(ISvgElementAttributeProvider))
-                    _attributeProvider = (ISvgElementAttributeProvider)factory();
+                    _attributeProvider = (ISvgElementAttributeProvider) factory();
                 if (typeof(TInterface) == typeof(ILogger))
-                    _logger = (ILogger)factory();
+                    _logger = (ILogger) factory();
             }
         }
 
@@ -142,9 +145,9 @@ namespace Svg
 
         private static void RegisterBaseServices()
         {
-            _serviceRegistry[typeof(ISvgElementFactory)] = () => _elementFactory;
-            _serviceRegistry[typeof(ISvgTypeConverterRegistry)] = () => _typeConverterRegistry;
-            _serviceRegistry[typeof(ISvgTypeDescriptor)] = () => _typeDescriptor;
+            RegisterInternal<ISvgElementFactory, SvgElementFactory>(() => _elementFactory);
+            RegisterInternal<ISvgTypeConverterRegistry, SvgTypeConverterRegistry>(() => _typeConverterRegistry);
+            RegisterInternal<ISvgTypeDescriptor, SvgTypeDescriptor>(() => (SvgTypeDescriptor)_typeDescriptor);
         }
     }
 }

@@ -12,6 +12,7 @@ namespace Svg.Tests.Win
         [SetUp]
         public void SetUp()
         {
+            SvgPlatform.Init();
         }
 
         [Test]

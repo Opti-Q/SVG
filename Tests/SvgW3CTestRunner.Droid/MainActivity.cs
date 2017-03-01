@@ -49,6 +49,8 @@ namespace SvgW3CTestRunner.Droid
         //{
         //    base.OnPostResume();
 
+            SvgPlatform.Init();
+
             var mainView = FindViewById<LinearLayout>(Resource.Id.mainView);
             mainView.AddView(new View(this) // Trennlinie
             {

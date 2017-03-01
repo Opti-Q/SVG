@@ -35,6 +35,8 @@ namespace SvgW3CTestSuite
         public static Func<string, ISvgSource> FileSourceProvider { get; set; }
         static W3CTestFixture()
         {
+            SvgPlatform.Init();
+
             var svgFiles = AssetHelper.GetAllSvgFiles().Take(400)/*.Where(s => !s.StartsWith("struct-image"))*/;
 
             SvgTestCases = svgFiles.Select(path => new object[]

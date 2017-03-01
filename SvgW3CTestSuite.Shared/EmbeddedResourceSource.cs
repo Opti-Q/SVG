@@ -28,7 +28,7 @@ namespace SvgW3CTestSuite.Assets
             if (str.StartsWith("#"))
                 return null;
 
-            var path = Path.GetDirectoryName(_name);
+            var path = GetParent(Path.GetFileNameWithoutExtension(_name));
 
             // remove hash if there is any
             var hash = relativePath.OriginalString.Substring(relativePath.OriginalString.LastIndexOf('#'));
@@ -42,11 +42,11 @@ namespace SvgW3CTestSuite.Assets
 
             while (str.StartsWith("../"))
             {
-                path = Path.GetDirectoryName(path);
+                path = GetParent(path);
                 str = str.Substring(3);
             }
 
-            var fullPath = path == null ? str : Path.Combine(path, str);
+            var fullPath = path == null ? str : $"{path}.{str.Replace('/','.')}";
             try
             {
                 return _assembly.GetManifestResourceStream(fullPath);
