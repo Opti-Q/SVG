@@ -4,6 +4,6 @@
              xmlns:svg="clr-namespace:Svg.Editor.Forms;assembly=Svg.Editor.Forms"
              x:Class="Svg.Editor.Sample.Forms.MainPage">
 
-	<svg:SvgCanvasEditorView />
+	<svg:SvgCanvasEditorView BackgroundColor="Purple" />
 
 </ContentPage>

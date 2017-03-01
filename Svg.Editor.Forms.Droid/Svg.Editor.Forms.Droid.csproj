@@ -9,8 +9,8 @@
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Svg.Editor.Forms</RootNamespace>
-    <AssemblyName>Svg.Editor.Forms</AssemblyName>
+    <RootNamespace>Svg.Editor.Forms.Droid</RootNamespace>
+    <AssemblyName>Svg.Editor.Forms.Droid</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
@@ -54,10 +54,6 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Svg.Core\Svg.Core.csproj">
-      <Project>{13edb4db-3977-4c2e-998a-6103ca015881}</Project>
-      <Name>Svg.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Svg.Droid\Svg.Droid.csproj">
       <Project>{03f31ec9-4f97-46da-b8f1-dce99c6954de}</Project>
       <Name>Svg.Droid</Name>

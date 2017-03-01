@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Windows.Foundation;
@@ -8,20 +9,24 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Svg.Editor.Gestures;
 using Svg.Editor.Interfaces;
+using Svg.Interfaces;
 
 namespace Svg.Editor.Views
 {
     public class UwpGestureRecognizer : IGestureRecognizer, IDisposable
     {
-        private readonly Subject<UserGesture> _gesturesSubject = new Subject<UserGesture>();
-        public IObservable<UserGesture> RecognizedGestures => _gesturesSubject.AsObservable();
-
         private readonly ManipulationInputProcessor _inputProcessor;
+
+        public IObservable<UserGesture> RecognizedGestures => _inputProcessor.RecognizedGestures;
 
         public UwpGestureRecognizer(UIElement control)
         {
             var gestureRecognizer = new GestureRecognizer();
             _inputProcessor = new ManipulationInputProcessor(gestureRecognizer, control);
+
+            // DEMO STUFF !!! TODO: REMOVE
+            _inputProcessor.RecognizedGestures.Subscribe(
+                ug => Debug.WriteLine($"Gesture recognized: {ug.Type.ToString()}"));
         }
 
         public void Dispose()
@@ -37,6 +42,10 @@ namespace Svg.Editor.Views
         private TransformGroup _cumulativeTransform;
         private MatrixTransform _previousTransform;
         private CompositeTransform _deltaTransform;
+
+        private readonly Subject<UserGesture> _gesturesSubject = new Subject<UserGesture>();
+
+        public IObservable<UserGesture> RecognizedGestures => _gesturesSubject.AsObservable();
 
         public ManipulationInputProcessor(GestureRecognizer gestureRecognizer, UIElement referenceFrame)
         {
@@ -57,11 +66,28 @@ namespace Svg.Editor.Views
             _element.PointerReleased += OnPointerReleased;
             _element.PointerCanceled += OnPointerCanceled;
 
+            _element.Tapped += ElementOnTapped;
+            _element.DoubleTapped += ElementOnDoubleTapped;
+
             // Set up event handlers to respond to gesture recognizer output
             _recognizer.ManipulationStarted += OnManipulationStarted;
             _recognizer.ManipulationUpdated += OnManipulationUpdated;
             _recognizer.ManipulationCompleted += OnManipulationCompleted;
             _recognizer.ManipulationInertiaStarting += OnManipulationInertiaStarting;
+        }
+
+        private void ElementOnDoubleTapped(object sender, DoubleTappedRoutedEventArgs args)
+        {
+            //var position = args.GetPosition(_element);
+            //_gesturesSubject.OnNext(new DoubleTapGesture(PointF.Create((float) position.X, (float) position.Y)));
+            Debug.WriteLine("Pointer pressed");
+        }
+
+        private void ElementOnTapped(object sender, TappedRoutedEventArgs args)
+        {
+            var position = args.GetPosition(_element);
+            _gesturesSubject.OnNext(new TapGesture(PointF.Create((float) position.X, (float) position.Y)));
+            Debug.WriteLine("Pointer pressed");
         }
 
         public void InitializeTransforms()
@@ -90,6 +116,8 @@ namespace Svg.Editor.Views
         // The points are in the reference frame of the canvas that contains the rectangle element.
         private void OnPointerPressed(object sender, PointerRoutedEventArgs args)
         {
+            Debug.WriteLine("Pointer pressed");
+
             // Set the pointer capture to the element being interacted with so that only it
             // will fire pointer-related events
             _element.CapturePointer(args.Pointer);
@@ -102,6 +130,8 @@ namespace Svg.Editor.Views
         // The points are in the reference frame of the canvas that contains the rectangle element.
         private void OnPointerMoved(object sender, PointerRoutedEventArgs args)
         {
+            Debug.WriteLine("Pointer moved");
+
             // Feed the set of points into the gesture recognizer as a move event
             _recognizer.ProcessMoveEvents(args.GetIntermediatePoints(_element));
         }
@@ -110,6 +140,8 @@ namespace Svg.Editor.Views
         // The points are in the reference frame of the canvas that contains the rectangle element.
         private void OnPointerReleased(object sender, PointerRoutedEventArgs args)
         {
+            Debug.WriteLine("Pointer released");
+
             // Feed the current point into the gesture recognizer as an up event
             _recognizer.ProcessUpEvent(args.GetCurrentPoint(_element));
 
@@ -129,11 +161,14 @@ namespace Svg.Editor.Views
         // that a manipulation is in progress
         private void OnManipulationStarted(object sender, ManipulationStartedEventArgs e)
         {
+            Debug.WriteLine("Manipulation started");
         }
 
         // Process the change resulting from a manipulation
         private void OnManipulationUpdated(object sender, ManipulationUpdatedEventArgs e)
         {
+            Debug.WriteLine("Manipulation updated");
+
             _previousTransform.Matrix = _cumulativeTransform.Value;
 
             // Get the center point of the manipulation for rotation
@@ -157,6 +192,7 @@ namespace Svg.Editor.Views
         // When a manipulation has finished, reset the color of the object
         private void OnManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
         {
+            Debug.WriteLine("Manipulation completed");
         }
 
         // Modify the GestureSettings property to only allow movement on the X axis

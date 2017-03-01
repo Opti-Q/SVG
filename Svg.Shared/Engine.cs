@@ -8,6 +8,14 @@ using Svg.Shared;
 
 namespace Svg
 {
+    public static class Svg
+    {
+        public static void Init()
+        {
+            
+        }
+    }
+
     public static class Engine
     {
         private static readonly object _lock = new object();
