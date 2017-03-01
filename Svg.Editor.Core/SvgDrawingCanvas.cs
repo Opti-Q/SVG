@@ -5,9 +5,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -36,7 +33,6 @@ namespace Svg.Editor
         private bool _isDebugEnabled;
         private bool _documentIsDirty;
         private PointF _zoomFocus;
-        private readonly Subject<UserInputEvent> _detectedGestures;
         private IUndoRedoService UndoRedoService { get; }
 
         #endregion
@@ -184,16 +180,7 @@ namespace Svg.Editor
             _selectedElements = new ObservableCollection<SvgVisualElement>();
             _selectedElements.CollectionChanged += OnSelectionChanged;
 
-            _detectedGestures = new Subject<UserInputEvent>();
-            var mainScheduler = Engine.TryResolve<IScheduler>();
-            var backgroundScheduler = (IScheduler) Scheduler.Default;
-            var p = Engine.TryResolve<SchedulerProvider>();
-            if (p != null)
-            {
-                mainScheduler = p.MainScheduer;
-                backgroundScheduler = p.BackgroundScheduler;
-            }
-            var gestureRecognizer = new GestureRecognizer(_detectedGestures.AsObservable(), mainScheduler, backgroundScheduler);
+            var gestureRecognizer = Engine.Resolve<IGestureRecognizer>();
             gestureRecognizer.RecognizedGestures.Subscribe(async g => await OnGesture(g));
 
             UndoRedoService = Engine.Resolve<IUndoRedoService>();
@@ -216,8 +203,6 @@ namespace Svg.Editor
         /// <param name="ev"></param>
         public async Task OnEvent(UserInputEvent ev)
         {
-            _detectedGestures.OnNext(ev);
-
             await EnsureInitialized();
 
             foreach (var tool in Tools.OrderBy(t => t.InputOrder))

@@ -13,7 +13,7 @@
     "Xamarin.Forms": "2.3.3.193"
   },
   "frameworks": {
-    "MonoAndroid,Version=v7.1": {}
+    "monoandroid71": {}
   },
   "runtimes": {
     "win-anycpu": {},

@@ -65,12 +65,25 @@ namespace Svg
             }
         }
 
+        public static void RegisterSingleton<TInterface, TImplementation>(Func<TImplementation> factory)
+            where TInterface : class
+            where TImplementation : TInterface
+        {
+            EnsureInitialized();
+
+            lock (_lock)
+            {
+                var singleton = factory();
+                _serviceRegistry[typeof(TInterface)] = () => singleton;
+            }
+        }
+
         public static void Register<TInterface, TImplementation>(Func<TImplementation> factory)
             where TInterface : class
             where TImplementation : class, TInterface
         {
             EnsureInitialized();
-
+            
             lock (_lock)
             {
                 _serviceRegistry[typeof(TInterface)] = factory;
@@ -155,28 +168,30 @@ namespace Svg
             {
                 _initializing = true;
 
-                var platformSetupAttribute = GetAssemblyAttribute<SvgPlatformAttribute>(assemblies).SingleOrDefault();
-                if (platformSetupAttribute == null)
-                    throw new InvalidOperationException(
-                        "No platform specific SVG setup was found. Create a setup and apply the assembly:[SvgPlatformAttribute] referencing it so the SVG.Engine can find it.");
+                foreach (var platformSetupAttribute in GetAssemblyAttribute<SvgPlatformAttribute>(assemblies))
+                {
+                    if (platformSetupAttribute == null)
+                        throw new InvalidOperationException(
+                            "No platform specific SVG setup was found. Create a setup and apply the assembly:[SvgPlatformAttribute] referencing it so the SVG.Engine can find it.");
 
-                // create instance and call "init"
-                var ctor = platformSetupAttribute.PlatformSetup.GetTypeInfo()
-                    .DeclaredConstructors.FirstOrDefault(c => c.GetParameters().Length == 0);
-                if (ctor == null)
-                    throw new InvalidOperationException(
-                        $"Found platformsetup type '{platformSetupAttribute.PlatformSetup.FullName}' has no parameterless constructors!");
+                    // create instance and call "init"
+                    var ctor = platformSetupAttribute.PlatformSetup.GetTypeInfo()
+                        .DeclaredConstructors.FirstOrDefault(c => c.GetParameters().Length == 0);
+                    if (ctor == null)
+                        throw new InvalidOperationException(
+                            $"Found platformsetup type '{platformSetupAttribute.PlatformSetup.FullName}' has no parameterless constructors!");
 
-                // create setup
-                var setup = ctor.Invoke(null);
+                    // create setup
+                    var setup = ctor.Invoke(null);
 
-                // call init
-                var init = platformSetupAttribute.PlatformSetup.GetTypeInfo().GetDeclaredMethod("Initialize");
-                if (init == null || init.GetParameters().Length != 0 || init.ReturnType != typeof(void))
-                    throw new InvalidOperationException(
-                        $"Could not find method 'public void Initialize()' on setup type $'{platformSetupAttribute.PlatformSetup.FullName}'");
+                    // call init
+                    var init = platformSetupAttribute.PlatformSetup.GetTypeInfo().GetDeclaredMethod("Initialize");
+                    if (init == null || init.GetParameters().Length != 0 || init.ReturnType != typeof(void))
+                        throw new InvalidOperationException(
+                            $"Could not find method 'public void Initialize()' on setup type $'{platformSetupAttribute.PlatformSetup.FullName}'");
 
-                init.Invoke(setup, null);
+                    init.Invoke(setup, null);
+                }
             }
             finally
             {

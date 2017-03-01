@@ -11,7 +11,7 @@ using Svg.Editor.Services;
 
 namespace Svg.Editor.UWP
 {
-    public class UwpGestureDetector : IGestureDetector
+    public class UwpGestureRecognizer : IGestureDetector
     {
         private readonly Subject<UserInputEvent> _gesturesSubject = new Subject<UserInputEvent>();
         public IObservable<UserInputEvent> DetectedGestures => _gesturesSubject.AsObservable();
@@ -23,7 +23,7 @@ namespace Svg.Editor.UWP
 
         private UIElement _control;
 
-        public UwpGestureDetector(UIElement control)
+        public UwpGestureRecognizer(UIElement control)
         {
             _control = control;
         }
