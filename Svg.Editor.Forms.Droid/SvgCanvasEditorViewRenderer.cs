@@ -10,5 +10,9 @@ namespace Svg.Editor.Forms
 {
     public class SvgCanvasEditorViewRenderer : SKCanvasViewRendererBase<SKFormsView, SKNativeView>
     {
+        public SvgCanvasEditorViewRenderer()
+        {
+            
+        }
     }
 }
