@@ -63,6 +63,10 @@
       <Project>{03f31ec9-4f97-46da-b8f1-dce99c6954de}</Project>
       <Name>Svg.Droid</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Svg.Editor.Core\Svg.Editor.Core.csproj">
+      <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
+      <Name>Svg.Editor.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Svg.Editor.Views.Droid\Svg.Editor.Views.Droid.csproj">
       <Project>{EC21B42F-DA0D-4E7B-A2F4-757ABC917E07}</Project>
       <Name>Svg.Editor.Views.Droid</Name>

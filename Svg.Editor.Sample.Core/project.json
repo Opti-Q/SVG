@@ -1,13 +1,13 @@
-{
+﻿{
   "supports": {},
   "dependencies": {
-    "Svg": "2.0.1",
     "MvvmCross": "4.1.6",
     "MvvmCross.Binding": "4.1.6",
     "MvvmCross.Core": "4.1.6",
     "MvvmCross.Platform": "4.2.3",
     "MvvmCross.Plugin.Email": "4.1.6",
-    "MvvmCross.Plugin.PictureChooser": "4.2.3"
+    "MvvmCross.Plugin.PictureChooser": "4.2.3",
+    "Svg": "2.0.2"
   },
   "frameworks": {
     ".NETPortable,Version=v4.5,Profile=Profile111": {}

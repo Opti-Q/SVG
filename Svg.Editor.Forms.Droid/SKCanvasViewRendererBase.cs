@@ -53,7 +53,7 @@ namespace SkiaSharp.Views.Forms
 
         protected virtual TNativeView CreateNativeView()
         {
-            var view = (TNativeView)Activator.CreateInstance(typeof(TNativeView), new object[] {Context});
+            var view = (TNativeView)Activator.CreateInstance(typeof(TNativeView), new object[] {Context, null});
             return view;
         }
 
