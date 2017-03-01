@@ -7,6 +7,7 @@ using Windows.UI.Xaml.Input;
 using SkiaSharp.Views.UWP;
 using Svg.Editor.Events;
 using Svg.Editor.Interfaces;
+using Svg.Editor.Services;
 
 namespace Svg.Editor.UWP
 {

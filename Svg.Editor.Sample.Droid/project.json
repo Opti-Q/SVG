@@ -1,5 +1,8 @@
 ﻿{
   "dependencies": {
+    "Svg": "2.0.1",
+    "Svg.Editor": "2.0.1",
+    "Svg.Editor.Views": "2.0.1",
     "MvvmCross": "4.1.6",
     "MvvmCross.Binding": "4.1.6",
     "MvvmCross.Core": "4.1.6",

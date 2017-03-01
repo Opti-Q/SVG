@@ -9,6 +9,6 @@
     <Import_RootNamespace>Svg.Editor.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Interfaces\" />
+    <Compile Include="$(MSBuildThisFileDirectory)AssemblyInfo.cs" />
   </ItemGroup>
 </Project>

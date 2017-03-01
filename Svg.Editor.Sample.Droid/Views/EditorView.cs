@@ -7,7 +7,6 @@ using System.Linq;
 using Android.Graphics.Drawables;
 using MvvmCross.Droid.Views;
 using Svg.Droid.SampleEditor.Core.ViewModels;
-using Svg.Editor.Droid;
 using Path = System.IO.Path;
 
 namespace Svg.Droid.SampleEditor.Views

@@ -3,6 +3,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Svg.Editor.Events;
 using Svg.Editor.Interfaces;
+using Svg.Editor.Services;
 using UIKit;
 
 namespace Svg.Editor.iOS

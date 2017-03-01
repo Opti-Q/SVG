@@ -11,11 +11,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Svg.Editor.Droid\Svg.Editor.Views.Droid.csproj" />
-    <ProjectReference Include="..\Svg.Editor.iOS\Svg.Editor.Views.iOS.csproj" />
+    <Content Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Readme.txt" />
+    <ProjectReference Include="..\Svg.Editor.Views.Droid\Svg.Editor.Views.Droid.csproj" />
+    <ProjectReference Include="..\Svg.Editor.Views.iOS\Svg.Editor.Views.iOS.csproj" />
+    <ProjectReference Include="..\Svg.Editor.Views.UWP\Svg.Editor.Views.UWP.csproj" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>339fc8ee-f80e-4758-9b91-3ce21fd933b9</ProjectGuid>

@@ -9,8 +9,8 @@
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Svg.Editor.Views.Droid</RootNamespace>
-    <AssemblyName>Svg.Editor.Views.Droid</AssemblyName>
+    <RootNamespace>Svg.Editor.Views</RootNamespace>
+    <AssemblyName>Svg.Editor.Views</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
@@ -67,12 +67,14 @@
     <Compile Include="Services\AndroidTextInputService.cs" />
     <Compile Include="SvgDrawingCanvasView.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AndroidGestureDetector.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="project.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="..\Svg.Editor.Shared\Svg.Editor.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

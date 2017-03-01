@@ -1,6 +1,8 @@
 ﻿{
   "dependencies": {
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
+    "Svg": "2.0.1",
+    "Svg.Editor": "2.0.1",
     "SkiaSharp.Views": "1.56.1",
     "System.Reactive": "3.0.0"
   },
