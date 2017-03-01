@@ -1,0 +1,1061 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Svg.Editor.Forms</id>
+    <version>2.0.1.1</version>
+    <title>Svg.Editor.Forms</title>
+    <authors>alexa, bruzkovsky</authors>
+    <owners>alexa</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Svg.Editor.Forms</description>
+    <summary>Svg.Editor.Forms</summary>
+    <copyright>Copyright © gentledepp</copyright>
+    <tags>Svg.Editor.Forms</tags>
+    <dependencies>
+      <group targetFramework="portable-net45+win80+wpa81">
+        <dependency id="SkiaSharp" version="1.56.1" />
+        <dependency id="SkiaSharp.Views.Forms" version="1.56.1" />
+        <dependency id="Xamarin.Forms" version="2.3.3.193" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+
+    <!-- Portable -->
+
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\bin\Debug\Svg.Editor.dll" target="lib\portable-net45+win+wpa81+MonoAndroid10+MonoTouch10+xamarinios10+xamarinmac20\Svg.Editor.dll" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\bin\Debug\Svg.Editor.pdb" target="lib\portable-net45+win+wpa81+MonoAndroid10+MonoTouch10+xamarinios10+xamarinmac20\Svg.Editor.pdb" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Forms\bin\Debug\Svg.Editor.Forms.dll" target="lib\portable-net45+win+wpa81+MonoAndroid10+MonoTouch10+xamarinios10+xamarinmac20\Svg.Editor.Forms.dll" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Forms\bin\Debug\Svg.Editor.Forms.pdb" target="lib\portable-net45+win+wpa81+MonoAndroid10+MonoTouch10+xamarinios10+xamarinmac20\Svg.Editor.Forms.pdb" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\bin\Debug\Svg.dll" target="lib\portable-net45+win+wpa81+MonoAndroid10+MonoTouch10+xamarinios10+xamarinmac20\Svg.dll" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\bin\Debug\Svg.pdb" target="lib\portable-net45+win+wpa81+MonoAndroid10+MonoTouch10+xamarinios10+xamarinmac20\Svg.pdb" exclude="" />
+
+    <!-- Android -->
+
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Droid\bin\Debug\Svg.dll" target="lib\MonoAndroid71\Svg.dll" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Droid\bin\Debug\Svg.pdb" target="lib\MonoAndroid71\Svg.pdb" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Forms.Droid\bin\Debug\Svg.Editor.Forms.Droid.dll" target="lib\MonoAndroid71\Svg.Editor.Forms.Droid.dll" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Forms.Droid\bin\Debug\Svg.Editor.Forms.Droid.pdb" target="lib\MonoAndroid71\Svg.Editor.Forms.Droid.pdb" exclude="" />
+
+    <!-- iOS -->
+
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.iOS\bin\Debug\Svg.dll" target="lib\xamarinios10\Svg.dll" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\bin\Debug\Svg.Editor.dll" target="lib\xamarinios10\Svg.Editor.dll" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.iOS\bin\Debug\Svg.Editor.iOS.dll" target="lib\xamarinios10\Svg.Editor.iOS.dll" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\bin\Debug\Svg.Editor.pdb" target="lib\xamarinios10\Svg.Editor.pdb" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.iOS\bin\Debug\Svg.Editor.iOS.pdb" target="lib\xamarinios10\Svg.Editor.iOS.pdb" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.iOS\bin\Debug\Svg.pdb" target="lib\xamarinios10\Svg.pdb" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Forms.iOS\bin\Debug\Svg.Editor.Forms.dll" target="lib\xamarinios10\Svg.Editor.Forms.dll" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Forms.iOS\bin\Debug\Svg.Editor.Forms.pdb" target="lib\xamarinios10\Svg.Editor.Forms.pdb" exclude="" />
+
+    <!-- NetCore/UWP -->
+
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\bin\Debug\Svg.Editor.dll" target="lib\.NETCore50\Svg.Editor.dll" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\bin\Debug\Svg.Editor.pdb" target="lib\.NETCore50\Svg.Editor.pdb" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.UWP\bin\Debug\Svg.dll" target="lib\.NETCore50\Svg.dll" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Forms\bin\Debug\Svg.Editor.Forms.dll" target="lib\.NETCore50\Svg.Editor.Forms.dll" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.UWP\bin\Debug\Svg.Editor.UWP.dll" target="lib\.NETCore50\Svg.Editor.UWP.dll" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Forms\bin\Debug\Svg.Editor.Forms.pdb" target="lib\.NETCore50\Svg.Editor.Forms.pdb" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.UWP\bin\Debug\Svg.Editor.UWP.pdb" target="lib\.NETCore50\Svg.Editor.UWP.pdb" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.UWP\bin\Debug\Svg.pdb" target="lib\.NETCore50\Svg.pdb" exclude="" />
+    
+    
+    
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Forms.Nuget\Readme.txt" target="" exclude="" />
+
+
+
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Droid\Platform\SvgAssetSource.cs" target="src\Svg.Droid\Platform\SvgAssetSource.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\CharConverter.cs" target="src\Svg.Platform.Shared\CharConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\CultureHelper.cs" target="src\Svg.Platform.Shared\CultureHelper.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\DefaultLogger.cs" target="src\Svg.Platform.Shared\DefaultLogger.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\FileSystem.cs" target="src\Svg.Platform.Shared\FileSystem.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\Marshal.cs" target="src\Svg.Platform.Shared\Marshal.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\SKFactory.cs" target="src\Svg.Platform.Shared\SKFactory.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\SvgDtdResolver.cs" target="src\Svg.Platform.Shared\SvgDtdResolver.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\SvgPlatformSetup.cs" target="src\Svg.Platform.Shared\SvgPlatformSetup.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\SvgPlatformSetupBase.cs" target="src\Svg.Platform.Shared\SvgPlatformSetupBase.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\SvgTextReader.cs" target="src\Svg.Platform.Shared\SvgTextReader.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\SvgXmlTextWriter.cs" target="src\Svg.Platform.Shared\SvgXmlTextWriter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\WebRequestSvc.cs" target="src\Svg.Platform.Shared\WebRequestSvc.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgCircle.cs" target="src\Svg.Shared\Basic Shapes\SvgCircle.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgEllipse.cs" target="src\Svg.Shared\Basic Shapes\SvgEllipse.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgImage.cs" target="src\Svg.Shared\Basic Shapes\SvgImage.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgLine.cs" target="src\Svg.Shared\Basic Shapes\SvgLine.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgPolygon.cs" target="src\Svg.Shared\Basic Shapes\SvgPolygon.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgPolyline.cs" target="src\Svg.Shared\Basic Shapes\SvgPolyline.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgRectangle.cs" target="src\Svg.Shared\Basic Shapes\SvgRectangle.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgVisualElement.cs" target="src\Svg.Shared\Basic Shapes\SvgVisualElement.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgVisualElementStyle.cs" target="src\Svg.Shared\Basic Shapes\SvgVisualElementStyle.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Clipping and Masking\SvgClipPath.cs" target="src\Svg.Shared\Clipping and Masking\SvgClipPath.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Clipping and Masking\SvgMask.cs" target="src\Svg.Shared\Clipping and Masking\SvgMask.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\BaseConverter.cs" target="src\Svg.Shared\Converters\BaseConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgColourConverter.cs" target="src\Svg.Shared\Converters\SvgColourConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgOrientConverter.cs" target="src\Svg.Shared\Converters\SvgOrientConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgPaintServerFactory.cs" target="src\Svg.Shared\Converters\SvgPaintServerFactory.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgPathBuilder.cs" target="src\Svg.Shared\Converters\SvgPathBuilder.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgPointCollectionConverter.cs" target="src\Svg.Shared\Converters\SvgPointCollectionConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgPreserveAspectRationConverter.cs" target="src\Svg.Shared\Converters\SvgPreserveAspectRationConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgTransformConverter.cs" target="src\Svg.Shared\Converters\SvgTransformConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgUnitCollectionConverter.cs" target="src\Svg.Shared\Converters\SvgUnitCollectionConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgUnitConverter.cs" target="src\Svg.Shared\Converters\SvgUnitConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgViewBoxConverter.cs" target="src\Svg.Shared\Converters\SvgViewBoxConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Css\CssQuery.cs" target="src\Svg.Shared\Css\CssQuery.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Css\SvgElementOps.cs" target="src\Svg.Shared\Css\SvgElementOps.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgAspectRatio.cs" target="src\Svg.Shared\DataTypes\SvgAspectRatio.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgOrient.cs" target="src\Svg.Shared\DataTypes\SvgOrient.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgPoint.cs" target="src\Svg.Shared\DataTypes\SvgPoint.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgPointCollection.cs" target="src\Svg.Shared\DataTypes\SvgPointCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgUnit.cs" target="src\Svg.Shared\DataTypes\SvgUnit.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgUnitCollection.cs" target="src\Svg.Shared\DataTypes\SvgUnitCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgViewBox.cs" target="src\Svg.Shared\DataTypes\SvgViewBox.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgDefinitionList.cs" target="src\Svg.Shared\Document Structure\SvgDefinitionList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgDescription.cs" target="src\Svg.Shared\Document Structure\SvgDescription.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgDocumentMetadata.cs" target="src\Svg.Shared\Document Structure\SvgDocumentMetadata.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgFragment.cs" target="src\Svg.Shared\Document Structure\SvgFragment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgGroup.cs" target="src\Svg.Shared\Document Structure\SvgGroup.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgSwitch.cs" target="src\Svg.Shared\Document Structure\SvgSwitch.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgSymbol.cs" target="src\Svg.Shared\Document Structure\SvgSymbol.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgTitle.cs" target="src\Svg.Shared\Document Structure\SvgTitle.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgUse.cs" target="src\Svg.Shared\Document Structure\SvgUse.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Engine.cs" target="src\Svg.Shared\Engine.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Exceptions\SvgException.cs" target="src\Svg.Shared\Exceptions\SvgException.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Extensibility\SvgForeignObject.cs" target="src\Svg.Shared\Extensibility\SvgForeignObject.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Extensions.cs" target="src\Svg.Shared\Extensions.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Lexer.cs" target="src\Svg.Shared\External\ExCSS\Lexer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Extensions\CharacterExtensions.cs" target="src\Svg.Shared\External\ExCSS\Model\Extensions\CharacterExtensions.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Extensions\StringExtensions.cs" target="src\Svg.Shared\External\ExCSS\Model\Extensions\StringExtensions.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\FunctionBuffer.cs" target="src\Svg.Shared\External\ExCSS\Model\FunctionBuffer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\HtmlEncoding.cs" target="src\Svg.Shared\External\ExCSS\Model\HtmlEncoding.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\MediaTypeList.cs" target="src\Svg.Shared\External\ExCSS\Model\MediaTypeList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\AggregateRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\AggregateRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\CharacterSetRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\CharacterSetRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\ConditionalRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\ConditionalRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\DocumentRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\DocumentRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\FontFaceRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\FontFaceRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\GenericRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\GenericRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\ImportRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\ImportRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\KeyframeRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\KeyframeRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\KeyframesRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\KeyframesRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\MediaRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\MediaRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\NamespaceRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\NamespaceRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\PageRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\PageRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\RuleSet.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\RuleSet.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\StyleDeclaration.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\StyleDeclaration.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\StyleRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\StyleRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\SupportsRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\SupportsRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\AggregateSelectorList.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\AggregateSelectorList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\BaseSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\BaseSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\CombinatorSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\CombinatorSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\ComplexSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\ComplexSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\FirstChildSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\FirstChildSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\LastChildSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\LastChildSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\MultipleSelectorList.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\MultipleSelectorList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\NthChildSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\NthChildSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\NthFirstChildSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\NthFirstChildSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\NthLastChildSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\NthLastChildSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\NthLastOfTypeSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\NthLastOfTypeSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\NthOfTypeSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\NthOfTypeSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\SelectorFactory.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\SelectorFactory.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\SelectorList.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\SelectorList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\SimpleSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\SimpleSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Specification.cs" target="src\Svg.Shared\External\ExCSS\Model\Specification.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\Block.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\Block.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\BracketBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\BracketBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\CharacterBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\CharacterBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\CommentBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\CommentBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\DelimiterBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\DelimiterBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\MatchBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\MatchBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\NumericBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\NumericBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\PipeBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\PipeBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\RangeBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\RangeBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\SpecialCharacter.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\SpecialCharacter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\StringBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\StringBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\SymbolBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\SymbolBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\UnitBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\UnitBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\GenericFunction.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\GenericFunction.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\HtmlColor.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\HtmlColor.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\InheritTerm.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\InheritTerm.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\PrimitiveTerm.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\PrimitiveTerm.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\Property.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\Property.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\Term.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\Term.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\TermList.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\TermList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Parser.Blocks.cs" target="src\Svg.Shared\External\ExCSS\Parser.Blocks.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Parser.cs" target="src\Svg.Shared\External\ExCSS\Parser.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\StyleSheet.cs" target="src\Svg.Shared\External\ExCSS\StyleSheet.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\StylesheetParseError.cs" target="src\Svg.Shared\External\ExCSS\StylesheetParseError.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\StylesheetReader.cs" target="src\Svg.Shared\External\ExCSS\StylesheetReader.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\Either.cs" target="src\Svg.Shared\External\Fizzler\Either.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\HumanReadableSelectorGenerator.cs" target="src\Svg.Shared\External\Fizzler\HumanReadableSelectorGenerator.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\NamespacePrefix.cs" target="src\Svg.Shared\External\Fizzler\NamespacePrefix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\Parser.cs" target="src\Svg.Shared\External\Fizzler\Parser.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\Reader.cs" target="src\Svg.Shared\External\Fizzler\Reader.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\SelectorGenerator.cs" target="src\Svg.Shared\External\Fizzler\SelectorGenerator.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\SelectorGeneratorTee.cs" target="src\Svg.Shared\External\Fizzler\SelectorGeneratorTee.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\SelectorsCachingCompiler.cs" target="src\Svg.Shared\External\Fizzler\SelectorsCachingCompiler.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\Token.cs" target="src\Svg.Shared\External\Fizzler\Token.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\Tokener.cs" target="src\Svg.Shared\External\Fizzler\Tokener.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feColourMatrix\SvgColourMatrix.cs" target="src\Svg.Shared\Filter Effects\feColourMatrix\SvgColourMatrix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feGaussianBlur\RawBitmap.cs" target="src\Svg.Shared\Filter Effects\feGaussianBlur\RawBitmap.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feGaussianBlur\SvgGaussianBlur.cs" target="src\Svg.Shared\Filter Effects\feGaussianBlur\SvgGaussianBlur.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feMerge\SvgMerge.cs" target="src\Svg.Shared\Filter Effects\feMerge\SvgMerge.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feMerge\SvgMergeNode.cs" target="src\Svg.Shared\Filter Effects\feMerge\SvgMergeNode.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feOffset\SvgOffset.cs" target="src\Svg.Shared\Filter Effects\feOffset\SvgOffset.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\ImageBuffer.cs" target="src\Svg.Shared\Filter Effects\ImageBuffer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\SvgFilter.cs" target="src\Svg.Shared\Filter Effects\SvgFilter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\SvgFilterPrimitive.cs" target="src\Svg.Shared\Filter Effects\SvgFilterPrimitive.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\Bitmap.cs" target="src\Svg.Shared\Interfaces\Bitmap.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\CharacterRange.cs" target="src\Svg.Shared\Interfaces\CharacterRange.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\Color.cs" target="src\Svg.Shared\Interfaces\Color.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\ColorBlend.cs" target="src\Svg.Shared\Interfaces\ColorBlend.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\ISvgElementFactory.cs" target="src\Svg.Shared\Interfaces\ISvgElementFactory.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\Matrix.cs" target="src\Svg.Shared\Interfaces\Matrix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\PathData.cs" target="src\Svg.Shared\Interfaces\PathData.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\PointF.cs" target="src\Svg.Shared\Interfaces\PointF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\RectangleF.cs" target="src\Svg.Shared\Interfaces\RectangleF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\Region.cs" target="src\Svg.Shared\Interfaces\Region.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\SizeF.cs" target="src\Svg.Shared\Interfaces\SizeF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\SystemColors.cs" target="src\Svg.Shared\Interfaces\SystemColors.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\NonSvgElement.cs" target="src\Svg.Shared\NonSvgElement.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\GenericBoundable.cs" target="src\Svg.Shared\Painting\GenericBoundable.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgColourServer.cs" target="src\Svg.Shared\Painting\SvgColourServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgDeferredPaintServer.cs" target="src\Svg.Shared\Painting\SvgDeferredPaintServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgFallbackPaintServer .cs" target="src\Svg.Shared\Painting\SvgFallbackPaintServer .cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgGradientServer.cs" target="src\Svg.Shared\Painting\SvgGradientServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgGradientStop.cs" target="src\Svg.Shared\Painting\SvgGradientStop.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgLinearGradientServer.cs" target="src\Svg.Shared\Painting\SvgLinearGradientServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgMarker.cs" target="src\Svg.Shared\Painting\SvgMarker.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgPaintServer.cs" target="src\Svg.Shared\Painting\SvgPaintServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgPatternServer.cs" target="src\Svg.Shared\Painting\SvgPatternServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgRadialGradientServer.cs" target="src\Svg.Shared\Painting\SvgRadialGradientServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\CoordinateParser.cs" target="src\Svg.Shared\Paths\CoordinateParser.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgArcSegment.cs" target="src\Svg.Shared\Paths\SvgArcSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgClosePathSegment.cs" target="src\Svg.Shared\Paths\SvgClosePathSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgCubicCurveSegment.cs" target="src\Svg.Shared\Paths\SvgCubicCurveSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgLineSegment.cs" target="src\Svg.Shared\Paths\SvgLineSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgMoveToSegment.cs" target="src\Svg.Shared\Paths\SvgMoveToSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgPath.cs" target="src\Svg.Shared\Paths\SvgPath.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgPathBuilder.cs" target="src\Svg.Shared\Paths\SvgPathBuilder.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgPathSegment.cs" target="src\Svg.Shared\Paths\SvgPathSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgPathSegmentList.cs" target="src\Svg.Shared\Paths\SvgPathSegmentList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgQuadraticCurveSegment.cs" target="src\Svg.Shared\Paths\SvgQuadraticCurveSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaBitmap.cs" target="src\Svg.Shared\Platform\SkiaBitmap.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaBrushBase.cs" target="src\Svg.Shared\Platform\SkiaBrushBase.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaColor.cs" target="src\Svg.Shared\Platform\SkiaColor.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaColorMatrix.cs" target="src\Svg.Shared\Platform\SkiaColorMatrix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaColors.cs" target="src\Svg.Shared\Platform\SkiaColors.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaFont.cs" target="src\Svg.Shared\Platform\SkiaFont.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaFontFamily.cs" target="src\Svg.Shared\Platform\SkiaFontFamily.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaFontFamilyProvider.cs" target="src\Svg.Shared\Platform\SkiaFontFamilyProvider.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaGraphics.cs" target="src\Svg.Shared\Platform\SkiaGraphics.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaGraphicsPath.cs" target="src\Svg.Shared\Platform\SkiaGraphicsPath.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaLinearGradientBrush.cs" target="src\Svg.Shared\Platform\SkiaLinearGradientBrush.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaMatrix.cs" target="src\Svg.Shared\Platform\SkiaMatrix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaPen.cs" target="src\Svg.Shared\Platform\SkiaPen.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaPointF.cs" target="src\Svg.Shared\Platform\SkiaPointF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaRectangleF.cs" target="src\Svg.Shared\Platform\SkiaRectangleF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaSizeF.cs" target="src\Svg.Shared\Platform\SkiaSizeF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaSolidBrush.cs" target="src\Svg.Shared\Platform\SkiaSolidBrush.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaStringFormat.cs" target="src\Svg.Shared\Platform\SkiaStringFormat.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaTextRenderer.cs" target="src\Svg.Shared\Platform\SkiaTextRenderer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaTextureBrush.cs" target="src\Svg.Shared\Platform\SkiaTextureBrush.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\PropertyDescriptor.cs" target="src\Svg.Shared\PropertyDescriptor.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Rendering\SvgRenderer.cs" target="src\Svg.Shared\Rendering\SvgRenderer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SKFactory.cs" target="src\Svg.Shared\SKFactory.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgAttributeAttribute.cs" target="src\Svg.Shared\SvgAttributeAttribute.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgAttributeCollection.cs" target="src\Svg.Shared\SvgAttributeCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgContentNode.cs" target="src\Svg.Shared\SvgContentNode.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgDefinitionDefaults.cs" target="src\Svg.Shared\SvgDefinitionDefaults.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgDocument.cs" target="src\Svg.Shared\SvgDocument.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgDocumentCollection.cs" target="src\Svg.Shared\SvgDocumentCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElement.cs" target="src\Svg.Shared\SvgElement.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementAttribute.cs" target="src\Svg.Shared\SvgElementAttribute.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementAttributeProvider.cs" target="src\Svg.Shared\SvgElementAttributeProvider.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementCollection.cs" target="src\Svg.Shared\SvgElementCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementFactory.cs" target="src\Svg.Shared\SvgElementFactory.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementIdManager.cs" target="src\Svg.Shared\SvgElementIdManager.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementStyle.cs" target="src\Svg.Shared\SvgElementStyle.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgExtentions.cs" target="src\Svg.Shared\SvgExtentions.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgPlatformAttribute.cs" target="src\Svg.Shared\SvgPlatformAttribute.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgServiceAttribute.cs" target="src\Svg.Shared\SvgServiceAttribute.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgTypeConverterRegistry.cs" target="src\Svg.Shared\SvgTypeConverterRegistry.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgTypeDescriptor.cs" target="src\Svg.Shared\SvgTypeDescriptor.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgUnknownElement.cs" target="src\Svg.Shared\SvgUnknownElement.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\FontFamily.cs" target="src\Svg.Shared\Text\FontFamily.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\GdiFontDefn.cs" target="src\Svg.Shared\Text\GdiFontDefn.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\PathStatistics.cs" target="src\Svg.Shared\Text\PathStatistics.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgFont.cs" target="src\Svg.Shared\Text\SvgFont.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgFontDefn.cs" target="src\Svg.Shared\Text\SvgFontDefn.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgFontFace.cs" target="src\Svg.Shared\Text\SvgFontFace.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgFontFaceSrc.cs" target="src\Svg.Shared\Text\SvgFontFaceSrc.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgFontFaceUri.cs" target="src\Svg.Shared\Text\SvgFontFaceUri.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgGlyph.cs" target="src\Svg.Shared\Text\SvgGlyph.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgKern.cs" target="src\Svg.Shared\Text\SvgKern.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgMissingGlyph.cs" target="src\Svg.Shared\Text\SvgMissingGlyph.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgText.cs" target="src\Svg.Shared\Text\SvgText.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgTextBase.cs" target="src\Svg.Shared\Text\SvgTextBase.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgTextPath.cs" target="src\Svg.Shared\Text\SvgTextPath.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgTextRef.cs" target="src\Svg.Shared\Text\SvgTextRef.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgTextSpan.cs" target="src\Svg.Shared\Text\SvgTextSpan.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgMatrix.cs" target="src\Svg.Shared\Transforms\SvgMatrix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgRotate.cs" target="src\Svg.Shared\Transforms\SvgRotate.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgScale.cs" target="src\Svg.Shared\Transforms\SvgScale.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgShear.cs" target="src\Svg.Shared\Transforms\SvgShear.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgSkew.cs" target="src\Svg.Shared\Transforms\SvgSkew.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgTransform.cs" target="src\Svg.Shared\Transforms\SvgTransform.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgTransformCollection.cs" target="src\Svg.Shared\Transforms\SvgTransformCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgTranslate.cs" target="src\Svg.Shared\Transforms\SvgTranslate.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Forms.Shared\SvgCanvasEditorView.cs" target="src\Svg.Editor.Forms.Shared\SvgCanvasEditorView.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Events\MoveEvent.cs" target="src\Svg.Editor.Core\Events\MoveEvent.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Events\PointerEvent.cs" target="src\Svg.Editor.Core\Events\PointerEvent.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Events\RotateEvent.cs" target="src\Svg.Editor.Core\Events\RotateEvent.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Events\ScaleEvent.cs" target="src\Svg.Editor.Core\Events\ScaleEvent.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Events\UserInputEvent.cs" target="src\Svg.Editor.Core\Events\UserInputEvent.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Extensions\ReactiveExtensions.cs" target="src\Svg.Editor.Core\Extensions\ReactiveExtensions.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Extensions\SvgVisualElementExtensions.cs" target="src\Svg.Editor.Core\Extensions\SvgVisualElementExtensions.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Gestures\DoubleTapGesture.cs" target="src\Svg.Editor.Core\Gestures\DoubleTapGesture.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Gestures\DragGesture.cs" target="src\Svg.Editor.Core\Gestures\DragGesture.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Gestures\LongPressGesture.cs" target="src\Svg.Editor.Core\Gestures\LongPressGesture.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Gestures\TapGesture.cs" target="src\Svg.Editor.Core\Gestures\TapGesture.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Properties\Annotations.cs" target="src\Svg.Editor.Core\Properties\Annotations.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Services\GestureRecognizer.cs" target="src\Svg.Editor.Core\Services\GestureRecognizer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Services\SchedulerProvider.cs" target="src\Svg.Editor.Core\Services\SchedulerProvider.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Services\SKCanvasRenderer.cs" target="src\Svg.Editor.Core\Services\SKCanvasRenderer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Services\ToolFactoryProvider.cs" target="src\Svg.Editor.Core\Services\ToolFactoryProvider.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\SvgDrawingCanvas.cs" target="src\Svg.Editor.Core\SvgDrawingCanvas.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Tools\ArrangeTool.cs" target="src\Svg.Editor.Core\Tools\ArrangeTool.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Tools\ColorTool.cs" target="src\Svg.Editor.Core\Tools\ColorTool.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Tools\DebugTool.cs" target="src\Svg.Editor.Core\Tools\DebugTool.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Tools\EllipseTool.cs" target="src\Svg.Editor.Core\Tools\EllipseTool.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Tools\FreeDrawingTool.cs" target="src\Svg.Editor.Core\Tools\FreeDrawingTool.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Tools\GridTool.cs" target="src\Svg.Editor.Core\Tools\GridTool.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Tools\ITool.cs" target="src\Svg.Editor.Core\Tools\ITool.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Tools\LineTool.cs" target="src\Svg.Editor.Core\Tools\LineTool.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Tools\MoveTool.cs" target="src\Svg.Editor.Core\Tools\MoveTool.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Tools\PanTool.cs" target="src\Svg.Editor.Core\Tools\PanTool.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Tools\PlaceAsBackgroundTool.cs" target="src\Svg.Editor.Core\Tools\PlaceAsBackgroundTool.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Tools\RotationTool.cs" target="src\Svg.Editor.Core\Tools\RotationTool.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Tools\SelectionTool.cs" target="src\Svg.Editor.Core\Tools\SelectionTool.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Tools\StrokeStyleTool.cs" target="src\Svg.Editor.Core\Tools\StrokeStyleTool.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Tools\TextTool.cs" target="src\Svg.Editor.Core\Tools\TextTool.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Tools\ToolBase.cs" target="src\Svg.Editor.Core\Tools\ToolBase.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Tools\UndoableToolBase.cs" target="src\Svg.Editor.Core\Tools\UndoableToolBase.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Tools\UndoRedoTool.cs" target="src\Svg.Editor.Core\Tools\UndoRedoTool.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Tools\ZoomTool.cs" target="src\Svg.Editor.Core\Tools\ZoomTool.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\UndoRedo\CompositeCommand.cs" target="src\Svg.Editor.Core\UndoRedo\CompositeCommand.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\UndoRedo\UndoableActionCommand.cs" target="src\Svg.Editor.Core\UndoRedo\UndoableActionCommand.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\UndoRedo\UndoRedoService.cs" target="src\Svg.Editor.Core\UndoRedo\UndoRedoService.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Core\Utils\SvgProcessingUtil.cs" target="src\Svg.Editor.Core\Utils\SvgProcessingUtil.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.iOS\SvgCanvasEditorView.cs" target="src\Svg.Editor.iOS\SvgCanvasEditorView.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.iOS\SvgCanvasGLEditorView.cs" target="src\Svg.Editor.iOS\SvgCanvasGLEditorView.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.iOS\TouchGestureDetector.cs" target="src\Svg.Editor.iOS\TouchGestureDetector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\CharConverter.cs" target="src\Svg.Platform.Shared\CharConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\CultureHelper.cs" target="src\Svg.Platform.Shared\CultureHelper.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\DefaultLogger.cs" target="src\Svg.Platform.Shared\DefaultLogger.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\FileSystem.cs" target="src\Svg.Platform.Shared\FileSystem.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\Marshal.cs" target="src\Svg.Platform.Shared\Marshal.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\SKFactory.cs" target="src\Svg.Platform.Shared\SKFactory.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\SvgDtdResolver.cs" target="src\Svg.Platform.Shared\SvgDtdResolver.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\SvgPlatformSetup.cs" target="src\Svg.Platform.Shared\SvgPlatformSetup.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\SvgPlatformSetupBase.cs" target="src\Svg.Platform.Shared\SvgPlatformSetupBase.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\SvgTextReader.cs" target="src\Svg.Platform.Shared\SvgTextReader.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\SvgXmlTextWriter.cs" target="src\Svg.Platform.Shared\SvgXmlTextWriter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\WebRequestSvc.cs" target="src\Svg.Platform.Shared\WebRequestSvc.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgCircle.cs" target="src\Svg.Shared\Basic Shapes\SvgCircle.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgEllipse.cs" target="src\Svg.Shared\Basic Shapes\SvgEllipse.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgImage.cs" target="src\Svg.Shared\Basic Shapes\SvgImage.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgLine.cs" target="src\Svg.Shared\Basic Shapes\SvgLine.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgPolygon.cs" target="src\Svg.Shared\Basic Shapes\SvgPolygon.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgPolyline.cs" target="src\Svg.Shared\Basic Shapes\SvgPolyline.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgRectangle.cs" target="src\Svg.Shared\Basic Shapes\SvgRectangle.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgVisualElement.cs" target="src\Svg.Shared\Basic Shapes\SvgVisualElement.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgVisualElementStyle.cs" target="src\Svg.Shared\Basic Shapes\SvgVisualElementStyle.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Clipping and Masking\SvgClipPath.cs" target="src\Svg.Shared\Clipping and Masking\SvgClipPath.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Clipping and Masking\SvgMask.cs" target="src\Svg.Shared\Clipping and Masking\SvgMask.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\BaseConverter.cs" target="src\Svg.Shared\Converters\BaseConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgColourConverter.cs" target="src\Svg.Shared\Converters\SvgColourConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgOrientConverter.cs" target="src\Svg.Shared\Converters\SvgOrientConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgPaintServerFactory.cs" target="src\Svg.Shared\Converters\SvgPaintServerFactory.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgPathBuilder.cs" target="src\Svg.Shared\Converters\SvgPathBuilder.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgPointCollectionConverter.cs" target="src\Svg.Shared\Converters\SvgPointCollectionConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgPreserveAspectRationConverter.cs" target="src\Svg.Shared\Converters\SvgPreserveAspectRationConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgTransformConverter.cs" target="src\Svg.Shared\Converters\SvgTransformConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgUnitCollectionConverter.cs" target="src\Svg.Shared\Converters\SvgUnitCollectionConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgUnitConverter.cs" target="src\Svg.Shared\Converters\SvgUnitConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgViewBoxConverter.cs" target="src\Svg.Shared\Converters\SvgViewBoxConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Css\CssQuery.cs" target="src\Svg.Shared\Css\CssQuery.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Css\SvgElementOps.cs" target="src\Svg.Shared\Css\SvgElementOps.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgAspectRatio.cs" target="src\Svg.Shared\DataTypes\SvgAspectRatio.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgOrient.cs" target="src\Svg.Shared\DataTypes\SvgOrient.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgPoint.cs" target="src\Svg.Shared\DataTypes\SvgPoint.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgPointCollection.cs" target="src\Svg.Shared\DataTypes\SvgPointCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgUnit.cs" target="src\Svg.Shared\DataTypes\SvgUnit.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgUnitCollection.cs" target="src\Svg.Shared\DataTypes\SvgUnitCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgViewBox.cs" target="src\Svg.Shared\DataTypes\SvgViewBox.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgDefinitionList.cs" target="src\Svg.Shared\Document Structure\SvgDefinitionList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgDescription.cs" target="src\Svg.Shared\Document Structure\SvgDescription.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgDocumentMetadata.cs" target="src\Svg.Shared\Document Structure\SvgDocumentMetadata.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgFragment.cs" target="src\Svg.Shared\Document Structure\SvgFragment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgGroup.cs" target="src\Svg.Shared\Document Structure\SvgGroup.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgSwitch.cs" target="src\Svg.Shared\Document Structure\SvgSwitch.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgSymbol.cs" target="src\Svg.Shared\Document Structure\SvgSymbol.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgTitle.cs" target="src\Svg.Shared\Document Structure\SvgTitle.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgUse.cs" target="src\Svg.Shared\Document Structure\SvgUse.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Engine.cs" target="src\Svg.Shared\Engine.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Exceptions\SvgException.cs" target="src\Svg.Shared\Exceptions\SvgException.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Extensibility\SvgForeignObject.cs" target="src\Svg.Shared\Extensibility\SvgForeignObject.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Extensions.cs" target="src\Svg.Shared\Extensions.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Lexer.cs" target="src\Svg.Shared\External\ExCSS\Lexer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Extensions\CharacterExtensions.cs" target="src\Svg.Shared\External\ExCSS\Model\Extensions\CharacterExtensions.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Extensions\StringExtensions.cs" target="src\Svg.Shared\External\ExCSS\Model\Extensions\StringExtensions.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\FunctionBuffer.cs" target="src\Svg.Shared\External\ExCSS\Model\FunctionBuffer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\HtmlEncoding.cs" target="src\Svg.Shared\External\ExCSS\Model\HtmlEncoding.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\MediaTypeList.cs" target="src\Svg.Shared\External\ExCSS\Model\MediaTypeList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\AggregateRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\AggregateRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\CharacterSetRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\CharacterSetRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\ConditionalRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\ConditionalRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\DocumentRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\DocumentRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\FontFaceRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\FontFaceRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\GenericRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\GenericRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\ImportRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\ImportRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\KeyframeRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\KeyframeRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\KeyframesRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\KeyframesRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\MediaRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\MediaRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\NamespaceRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\NamespaceRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\PageRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\PageRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\RuleSet.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\RuleSet.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\StyleDeclaration.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\StyleDeclaration.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\StyleRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\StyleRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\SupportsRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\SupportsRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\AggregateSelectorList.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\AggregateSelectorList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\BaseSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\BaseSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\CombinatorSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\CombinatorSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\ComplexSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\ComplexSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\FirstChildSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\FirstChildSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\LastChildSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\LastChildSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\MultipleSelectorList.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\MultipleSelectorList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\NthChildSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\NthChildSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\NthFirstChildSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\NthFirstChildSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\NthLastChildSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\NthLastChildSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\NthLastOfTypeSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\NthLastOfTypeSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\NthOfTypeSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\NthOfTypeSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\SelectorFactory.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\SelectorFactory.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\SelectorList.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\SelectorList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\SimpleSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\SimpleSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Specification.cs" target="src\Svg.Shared\External\ExCSS\Model\Specification.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\Block.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\Block.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\BracketBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\BracketBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\CharacterBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\CharacterBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\CommentBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\CommentBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\DelimiterBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\DelimiterBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\MatchBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\MatchBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\NumericBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\NumericBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\PipeBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\PipeBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\RangeBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\RangeBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\SpecialCharacter.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\SpecialCharacter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\StringBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\StringBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\SymbolBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\SymbolBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\UnitBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\UnitBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\GenericFunction.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\GenericFunction.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\HtmlColor.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\HtmlColor.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\InheritTerm.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\InheritTerm.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\PrimitiveTerm.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\PrimitiveTerm.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\Property.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\Property.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\Term.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\Term.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\TermList.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\TermList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Parser.Blocks.cs" target="src\Svg.Shared\External\ExCSS\Parser.Blocks.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Parser.cs" target="src\Svg.Shared\External\ExCSS\Parser.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\StyleSheet.cs" target="src\Svg.Shared\External\ExCSS\StyleSheet.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\StylesheetParseError.cs" target="src\Svg.Shared\External\ExCSS\StylesheetParseError.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\StylesheetReader.cs" target="src\Svg.Shared\External\ExCSS\StylesheetReader.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\Either.cs" target="src\Svg.Shared\External\Fizzler\Either.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\HumanReadableSelectorGenerator.cs" target="src\Svg.Shared\External\Fizzler\HumanReadableSelectorGenerator.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\NamespacePrefix.cs" target="src\Svg.Shared\External\Fizzler\NamespacePrefix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\Parser.cs" target="src\Svg.Shared\External\Fizzler\Parser.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\Reader.cs" target="src\Svg.Shared\External\Fizzler\Reader.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\SelectorGenerator.cs" target="src\Svg.Shared\External\Fizzler\SelectorGenerator.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\SelectorGeneratorTee.cs" target="src\Svg.Shared\External\Fizzler\SelectorGeneratorTee.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\SelectorsCachingCompiler.cs" target="src\Svg.Shared\External\Fizzler\SelectorsCachingCompiler.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\Token.cs" target="src\Svg.Shared\External\Fizzler\Token.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\Tokener.cs" target="src\Svg.Shared\External\Fizzler\Tokener.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feColourMatrix\SvgColourMatrix.cs" target="src\Svg.Shared\Filter Effects\feColourMatrix\SvgColourMatrix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feGaussianBlur\RawBitmap.cs" target="src\Svg.Shared\Filter Effects\feGaussianBlur\RawBitmap.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feGaussianBlur\SvgGaussianBlur.cs" target="src\Svg.Shared\Filter Effects\feGaussianBlur\SvgGaussianBlur.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feMerge\SvgMerge.cs" target="src\Svg.Shared\Filter Effects\feMerge\SvgMerge.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feMerge\SvgMergeNode.cs" target="src\Svg.Shared\Filter Effects\feMerge\SvgMergeNode.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feOffset\SvgOffset.cs" target="src\Svg.Shared\Filter Effects\feOffset\SvgOffset.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\ImageBuffer.cs" target="src\Svg.Shared\Filter Effects\ImageBuffer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\SvgFilter.cs" target="src\Svg.Shared\Filter Effects\SvgFilter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\SvgFilterPrimitive.cs" target="src\Svg.Shared\Filter Effects\SvgFilterPrimitive.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\Bitmap.cs" target="src\Svg.Shared\Interfaces\Bitmap.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\CharacterRange.cs" target="src\Svg.Shared\Interfaces\CharacterRange.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\Color.cs" target="src\Svg.Shared\Interfaces\Color.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\ColorBlend.cs" target="src\Svg.Shared\Interfaces\ColorBlend.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\ISvgElementFactory.cs" target="src\Svg.Shared\Interfaces\ISvgElementFactory.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\Matrix.cs" target="src\Svg.Shared\Interfaces\Matrix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\PathData.cs" target="src\Svg.Shared\Interfaces\PathData.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\PointF.cs" target="src\Svg.Shared\Interfaces\PointF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\RectangleF.cs" target="src\Svg.Shared\Interfaces\RectangleF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\Region.cs" target="src\Svg.Shared\Interfaces\Region.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\SizeF.cs" target="src\Svg.Shared\Interfaces\SizeF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\SystemColors.cs" target="src\Svg.Shared\Interfaces\SystemColors.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\NonSvgElement.cs" target="src\Svg.Shared\NonSvgElement.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\GenericBoundable.cs" target="src\Svg.Shared\Painting\GenericBoundable.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgColourServer.cs" target="src\Svg.Shared\Painting\SvgColourServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgDeferredPaintServer.cs" target="src\Svg.Shared\Painting\SvgDeferredPaintServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgFallbackPaintServer .cs" target="src\Svg.Shared\Painting\SvgFallbackPaintServer .cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgGradientServer.cs" target="src\Svg.Shared\Painting\SvgGradientServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgGradientStop.cs" target="src\Svg.Shared\Painting\SvgGradientStop.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgLinearGradientServer.cs" target="src\Svg.Shared\Painting\SvgLinearGradientServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgMarker.cs" target="src\Svg.Shared\Painting\SvgMarker.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgPaintServer.cs" target="src\Svg.Shared\Painting\SvgPaintServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgPatternServer.cs" target="src\Svg.Shared\Painting\SvgPatternServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgRadialGradientServer.cs" target="src\Svg.Shared\Painting\SvgRadialGradientServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\CoordinateParser.cs" target="src\Svg.Shared\Paths\CoordinateParser.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgArcSegment.cs" target="src\Svg.Shared\Paths\SvgArcSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgClosePathSegment.cs" target="src\Svg.Shared\Paths\SvgClosePathSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgCubicCurveSegment.cs" target="src\Svg.Shared\Paths\SvgCubicCurveSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgLineSegment.cs" target="src\Svg.Shared\Paths\SvgLineSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgMoveToSegment.cs" target="src\Svg.Shared\Paths\SvgMoveToSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgPath.cs" target="src\Svg.Shared\Paths\SvgPath.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgPathBuilder.cs" target="src\Svg.Shared\Paths\SvgPathBuilder.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgPathSegment.cs" target="src\Svg.Shared\Paths\SvgPathSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgPathSegmentList.cs" target="src\Svg.Shared\Paths\SvgPathSegmentList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgQuadraticCurveSegment.cs" target="src\Svg.Shared\Paths\SvgQuadraticCurveSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaBitmap.cs" target="src\Svg.Shared\Platform\SkiaBitmap.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaBrushBase.cs" target="src\Svg.Shared\Platform\SkiaBrushBase.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaColor.cs" target="src\Svg.Shared\Platform\SkiaColor.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaColorMatrix.cs" target="src\Svg.Shared\Platform\SkiaColorMatrix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaColors.cs" target="src\Svg.Shared\Platform\SkiaColors.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaFont.cs" target="src\Svg.Shared\Platform\SkiaFont.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaFontFamily.cs" target="src\Svg.Shared\Platform\SkiaFontFamily.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaFontFamilyProvider.cs" target="src\Svg.Shared\Platform\SkiaFontFamilyProvider.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaGraphics.cs" target="src\Svg.Shared\Platform\SkiaGraphics.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaGraphicsPath.cs" target="src\Svg.Shared\Platform\SkiaGraphicsPath.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaLinearGradientBrush.cs" target="src\Svg.Shared\Platform\SkiaLinearGradientBrush.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaMatrix.cs" target="src\Svg.Shared\Platform\SkiaMatrix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaPen.cs" target="src\Svg.Shared\Platform\SkiaPen.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaPointF.cs" target="src\Svg.Shared\Platform\SkiaPointF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaRectangleF.cs" target="src\Svg.Shared\Platform\SkiaRectangleF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaSizeF.cs" target="src\Svg.Shared\Platform\SkiaSizeF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaSolidBrush.cs" target="src\Svg.Shared\Platform\SkiaSolidBrush.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaStringFormat.cs" target="src\Svg.Shared\Platform\SkiaStringFormat.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaTextRenderer.cs" target="src\Svg.Shared\Platform\SkiaTextRenderer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaTextureBrush.cs" target="src\Svg.Shared\Platform\SkiaTextureBrush.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\PropertyDescriptor.cs" target="src\Svg.Shared\PropertyDescriptor.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Rendering\SvgRenderer.cs" target="src\Svg.Shared\Rendering\SvgRenderer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SKFactory.cs" target="src\Svg.Shared\SKFactory.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgAttributeAttribute.cs" target="src\Svg.Shared\SvgAttributeAttribute.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgAttributeCollection.cs" target="src\Svg.Shared\SvgAttributeCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgContentNode.cs" target="src\Svg.Shared\SvgContentNode.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgDefinitionDefaults.cs" target="src\Svg.Shared\SvgDefinitionDefaults.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgDocument.cs" target="src\Svg.Shared\SvgDocument.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgDocumentCollection.cs" target="src\Svg.Shared\SvgDocumentCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElement.cs" target="src\Svg.Shared\SvgElement.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementAttribute.cs" target="src\Svg.Shared\SvgElementAttribute.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementAttributeProvider.cs" target="src\Svg.Shared\SvgElementAttributeProvider.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementCollection.cs" target="src\Svg.Shared\SvgElementCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementFactory.cs" target="src\Svg.Shared\SvgElementFactory.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementIdManager.cs" target="src\Svg.Shared\SvgElementIdManager.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementStyle.cs" target="src\Svg.Shared\SvgElementStyle.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgExtentions.cs" target="src\Svg.Shared\SvgExtentions.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgPlatformAttribute.cs" target="src\Svg.Shared\SvgPlatformAttribute.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgServiceAttribute.cs" target="src\Svg.Shared\SvgServiceAttribute.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgTypeConverterRegistry.cs" target="src\Svg.Shared\SvgTypeConverterRegistry.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgTypeDescriptor.cs" target="src\Svg.Shared\SvgTypeDescriptor.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgUnknownElement.cs" target="src\Svg.Shared\SvgUnknownElement.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\FontFamily.cs" target="src\Svg.Shared\Text\FontFamily.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\GdiFontDefn.cs" target="src\Svg.Shared\Text\GdiFontDefn.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\PathStatistics.cs" target="src\Svg.Shared\Text\PathStatistics.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgFont.cs" target="src\Svg.Shared\Text\SvgFont.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgFontDefn.cs" target="src\Svg.Shared\Text\SvgFontDefn.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgFontFace.cs" target="src\Svg.Shared\Text\SvgFontFace.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgFontFaceSrc.cs" target="src\Svg.Shared\Text\SvgFontFaceSrc.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgFontFaceUri.cs" target="src\Svg.Shared\Text\SvgFontFaceUri.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgGlyph.cs" target="src\Svg.Shared\Text\SvgGlyph.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgKern.cs" target="src\Svg.Shared\Text\SvgKern.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgMissingGlyph.cs" target="src\Svg.Shared\Text\SvgMissingGlyph.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgText.cs" target="src\Svg.Shared\Text\SvgText.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgTextBase.cs" target="src\Svg.Shared\Text\SvgTextBase.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgTextPath.cs" target="src\Svg.Shared\Text\SvgTextPath.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgTextRef.cs" target="src\Svg.Shared\Text\SvgTextRef.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgTextSpan.cs" target="src\Svg.Shared\Text\SvgTextSpan.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgMatrix.cs" target="src\Svg.Shared\Transforms\SvgMatrix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgRotate.cs" target="src\Svg.Shared\Transforms\SvgRotate.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgScale.cs" target="src\Svg.Shared\Transforms\SvgScale.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgShear.cs" target="src\Svg.Shared\Transforms\SvgShear.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgSkew.cs" target="src\Svg.Shared\Transforms\SvgSkew.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgTransform.cs" target="src\Svg.Shared\Transforms\SvgTransform.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgTransformCollection.cs" target="src\Svg.Shared\Transforms\SvgTransformCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgTranslate.cs" target="src\Svg.Shared\Transforms\SvgTranslate.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Forms.iOS\SvgCanvasEditorViewRenderer.cs" target="src\Svg.Editor.Forms.iOS\SvgCanvasEditorViewRenderer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Forms.Shared\SvgCanvasEditorView.cs" target="src\Svg.Editor.Forms.Shared\SvgCanvasEditorView.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.Forms.Shared\SvgCanvasEditorView.cs" target="src\Svg.Editor.Forms.Shared\SvgCanvasEditorView.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Editor.UWP\UwpGestureRecognizer.cs" target="src\Svg.Editor.UWP\UwpGestureRecognizer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\CharConverter.cs" target="src\Svg.Platform.Shared\CharConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\CultureHelper.cs" target="src\Svg.Platform.Shared\CultureHelper.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\DefaultLogger.cs" target="src\Svg.Platform.Shared\DefaultLogger.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\FileSystem.cs" target="src\Svg.Platform.Shared\FileSystem.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\Marshal.cs" target="src\Svg.Platform.Shared\Marshal.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\SKFactory.cs" target="src\Svg.Platform.Shared\SKFactory.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\SvgPlatformSetup.cs" target="src\Svg.Platform.Shared\SvgPlatformSetup.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\SvgPlatformSetupBase.cs" target="src\Svg.Platform.Shared\SvgPlatformSetupBase.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\SvgTextReader.cs" target="src\Svg.Platform.Shared\SvgTextReader.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\SvgXmlTextWriter.cs" target="src\Svg.Platform.Shared\SvgXmlTextWriter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Platform.Shared\WebRequestSvc.cs" target="src\Svg.Platform.Shared\WebRequestSvc.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgCircle.cs" target="src\Svg.Shared\Basic Shapes\SvgCircle.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgEllipse.cs" target="src\Svg.Shared\Basic Shapes\SvgEllipse.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgImage.cs" target="src\Svg.Shared\Basic Shapes\SvgImage.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgLine.cs" target="src\Svg.Shared\Basic Shapes\SvgLine.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgPolygon.cs" target="src\Svg.Shared\Basic Shapes\SvgPolygon.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgPolyline.cs" target="src\Svg.Shared\Basic Shapes\SvgPolyline.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgRectangle.cs" target="src\Svg.Shared\Basic Shapes\SvgRectangle.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgVisualElement.cs" target="src\Svg.Shared\Basic Shapes\SvgVisualElement.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgVisualElementStyle.cs" target="src\Svg.Shared\Basic Shapes\SvgVisualElementStyle.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Clipping and Masking\SvgClipPath.cs" target="src\Svg.Shared\Clipping and Masking\SvgClipPath.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Clipping and Masking\SvgMask.cs" target="src\Svg.Shared\Clipping and Masking\SvgMask.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\BaseConverter.cs" target="src\Svg.Shared\Converters\BaseConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgColourConverter.cs" target="src\Svg.Shared\Converters\SvgColourConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgOrientConverter.cs" target="src\Svg.Shared\Converters\SvgOrientConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgPaintServerFactory.cs" target="src\Svg.Shared\Converters\SvgPaintServerFactory.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgPathBuilder.cs" target="src\Svg.Shared\Converters\SvgPathBuilder.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgPointCollectionConverter.cs" target="src\Svg.Shared\Converters\SvgPointCollectionConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgPreserveAspectRationConverter.cs" target="src\Svg.Shared\Converters\SvgPreserveAspectRationConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgTransformConverter.cs" target="src\Svg.Shared\Converters\SvgTransformConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgUnitCollectionConverter.cs" target="src\Svg.Shared\Converters\SvgUnitCollectionConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgUnitConverter.cs" target="src\Svg.Shared\Converters\SvgUnitConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgViewBoxConverter.cs" target="src\Svg.Shared\Converters\SvgViewBoxConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Css\CssQuery.cs" target="src\Svg.Shared\Css\CssQuery.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Css\SvgElementOps.cs" target="src\Svg.Shared\Css\SvgElementOps.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgAspectRatio.cs" target="src\Svg.Shared\DataTypes\SvgAspectRatio.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgOrient.cs" target="src\Svg.Shared\DataTypes\SvgOrient.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgPoint.cs" target="src\Svg.Shared\DataTypes\SvgPoint.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgPointCollection.cs" target="src\Svg.Shared\DataTypes\SvgPointCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgUnit.cs" target="src\Svg.Shared\DataTypes\SvgUnit.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgUnitCollection.cs" target="src\Svg.Shared\DataTypes\SvgUnitCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgViewBox.cs" target="src\Svg.Shared\DataTypes\SvgViewBox.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgDefinitionList.cs" target="src\Svg.Shared\Document Structure\SvgDefinitionList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgDescription.cs" target="src\Svg.Shared\Document Structure\SvgDescription.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgDocumentMetadata.cs" target="src\Svg.Shared\Document Structure\SvgDocumentMetadata.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgFragment.cs" target="src\Svg.Shared\Document Structure\SvgFragment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgGroup.cs" target="src\Svg.Shared\Document Structure\SvgGroup.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgSwitch.cs" target="src\Svg.Shared\Document Structure\SvgSwitch.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgSymbol.cs" target="src\Svg.Shared\Document Structure\SvgSymbol.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgTitle.cs" target="src\Svg.Shared\Document Structure\SvgTitle.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgUse.cs" target="src\Svg.Shared\Document Structure\SvgUse.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Engine.cs" target="src\Svg.Shared\Engine.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Exceptions\SvgException.cs" target="src\Svg.Shared\Exceptions\SvgException.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Extensibility\SvgForeignObject.cs" target="src\Svg.Shared\Extensibility\SvgForeignObject.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Extensions.cs" target="src\Svg.Shared\Extensions.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Lexer.cs" target="src\Svg.Shared\External\ExCSS\Lexer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Extensions\CharacterExtensions.cs" target="src\Svg.Shared\External\ExCSS\Model\Extensions\CharacterExtensions.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Extensions\StringExtensions.cs" target="src\Svg.Shared\External\ExCSS\Model\Extensions\StringExtensions.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\FunctionBuffer.cs" target="src\Svg.Shared\External\ExCSS\Model\FunctionBuffer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\HtmlEncoding.cs" target="src\Svg.Shared\External\ExCSS\Model\HtmlEncoding.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\MediaTypeList.cs" target="src\Svg.Shared\External\ExCSS\Model\MediaTypeList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\AggregateRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\AggregateRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\CharacterSetRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\CharacterSetRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\ConditionalRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\ConditionalRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\DocumentRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\DocumentRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\FontFaceRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\FontFaceRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\GenericRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\GenericRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\ImportRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\ImportRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\KeyframeRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\KeyframeRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\KeyframesRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\KeyframesRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\MediaRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\MediaRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\NamespaceRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\NamespaceRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\PageRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\PageRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\RuleSet.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\RuleSet.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\StyleDeclaration.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\StyleDeclaration.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\StyleRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\StyleRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\SupportsRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\SupportsRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\AggregateSelectorList.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\AggregateSelectorList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\BaseSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\BaseSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\CombinatorSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\CombinatorSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\ComplexSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\ComplexSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\FirstChildSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\FirstChildSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\LastChildSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\LastChildSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\MultipleSelectorList.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\MultipleSelectorList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\NthChildSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\NthChildSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\NthFirstChildSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\NthFirstChildSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\NthLastChildSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\NthLastChildSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\NthLastOfTypeSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\NthLastOfTypeSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\NthOfTypeSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\NthOfTypeSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\SelectorFactory.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\SelectorFactory.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\SelectorList.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\SelectorList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\SimpleSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\SimpleSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Specification.cs" target="src\Svg.Shared\External\ExCSS\Model\Specification.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\Block.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\Block.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\BracketBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\BracketBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\CharacterBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\CharacterBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\CommentBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\CommentBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\DelimiterBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\DelimiterBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\MatchBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\MatchBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\NumericBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\NumericBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\PipeBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\PipeBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\RangeBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\RangeBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\SpecialCharacter.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\SpecialCharacter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\StringBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\StringBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\SymbolBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\SymbolBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\UnitBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\UnitBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\GenericFunction.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\GenericFunction.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\HtmlColor.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\HtmlColor.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\InheritTerm.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\InheritTerm.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\PrimitiveTerm.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\PrimitiveTerm.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\Property.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\Property.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\Term.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\Term.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\TermList.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\TermList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Parser.Blocks.cs" target="src\Svg.Shared\External\ExCSS\Parser.Blocks.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Parser.cs" target="src\Svg.Shared\External\ExCSS\Parser.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\StyleSheet.cs" target="src\Svg.Shared\External\ExCSS\StyleSheet.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\StylesheetParseError.cs" target="src\Svg.Shared\External\ExCSS\StylesheetParseError.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\StylesheetReader.cs" target="src\Svg.Shared\External\ExCSS\StylesheetReader.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\Either.cs" target="src\Svg.Shared\External\Fizzler\Either.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\HumanReadableSelectorGenerator.cs" target="src\Svg.Shared\External\Fizzler\HumanReadableSelectorGenerator.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\NamespacePrefix.cs" target="src\Svg.Shared\External\Fizzler\NamespacePrefix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\Parser.cs" target="src\Svg.Shared\External\Fizzler\Parser.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\Reader.cs" target="src\Svg.Shared\External\Fizzler\Reader.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\SelectorGenerator.cs" target="src\Svg.Shared\External\Fizzler\SelectorGenerator.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\SelectorGeneratorTee.cs" target="src\Svg.Shared\External\Fizzler\SelectorGeneratorTee.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\SelectorsCachingCompiler.cs" target="src\Svg.Shared\External\Fizzler\SelectorsCachingCompiler.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\Token.cs" target="src\Svg.Shared\External\Fizzler\Token.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\Tokener.cs" target="src\Svg.Shared\External\Fizzler\Tokener.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feColourMatrix\SvgColourMatrix.cs" target="src\Svg.Shared\Filter Effects\feColourMatrix\SvgColourMatrix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feGaussianBlur\RawBitmap.cs" target="src\Svg.Shared\Filter Effects\feGaussianBlur\RawBitmap.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feGaussianBlur\SvgGaussianBlur.cs" target="src\Svg.Shared\Filter Effects\feGaussianBlur\SvgGaussianBlur.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feMerge\SvgMerge.cs" target="src\Svg.Shared\Filter Effects\feMerge\SvgMerge.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feMerge\SvgMergeNode.cs" target="src\Svg.Shared\Filter Effects\feMerge\SvgMergeNode.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feOffset\SvgOffset.cs" target="src\Svg.Shared\Filter Effects\feOffset\SvgOffset.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\ImageBuffer.cs" target="src\Svg.Shared\Filter Effects\ImageBuffer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\SvgFilter.cs" target="src\Svg.Shared\Filter Effects\SvgFilter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\SvgFilterPrimitive.cs" target="src\Svg.Shared\Filter Effects\SvgFilterPrimitive.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\Bitmap.cs" target="src\Svg.Shared\Interfaces\Bitmap.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\CharacterRange.cs" target="src\Svg.Shared\Interfaces\CharacterRange.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\Color.cs" target="src\Svg.Shared\Interfaces\Color.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\ColorBlend.cs" target="src\Svg.Shared\Interfaces\ColorBlend.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\ISvgElementFactory.cs" target="src\Svg.Shared\Interfaces\ISvgElementFactory.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\Matrix.cs" target="src\Svg.Shared\Interfaces\Matrix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\PathData.cs" target="src\Svg.Shared\Interfaces\PathData.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\PointF.cs" target="src\Svg.Shared\Interfaces\PointF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\RectangleF.cs" target="src\Svg.Shared\Interfaces\RectangleF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\Region.cs" target="src\Svg.Shared\Interfaces\Region.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\SizeF.cs" target="src\Svg.Shared\Interfaces\SizeF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\SystemColors.cs" target="src\Svg.Shared\Interfaces\SystemColors.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\NonSvgElement.cs" target="src\Svg.Shared\NonSvgElement.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\GenericBoundable.cs" target="src\Svg.Shared\Painting\GenericBoundable.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgColourServer.cs" target="src\Svg.Shared\Painting\SvgColourServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgDeferredPaintServer.cs" target="src\Svg.Shared\Painting\SvgDeferredPaintServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgFallbackPaintServer .cs" target="src\Svg.Shared\Painting\SvgFallbackPaintServer .cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgGradientServer.cs" target="src\Svg.Shared\Painting\SvgGradientServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgGradientStop.cs" target="src\Svg.Shared\Painting\SvgGradientStop.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgLinearGradientServer.cs" target="src\Svg.Shared\Painting\SvgLinearGradientServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgMarker.cs" target="src\Svg.Shared\Painting\SvgMarker.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgPaintServer.cs" target="src\Svg.Shared\Painting\SvgPaintServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgPatternServer.cs" target="src\Svg.Shared\Painting\SvgPatternServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgRadialGradientServer.cs" target="src\Svg.Shared\Painting\SvgRadialGradientServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\CoordinateParser.cs" target="src\Svg.Shared\Paths\CoordinateParser.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgArcSegment.cs" target="src\Svg.Shared\Paths\SvgArcSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgClosePathSegment.cs" target="src\Svg.Shared\Paths\SvgClosePathSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgCubicCurveSegment.cs" target="src\Svg.Shared\Paths\SvgCubicCurveSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgLineSegment.cs" target="src\Svg.Shared\Paths\SvgLineSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgMoveToSegment.cs" target="src\Svg.Shared\Paths\SvgMoveToSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgPath.cs" target="src\Svg.Shared\Paths\SvgPath.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgPathBuilder.cs" target="src\Svg.Shared\Paths\SvgPathBuilder.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgPathSegment.cs" target="src\Svg.Shared\Paths\SvgPathSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgPathSegmentList.cs" target="src\Svg.Shared\Paths\SvgPathSegmentList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgQuadraticCurveSegment.cs" target="src\Svg.Shared\Paths\SvgQuadraticCurveSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaBitmap.cs" target="src\Svg.Shared\Platform\SkiaBitmap.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaBrushBase.cs" target="src\Svg.Shared\Platform\SkiaBrushBase.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaColor.cs" target="src\Svg.Shared\Platform\SkiaColor.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaColorMatrix.cs" target="src\Svg.Shared\Platform\SkiaColorMatrix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaColors.cs" target="src\Svg.Shared\Platform\SkiaColors.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaFont.cs" target="src\Svg.Shared\Platform\SkiaFont.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaFontFamily.cs" target="src\Svg.Shared\Platform\SkiaFontFamily.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaFontFamilyProvider.cs" target="src\Svg.Shared\Platform\SkiaFontFamilyProvider.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaGraphics.cs" target="src\Svg.Shared\Platform\SkiaGraphics.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaGraphicsPath.cs" target="src\Svg.Shared\Platform\SkiaGraphicsPath.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaLinearGradientBrush.cs" target="src\Svg.Shared\Platform\SkiaLinearGradientBrush.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaMatrix.cs" target="src\Svg.Shared\Platform\SkiaMatrix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaPen.cs" target="src\Svg.Shared\Platform\SkiaPen.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaPointF.cs" target="src\Svg.Shared\Platform\SkiaPointF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaRectangleF.cs" target="src\Svg.Shared\Platform\SkiaRectangleF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaSizeF.cs" target="src\Svg.Shared\Platform\SkiaSizeF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaSolidBrush.cs" target="src\Svg.Shared\Platform\SkiaSolidBrush.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaStringFormat.cs" target="src\Svg.Shared\Platform\SkiaStringFormat.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaTextRenderer.cs" target="src\Svg.Shared\Platform\SkiaTextRenderer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaTextureBrush.cs" target="src\Svg.Shared\Platform\SkiaTextureBrush.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\PropertyDescriptor.cs" target="src\Svg.Shared\PropertyDescriptor.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Rendering\SvgRenderer.cs" target="src\Svg.Shared\Rendering\SvgRenderer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SKFactory.cs" target="src\Svg.Shared\SKFactory.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgAttributeAttribute.cs" target="src\Svg.Shared\SvgAttributeAttribute.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgAttributeCollection.cs" target="src\Svg.Shared\SvgAttributeCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgContentNode.cs" target="src\Svg.Shared\SvgContentNode.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgDefinitionDefaults.cs" target="src\Svg.Shared\SvgDefinitionDefaults.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgDocument.cs" target="src\Svg.Shared\SvgDocument.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgDocumentCollection.cs" target="src\Svg.Shared\SvgDocumentCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElement.cs" target="src\Svg.Shared\SvgElement.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementAttribute.cs" target="src\Svg.Shared\SvgElementAttribute.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementAttributeProvider.cs" target="src\Svg.Shared\SvgElementAttributeProvider.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementCollection.cs" target="src\Svg.Shared\SvgElementCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementFactory.cs" target="src\Svg.Shared\SvgElementFactory.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementIdManager.cs" target="src\Svg.Shared\SvgElementIdManager.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementStyle.cs" target="src\Svg.Shared\SvgElementStyle.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgExtentions.cs" target="src\Svg.Shared\SvgExtentions.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgPlatformAttribute.cs" target="src\Svg.Shared\SvgPlatformAttribute.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgServiceAttribute.cs" target="src\Svg.Shared\SvgServiceAttribute.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgTypeConverterRegistry.cs" target="src\Svg.Shared\SvgTypeConverterRegistry.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgTypeDescriptor.cs" target="src\Svg.Shared\SvgTypeDescriptor.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgUnknownElement.cs" target="src\Svg.Shared\SvgUnknownElement.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\FontFamily.cs" target="src\Svg.Shared\Text\FontFamily.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\GdiFontDefn.cs" target="src\Svg.Shared\Text\GdiFontDefn.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\PathStatistics.cs" target="src\Svg.Shared\Text\PathStatistics.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgFont.cs" target="src\Svg.Shared\Text\SvgFont.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgFontDefn.cs" target="src\Svg.Shared\Text\SvgFontDefn.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgFontFace.cs" target="src\Svg.Shared\Text\SvgFontFace.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgFontFaceSrc.cs" target="src\Svg.Shared\Text\SvgFontFaceSrc.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgFontFaceUri.cs" target="src\Svg.Shared\Text\SvgFontFaceUri.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgGlyph.cs" target="src\Svg.Shared\Text\SvgGlyph.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgKern.cs" target="src\Svg.Shared\Text\SvgKern.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgMissingGlyph.cs" target="src\Svg.Shared\Text\SvgMissingGlyph.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgText.cs" target="src\Svg.Shared\Text\SvgText.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgTextBase.cs" target="src\Svg.Shared\Text\SvgTextBase.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgTextPath.cs" target="src\Svg.Shared\Text\SvgTextPath.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgTextRef.cs" target="src\Svg.Shared\Text\SvgTextRef.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgTextSpan.cs" target="src\Svg.Shared\Text\SvgTextSpan.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgMatrix.cs" target="src\Svg.Shared\Transforms\SvgMatrix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgRotate.cs" target="src\Svg.Shared\Transforms\SvgRotate.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgScale.cs" target="src\Svg.Shared\Transforms\SvgScale.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgShear.cs" target="src\Svg.Shared\Transforms\SvgShear.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgSkew.cs" target="src\Svg.Shared\Transforms\SvgSkew.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgTransform.cs" target="src\Svg.Shared\Transforms\SvgTransform.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgTransformCollection.cs" target="src\Svg.Shared\Transforms\SvgTransformCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgTranslate.cs" target="src\Svg.Shared\Transforms\SvgTranslate.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgCircle.cs" target="src\Svg.Shared\Basic Shapes\SvgCircle.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgEllipse.cs" target="src\Svg.Shared\Basic Shapes\SvgEllipse.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgImage.cs" target="src\Svg.Shared\Basic Shapes\SvgImage.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgLine.cs" target="src\Svg.Shared\Basic Shapes\SvgLine.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgPolygon.cs" target="src\Svg.Shared\Basic Shapes\SvgPolygon.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgPolyline.cs" target="src\Svg.Shared\Basic Shapes\SvgPolyline.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgRectangle.cs" target="src\Svg.Shared\Basic Shapes\SvgRectangle.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgVisualElement.cs" target="src\Svg.Shared\Basic Shapes\SvgVisualElement.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Basic Shapes\SvgVisualElementStyle.cs" target="src\Svg.Shared\Basic Shapes\SvgVisualElementStyle.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Clipping and Masking\SvgClipPath.cs" target="src\Svg.Shared\Clipping and Masking\SvgClipPath.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Clipping and Masking\SvgMask.cs" target="src\Svg.Shared\Clipping and Masking\SvgMask.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\BaseConverter.cs" target="src\Svg.Shared\Converters\BaseConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgColourConverter.cs" target="src\Svg.Shared\Converters\SvgColourConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgOrientConverter.cs" target="src\Svg.Shared\Converters\SvgOrientConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgPaintServerFactory.cs" target="src\Svg.Shared\Converters\SvgPaintServerFactory.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgPathBuilder.cs" target="src\Svg.Shared\Converters\SvgPathBuilder.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgPointCollectionConverter.cs" target="src\Svg.Shared\Converters\SvgPointCollectionConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgPreserveAspectRationConverter.cs" target="src\Svg.Shared\Converters\SvgPreserveAspectRationConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgTransformConverter.cs" target="src\Svg.Shared\Converters\SvgTransformConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgUnitCollectionConverter.cs" target="src\Svg.Shared\Converters\SvgUnitCollectionConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgUnitConverter.cs" target="src\Svg.Shared\Converters\SvgUnitConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Converters\SvgViewBoxConverter.cs" target="src\Svg.Shared\Converters\SvgViewBoxConverter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Css\CssQuery.cs" target="src\Svg.Shared\Css\CssQuery.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Css\SvgElementOps.cs" target="src\Svg.Shared\Css\SvgElementOps.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgAspectRatio.cs" target="src\Svg.Shared\DataTypes\SvgAspectRatio.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgOrient.cs" target="src\Svg.Shared\DataTypes\SvgOrient.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgPoint.cs" target="src\Svg.Shared\DataTypes\SvgPoint.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgPointCollection.cs" target="src\Svg.Shared\DataTypes\SvgPointCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgUnit.cs" target="src\Svg.Shared\DataTypes\SvgUnit.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgUnitCollection.cs" target="src\Svg.Shared\DataTypes\SvgUnitCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\DataTypes\SvgViewBox.cs" target="src\Svg.Shared\DataTypes\SvgViewBox.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgDefinitionList.cs" target="src\Svg.Shared\Document Structure\SvgDefinitionList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgDescription.cs" target="src\Svg.Shared\Document Structure\SvgDescription.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgDocumentMetadata.cs" target="src\Svg.Shared\Document Structure\SvgDocumentMetadata.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgFragment.cs" target="src\Svg.Shared\Document Structure\SvgFragment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgGroup.cs" target="src\Svg.Shared\Document Structure\SvgGroup.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgSwitch.cs" target="src\Svg.Shared\Document Structure\SvgSwitch.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgSymbol.cs" target="src\Svg.Shared\Document Structure\SvgSymbol.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgTitle.cs" target="src\Svg.Shared\Document Structure\SvgTitle.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Document Structure\SvgUse.cs" target="src\Svg.Shared\Document Structure\SvgUse.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Engine.cs" target="src\Svg.Shared\Engine.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Exceptions\SvgException.cs" target="src\Svg.Shared\Exceptions\SvgException.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Extensibility\SvgForeignObject.cs" target="src\Svg.Shared\Extensibility\SvgForeignObject.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Extensions.cs" target="src\Svg.Shared\Extensions.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Lexer.cs" target="src\Svg.Shared\External\ExCSS\Lexer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Extensions\CharacterExtensions.cs" target="src\Svg.Shared\External\ExCSS\Model\Extensions\CharacterExtensions.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Extensions\StringExtensions.cs" target="src\Svg.Shared\External\ExCSS\Model\Extensions\StringExtensions.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\FunctionBuffer.cs" target="src\Svg.Shared\External\ExCSS\Model\FunctionBuffer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\HtmlEncoding.cs" target="src\Svg.Shared\External\ExCSS\Model\HtmlEncoding.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\MediaTypeList.cs" target="src\Svg.Shared\External\ExCSS\Model\MediaTypeList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\AggregateRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\AggregateRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\CharacterSetRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\CharacterSetRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\ConditionalRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\ConditionalRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\DocumentRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\DocumentRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\FontFaceRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\FontFaceRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\GenericRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\GenericRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\ImportRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\ImportRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\KeyframeRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\KeyframeRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\KeyframesRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\KeyframesRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\MediaRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\MediaRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\NamespaceRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\NamespaceRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\PageRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\PageRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\RuleSet.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\RuleSet.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\StyleDeclaration.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\StyleDeclaration.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\StyleRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\StyleRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Rules\SupportsRule.cs" target="src\Svg.Shared\External\ExCSS\Model\Rules\SupportsRule.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\AggregateSelectorList.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\AggregateSelectorList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\BaseSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\BaseSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\CombinatorSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\CombinatorSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\ComplexSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\ComplexSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\FirstChildSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\FirstChildSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\LastChildSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\LastChildSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\MultipleSelectorList.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\MultipleSelectorList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\NthChildSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\NthChildSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\NthFirstChildSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\NthFirstChildSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\NthLastChildSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\NthLastChildSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\NthLastOfTypeSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\NthLastOfTypeSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\NthOfTypeSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\NthOfTypeSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\SelectorFactory.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\SelectorFactory.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\SelectorList.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\SelectorList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Selector\SimpleSelector.cs" target="src\Svg.Shared\External\ExCSS\Model\Selector\SimpleSelector.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Specification.cs" target="src\Svg.Shared\External\ExCSS\Model\Specification.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\Block.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\Block.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\BracketBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\BracketBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\CharacterBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\CharacterBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\CommentBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\CommentBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\DelimiterBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\DelimiterBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\MatchBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\MatchBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\NumericBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\NumericBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\PipeBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\PipeBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\RangeBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\RangeBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\SpecialCharacter.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\SpecialCharacter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\StringBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\StringBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\SymbolBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\SymbolBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\TextBlocks\UnitBlock.cs" target="src\Svg.Shared\External\ExCSS\Model\TextBlocks\UnitBlock.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\GenericFunction.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\GenericFunction.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\HtmlColor.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\HtmlColor.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\InheritTerm.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\InheritTerm.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\PrimitiveTerm.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\PrimitiveTerm.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\Property.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\Property.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\Term.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\Term.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Model\Values\TermList.cs" target="src\Svg.Shared\External\ExCSS\Model\Values\TermList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Parser.Blocks.cs" target="src\Svg.Shared\External\ExCSS\Parser.Blocks.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\Parser.cs" target="src\Svg.Shared\External\ExCSS\Parser.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\StyleSheet.cs" target="src\Svg.Shared\External\ExCSS\StyleSheet.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\StylesheetParseError.cs" target="src\Svg.Shared\External\ExCSS\StylesheetParseError.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\ExCSS\StylesheetReader.cs" target="src\Svg.Shared\External\ExCSS\StylesheetReader.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\Either.cs" target="src\Svg.Shared\External\Fizzler\Either.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\HumanReadableSelectorGenerator.cs" target="src\Svg.Shared\External\Fizzler\HumanReadableSelectorGenerator.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\NamespacePrefix.cs" target="src\Svg.Shared\External\Fizzler\NamespacePrefix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\Parser.cs" target="src\Svg.Shared\External\Fizzler\Parser.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\Reader.cs" target="src\Svg.Shared\External\Fizzler\Reader.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\SelectorGenerator.cs" target="src\Svg.Shared\External\Fizzler\SelectorGenerator.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\SelectorGeneratorTee.cs" target="src\Svg.Shared\External\Fizzler\SelectorGeneratorTee.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\SelectorsCachingCompiler.cs" target="src\Svg.Shared\External\Fizzler\SelectorsCachingCompiler.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\Token.cs" target="src\Svg.Shared\External\Fizzler\Token.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\External\Fizzler\Tokener.cs" target="src\Svg.Shared\External\Fizzler\Tokener.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feColourMatrix\SvgColourMatrix.cs" target="src\Svg.Shared\Filter Effects\feColourMatrix\SvgColourMatrix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feGaussianBlur\RawBitmap.cs" target="src\Svg.Shared\Filter Effects\feGaussianBlur\RawBitmap.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feGaussianBlur\SvgGaussianBlur.cs" target="src\Svg.Shared\Filter Effects\feGaussianBlur\SvgGaussianBlur.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feMerge\SvgMerge.cs" target="src\Svg.Shared\Filter Effects\feMerge\SvgMerge.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feMerge\SvgMergeNode.cs" target="src\Svg.Shared\Filter Effects\feMerge\SvgMergeNode.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\feOffset\SvgOffset.cs" target="src\Svg.Shared\Filter Effects\feOffset\SvgOffset.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\ImageBuffer.cs" target="src\Svg.Shared\Filter Effects\ImageBuffer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\SvgFilter.cs" target="src\Svg.Shared\Filter Effects\SvgFilter.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Filter Effects\SvgFilterPrimitive.cs" target="src\Svg.Shared\Filter Effects\SvgFilterPrimitive.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\Bitmap.cs" target="src\Svg.Shared\Interfaces\Bitmap.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\CharacterRange.cs" target="src\Svg.Shared\Interfaces\CharacterRange.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\Color.cs" target="src\Svg.Shared\Interfaces\Color.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\ColorBlend.cs" target="src\Svg.Shared\Interfaces\ColorBlend.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\ISvgElementFactory.cs" target="src\Svg.Shared\Interfaces\ISvgElementFactory.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\Matrix.cs" target="src\Svg.Shared\Interfaces\Matrix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\PathData.cs" target="src\Svg.Shared\Interfaces\PathData.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\PointF.cs" target="src\Svg.Shared\Interfaces\PointF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\RectangleF.cs" target="src\Svg.Shared\Interfaces\RectangleF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\Region.cs" target="src\Svg.Shared\Interfaces\Region.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\SizeF.cs" target="src\Svg.Shared\Interfaces\SizeF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Interfaces\SystemColors.cs" target="src\Svg.Shared\Interfaces\SystemColors.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\NonSvgElement.cs" target="src\Svg.Shared\NonSvgElement.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\GenericBoundable.cs" target="src\Svg.Shared\Painting\GenericBoundable.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgColourServer.cs" target="src\Svg.Shared\Painting\SvgColourServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgDeferredPaintServer.cs" target="src\Svg.Shared\Painting\SvgDeferredPaintServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgFallbackPaintServer .cs" target="src\Svg.Shared\Painting\SvgFallbackPaintServer .cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgGradientServer.cs" target="src\Svg.Shared\Painting\SvgGradientServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgGradientStop.cs" target="src\Svg.Shared\Painting\SvgGradientStop.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgLinearGradientServer.cs" target="src\Svg.Shared\Painting\SvgLinearGradientServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgMarker.cs" target="src\Svg.Shared\Painting\SvgMarker.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgPaintServer.cs" target="src\Svg.Shared\Painting\SvgPaintServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgPatternServer.cs" target="src\Svg.Shared\Painting\SvgPatternServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Painting\SvgRadialGradientServer.cs" target="src\Svg.Shared\Painting\SvgRadialGradientServer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\CoordinateParser.cs" target="src\Svg.Shared\Paths\CoordinateParser.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgArcSegment.cs" target="src\Svg.Shared\Paths\SvgArcSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgClosePathSegment.cs" target="src\Svg.Shared\Paths\SvgClosePathSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgCubicCurveSegment.cs" target="src\Svg.Shared\Paths\SvgCubicCurveSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgLineSegment.cs" target="src\Svg.Shared\Paths\SvgLineSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgMoveToSegment.cs" target="src\Svg.Shared\Paths\SvgMoveToSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgPath.cs" target="src\Svg.Shared\Paths\SvgPath.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgPathBuilder.cs" target="src\Svg.Shared\Paths\SvgPathBuilder.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgPathSegment.cs" target="src\Svg.Shared\Paths\SvgPathSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgPathSegmentList.cs" target="src\Svg.Shared\Paths\SvgPathSegmentList.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Paths\SvgQuadraticCurveSegment.cs" target="src\Svg.Shared\Paths\SvgQuadraticCurveSegment.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaBitmap.cs" target="src\Svg.Shared\Platform\SkiaBitmap.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaBrushBase.cs" target="src\Svg.Shared\Platform\SkiaBrushBase.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaColor.cs" target="src\Svg.Shared\Platform\SkiaColor.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaColorMatrix.cs" target="src\Svg.Shared\Platform\SkiaColorMatrix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaColors.cs" target="src\Svg.Shared\Platform\SkiaColors.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaFont.cs" target="src\Svg.Shared\Platform\SkiaFont.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaFontFamily.cs" target="src\Svg.Shared\Platform\SkiaFontFamily.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaFontFamilyProvider.cs" target="src\Svg.Shared\Platform\SkiaFontFamilyProvider.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaGraphics.cs" target="src\Svg.Shared\Platform\SkiaGraphics.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaGraphicsPath.cs" target="src\Svg.Shared\Platform\SkiaGraphicsPath.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaLinearGradientBrush.cs" target="src\Svg.Shared\Platform\SkiaLinearGradientBrush.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaMatrix.cs" target="src\Svg.Shared\Platform\SkiaMatrix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaPen.cs" target="src\Svg.Shared\Platform\SkiaPen.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaPointF.cs" target="src\Svg.Shared\Platform\SkiaPointF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaRectangleF.cs" target="src\Svg.Shared\Platform\SkiaRectangleF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaSizeF.cs" target="src\Svg.Shared\Platform\SkiaSizeF.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaSolidBrush.cs" target="src\Svg.Shared\Platform\SkiaSolidBrush.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaStringFormat.cs" target="src\Svg.Shared\Platform\SkiaStringFormat.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaTextRenderer.cs" target="src\Svg.Shared\Platform\SkiaTextRenderer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Platform\SkiaTextureBrush.cs" target="src\Svg.Shared\Platform\SkiaTextureBrush.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\PropertyDescriptor.cs" target="src\Svg.Shared\PropertyDescriptor.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Rendering\SvgRenderer.cs" target="src\Svg.Shared\Rendering\SvgRenderer.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SKFactory.cs" target="src\Svg.Shared\SKFactory.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgAttributeAttribute.cs" target="src\Svg.Shared\SvgAttributeAttribute.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgAttributeCollection.cs" target="src\Svg.Shared\SvgAttributeCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgContentNode.cs" target="src\Svg.Shared\SvgContentNode.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgDefinitionDefaults.cs" target="src\Svg.Shared\SvgDefinitionDefaults.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgDocument.cs" target="src\Svg.Shared\SvgDocument.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgDocumentCollection.cs" target="src\Svg.Shared\SvgDocumentCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElement.cs" target="src\Svg.Shared\SvgElement.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementAttribute.cs" target="src\Svg.Shared\SvgElementAttribute.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementAttributeProvider.cs" target="src\Svg.Shared\SvgElementAttributeProvider.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementCollection.cs" target="src\Svg.Shared\SvgElementCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementFactory.cs" target="src\Svg.Shared\SvgElementFactory.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementIdManager.cs" target="src\Svg.Shared\SvgElementIdManager.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgElementStyle.cs" target="src\Svg.Shared\SvgElementStyle.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgExtentions.cs" target="src\Svg.Shared\SvgExtentions.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgPlatformAttribute.cs" target="src\Svg.Shared\SvgPlatformAttribute.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgServiceAttribute.cs" target="src\Svg.Shared\SvgServiceAttribute.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgTypeConverterRegistry.cs" target="src\Svg.Shared\SvgTypeConverterRegistry.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgTypeDescriptor.cs" target="src\Svg.Shared\SvgTypeDescriptor.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\SvgUnknownElement.cs" target="src\Svg.Shared\SvgUnknownElement.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\FontFamily.cs" target="src\Svg.Shared\Text\FontFamily.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\GdiFontDefn.cs" target="src\Svg.Shared\Text\GdiFontDefn.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\PathStatistics.cs" target="src\Svg.Shared\Text\PathStatistics.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgFont.cs" target="src\Svg.Shared\Text\SvgFont.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgFontDefn.cs" target="src\Svg.Shared\Text\SvgFontDefn.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgFontFace.cs" target="src\Svg.Shared\Text\SvgFontFace.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgFontFaceSrc.cs" target="src\Svg.Shared\Text\SvgFontFaceSrc.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgFontFaceUri.cs" target="src\Svg.Shared\Text\SvgFontFaceUri.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgGlyph.cs" target="src\Svg.Shared\Text\SvgGlyph.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgKern.cs" target="src\Svg.Shared\Text\SvgKern.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgMissingGlyph.cs" target="src\Svg.Shared\Text\SvgMissingGlyph.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgText.cs" target="src\Svg.Shared\Text\SvgText.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgTextBase.cs" target="src\Svg.Shared\Text\SvgTextBase.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgTextPath.cs" target="src\Svg.Shared\Text\SvgTextPath.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgTextRef.cs" target="src\Svg.Shared\Text\SvgTextRef.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Text\SvgTextSpan.cs" target="src\Svg.Shared\Text\SvgTextSpan.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgMatrix.cs" target="src\Svg.Shared\Transforms\SvgMatrix.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgRotate.cs" target="src\Svg.Shared\Transforms\SvgRotate.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgScale.cs" target="src\Svg.Shared\Transforms\SvgScale.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgShear.cs" target="src\Svg.Shared\Transforms\SvgShear.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgSkew.cs" target="src\Svg.Shared\Transforms\SvgSkew.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgTransform.cs" target="src\Svg.Shared\Transforms\SvgTransform.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgTransformCollection.cs" target="src\Svg.Shared\Transforms\SvgTransformCollection.cs" exclude="" />
+    <file src="C:\Users\admin\Source\Repos\SVG\Svg.Shared\Transforms\SvgTranslate.cs" target="src\Svg.Shared\Transforms\SvgTranslate.cs" exclude="" />
+  </files>
+</package>

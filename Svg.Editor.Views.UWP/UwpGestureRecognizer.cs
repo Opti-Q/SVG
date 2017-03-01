@@ -1,140 +1,222 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using Windows.Foundation;
+using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
-using SkiaSharp.Views.UWP;
-using Svg.Editor.Events;
+using Windows.UI.Xaml.Media;
+using Svg.Editor.Gestures;
 using Svg.Editor.Interfaces;
-using Svg.Editor.Services;
 
-namespace Svg.Editor.UWP
+namespace Svg.Editor.Views
 {
-    public class UwpGestureRecognizer : IGestureDetector
+    public class UwpGestureRecognizer : IGestureRecognizer, IDisposable
     {
-        private readonly Subject<UserInputEvent> _gesturesSubject = new Subject<UserInputEvent>();
-        public IObservable<UserInputEvent> DetectedGestures => _gesturesSubject.AsObservable();
+        private readonly Subject<UserGesture> _gesturesSubject = new Subject<UserGesture>();
+        public IObservable<UserGesture> RecognizedGestures => _gesturesSubject.AsObservable();
 
-        /// <summary>Dictionary to maintain information about each active contact. 
-        /// An entry is added during PointerPressed/PointerEntered events and removed 
-        /// during PointerReleased/PointerCaptureLost/PointerCanceled/PointerExited events.</summary>
-        Dictionary<uint, Pointer> _contacts = new Dictionary<uint, Pointer>();
-
-        private UIElement _control;
+        private readonly ManipulationInputProcessor _inputProcessor;
 
         public UwpGestureRecognizer(UIElement control)
         {
-            _control = control;
+            var gestureRecognizer = new GestureRecognizer();
+            _inputProcessor = new ManipulationInputProcessor(gestureRecognizer, control);
         }
 
-        public void OnTouch(PointerRoutedEventArgs args)
+        public void Dispose()
         {
-            UserInputEvent uie = null;
+            _inputProcessor.Dispose();
+        }
+    }
 
-            var x = 0.0;
-            var y = 0.0;
+    internal class ManipulationInputProcessor : IDisposable
+    {
+        private readonly GestureRecognizer _recognizer;
+        private readonly UIElement _element;
+        private TransformGroup _cumulativeTransform;
+        private MatrixTransform _previousTransform;
+        private CompositeTransform _deltaTransform;
 
-            var pointerPoint = args.GetCurrentPoint(_control);
-            _contacts[args.Pointer.PointerId] = args.Pointer;
-            var pointerCount = _contacts.Count;
-            foreach (var pointer in _contacts.Values)
+        public ManipulationInputProcessor(GestureRecognizer gestureRecognizer, UIElement referenceFrame)
+        {
+            _recognizer = gestureRecognizer;
+            _element = referenceFrame;
+
+            // Initialize the transforms that will be used to manipulate the shape
+            InitializeTransforms();
+
+            // The GestureSettings property dictates what manipulation events the
+            // Gesture Recognizer will listen to.  This will set it to a limited
+            // subset of these events.
+            _recognizer.GestureSettings = GenerateDefaultSettings();
+
+            // Set up pointer event handlers. These receive input events that are used by the gesture recognizer.
+            _element.PointerPressed += OnPointerPressed;
+            _element.PointerMoved += OnPointerMoved;
+            _element.PointerReleased += OnPointerReleased;
+            _element.PointerCanceled += OnPointerCanceled;
+
+            // Set up event handlers to respond to gesture recognizer output
+            _recognizer.ManipulationStarted += OnManipulationStarted;
+            _recognizer.ManipulationUpdated += OnManipulationUpdated;
+            _recognizer.ManipulationCompleted += OnManipulationCompleted;
+            _recognizer.ManipulationInertiaStarting += OnManipulationInertiaStarting;
+        }
+
+        public void InitializeTransforms()
+        {
+            _cumulativeTransform = new TransformGroup();
+            _deltaTransform = new CompositeTransform();
+            _previousTransform = new MatrixTransform { Matrix = Windows.UI.Xaml.Media.Matrix.Identity };
+
+            _cumulativeTransform.Children.Add(_previousTransform);
+            _cumulativeTransform.Children.Add(_deltaTransform);
+
+            _element.RenderTransform = _cumulativeTransform;
+        }
+
+        // Return the default GestureSettings for this sample
+        private GestureSettings GenerateDefaultSettings()
+        {
+            return GestureSettings.ManipulationTranslateX |
+                GestureSettings.ManipulationTranslateY |
+                GestureSettings.ManipulationRotate |
+                GestureSettings.ManipulationTranslateInertia |
+                GestureSettings.ManipulationRotateInertia;
+        }
+
+        // Route the pointer pressed event to the gesture recognizer.
+        // The points are in the reference frame of the canvas that contains the rectangle element.
+        private void OnPointerPressed(object sender, PointerRoutedEventArgs args)
+        {
+            // Set the pointer capture to the element being interacted with so that only it
+            // will fire pointer-related events
+            _element.CapturePointer(args.Pointer);
+
+            // Feed the current point into the gesture recognizer as a down event
+            _recognizer.ProcessDownEvent(args.GetCurrentPoint(_element));
+        }
+
+        // Route the pointer moved event to the gesture recognizer.
+        // The points are in the reference frame of the canvas that contains the rectangle element.
+        private void OnPointerMoved(object sender, PointerRoutedEventArgs args)
+        {
+            // Feed the set of points into the gesture recognizer as a move event
+            _recognizer.ProcessMoveEvents(args.GetIntermediatePoints(_element));
+        }
+
+        // Route the pointer released event to the gesture recognizer.
+        // The points are in the reference frame of the canvas that contains the rectangle element.
+        private void OnPointerReleased(object sender, PointerRoutedEventArgs args)
+        {
+            // Feed the current point into the gesture recognizer as an up event
+            _recognizer.ProcessUpEvent(args.GetCurrentPoint(_element));
+
+            // Release the pointer
+            _element.ReleasePointerCapture(args.Pointer);
+        }
+
+        // Route the pointer canceled event to the gesture recognizer.
+        // The points are in the reference frame of the canvas that contains the rectangle element.
+        private void OnPointerCanceled(object sender, PointerRoutedEventArgs args)
+        {
+            _recognizer.CompleteGesture();
+            _element.ReleasePointerCapture(args.Pointer);
+        }
+
+        // When a manipulation begins, change the color of the object to reflect
+        // that a manipulation is in progress
+        private void OnManipulationStarted(object sender, ManipulationStartedEventArgs e)
+        {
+        }
+
+        // Process the change resulting from a manipulation
+        private void OnManipulationUpdated(object sender, ManipulationUpdatedEventArgs e)
+        {
+            _previousTransform.Matrix = _cumulativeTransform.Value;
+
+            // Get the center point of the manipulation for rotation
+            Point center = new Point(e.Position.X, e.Position.Y);
+            _deltaTransform.CenterX = center.X;
+            _deltaTransform.CenterY = center.Y;
+
+            // Look at the Delta property of the ManipulationDeltaRoutedEventArgs to retrieve
+            // the rotation, X, and Y changes
+            _deltaTransform.Rotation = e.Delta.Rotation;
+            _deltaTransform.TranslateX = e.Delta.Translation.X;
+            _deltaTransform.TranslateY = e.Delta.Translation.Y;
+        }
+
+        // When a manipulation that's a result of inertia begins, change the color of the
+        // the object to reflect that inertia has taken over
+        private void OnManipulationInertiaStarting(object sender, ManipulationInertiaStartingEventArgs e)
+        {
+        }
+
+        // When a manipulation has finished, reset the color of the object
+        private void OnManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
+        {
+        }
+
+        // Modify the GestureSettings property to only allow movement on the X axis
+        public void LockToXAxis()
+        {
+            _recognizer.CompleteGesture();
+            _recognizer.GestureSettings |= GestureSettings.ManipulationTranslateY | GestureSettings.ManipulationTranslateX;
+            _recognizer.GestureSettings ^= GestureSettings.ManipulationTranslateY;
+        }
+
+        // Modify the GestureSettings property to only allow movement on the Y axis
+        public void LockToYAxis()
+        {
+            _recognizer.CompleteGesture();
+            _recognizer.GestureSettings |= GestureSettings.ManipulationTranslateY | GestureSettings.ManipulationTranslateX;
+            _recognizer.GestureSettings ^= GestureSettings.ManipulationTranslateX;
+        }
+
+        // Modify the GestureSettings property to allow movement on both the the X and Y axes
+        public void MoveOnXAndYAxes()
+        {
+            _recognizer.CompleteGesture();
+            _recognizer.GestureSettings |= GestureSettings.ManipulationTranslateX | GestureSettings.ManipulationTranslateY;
+        }
+
+        // Modify the GestureSettings property to enable or disable inertia based on the passed-in value
+        public void UseInertia(bool inertia)
+        {
+            if (!inertia)
             {
-                x += pointerPoint.Position.X / pointerCount;
-                y += pointerPoint.Position.Y / pointerCount;
+                _recognizer.CompleteGesture();
+                _recognizer.GestureSettings ^= GestureSettings.ManipulationTranslateInertia | GestureSettings.ManipulationRotateInertia;
             }
+            else
+            {
+                _recognizer.GestureSettings |= GestureSettings.ManipulationTranslateInertia | GestureSettings.ManipulationRotateInertia;
+            }
+        }
 
-            //var action = (int) ev.Action;
-            //var maskedAction = action & (int) MotionEventActions.Mask;
-            //switch (maskedAction)
-            //{
-            //    case (int) MotionEventActions.Down:
-            //    case (int) MotionEventActions.Pointer1Down:
-            //        uie = new PointerEvent(EventType.PointerDown,
-            //            Engine.Factory.CreatePointF(_pointerDownX, _pointerDownY),
-            //            Engine.Factory.CreatePointF(_lastTouchX, _lastTouchY),
-            //            Engine.Factory.CreatePointF(x, y), ev.PointerCount);
+        public void Reset()
+        {
+            _element.RenderTransform = null;
+            _recognizer.CompleteGesture();
+            InitializeTransforms();
+            _recognizer.GestureSettings = GenerateDefaultSettings();
+        }
 
-            //        _lastTouchX = x;
-            //        _lastTouchY = y;
+        public void Dispose()
+        {
+            // Unregister pointer event handlers. These receive input events that are used by the gesture recognizer.
+            _element.PointerPressed -= OnPointerPressed;
+            _element.PointerMoved -= OnPointerMoved;
+            _element.PointerReleased -= OnPointerReleased;
+            _element.PointerCanceled -= OnPointerCanceled;
 
-            //        _pointerDownX = x;
-            //        _pointerDownY = y;
-
-            //        ActivePointerId = ev.GetPointerId(0);
-            //        break;
-
-            //    case (int) MotionEventActions.Up:
-            //        ActivePointerId = InvalidPointerId;
-            //        uie = new PointerEvent(EventType.PointerUp,
-            //            Engine.Factory.CreatePointF(_pointerDownX, _pointerDownY),
-            //            Engine.Factory.CreatePointF(_lastTouchX, _lastTouchY),
-            //            Engine.Factory.CreatePointF(x, y), ev.PointerCount);
-            //        break;
-
-            //    case (int) MotionEventActions.Cancel:
-            //        ActivePointerId = InvalidPointerId;
-            //        uie = new PointerEvent(EventType.Cancel,
-            //            Engine.Factory.CreatePointF(_pointerDownX, _pointerDownY),
-            //            Engine.Factory.CreatePointF(_lastTouchX, _lastTouchY),
-            //            Engine.Factory.CreatePointF(x, y), 1);
-            //        break;
-
-            //    case (int) MotionEventActions.Move:
-            //        var relativeDeltaX = x - _lastTouchX;
-            //        var relativeDeltaY = y - _lastTouchY;
-
-            //        uie = new MoveEvent(Engine.Factory.CreatePointF(_pointerDownX, _pointerDownY),
-            //            Engine.Factory.CreatePointF(_lastTouchX, _lastTouchY),
-            //            Engine.Factory.CreatePointF(x, y),
-            //            Engine.Factory.CreatePointF(relativeDeltaX, relativeDeltaY),
-            //            ev.PointerCount);
-
-            //        _lastTouchX = x;
-            //        _lastTouchY = y;
-            //        break;
-
-            //    case (int) MotionEventActions.PointerUp:
-
-            //        var pointerIndex2 = ((int) ev.Action & (int) MotionEventActions.PointerIndexMask)
-            //                            >> (int) MotionEventActions.PointerIndexShift;
-
-            //        var pointerId = ev.GetPointerId(pointerIndex2);
-            //        if (pointerId == ActivePointerId)
-            //        {
-            //            // This was our active pointer going up. Choose a new
-            //            // active pointer and adjust accordingly.
-            //            var newPointerIndex = pointerIndex2 == 0 ? 1 : 0;
-            //            x = ev.GetX(newPointerIndex);
-            //            y = ev.GetY(newPointerIndex);
-            //            uie = new PointerEvent(EventType.PointerUp,
-            //                Engine.Factory.CreatePointF(_pointerDownX, _pointerDownY),
-            //                Engine.Factory.CreatePointF(_lastTouchX, _lastTouchY),
-            //                Engine.Factory.CreatePointF(x, y), 1);
-
-            //            _lastTouchX = x;
-            //            _lastTouchY = y;
-            //            ActivePointerId = ev.GetPointerId(newPointerIndex);
-            //        }
-            //        else
-            //        {
-            //            var tempPointerIndex = ev.FindPointerIndex(ActivePointerId);
-            //            x = ev.GetX(tempPointerIndex);
-            //            y = ev.GetY(tempPointerIndex);
-            //            uie = new PointerEvent(EventType.PointerUp,
-            //                Engine.Factory.CreatePointF(_pointerDownX, _pointerDownY),
-            //                Engine.Factory.CreatePointF(_lastTouchX, _lastTouchY),
-            //                Engine.Factory.CreatePointF(x, y), 1);
-
-            //            _lastTouchX = ev.GetX(tempPointerIndex);
-            //            _lastTouchY = ev.GetY(tempPointerIndex);
-            //        }
-
-            //        break;
-            //}
-
-            if (uie != null)
-                _gesturesSubject.OnNext(uie);
+            // Unregister event handlers to respond to gesture recognizer output
+            _recognizer.ManipulationStarted -= OnManipulationStarted;
+            _recognizer.ManipulationUpdated -= OnManipulationUpdated;
+            _recognizer.ManipulationCompleted -= OnManipulationCompleted;
+            _recognizer.ManipulationInertiaStarting -= OnManipulationInertiaStarting;
         }
     }
 }

@@ -5,7 +5,6 @@ using Xamarin.Forms;
 
 namespace Svg.Editor.Forms
 {
-    [RenderWith(typeof(SvgCanvasEditorViewRenderer))]
     public class SvgCanvasEditorView : View, ISKCanvasViewController
     {
         public static readonly BindableProperty IgnorePixelScalingProperty =
