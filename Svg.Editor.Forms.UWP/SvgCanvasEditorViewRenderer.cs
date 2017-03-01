@@ -22,7 +22,7 @@ namespace Svg.Editor.Forms
         {
             base.Dispose(disposing);
 
-            //_gestureRecognizer.Dispose();
+            _gestureRecognizer.Dispose();
         }
     }
 }
