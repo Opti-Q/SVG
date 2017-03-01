@@ -1,7 +1,6 @@
 ﻿{
   "dependencies": {
-    "Svg": "2.0.1",
-    "Svg.Editor": "2.0.1",
+
     "SkiaSharp": "1.56.1",
     "System.Reactive": "3.0.0",
     "System.Reactive.Core": "3.0.0",

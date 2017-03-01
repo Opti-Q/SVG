@@ -47,6 +47,12 @@
   <ItemGroup>
     <None Include="project.json" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Svg.Editor.Core\Svg.Editor.Core.csproj">
+      <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
+      <Name>Svg.Editor.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="..\Svg.Editor.Shared\Svg.Editor.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

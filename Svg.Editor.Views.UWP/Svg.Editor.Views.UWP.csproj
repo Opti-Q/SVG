@@ -110,6 +110,12 @@
     <Compile Include="UwpGestureRecognizer.cs" />
     <EmbeddedResource Include="Properties\Svg.Editor.UWP.rd.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Svg.Editor.Core\Svg.Editor.Core.csproj">
+      <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
+      <Name>Svg.Editor.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="..\Svg.Editor.Shared\Svg.Editor.Shared.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
