@@ -49,10 +49,10 @@
     <Compile Include="Gestures\DoubleTapGesture.cs" />
     <Compile Include="Gestures\TapGesture.cs" />
     <Compile Include="Gestures\UserGesture.cs" />
+    <Compile Include="Interfaces\IGestureDetector.cs" />
     <Compile Include="Interfaces\IPickImageService.cs" />
     <Compile Include="Interfaces\ISvgDrawingCanvas.cs" />
     <Compile Include="Services\GestureRecognizer.cs" />
-    <Compile Include="Services\IGestureDetector.cs" />
     <Compile Include="Services\SchedulerProvider.cs" />
     <Compile Include="Services\SKCanvasRenderer.cs" />
     <Compile Include="Services\ToolFactoryProvider.cs" />

@@ -4,7 +4,7 @@ using System.Reactive.Subjects;
 using Android.Content;
 using Android.Views;
 using Svg.Editor.Events;
-using Svg.Editor.Services;
+using Svg.Editor.Interfaces;
 
 namespace Svg.Editor.Droid.Services
 {
