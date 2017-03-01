@@ -36,6 +36,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="SvgCanvasEditorView.cs" />
+    <Compile Include="SvgGlEditorView.cs" />
     <Compile Include="SvgGlEditorViewRenderer.cs" />
     <Compile Include="SvgCanvasEditorViewRenderer.cs" />
   </ItemGroup>
