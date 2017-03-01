@@ -6,9 +6,9 @@
              x:Class="Svg.Editor.Sample.Forms.MainPage">
 
     <svg:SvgCanvasEditorView BackgroundColor="Purple" >
-        <svg:SvgCanvasEditorView.BindingContext>
+        <!--<svg:SvgCanvasEditorView.BindingContext>
             <editor:SvgDrawingCanvas />
-        </svg:SvgCanvasEditorView.BindingContext>
+        </svg:SvgCanvasEditorView.BindingContext>-->
     </svg:SvgCanvasEditorView>
 
 </ContentPage>
