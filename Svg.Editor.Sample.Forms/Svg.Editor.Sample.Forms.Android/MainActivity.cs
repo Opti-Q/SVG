@@ -1,12 +1,11 @@
-﻿using Android;
-using Android.App;
+﻿using Android.App;
 using Android.Content.PM;
 using Android.OS;
 
 namespace Svg.Editor.Sample.Forms.Droid
 {
     [Activity(Label = "Svg.Editor.Sample.Forms", Icon = "@drawable/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
-    public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
+    public class MainActivity : Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle bundle)
         {
@@ -15,7 +14,9 @@ namespace Svg.Editor.Sample.Forms.Droid
 
             base.OnCreate(bundle);
 
-            global::Xamarin.Forms.Forms.Init(this, bundle);
+            Xamarin.Forms.Forms.Init(this, bundle);
+
+            Editor.Init();
 
             LoadApplication(new App());
         }

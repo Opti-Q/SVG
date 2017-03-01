@@ -12,7 +12,7 @@ using Svg.Editor.Events;
 using Svg.Editor.Interfaces;
 using Svg.Editor.Services;
 
-namespace Svg.Editor.Droid
+namespace Svg.Editor.Views.Droid
 {
     public class SvgDrawingCanvasView : View
     {

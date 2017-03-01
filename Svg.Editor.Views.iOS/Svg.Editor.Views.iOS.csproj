@@ -8,9 +8,9 @@
     <ProjectGuid>{1A4F1238-2571-4E51-9834-D2432F1D9C35}</ProjectGuid>
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
-    <RootNamespace>Svg.Editor.Views</RootNamespace>
+    <RootNamespace>Svg.Editor.Views.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>Svg.Editor.Views</AssemblyName>
+    <AssemblyName>Svg.Editor.Views.iOS</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
