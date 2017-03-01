@@ -1,4 +1,5 @@
 using System;
+using Svg.Interfaces;
 using Svg.Pathing;
 using Svg.Transforms;
 
@@ -108,7 +109,7 @@ namespace Svg
         /// Gets the bounds of the element.
         /// </summary>
         /// <value>The bounds.</value>
-        public override Svg.Interfaces.RectangleF Bounds
+        public override RectangleF Bounds
         {
             get
             {

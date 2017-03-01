@@ -12,10 +12,11 @@ using Svg.Editor.Droid.Services;
 using Svg.Editor.Events;
 using Svg.Editor.Interfaces;
 using Svg.Editor.Services;
+using Svg.Editor.Shared;
 
 namespace Svg.Editor.Droid
 {
-    public class SvgCanvasEditorView : SKCanvasView
+    public class SvgCanvasEditorView : SKCanvasView, IPaintSurface
     {
 #if !ANDROID
         private Android.Graphics.Bitmap _bitmap;

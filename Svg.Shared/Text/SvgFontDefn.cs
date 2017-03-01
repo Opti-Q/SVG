@@ -42,14 +42,14 @@ namespace Svg
             return renderer.DpiY / 72f * baselineOffset;
         }
 
-        public IList<Svg.Interfaces.RectangleF> MeasureCharacters(ISvgRenderer renderer, string text)
+        public IList<RectangleF> MeasureCharacters(ISvgRenderer renderer, string text)
         {
             var result = new List<RectangleF>();
             using (var path = GetPath(renderer, text, result, false)) { }
             return result;
         }
 
-        public Svg.Interfaces.SizeF MeasureString(ISvgRenderer renderer, string text)
+        public SizeF MeasureString(ISvgRenderer renderer, string text)
         {
             var result = new List<RectangleF>();
             using (var path = GetPath(renderer, text, result, true)) { }

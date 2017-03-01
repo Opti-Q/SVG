@@ -31,6 +31,7 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="System" />
     <Reference Include="Xamarin.iOS">
       <ExcludeFromNuPkg>true</ExcludeFromNuPkg>
     </Reference>

@@ -113,7 +113,7 @@ namespace Svg
             return null;
         }
 
-        public override Svg.Interfaces.RectangleF Bounds
+        public override RectangleF Bounds
         {
             get
             {

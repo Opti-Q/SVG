@@ -48,7 +48,7 @@ namespace Svg
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="SvgViewBox"/> to <see cref="Svg.Interfaces.RectangleF"/>.
+        /// Performs an implicit conversion from <see cref="SvgViewBox"/> to <see cref="RectangleF"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>
@@ -58,7 +58,7 @@ namespace Svg
         }
 
         /// <summary>
-        /// Performs an implicit conversion from <see cref="Svg.Interfaces.RectangleF"/> to <see cref="SvgViewBox"/>.
+        /// Performs an implicit conversion from <see cref="RectangleF"/> to <see cref="SvgViewBox"/>.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns>The result of the conversion.</returns>

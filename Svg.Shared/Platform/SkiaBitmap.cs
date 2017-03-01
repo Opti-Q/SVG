@@ -6,7 +6,7 @@ using RectangleF = Svg.Interfaces.RectangleF;
 namespace Svg.Platform
 {
 
-    public class SkiaBitmap : Svg.Bitmap
+    public class SkiaBitmap : Bitmap
     {
         protected readonly SKBitmap _image;
 

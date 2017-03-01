@@ -1,12 +1,13 @@
 ﻿using Foundation;
 using SkiaSharp.Views.iOS;
+using Svg.Editor.Shared;
 using UIKit;
 
 namespace Svg.Editor.iOS
 {
     [Register(nameof(SvgCanvasEditorView))]
     public class SvgCanvasEditorView
-        : SKCanvasView
+        : SKCanvasView, IPaintSurface
     {
         private TouchGestureDetector _detector;
 

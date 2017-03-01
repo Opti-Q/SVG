@@ -60,7 +60,7 @@ namespace Svg
             return (element != null) ? element.Path(renderer) : null;
         }
 
-        public override Svg.Interfaces.RectangleF Bounds
+        public override RectangleF Bounds
         {
             get
             {

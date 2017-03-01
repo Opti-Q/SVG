@@ -1,5 +1,6 @@
 using System;
 using SkiaSharp;
+using Svg.Interfaces;
 
 namespace Svg.Platform
 {
@@ -65,7 +66,7 @@ namespace Svg.Platform
             _canvas.DrawBitmap(img.Image, src, dest, null);
         }
 
-        public void DrawImageUnscaled(Image image, Svg.Interfaces.PointF location)
+        public void DrawImageUnscaled(Image image, PointF location)
         {
             var img = (SkiaBitmap)image;
             _canvas.DrawBitmap(img.Image, (int)location.X, (int)location.Y, null);
@@ -234,7 +235,7 @@ namespace Svg.Platform
             _canvas.Concat(ref m);
         }
 
-        public void FillBackground(Svg.Interfaces.Color color)
+        public void FillBackground(Color color)
         {
             var c = (SkiaColor)color;
             _canvas.DrawColor(c);

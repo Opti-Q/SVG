@@ -5,7 +5,7 @@ using Xamarin.Forms;
 
 namespace Svg.Editor.Forms
 {
-    public class SvgCanvasEditorView : SKCanvasView
+    public class SvgCanvasEditorView : SKCanvasViewX
     {
         
     }
