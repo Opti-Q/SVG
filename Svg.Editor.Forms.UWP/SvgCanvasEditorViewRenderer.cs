@@ -6,7 +6,7 @@ using Xamarin.Forms.Platform.UWP;
 [assembly: ExportRenderer(typeof(SvgCanvasEditorViewRenderer), typeof(SvgCanvasEditorView))]
 namespace Svg.Editor.Forms
 {
-    internal class SvgCanvasEditorViewRenderer : ViewRenderer<SvgCanvasEditorView, Canvas>
+    public class SvgCanvasEditorViewRenderer : ViewRenderer<SvgCanvasEditorView, Canvas>
     {
         private UwpGestureRecognizer _gestureRecognizer;
 
