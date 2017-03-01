@@ -12,5 +12,6 @@ del *.nupkg
 
 nuget pack Svg.nuspec -Symbols
 nuget pack Svg.Editor.nuspec -Symbols
+nuget pack Svg.Editor.Forms.nuspec -Symbols
 
 pause
