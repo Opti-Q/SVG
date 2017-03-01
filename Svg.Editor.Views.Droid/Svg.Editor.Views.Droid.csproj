@@ -65,7 +65,7 @@
     <Compile Include="Services\AndroidSvgCachingService.cs" />
     <Compile Include="Services\AndroidSvgSourceFactory.cs" />
     <Compile Include="Services\AndroidTextInputService.cs" />
-    <Compile Include="SvgDrawingCanvasView.cs" />
+    <Compile Include="SvgCanvasEditorView.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Services\AndroidGestureDetector.cs" />
   </ItemGroup>

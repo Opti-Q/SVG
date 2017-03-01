@@ -7,6 +7,7 @@ using Android.Graphics;
 using Android.Util;
 using Android.Views;
 using SkiaSharp;
+using SkiaSharp.Views.Android;
 using Svg.Editor.Droid.Services;
 using Svg.Editor.Events;
 using Svg.Editor.Interfaces;
@@ -14,7 +15,7 @@ using Svg.Editor.Services;
 
 namespace Svg.Editor.Droid
 {
-    public class SvgDrawingCanvasView : View
+    public class SvgCanvasEditorView : SKCanvasView
     {
 #if !ANDROID
         private Android.Graphics.Bitmap _bitmap;
@@ -37,7 +38,7 @@ namespace Svg.Editor.Droid
             }
         }
 
-        public SvgDrawingCanvasView(Context context, IAttributeSet attr) : base(context, attr)
+        public SvgCanvasEditorView(Context context, IAttributeSet attr) : base(context, attr)
         {
             //DrawingCanvas = new SvgDrawingCanvas();
             var gestureRecognizer = Engine.Resolve<IGestureRecognizer>() as GestureRecognizer;

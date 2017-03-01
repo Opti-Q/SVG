@@ -71,7 +71,7 @@
       <Name>Svg.Editor.Forms</Name>
     </ProjectReference>
     <ProjectReference Include="..\Svg.Editor.Views.Droid\Svg.Editor.Views.Droid.csproj">
-      <Project>{ec21b42f-da0d-4e7b-a2f4-757abc917e07}</Project>
+      <Project>{EC21B42F-DA0D-4E7B-A2F4-757ABC917E07}</Project>
       <Name>Svg.Editor.Views.Droid</Name>
     </ProjectReference>
   </ItemGroup>
