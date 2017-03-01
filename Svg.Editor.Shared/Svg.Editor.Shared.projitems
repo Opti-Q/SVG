@@ -11,5 +11,6 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AssemblyInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IPaintSurface.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Editor.cs" />
   </ItemGroup>
 </Project>

@@ -23,6 +23,9 @@ namespace Svg.Editor.Sample.Forms.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
+
+            Editor.Init();
+
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);

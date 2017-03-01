@@ -17,8 +17,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)SKFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgDtdResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgNodeReader.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SvgPlatformSetup.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SvgPlatformSetupBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgSortedList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgTextReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgXmlTextWriter.cs" />
