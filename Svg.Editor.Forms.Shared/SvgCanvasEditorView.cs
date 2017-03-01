@@ -1,11 +1,7 @@
-﻿using System;
-using SkiaSharp;
-using SkiaSharp.Views.Forms;
-using Xamarin.Forms;
+﻿using SkiaSharp.Views.Forms;
 
 namespace Svg.Editor.Forms
 {
-    [RenderWith(typeof(SvgCanvasEditorViewRenderer))]
     public class SvgCanvasEditorView : SKCanvasViewX
     {
         

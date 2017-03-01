@@ -1,6 +1,6 @@
 ﻿using SkiaSharp.Views.Forms;
 using Svg.Editor.Forms;
-using Svg.Editor.Views;
+using Svg.Editor.Views.UWP;
 using Xamarin.Forms.Platform.UWP;
 
 [assembly: ExportRenderer(typeof(SvgCanvasEditorView), typeof(SvgCanvasEditorViewRenderer))]

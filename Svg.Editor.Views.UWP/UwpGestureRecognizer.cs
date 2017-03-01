@@ -11,7 +11,7 @@ using Svg.Editor.Gestures;
 using Svg.Editor.Interfaces;
 using Svg.Interfaces;
 
-namespace Svg.Editor.Views
+namespace Svg.Editor.Views.UWP
 {
     public class UwpGestureRecognizer : IGestureRecognizer, IDisposable
     {
