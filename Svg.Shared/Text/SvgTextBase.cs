@@ -19,7 +19,7 @@ namespace Svg
 
         static SvgTextBase()
         {
-            _alternativeTextRenderer = Svg.Engine.TryResolve<IAlternativeSvgTextRenderer>();
+            _alternativeTextRenderer = Engine.TryResolve<IAlternativeSvgTextRenderer>();
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace Svg
         /// Gets the bounds of the element.
         /// </summary>
         /// <value>The bounds.</value>
-        public override Svg.Interfaces.RectangleF Bounds
+        public override RectangleF Bounds
         {
             get
             {

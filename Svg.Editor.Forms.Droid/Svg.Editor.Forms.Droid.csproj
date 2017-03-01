@@ -9,8 +9,8 @@
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Svg.Editor.Forms.Droid</RootNamespace>
-    <AssemblyName>Svg.Editor.Forms.Droid</AssemblyName>
+    <RootNamespace>Svg.Editor.Forms</RootNamespace>
+    <AssemblyName>Svg.Editor.Forms</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SKCanvasViewRendererBase.cs" />
     <Compile Include="SvgCanvasEditorViewRenderer.cs" />
     <Compile Include="SvgGlEditorViewRenderer.cs" />
   </ItemGroup>
@@ -54,6 +55,10 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Svg.Core\Svg.Core.csproj">
+      <Project>{13edb4db-3977-4c2e-998a-6103ca015881}</Project>
+      <Name>Svg.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Svg.Droid\Svg.Droid.csproj">
       <Project>{03f31ec9-4f97-46da-b8f1-dce99c6954de}</Project>
       <Name>Svg.Droid</Name>
@@ -67,7 +72,7 @@
       <Name>Svg.Editor.Forms</Name>
     </ProjectReference>
     <ProjectReference Include="..\Svg.Editor.Views.Droid\Svg.Editor.Views.Droid.csproj">
-      <Project>{ec21b42f-da0d-4e7b-a2f4-757abc917e07}</Project>
+      <Project>{EC21B42F-DA0D-4E7B-A2F4-757ABC917E07}</Project>
       <Name>Svg.Editor.Views.Droid</Name>
     </ProjectReference>
   </ItemGroup>

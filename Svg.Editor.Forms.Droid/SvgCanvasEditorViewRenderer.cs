@@ -1,6 +1,14 @@
-﻿namespace Svg.Editor.Forms
+﻿using SkiaSharp.Views.Forms;
+using Svg.Editor.Forms;
+using Xamarin.Forms;
+using SKFormsView = Svg.Editor.Forms.SvgCanvasEditorView;
+using SKNativeView = Svg.Editor.Droid.SvgCanvasEditorView;
+
+[assembly: ExportRenderer(typeof(SKFormsView), typeof(SvgCanvaseEditorViewRenderer))]
+
+namespace Svg.Editor.Forms
 {
-    internal class SvgCanvasEditorViewRenderer
+    public class SvgCanvaseEditorViewRenderer : SKCanvasViewRendererBase<SKFormsView, SKNativeView>
     {
     }
 }
