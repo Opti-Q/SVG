@@ -107,6 +107,7 @@ Global
 		Svg.Platform.Shared\Svg.Platform.Shared.projitems*{1a9890ab-e4b4-4282-89ac-cef2610e30b0}*SharedItemsImports = 4
 		Svg.Shared\Svg.Shared.projitems*{1a9890ab-e4b4-4282-89ac-cef2610e30b0}*SharedItemsImports = 4
 		SvgW3CTestSuite.Shared\SvgW3CTestSuite.Shared.projitems*{21cffa29-3d29-43e6-8c7b-47f17a900ba6}*SharedItemsImports = 13
+		Svg.Editor.Forms.Shared\Svg.Editor.Forms.Shared.projitems*{2c90ee6d-52e3-4ba0-92d4-8162800f698d}*SharedItemsImports = 4
 		Svg.Editor.Shared\Svg.Editor.Shared.projitems*{3e70de2e-b85a-4f33-8d23-d80bfa36aef1}*SharedItemsImports = 13
 		Svg.Platform.Shared\Svg.Platform.Shared.projitems*{4094535b-5358-456b-87f5-deacec0ef6fa}*SharedItemsImports = 13
 		Svg.Editor.Forms.Shared\Svg.Editor.Forms.Shared.projitems*{40ec91e6-987e-4975-ab4e-dcf39fc01102}*SharedItemsImports = 13
