@@ -52,7 +52,6 @@
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.ObjectModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -81,6 +80,18 @@
     <AndroidResource Include="Resources\values\styles.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Svg.Editor.Core\Svg.Editor.Core.csproj">
+      <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
+      <Name>Svg.Editor.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Svg.Editor.Forms.Droid\Svg.Editor.Forms.Droid.csproj">
+      <Project>{d710ffb6-b3c1-4244-87d4-826251490167}</Project>
+      <Name>Svg.Editor.Forms.Droid</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Svg.Editor.Views.Droid\Svg.Editor.Views.Droid.csproj">
+      <Project>{ec21b42f-da0d-4e7b-a2f4-757abc917e07}</Project>
+      <Name>Svg.Editor.Views.Droid</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Svg.Editor.Sample.Forms\Svg.Editor.Sample.Forms.csproj">
       <Project>{af05ff4e-ef14-4cb9-afd6-fb1231f62245}</Project>
       <Name>Svg.Editor.Sample.Forms</Name>

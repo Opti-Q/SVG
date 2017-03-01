@@ -547,9 +547,17 @@
     <AndroidResource Include="Resources\drawable-xhdpi\ic_rotate_right_white_48dp.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Svg.Editor.Core\Svg.Editor.Core.csproj">
+      <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
+      <Name>Svg.Editor.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Svg.Editor.Sample.Core\Svg.Editor.Sample.Core.csproj">
       <Project>{8739CED3-5844-4F18-B2E3-C99036B31B33}</Project>
       <Name>Svg.Editor.Sample.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Svg.Editor.Views.Droid\Svg.Editor.Views.Droid.csproj">
+      <Project>{ec21b42f-da0d-4e7b-a2f4-757abc917e07}</Project>
+      <Name>Svg.Editor.Views.Droid</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
