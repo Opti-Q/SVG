@@ -1,21 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Threading;
 using Svg.Interfaces;
 using Svg.Shared;
 
 namespace Svg
 {
-    public static class Svg
-    {
-        public static void Init()
-        {
-            
-        }
-    }
-
     public static class Engine
     {
         private static readonly object _lock = new object();
@@ -23,11 +12,10 @@ namespace Svg
         private static readonly SvgElementFactory _elementFactory = new SvgElementFactory();
         private static readonly SvgTypeConverterRegistry _typeConverterRegistry = new SvgTypeConverterRegistry();
         private static ISvgTypeDescriptor _typeDescriptor = new SvgTypeDescriptor(_typeConverterRegistry);
-        private static IFactory _factory = null;
-        private static ISvgElementAttributeProvider _attributeProvider = null;
-        private static ILogger _logger = null;
-        private static bool _initialized = false;
-        private static bool _initializing = false;
+        private static IFactory _factory;
+        private static ISvgElementAttributeProvider _attributeProvider;
+        private static ILogger _logger;
+        private static bool _initialized;
 
         public static IFactory Factory
         {
@@ -148,15 +136,7 @@ namespace Svg
             lock (_lock)
             {
                 RegisterBaseServices();
-
-                var assemblies = GetAppDomainAssemblies();
-
-                // run setup
-                ResolveAndRunPlatformSetup(assemblies);
                 _initialized = true;
-
-                // register platform-specific services
-                RegisterPlatformSpecificServices(assemblies);
             }
         }
 
@@ -165,81 +145,6 @@ namespace Svg
             _serviceRegistry[typeof(ISvgElementFactory)] = () => _elementFactory;
             _serviceRegistry[typeof(ISvgTypeConverterRegistry)] = () => _typeConverterRegistry;
             _serviceRegistry[typeof(ISvgTypeDescriptor)] = () => _typeDescriptor;
-        }
-
-        private static void ResolveAndRunPlatformSetup(Assembly[] assemblies)
-        {
-            if (_initializing)
-                return;
-
-            try
-            {
-                _initializing = true;
-
-                foreach (var platformSetupAttribute in GetAssemblyAttribute<SvgPlatformAttribute>(assemblies))
-                {
-                    if (platformSetupAttribute == null)
-                        throw new InvalidOperationException(
-                            "No platform specific SVG setup was found. Create a setup and apply the assembly:[SvgPlatformAttribute] referencing it so the SVG.Engine can find it.");
-
-                    // create instance and call "init"
-                    var ctor = platformSetupAttribute.PlatformSetup.GetTypeInfo()
-                        .DeclaredConstructors.FirstOrDefault(c => c.GetParameters().Length == 0);
-                    if (ctor == null)
-                        throw new InvalidOperationException(
-                            $"Found platformsetup type '{platformSetupAttribute.PlatformSetup.FullName}' has no parameterless constructors!");
-
-                    // create setup
-                    var setup = ctor.Invoke(null);
-
-                    // call init
-                    var init = platformSetupAttribute.PlatformSetup.GetTypeInfo().GetDeclaredMethod("Initialize");
-                    if (init == null || init.GetParameters().Length != 0 || init.ReturnType != typeof(void))
-                        throw new InvalidOperationException(
-                            $"Could not find method 'public void Initialize()' on setup type $'{platformSetupAttribute.PlatformSetup.FullName}'");
-
-                    init.Invoke(setup, null);
-                }
-            }
-            finally
-            {
-                _initializing = false;
-            }
-        }
-
-        private static void RegisterPlatformSpecificServices(Assembly[] assemblies)
-        {
-            foreach (var attribute in GetAssemblyAttribute<SvgServiceAttribute>(assemblies))
-            {
-                var ctor = attribute.Type.GetTypeInfo().DeclaredConstructors.First(c => c.GetParameters().Length == 0);
-
-                _serviceRegistry[attribute.InterfaceType] = () => ctor.Invoke(null);
-            }
-        }
-
-        private static IEnumerable<T> GetAssemblyAttribute<T>(Assembly[] assemblies)
-        {
-            var platformSetupAttributeTypes =
-                assemblies.SelectMany(a => a.CustomAttributes.Where(ca => ca.AttributeType == typeof(T)))
-                    .ToList();
-            
-            foreach (var pt in platformSetupAttributeTypes)
-            {
-                var ctor = pt.AttributeType.GetTypeInfo().DeclaredConstructors.First();
-                var parameters = pt.ConstructorArguments?.Select(carg => carg.Value).ToArray();
-                yield return (T) ctor.Invoke(parameters);
-            }
-        }
-        
-        private static Assembly[] GetAppDomainAssemblies()
-        {
-            var ass = typeof(string).GetTypeInfo().Assembly;
-            var ty = ass.GetType("System.AppDomain");
-            var gm = ty.GetRuntimeProperty("CurrentDomain").GetMethod;
-            var currentdomain = gm.Invoke(null, new object[] {});
-            var getassemblies = currentdomain.GetType().GetRuntimeMethod("GetAssemblies", new Type[] {});
-            var assemblies = getassemblies.Invoke(currentdomain, new object[] {}) as Assembly[];
-            return assemblies;
         }
     }
 }

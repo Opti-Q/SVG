@@ -78,16 +78,14 @@ namespace Svg.Editor.Views
 
         private void ElementOnDoubleTapped(object sender, DoubleTappedRoutedEventArgs args)
         {
-            //var position = args.GetPosition(_element);
-            //_gesturesSubject.OnNext(new DoubleTapGesture(PointF.Create((float) position.X, (float) position.Y)));
-            Debug.WriteLine("Pointer pressed");
+            var position = args.GetPosition(_element);
+            _gesturesSubject.OnNext(new DoubleTapGesture(PointF.Create((float) position.X, (float) position.Y)));
         }
 
         private void ElementOnTapped(object sender, TappedRoutedEventArgs args)
         {
             var position = args.GetPosition(_element);
             _gesturesSubject.OnNext(new TapGesture(PointF.Create((float) position.X, (float) position.Y)));
-            Debug.WriteLine("Pointer pressed");
         }
 
         public void InitializeTransforms()

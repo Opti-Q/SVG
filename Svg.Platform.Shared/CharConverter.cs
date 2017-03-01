@@ -4,7 +4,7 @@ using Svg.Interfaces;
 
 namespace Svg
 {
-    public class SvgCharComverter : ICharConverter
+    public class SvgCharConverter : ICharConverter
     {
         public string ConvertFromUtf32(int charCode)
         {
