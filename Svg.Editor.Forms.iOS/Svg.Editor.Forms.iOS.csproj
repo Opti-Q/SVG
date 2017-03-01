@@ -8,9 +8,9 @@
     <ProjectGuid>{F99C92C2-1192-4CB8-8CE1-F90874669246}</ProjectGuid>
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
-    <RootNamespace>Svg.Editor.Forms</RootNamespace>
+    <RootNamespace>Svg.Editor.Forms.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>Svg.Editor.Forms</AssemblyName>
+    <AssemblyName>Svg.Editor.Forms.iOS</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,10 +49,6 @@
     <Compile Include="SvgGlEditorViewRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Svg.Core\Svg.Core.csproj">
-      <Project>{13edb4db-3977-4c2e-998a-6103ca015881}</Project>
-      <Name>Svg.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Svg.Editor.Core\Svg.Editor.Core.csproj">
       <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
       <Name>Svg.Editor.Core</Name>

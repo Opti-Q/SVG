@@ -7,8 +7,8 @@
     <ProjectGuid>{D93C5B6A-7F1C-4904-89EF-4679784C7AD1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Svg.Editor.Forms</RootNamespace>
-    <AssemblyName>Svg.Editor.Forms</AssemblyName>
+    <RootNamespace>Svg.Editor.Forms.UWP</RootNamespace>
+    <AssemblyName>Svg.Editor.Forms.UWP</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
@@ -112,10 +112,6 @@
     <EmbeddedResource Include="Properties\Svg.Editor.UWP.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Svg.Core\Svg.Core.csproj">
-      <Project>{13edb4db-3977-4c2e-998a-6103ca015881}</Project>
-      <Name>Svg.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Svg.Editor.Core\Svg.Editor.Core.csproj">
       <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
       <Name>Svg.Editor.Core</Name>
