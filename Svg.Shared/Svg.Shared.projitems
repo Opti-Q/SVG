@@ -302,7 +302,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SvgElementIdManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgElementStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgExtentions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SvgPlatformAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SvgPlatform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgServiceAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgTypeConverterRegistry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgTypeDescriptor.cs" />
