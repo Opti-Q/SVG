@@ -2,7 +2,6 @@
 
 namespace Svg.Editor.Forms
 {
-    //[RenderWith(typeof(SvgCanvasEditorViewRenderer))]
     public class SvgCanvasEditorView : SKCanvasViewX
     {
         

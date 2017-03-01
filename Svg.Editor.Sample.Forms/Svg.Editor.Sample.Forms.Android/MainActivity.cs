@@ -16,6 +16,7 @@ namespace Svg.Editor.Sample.Forms.Droid
 
             Xamarin.Forms.Forms.Init(this, bundle);
 
+            SvgPlatform.Init();
             Editor.Init();
 
             LoadApplication(new App());

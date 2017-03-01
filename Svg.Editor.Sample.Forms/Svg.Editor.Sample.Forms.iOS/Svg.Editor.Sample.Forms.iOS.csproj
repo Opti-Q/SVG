@@ -129,6 +129,10 @@
       <IsAppExtension>false</IsAppExtension>
       <IsWatchApp>false</IsWatchApp>
     </ProjectReference>
+    <ProjectReference Include="..\..\Svg.Editor.Forms\Svg.Editor.Forms.csproj">
+      <Project>{2c90ee6d-52e3-4ba0-92d4-8162800f698d}</Project>
+      <Name>Svg.Editor.Forms</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Svg.Editor.Views.iOS\Svg.Editor.Views.iOS.csproj">
       <Project>{1a4f1238-2571-4e51-9834-d2432f1d9c35}</Project>
       <Name>Svg.Editor.Views.iOS</Name>

@@ -8,8 +8,6 @@ using Xamarin.Forms.Platform.iOS;
 using SKFormsView = SkiaSharp.Views.Forms.SKCanvasViewX;
 using SKNativeView = SkiaSharp.Views.iOS.SKCanvasView;
 
-[assembly: ExportRenderer(typeof(SKFormsView), typeof(SkiaSharp.Views.Forms.SKCanvasViewRenderer))]
-
 namespace SkiaSharp.Views.Forms
 {
     public class SKCanvasViewRendererBase<TFormsView, TNativeView> : ViewRenderer<TFormsView, TNativeView>

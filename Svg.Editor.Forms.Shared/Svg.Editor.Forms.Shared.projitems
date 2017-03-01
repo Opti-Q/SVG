@@ -10,8 +10,5 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AssemblyInfo.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SKCanvasViewX.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SvgCanvasEditorView.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SvgGlEditorView.cs" />
   </ItemGroup>
 </Project>

@@ -6,6 +6,7 @@
         {
             InitializeComponent();
 
+            SvgPlatform.Init();
             Editor.Init();
 
             LoadApplication(new Forms.App());

@@ -1,13 +1,10 @@
 using System;
 using System.ComponentModel;
 using Svg.Editor.Shared;
-using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
 using SKFormsView = SkiaSharp.Views.Forms.SKCanvasViewX;
 using SKNativeView = SkiaSharp.Views.Android.SKCanvasView;
-
-[assembly: ExportRenderer(typeof(SKFormsView), typeof(SkiaSharp.Views.Forms.SKCanvasViewRenderer))]
 
 namespace SkiaSharp.Views.Forms
 {

@@ -36,10 +36,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="SvgGlEditorViewRenderer.cs" />
-    <Compile Include="SvgCanvasEditorViewRenderer.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +46,11 @@
       <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
       <Name>Svg.Editor.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="SKCanvasViewX.cs" />
+    <Compile Include="SvgCanvasEditorView.cs" />
+    <Compile Include="SvgGlEditorView.cs" />
   </ItemGroup>
   <Import Project="..\Svg.Editor.Forms.Shared\Svg.Editor.Forms.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
