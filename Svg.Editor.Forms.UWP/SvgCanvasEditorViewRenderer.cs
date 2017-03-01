@@ -3,14 +3,17 @@ using Svg.Editor.Forms;
 using Svg.Editor.Views.UWP;
 using Xamarin.Forms.Platform.UWP;
 
+using SKFormsView = Svg.Editor.Forms.SvgCanvasEditorView;
+using SKNativeView = SkiaSharp.Views.UWP.SKXamlCanvasX;
+
 [assembly: ExportRenderer(typeof(SvgCanvasEditorView), typeof(SvgCanvasEditorViewRenderer))]
 namespace Svg.Editor.Forms
 {
-    public class SvgCanvasEditorViewRenderer : SKCanvasViewRenderer
+    public class SvgCanvasEditorViewRenderer : SKCanvasViewRendererBase<SKFormsView, SKNativeView>
     {
         private UwpGestureRecognizer _gestureRecognizer;
 
-        protected override void OnElementChanged(ElementChangedEventArgs<SKCanvasView> e)
+        protected override void OnElementChanged(ElementChangedEventArgs<SKFormsView> e)
         {
             base.OnElementChanged(e);
 
