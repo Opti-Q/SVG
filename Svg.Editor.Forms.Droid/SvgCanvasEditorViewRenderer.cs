@@ -4,11 +4,11 @@ using Xamarin.Forms;
 using SKFormsView = Svg.Editor.Forms.SvgCanvasEditorView;
 using SKNativeView = Svg.Editor.Droid.SvgCanvasEditorView;
 
-[assembly: ExportRenderer(typeof(SKFormsView), typeof(SvgCanvaseEditorViewRenderer))]
+[assembly: ExportRenderer(typeof(SKFormsView), typeof(SvgCanvasEditorViewRenderer))]
 
 namespace Svg.Editor.Forms
 {
-    public class SvgCanvaseEditorViewRenderer : SKCanvasViewRendererBase<SKFormsView, SKNativeView>
+    public class SvgCanvasEditorViewRenderer : SKCanvasViewRendererBase<SKFormsView, SKNativeView>
     {
     }
 }

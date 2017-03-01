@@ -59,6 +59,7 @@ namespace Svg.Editor.Sample.Forms.UWP
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
                 Xamarin.Forms.Forms.Init(e);
+                Svg.Editor.Editor.Init();
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
