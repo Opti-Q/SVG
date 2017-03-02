@@ -48,7 +48,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MenuActionsToToolbarItemsConverter.cs" />
+    <Compile Include="ToolCommandsToToolbarItemsConverter.cs" />
     <Compile Include="SKCanvasViewX.cs" />
     <Compile Include="SvgCanvasEditorView.cs" />
     <Compile Include="SvgGlEditorView.cs" />
