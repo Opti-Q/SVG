@@ -25,7 +25,7 @@ namespace Svg.Editor
                 if (_initialized)
                     return;
 
-                //await SvgPlatform.InitializeAsync();
+                SvgPlatform.Init();
 
                 var context = SynchronizationContext.Current;
                 if (context != null)

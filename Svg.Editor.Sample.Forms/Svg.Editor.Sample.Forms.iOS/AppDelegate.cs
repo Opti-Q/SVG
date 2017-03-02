@@ -25,8 +25,6 @@ namespace Svg.Editor.Sample.Forms.iOS
             global::Xamarin.Forms.Forms.Init();
             Svg.Editor.Editor.Init();
 
-            Editor.Init();
-
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);
