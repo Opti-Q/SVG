@@ -52,7 +52,7 @@
     <Compile Include="Interfaces\IInputEventDetector.cs" />
     <Compile Include="Interfaces\IPickImageService.cs" />
     <Compile Include="Interfaces\ISvgDrawingCanvas.cs" />
-    <Compile Include="Services\GestureRecognizer.cs" />
+    <Compile Include="Services\ReactiveGestureRecognizer.cs" />
     <Compile Include="Interfaces\IGestureRecognizer.cs" />
     <Compile Include="Interfaces\ISchedulerProvider.cs" />
     <Compile Include="Services\SchedulerProvider.cs" />

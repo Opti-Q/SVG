@@ -14,7 +14,7 @@ using Svg.Interfaces;
 
 namespace Svg.Editor.Services
 {
-    public class GestureRecognizer : IDisposable, IGestureRecognizer
+    public class ReactiveGestureRecognizer : IDisposable, IGestureRecognizer
     {
         private readonly Subject<UserGesture> _recognizedGestures = new Subject<UserGesture>();
         private readonly IDictionary<string, IDisposable> _subscriptions = new Dictionary<string, IDisposable>();
@@ -55,7 +55,7 @@ namespace Svg.Editor.Services
 
         #endregion
 
-        public GestureRecognizer(ISchedulerProvider schedulerProvider)
+        public ReactiveGestureRecognizer(ISchedulerProvider schedulerProvider)
         {
             if (schedulerProvider == null) throw new ArgumentNullException(nameof(schedulerProvider));
 
