@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using CoreGraphics;
 using Svg.Editor.Events;
 using Svg.Editor.Interfaces;
-using Svg.Editor.Services;
+using Svg.Interfaces;
 using UIKit;
 
 namespace Svg.Editor.iOS
@@ -42,11 +44,13 @@ namespace Svg.Editor.iOS
             if (state == UIGestureRecognizerState.Began)
             {
                 var s = new ScaleEvent(ScaleStatus.Start, (float) r.Scale, 0f, 0f);
+                System.Diagnostics.Debug.WriteLine($"Zoom Begin: {s}");
                 _gestureSubject.OnNext(s);
             }
             else if (state == UIGestureRecognizerState.Changed)
             {
                 var c = new ScaleEvent(ScaleStatus.Scaling, (float) r.Scale, 0f, 0f);
+                System.Diagnostics.Debug.WriteLine($"Zooming: {c}");
                 _gestureSubject.OnNext(c);
             }
             else if( state == UIGestureRecognizerState.Cancelled ||
@@ -54,6 +58,7 @@ namespace Svg.Editor.iOS
                 state ==UIGestureRecognizerState.Recognized)
             {
                 var e = new ScaleEvent(ScaleStatus.End, (float)r.Scale, 0f, 0f);
+                System.Diagnostics.Debug.WriteLine($"Zoom End: {e}");
                 _gestureSubject.OnNext(e);
             }
         }
@@ -69,6 +74,7 @@ namespace Svg.Editor.iOS
                 _absoluteRotation = RadianToDegree(r.Rotation);
                 var relativeRotation = RadianToDegree(r.Rotation);
                 var s = new RotateEvent(relativeRotation, _absoluteRotation, RotateStatus.Start, (int)r.NumberOfTouches);
+                System.Diagnostics.Debug.WriteLine($"Rotate Begin: {s}");
                 _gestureSubject.OnNext(s);
             }
             else if (state == UIGestureRecognizerState.Changed)
@@ -76,6 +82,7 @@ namespace Svg.Editor.iOS
                 _absoluteRotation += RadianToDegree(r.Rotation);
                 var relativeRotation = RadianToDegree(r.Rotation);
                 var s = new RotateEvent(relativeRotation, _absoluteRotation, RotateStatus.Rotating, (int)r.NumberOfTouches);
+                System.Diagnostics.Debug.WriteLine($"Rotating: {s}");
                 _gestureSubject.OnNext(s);
             }
             else if (state == UIGestureRecognizerState.Cancelled ||
@@ -85,6 +92,7 @@ namespace Svg.Editor.iOS
                 _absoluteRotation += RadianToDegree(r.Rotation);
                 var relativeRotation = RadianToDegree(r.Rotation);
                 var s = new RotateEvent(relativeRotation, _absoluteRotation, RotateStatus.End, (int)r.NumberOfTouches);
+                System.Diagnostics.Debug.WriteLine($"Rotate End: {s}");
                 _gestureSubject.OnNext(s);
             }
         }
@@ -95,29 +103,115 @@ namespace Svg.Editor.iOS
 
         public IObservable<UserInputEvent> DetectedGestures => _gestureSubject.AsObservable();
 
-        internal void OnBegin(UITouch e)
+
+        private List<PointF> _pointerDownPositions = new List<PointF>();
+        private List<PointF> _previousPointerPositions = new List<PointF>();
+
+        internal void OnBegin(UITouch[] events)
         {
-            var point = e.LocationInView(_owner);
+            for (int i = events.Length - 1; i >= 0; i--)
+            {
+                var e = events[i];
+                var point = e.LocationInView(_owner);
+                
+                if (!_owner.Frame.Contains(point))
+                    return;
+                var pointF = point.ToPointF();
+                UpdatePoint(pointF, i, _pointerDownPositions);
+                UpdatePoint(pointF, i, _previousPointerPositions);
 
-            if (!_owner.Frame.Contains(point))
-                return;
-
-
+                var pe = new PointerEvent(EventType.PointerDown, pointF, pointF, pointF, events.Length);
+                _gestureSubject.OnNext(pe);
+                System.Diagnostics.Debug.WriteLine($"Down: {pe}");
+            }
         }
 
-        internal void OnMove(UITouch e)
+        internal void OnMove(UITouch[] events)
         {
+            for (int i = events.Length - 1; i >= 0; i--)
+            {
+                var e = events[i];
+                var point = e.LocationInView(_owner);
 
+                if (!_owner.Frame.Contains(point))
+                    return;
+                var pointF = point.ToPointF();
+                UpdatePoint(pointF, i, _pointerDownPositions);
+                UpdatePoint(pointF, i, _previousPointerPositions);
+
+                var pe = new PointerEvent(EventType.Move, _pointerDownPositions[i], _previousPointerPositions[i], pointF, events.Length);
+                _gestureSubject.OnNext(pe);
+                System.Diagnostics.Debug.WriteLine($"Move: {pe}");
+            }
         }
 
-        internal void OnEnd(UITouch e)
+        internal void OnEnd(UITouch[] events)
         {
+            for (int i = 0; i < events.Length; i++)
+            {
+                var e = events[i];
+                var point = e.LocationInView(_owner);
 
+                if (!_owner.Frame.Contains(point))
+                    return;
+                var pointF = point.ToPointF();
+                UpdatePoint(pointF, i, _pointerDownPositions);
+                UpdatePoint(pointF, i, _previousPointerPositions);
+
+                var pe = new PointerEvent(EventType.PointerUp, _pointerDownPositions[i], _previousPointerPositions[i], pointF, events.Length);
+                _gestureSubject.OnNext(pe);
+                System.Diagnostics.Debug.WriteLine($"End: {pe}");
+            }
+
+            for (int i = 0; i < events.Length; i++)
+            {
+                _pointerDownPositions.RemoveAt(i);
+                _previousPointerPositions.RemoveAt(i);
+            }
         }
 
-        internal void OnCancel(UITouch e)
+        internal void OnCancel(UITouch[] events)
         {
+            for (int i = 0; i < events.Length; i++)
+            {
+                var e = events[i];
+                var point = e.LocationInView(_owner);
 
+                if (!_owner.Frame.Contains(point))
+                    return;
+                var pointF = point.ToPointF();
+                UpdatePoint(pointF, i, _pointerDownPositions);
+                UpdatePoint(pointF, i, _previousPointerPositions);
+                var pe = new PointerEvent(EventType.Cancel, _pointerDownPositions[i], _previousPointerPositions[i], pointF, events.Length);
+                _gestureSubject.OnNext(pe);
+                System.Diagnostics.Debug.WriteLine($"Cancel: {pe}");
+            }
+
+            for (int i = 0; i < events.Length; i++)
+            {
+                _pointerDownPositions.RemoveAt(i);
+                _previousPointerPositions.RemoveAt(i);
+            }
+        }
+
+        private void UpdatePoint(PointF point, int index, List<PointF> list)
+        {
+            if (list.Count > index)
+            {
+                list[index] = point;
+            }
+            else
+            {
+                list.Add(point);
+            }
+        }
+    }
+
+    internal static class CGPointExtensions
+    {
+        public static PointF ToPointF(this CGPoint point)
+        {
+            return PointF.Create((float)point.X, (float)point.Y);
         }
     }
 }
