@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Windows.Foundation;
@@ -45,6 +46,7 @@ namespace Svg.Editor.Views.UWP
         private readonly Subject<UserGesture> _gesturesSubject = new Subject<UserGesture>();
         private readonly Subject<UserInputEvent> _eventsSubject = new Subject<UserInputEvent>();
         private Point _startPoint;
+        private Point _currentPoint;
 
         public IObservable<UserGesture> RecognizedGestures => _gesturesSubject.AsObservable();
         public IObservable<UserInputEvent> DetectedEvents => _eventsSubject.AsObservable();
@@ -83,10 +85,7 @@ namespace Svg.Editor.Views.UWP
             var pointerPoint = args.GetCurrentPoint(_element);
             var wheelDelta = pointerPoint.Properties.MouseWheelDelta;
 
-            var displayInformation = DisplayInformation.GetForCurrentView();
-            Debug.WriteLine($"Logical: {displayInformation.LogicalDpi}");
-            Debug.WriteLine($"RawX: {displayInformation.RawDpiX}");
-            Debug.WriteLine($"RawY: {displayInformation.RawDpiY}");
+            _eventsSubject.OnNext(new ScaleEvent(ScaleStatus.Scaling, 1 + wheelDelta / 960f, (float) pointerPoint.Position.X, (float) pointerPoint.Position.Y));
         }
 
         private void ElementOnDoubleTapped(object sender, DoubleTappedRoutedEventArgs args)
@@ -132,18 +131,36 @@ namespace Svg.Editor.Views.UWP
             // Feed the current point into the gesture recognizer as a down event
             _recognizer.ProcessDownEvent(args.GetCurrentPoint(_element));
 
-            var pointerPosition = args.GetCurrentPoint(_element).Position;
-            var pointerPoint = PointF.Create((float) pointerPosition.X, (float) pointerPosition.Y);
+            var pointerPoint = args.GetCurrentPoint(_element);
+            var pointerPosition = pointerPoint.Position;
+            var pointerPointF = PointF.Create((float) pointerPosition.X, (float) pointerPosition.Y);
 
-            _eventsSubject.OnNext(new PointerEvent(EventType.PointerDown, pointerPoint, pointerPoint, pointerPoint, 1));
+            _eventsSubject.OnNext(new PointerEvent(EventType.PointerDown, pointerPointF, pointerPointF, pointerPointF, 1));
+
+            _currentPoint = _startPoint = pointerPosition;
         }
 
         // Route the pointer moved event to the gesture recognizer.
         // The points are in the reference frame of the canvas that contains the rectangle element.
         private void OnPointerMoved(object sender, PointerRoutedEventArgs args)
         {
+            var pointerPoint = args.GetCurrentPoint(_element);
+            var previousPointF = PointF.Create((float) _currentPoint.X, (float) _currentPoint.Y);
+            _currentPoint = pointerPoint.Position;
+            var currentPointF = PointF.Create((float) _currentPoint.X, (float) _currentPoint.Y);
+            var startPointF = PointF.Create((float) _startPoint.X, (float) _startPoint.Y);
+            var delta = currentPointF - previousPointF;
+            if (pointerPoint.Properties.IsMiddleButtonPressed)
+                _eventsSubject.OnNext(new MoveEvent(startPointF, previousPointF, currentPointF, delta, 2));
+            //else if (pointerPoint.Properties.IsLeftButtonPressed)
+            //{
+            //    var distance = Math.Sqrt(Math.Pow(delta.X, 2) + Math.Pow(delta.Y, 2));
+            //    _gesturesSubject.OnNext(new DragGesture(currentPointF, startPointF, SizeF.Create(delta.X, delta.Y), distance));
+            //}
+
             // Feed the set of points into the gesture recognizer as a move event
-            _recognizer.ProcessMoveEvents(args.GetIntermediatePoints(_element));
+            if (pointerPoint.Properties.IsLeftButtonPressed)
+                _recognizer.ProcessMoveEvents(args.GetIntermediatePoints(_element));
         }
 
         // Route the pointer released event to the gesture recognizer.
@@ -171,8 +188,6 @@ namespace Svg.Editor.Views.UWP
         // that a manipulation is in progress
         private void OnManipulationStarted(object sender, ManipulationStartedEventArgs e)
         {
-            _startPoint = e.Position;
-
             _gesturesSubject.OnNext(DragGesture.Enter(PointF.Create((float) e.Position.X, (float) e.Position.Y)));
         }
 
@@ -186,7 +201,6 @@ namespace Svg.Editor.Views.UWP
             var delta = SizeF.Create((float) e.Cumulative.Translation.X * pixelDensityFactor, (float) e.Cumulative.Translation.Y * pixelDensityFactor);
             var start = PointF.Create((float) _startPoint.X * pixelDensityFactor, (float) _startPoint.Y * pixelDensityFactor);
             var distance = Math.Sqrt(Math.Pow(delta.Width, 2) + Math.Pow(delta.Height, 2));
-
             _gesturesSubject.OnNext(new DragGesture(position, start, delta, distance));
 
             //_previousTransform.Matrix = _cumulativeTransform.Value;
