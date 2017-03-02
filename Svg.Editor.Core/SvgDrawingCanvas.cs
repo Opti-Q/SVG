@@ -190,7 +190,7 @@ namespace Svg.Editor
             _selectedElements.CollectionChanged += OnSelectionChanged;
 
             UndoRedoService = Engine.Resolve<IUndoRedoService>();
-            GestureRecognizer = new Svg.Editor.Services.GestureRecognizer(Engine.Resolve<ISchedulerProvider>());
+            GestureRecognizer = Engine.Resolve<IGestureRecognizer>();
 
             var toolProvider = Engine.Resolve<ToolFactoryProvider>();
 

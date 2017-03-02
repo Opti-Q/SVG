@@ -31,7 +31,7 @@ namespace Svg.Editor
                     var mainScheduler = new SynchronizationContextScheduler(context);
                     var schedulerProvider = new SchedulerProvider(mainScheduler, NewThreadScheduler.Default);
                     Engine.Register<ISchedulerProvider, SchedulerProvider>(() => schedulerProvider);
-                    Engine.RegisterSingleton<IGestureRecognizer, GestureRecognizer>(() => new GestureRecognizer(schedulerProvider));
+                    Engine.RegisterSingleton<IGestureRecognizer, ReactiveGestureRecognizer>(() => new ReactiveGestureRecognizer(schedulerProvider));
                 }
 
                 Engine.RegisterSingleton<IUndoRedoService, UndoRedoService>(() => new UndoRedoService());

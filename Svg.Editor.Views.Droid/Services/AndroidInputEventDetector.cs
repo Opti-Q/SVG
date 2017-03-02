@@ -9,7 +9,7 @@ using Svg.Editor.Services;
 
 namespace Svg.Editor.Droid.Services
 {
-    public class AndroidGestureDetector : IGestureDetector, IDisposable
+    public class AndroidInputEventDetector : IInputEventDetector, IDisposable
     {
         public const int InvalidPointerId = -1;
         public int ActivePointerId = InvalidPointerId;
@@ -21,17 +21,21 @@ namespace Svg.Editor.Droid.Services
         private readonly RotateDetector _rotateDetector;
         private float _pointerDownX;
         private float _pointerDownY;
-        private readonly Subject<UserInputEvent> _detectedGesturesSubject = new Subject<UserInputEvent>();
+        private readonly Subject<UserInputEvent> _detectedGestures = new Subject<UserInputEvent>();
 
-        public IObservable<UserInputEvent> DetectedGestures => _detectedGesturesSubject.AsObservable();
+        public IObservable<UserInputEvent> DetectedGestures => _detectedGestures.AsObservable();
 
-        public AndroidGestureDetector(Context ctx)
+        public AndroidInputEventDetector(Context ctx)
         {
             var scaleListener = new ScaleDetector();
-            scaleListener.OnEvent += (sender, ev) => _detectedGesturesSubject.OnNext(ev);
+            scaleListener.OnEvent += (sender, ev) => _detectedGestures.OnNext(ev);
             _scaleDetector = new ScaleGestureDetector(ctx, scaleListener);
             _rotateDetector = new RotateDetector();
-            _rotateDetector.OnRotate += (sender, ev) => _detectedGesturesSubject.OnNext(ev);
+            _rotateDetector.OnRotate += (sender, ev) => _detectedGestures.OnNext(ev);
+
+
+            var gestureRecognizer = Engine.Resolve<IGestureRecognizer>() as ReactiveGestureRecognizer;
+            gestureRecognizer?.SubscribeTo(_detectedGestures.AsObservable());
         }
 
         public void OnTouch(MotionEvent ev)
@@ -142,7 +146,7 @@ namespace Svg.Editor.Droid.Services
             }
 
             if (uie != null)
-                _detectedGesturesSubject.OnNext(uie);
+                _detectedGestures.OnNext(uie);
         }
 
         public void Reset()
@@ -299,7 +303,7 @@ namespace Svg.Editor.Droid.Services
 
         public void Dispose()
         {
-            _detectedGesturesSubject?.Dispose();
+            _detectedGestures?.Dispose();
         }
     }
 }

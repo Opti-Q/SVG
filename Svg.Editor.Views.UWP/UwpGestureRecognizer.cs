@@ -2,11 +2,11 @@
 using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using Windows.Foundation;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Svg.Editor.Events;
 using Svg.Editor.Gestures;
 using Svg.Editor.Interfaces;
 using Svg.Interfaces;
@@ -18,15 +18,12 @@ namespace Svg.Editor.Views.UWP
         private readonly ManipulationInputProcessor _inputProcessor;
 
         public IObservable<UserGesture> RecognizedGestures => _inputProcessor.RecognizedGestures;
+        public IObservable<UserInputEvent> DetectedEvents => _inputProcessor.DetectedEvents;
 
         public UwpGestureRecognizer(UIElement control)
         {
             var gestureRecognizer = new GestureRecognizer();
             _inputProcessor = new ManipulationInputProcessor(gestureRecognizer, control);
-
-            // DEMO STUFF !!! TODO: REMOVE
-            _inputProcessor.RecognizedGestures.Subscribe(
-                ug => Debug.WriteLine($"Gesture recognized: {ug.Type.ToString()}"));
         }
 
         public void Dispose()
@@ -44,8 +41,10 @@ namespace Svg.Editor.Views.UWP
         private CompositeTransform _deltaTransform;
 
         private readonly Subject<UserGesture> _gesturesSubject = new Subject<UserGesture>();
+        private readonly Subject<UserInputEvent> _eventsSubject = new Subject<UserInputEvent>();
 
         public IObservable<UserGesture> RecognizedGestures => _gesturesSubject.AsObservable();
+        public IObservable<UserInputEvent> DetectedEvents => _eventsSubject.AsObservable();
 
         public ManipulationInputProcessor(GestureRecognizer gestureRecognizer, UIElement referenceFrame)
         {
@@ -118,6 +117,10 @@ namespace Svg.Editor.Views.UWP
 
             // Feed the current point into the gesture recognizer as a down event
             _recognizer.ProcessDownEvent(args.GetCurrentPoint(_element));
+
+            //var pointerPoint = PointF.Create((float) args.Pointer)
+
+            //_eventsSubject.OnNext(new PointerEvent(EventType.PointerDown, ));
         }
 
         // Route the pointer moved event to the gesture recognizer.
