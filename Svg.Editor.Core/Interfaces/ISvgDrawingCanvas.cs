@@ -17,7 +17,7 @@ namespace Svg.Editor.Interfaces
         bool DocumentIsDirty { get; }
         ObservableCollection<SvgVisualElement> SelectedElements { get; }
         ObservableCollection<ITool> Tools { get; }
-        IEnumerable<IEnumerable<IToolCommand>> ToolCommands { get; }
+        ObservableCollection<IEnumerable<IToolCommand>> ToolCommands { get; }
         List<Func<SvgVisualElement, Task>> DefaultEditors { get; }
         PointF Translate { get; set; }
         float ZoomFactor { get; set; }
