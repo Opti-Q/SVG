@@ -1,4 +1,5 @@
-﻿using SkiaSharp.Views.Forms;
+﻿using System;
+using SkiaSharp.Views.Forms;
 using Svg.Editor.Interfaces;
 using Svg.Editor.Services;
 
@@ -6,23 +7,50 @@ namespace Svg.Editor.Forms
 {
     public class SvgCanvasEditorView : SKCanvasViewX
     {
-        private ISvgDrawingCanvas _drawingCanvas;
-
         public ISvgDrawingCanvas DrawingCanvas
         {
-            get { return _drawingCanvas; }
-            set
+            get { return BindingContext as ISvgDrawingCanvas; }
+            set { BindingContext = value; }
+        }
+
+        protected override void OnPropertyChanging(string propertyName = null)
+        {
+            if (propertyName == "BindingContext")
             {
-                _drawingCanvas = value;
-                if (value == null) return;
+                UnregisterCallbacks();
+            }
+
+            base.OnPropertyChanging(propertyName);
+        }
+
+        protected override void OnPropertyChanged(string propertyName = null)
+        {
+            if (propertyName == "BindingContext")
+            {
                 RegisterCallbacks();
             }
+
+            base.OnPropertyChanged(propertyName);
+        }
+
+        private void UnregisterCallbacks()
+        {
+            var canvas = DrawingCanvas;
+            if (canvas == null)
+                return;
+
+            canvas.CanvasInvalidated -= DrawingCanvas_CanvasInvalidated;
+            canvas.ToolCommandsChanged -= DrawingCanvas_ToolCommandsChanged;
         }
 
         private void RegisterCallbacks()
         {
-            DrawingCanvas.CanvasInvalidated += DrawingCanvas_CanvasInvalidated;
-            DrawingCanvas.ToolCommandsChanged += DrawingCanvas_ToolCommandsChanged;
+            var canvas = DrawingCanvas;
+            if (canvas == null)
+                return;
+
+            canvas.CanvasInvalidated += DrawingCanvas_CanvasInvalidated;
+            canvas.ToolCommandsChanged += DrawingCanvas_ToolCommandsChanged;
         }
 
         private void DrawingCanvas_ToolCommandsChanged(object sender, System.EventArgs e)
