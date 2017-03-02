@@ -105,17 +105,13 @@ namespace Svg.Editor.Views.UWP
         {
             return GestureSettings.ManipulationTranslateX |
                 GestureSettings.ManipulationTranslateY |
-                GestureSettings.ManipulationRotate |
-                GestureSettings.ManipulationTranslateInertia |
-                GestureSettings.ManipulationRotateInertia;
+                GestureSettings.ManipulationRotate;
         }
 
         // Route the pointer pressed event to the gesture recognizer.
         // The points are in the reference frame of the canvas that contains the rectangle element.
         private void OnPointerPressed(object sender, PointerRoutedEventArgs args)
         {
-            Debug.WriteLine("Pointer pressed");
-
             // Set the pointer capture to the element being interacted with so that only it
             // will fire pointer-related events
             _element.CapturePointer(args.Pointer);
@@ -128,8 +124,6 @@ namespace Svg.Editor.Views.UWP
         // The points are in the reference frame of the canvas that contains the rectangle element.
         private void OnPointerMoved(object sender, PointerRoutedEventArgs args)
         {
-            Debug.WriteLine("Pointer moved");
-
             // Feed the set of points into the gesture recognizer as a move event
             _recognizer.ProcessMoveEvents(args.GetIntermediatePoints(_element));
         }
@@ -138,8 +132,6 @@ namespace Svg.Editor.Views.UWP
         // The points are in the reference frame of the canvas that contains the rectangle element.
         private void OnPointerReleased(object sender, PointerRoutedEventArgs args)
         {
-            Debug.WriteLine("Pointer released");
-
             // Feed the current point into the gesture recognizer as an up event
             _recognizer.ProcessUpEvent(args.GetCurrentPoint(_element));
 
@@ -159,26 +151,31 @@ namespace Svg.Editor.Views.UWP
         // that a manipulation is in progress
         private void OnManipulationStarted(object sender, ManipulationStartedEventArgs e)
         {
-            Debug.WriteLine("Manipulation started");
+            _gesturesSubject.OnNext(DragGesture.Enter(PointF.Create((float) e.Position.X, (float) e.Position.Y)));
         }
 
         // Process the change resulting from a manipulation
         private void OnManipulationUpdated(object sender, ManipulationUpdatedEventArgs e)
         {
-            Debug.WriteLine("Manipulation updated");
+            var position = PointF.Create((float) e.Position.X, (float) e.Position.Y);
+            var delta = SizeF.Create((float) e.Cumulative.Translation.X, (float) e.Cumulative.Translation.Y);
+            var start = position - delta;
+            var distance = Math.Sqrt(Math.Pow(delta.Width, 2) + Math.Pow(delta.Height, 2));
 
-            _previousTransform.Matrix = _cumulativeTransform.Value;
+            _gesturesSubject.OnNext(new DragGesture(position, start, delta, distance));
 
-            // Get the center point of the manipulation for rotation
-            Point center = new Point(e.Position.X, e.Position.Y);
-            _deltaTransform.CenterX = center.X;
-            _deltaTransform.CenterY = center.Y;
+            //_previousTransform.Matrix = _cumulativeTransform.Value;
 
-            // Look at the Delta property of the ManipulationDeltaRoutedEventArgs to retrieve
-            // the rotation, X, and Y changes
-            _deltaTransform.Rotation = e.Delta.Rotation;
-            _deltaTransform.TranslateX = e.Delta.Translation.X;
-            _deltaTransform.TranslateY = e.Delta.Translation.Y;
+            //// Get the center point of the manipulation for rotation
+            //Point center = new Point(e.Position.X, e.Position.Y);
+            //_deltaTransform.CenterX = center.X;
+            //_deltaTransform.CenterY = center.Y;
+
+            //// Look at the Delta property of the ManipulationDeltaRoutedEventArgs to retrieve
+            //// the rotation, X, and Y changes
+            //_deltaTransform.Rotation = e.Delta.Rotation;
+            //_deltaTransform.TranslateX = e.Delta.Translation.X;
+            //_deltaTransform.TranslateY = e.Delta.Translation.Y;
         }
 
         // When a manipulation that's a result of inertia begins, change the color of the
@@ -190,7 +187,7 @@ namespace Svg.Editor.Views.UWP
         // When a manipulation has finished, reset the color of the object
         private void OnManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
         {
-            Debug.WriteLine("Manipulation completed");
+            _gesturesSubject.OnNext(DragGesture.Exit);
         }
 
         // Modify the GestureSettings property to only allow movement on the X axis
