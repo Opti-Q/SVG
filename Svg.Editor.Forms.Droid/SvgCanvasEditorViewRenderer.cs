@@ -39,6 +39,13 @@ namespace Svg.Editor.Forms.Droid
             }
         }
 
+        protected override SKNativeView CreateNativeView()
+        {
+            var nv = base.CreateNativeView();
+            nv.IsFormsMode = true;
+            return nv;
+        }
+
         private void OnElementBindingContextChanged(object sender, EventArgs e)
         {
             UpdateBindings(sender as BindableObject);

@@ -23,6 +23,8 @@ namespace Svg.Editor.Views.Droid
         private ISvgDrawingCanvas _drawingCanvas;
         private readonly Subject<UserInputEvent> _detectedGestures = new Subject<UserInputEvent>();
 
+        public bool IsFormsMode { get; set; }
+
         public ISvgDrawingCanvas DrawingCanvas
         {
             get { return _drawingCanvas; }
@@ -55,6 +57,12 @@ namespace Svg.Editor.Views.Droid
 
         protected override async void OnDraw(Canvas canvas)
         {
+            if (IsFormsMode)
+            {
+                base.OnDraw(canvas);
+                return;
+            }
+
             if (DrawingCanvas == null)
                 return;
 
