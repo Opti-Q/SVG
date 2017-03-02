@@ -164,6 +164,7 @@ namespace Svg.Editor
         }
 
         public Color BackgroundColor { get; set; }
+
         public IGestureRecognizer GestureRecognizer
         {
             set

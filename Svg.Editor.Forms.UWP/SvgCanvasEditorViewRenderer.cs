@@ -1,7 +1,7 @@
-﻿using SkiaSharp.Views.Forms;
+﻿using System;
+using SkiaSharp.Views.Forms;
 using Svg.Editor.Forms;
 using Svg.Editor.Forms.UWP;
-using Svg.Editor.Interfaces;
 using Svg.Editor.Views.UWP;
 using Xamarin.Forms.Platform.UWP;
 
@@ -18,6 +18,7 @@ namespace Svg.Editor.Forms.UWP
 
             _gestureRecognizer = new UwpGestureRecognizer(Control);
             Element.DrawingCanvas.GestureRecognizer = _gestureRecognizer;
+            _gestureRecognizer.DetectedEvents.Subscribe(async uie => await Element.DrawingCanvas.OnEvent(uie));
         }
 
         protected override void Dispose(bool disposing)

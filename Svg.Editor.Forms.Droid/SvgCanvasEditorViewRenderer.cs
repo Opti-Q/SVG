@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using SkiaSharp.Views.Forms;
 using Svg.Editor.Forms.Droid;
-using Svg.Editor.Interfaces;
-using Svg.Editor.Services;
-using Svg.Editor.Tools;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using SKFormsView = Svg.Editor.Forms.SvgCanvasEditorView;

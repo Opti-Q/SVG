@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using Windows.Foundation;
+using Windows.Graphics.Display;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
@@ -42,6 +44,7 @@ namespace Svg.Editor.Views.UWP
 
         private readonly Subject<UserGesture> _gesturesSubject = new Subject<UserGesture>();
         private readonly Subject<UserInputEvent> _eventsSubject = new Subject<UserInputEvent>();
+        private Point _startPoint;
 
         public IObservable<UserGesture> RecognizedGestures => _gesturesSubject.AsObservable();
         public IObservable<UserInputEvent> DetectedEvents => _eventsSubject.AsObservable();
@@ -67,12 +70,23 @@ namespace Svg.Editor.Views.UWP
 
             _element.Tapped += ElementOnTapped;
             _element.DoubleTapped += ElementOnDoubleTapped;
+            _element.PointerWheelChanged += ElementOnPointerWheelChanged;
 
             // Set up event handlers to respond to gesture recognizer output
             _recognizer.ManipulationStarted += OnManipulationStarted;
             _recognizer.ManipulationUpdated += OnManipulationUpdated;
             _recognizer.ManipulationCompleted += OnManipulationCompleted;
-            _recognizer.ManipulationInertiaStarting += OnManipulationInertiaStarting;
+        }
+
+        private void ElementOnPointerWheelChanged(object sender, PointerRoutedEventArgs args)
+        {
+            var pointerPoint = args.GetCurrentPoint(_element);
+            var wheelDelta = pointerPoint.Properties.MouseWheelDelta;
+
+            var displayInformation = DisplayInformation.GetForCurrentView();
+            Debug.WriteLine($"Logical: {displayInformation.LogicalDpi}");
+            Debug.WriteLine($"RawX: {displayInformation.RawDpiX}");
+            Debug.WriteLine($"RawY: {displayInformation.RawDpiY}");
         }
 
         private void ElementOnDoubleTapped(object sender, DoubleTappedRoutedEventArgs args)
@@ -104,7 +118,7 @@ namespace Svg.Editor.Views.UWP
         {
             return GestureSettings.ManipulationTranslateX |
                 GestureSettings.ManipulationTranslateY |
-                GestureSettings.ManipulationRotate;
+                GestureSettings.ManipulationMultipleFingerPanning;
         }
 
         // Route the pointer pressed event to the gesture recognizer.
@@ -118,9 +132,10 @@ namespace Svg.Editor.Views.UWP
             // Feed the current point into the gesture recognizer as a down event
             _recognizer.ProcessDownEvent(args.GetCurrentPoint(_element));
 
-            //var pointerPoint = PointF.Create((float) args.Pointer)
+            var pointerPosition = args.GetCurrentPoint(_element).Position;
+            var pointerPoint = PointF.Create((float) pointerPosition.X, (float) pointerPosition.Y);
 
-            //_eventsSubject.OnNext(new PointerEvent(EventType.PointerDown, ));
+            _eventsSubject.OnNext(new PointerEvent(EventType.PointerDown, pointerPoint, pointerPoint, pointerPoint, 1));
         }
 
         // Route the pointer moved event to the gesture recognizer.
@@ -140,6 +155,8 @@ namespace Svg.Editor.Views.UWP
 
             // Release the pointer
             _element.ReleasePointerCapture(args.Pointer);
+
+            _eventsSubject.OnNext(new PointerEvent(EventType.PointerUp, PointF.Empty, PointF.Empty, PointF.Empty, 0));
         }
 
         // Route the pointer canceled event to the gesture recognizer.
@@ -154,15 +171,20 @@ namespace Svg.Editor.Views.UWP
         // that a manipulation is in progress
         private void OnManipulationStarted(object sender, ManipulationStartedEventArgs e)
         {
+            _startPoint = e.Position;
+
             _gesturesSubject.OnNext(DragGesture.Enter(PointF.Create((float) e.Position.X, (float) e.Position.Y)));
         }
 
         // Process the change resulting from a manipulation
         private void OnManipulationUpdated(object sender, ManipulationUpdatedEventArgs e)
         {
-            var position = PointF.Create((float) e.Position.X, (float) e.Position.Y);
-            var delta = SizeF.Create((float) e.Cumulative.Translation.X, (float) e.Cumulative.Translation.Y);
-            var start = position - delta;
+            var displayInformation = DisplayInformation.GetForCurrentView();
+            var pixelDensityFactor = displayInformation.LogicalDpi / 96;
+
+            var position = PointF.Create((float) e.Position.X, (float) e.Position.Y) * pixelDensityFactor;
+            var delta = SizeF.Create((float) e.Cumulative.Translation.X * pixelDensityFactor, (float) e.Cumulative.Translation.Y * pixelDensityFactor);
+            var start = PointF.Create((float) _startPoint.X * pixelDensityFactor, (float) _startPoint.Y * pixelDensityFactor);
             var distance = Math.Sqrt(Math.Pow(delta.Width, 2) + Math.Pow(delta.Height, 2));
 
             _gesturesSubject.OnNext(new DragGesture(position, start, delta, distance));
@@ -179,12 +201,6 @@ namespace Svg.Editor.Views.UWP
             //_deltaTransform.Rotation = e.Delta.Rotation;
             //_deltaTransform.TranslateX = e.Delta.Translation.X;
             //_deltaTransform.TranslateY = e.Delta.Translation.Y;
-        }
-
-        // When a manipulation that's a result of inertia begins, change the color of the
-        // the object to reflect that inertia has taken over
-        private void OnManipulationInertiaStarting(object sender, ManipulationInertiaStartingEventArgs e)
-        {
         }
 
         // When a manipulation has finished, reset the color of the object
@@ -250,7 +266,6 @@ namespace Svg.Editor.Views.UWP
             _recognizer.ManipulationStarted -= OnManipulationStarted;
             _recognizer.ManipulationUpdated -= OnManipulationUpdated;
             _recognizer.ManipulationCompleted -= OnManipulationCompleted;
-            _recognizer.ManipulationInertiaStarting -= OnManipulationInertiaStarting;
         }
     }
 }
