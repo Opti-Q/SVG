@@ -43,7 +43,7 @@
   <ItemGroup>
     <Compile Include="SvgCanvasEditorView.cs" />
     <Compile Include="SvgCanvasGLEditorView.cs" />
-    <Compile Include="TouchGestureDetector.cs" />
+    <Compile Include="TouchInputEventDetector.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />

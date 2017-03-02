@@ -49,7 +49,7 @@
     <Compile Include="Gestures\DoubleTapGesture.cs" />
     <Compile Include="Gestures\TapGesture.cs" />
     <Compile Include="Gestures\UserGesture.cs" />
-    <Compile Include="Interfaces\IGestureDetector.cs" />
+    <Compile Include="Interfaces\IInputEventDetector.cs" />
     <Compile Include="Interfaces\IPickImageService.cs" />
     <Compile Include="Interfaces\ISvgDrawingCanvas.cs" />
     <Compile Include="Services\GestureRecognizer.cs" />

@@ -5,11 +5,10 @@ using Android.Content;
 using Android.Views;
 using Svg.Editor.Events;
 using Svg.Editor.Interfaces;
-using Svg.Editor.Services;
 
 namespace Svg.Editor.Droid.Services
 {
-    public class AndroidGestureDetector : IGestureDetector, IDisposable
+    public class AndroidInputEventDetector : IInputEventDetector, IDisposable
     {
         public const int InvalidPointerId = -1;
         public int ActivePointerId = InvalidPointerId;
@@ -25,7 +24,7 @@ namespace Svg.Editor.Droid.Services
 
         public IObservable<UserInputEvent> DetectedGestures => _detectedGesturesSubject.AsObservable();
 
-        public AndroidGestureDetector(Context ctx)
+        public AndroidInputEventDetector(Context ctx)
         {
             var scaleListener = new ScaleDetector();
             scaleListener.OnEvent += (sender, ev) => _detectedGesturesSubject.OnNext(ev);

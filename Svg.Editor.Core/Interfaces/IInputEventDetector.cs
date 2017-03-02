@@ -13,7 +13,7 @@ namespace Svg.Editor.Interfaces
     /// <item><see cref="ScaleEvent"/></item>
     /// </list>
     /// </summary>
-    public interface IGestureDetector
+    public interface IInputEventDetector
     {
         IObservable<UserInputEvent> DetectedGestures { get; }
     }

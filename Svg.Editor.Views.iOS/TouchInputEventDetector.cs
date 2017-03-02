@@ -11,14 +11,14 @@ namespace Svg.Editor.iOS
     /// <summary>
     /// see: https://developer.xamarin.com/guides/ios/application_fundamentals/touch/touch_in_ios/
     /// </summary>
-    public class TouchGestureDetector : IGestureDetector
+    public class TouchInputEventDetector : IInputEventDetector
     {
         private readonly UIView _owner;
         private readonly Subject<UserInputEvent> _gestureSubject = new Subject<UserInputEvent>();
         private UIPinchGestureRecognizer _zoomRecognizer;
         private UIRotationGestureRecognizer _rotationRecognizer;
 
-        public TouchGestureDetector(UIView owner)
+        public TouchInputEventDetector(UIView owner)
         {
             if (owner == null) throw new ArgumentNullException(nameof(owner));
             _owner = owner;

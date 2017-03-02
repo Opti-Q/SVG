@@ -9,11 +9,11 @@ namespace Svg.Editor.iOS
     public class SvgCanvasEditorView
         : SKCanvasView, IPaintSurface
     {
-        private TouchGestureDetector _detector;
+        private TouchInputEventDetector _detector;
 
         public SvgCanvasEditorView()
         {
-            _detector = new TouchGestureDetector(this);
+            _detector = new TouchInputEventDetector(this);
         }
 
         public override void TouchesBegan(NSSet touches, UIEvent evt)

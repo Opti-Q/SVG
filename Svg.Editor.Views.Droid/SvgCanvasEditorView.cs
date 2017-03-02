@@ -19,7 +19,7 @@ namespace Svg.Editor.Views.Droid
     public class SvgCanvasEditorView : SKCanvasView, IPaintSurface
     {
         private Android.Graphics.Bitmap _bitmap;
-        private AndroidGestureDetector _detector;
+        private AndroidInputEventDetector _detector;
         private ISvgDrawingCanvas _drawingCanvas;
         private readonly Subject<UserInputEvent> _detectedGestures = new Subject<UserInputEvent>();
 
@@ -33,7 +33,7 @@ namespace Svg.Editor.Views.Droid
                 _drawingCanvas = value;
                 if (value == null) return;
                 _detector?.Dispose();
-                _detector = new AndroidGestureDetector(Context);
+                _detector = new AndroidInputEventDetector(Context);
                 _detector.DetectedGestures.Subscribe(async uie => await DrawingCanvas.OnEvent(uie));
                 _detector.DetectedGestures.Subscribe(_detectedGestures.OnNext);
 
