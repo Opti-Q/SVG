@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Xamarin.Forms;
 
-namespace Svg.Editor.Forms
+namespace Svg.Editor.Sample.Forms
 {
     public static class BindableToolbarProperty
     {
