@@ -26,6 +26,7 @@ namespace Svg.Editor
 
         private readonly ObservableCollection<SvgVisualElement> _selectedElements;
         private readonly ObservableCollection<ITool> _tools;
+        private ObservableCollection<IEnumerable<IToolCommand>> _toolCommands;
         private List<IToolCommand> _toolSelectors;
         private SvgDocument _document;
         private bool _initialized;
@@ -77,22 +78,20 @@ namespace Svg.Editor
 
         public ObservableCollection<ITool> Tools => _tools;
 
-        public IEnumerable<IEnumerable<IToolCommand>> ToolCommands
+        public ObservableCollection<IEnumerable<IToolCommand>> ToolCommands
         {
             get
             {
-                // prepare tool commands
-                var commands = Tools.Select(t => t.Commands.OrderBy(tc => tc.Sort))
-                    .OrderBy(t => t.FirstOrDefault()?.Sort ?? int.MaxValue)
-                    .Cast<IEnumerable<IToolCommand>>()
-                    .ToList();
-
-                // prepare tool selectors
-                var toolSelectors = EnsureToolSelectors().OrderBy(s => s.Sort);
-
-                commands.Insert(0, toolSelectors);
-
-                return commands;
+                if (_toolCommands == null)
+                {
+                    _toolCommands = new ObservableCollection<IEnumerable<IToolCommand>>();
+                    var cmds = GetCommands();
+                    foreach (var cmd in cmds)
+                    {
+                        _toolCommands.Add(cmd);
+                    }
+                }
+                return _toolCommands;
             }
         }
 
@@ -736,6 +735,8 @@ namespace Svg.Editor
 
         public void FireToolCommandsChanged()
         {
+            ResetToolCommands();
+
             ToolCommandsChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -834,6 +835,35 @@ namespace Svg.Editor
             if (e is SvgFragment || !(e is SvgVisualElement)) return;
 
             DocumentIsDirty = true;
+        }
+
+        private IEnumerable<IEnumerable<IToolCommand>> GetCommands()
+        {
+            // prepare tool commands
+            var commands = Tools.Select(t => t.Commands.OrderBy(tc => tc.Sort))
+                .OrderBy(t => t.FirstOrDefault()?.Sort ?? int.MaxValue)
+                .Cast<IEnumerable<IToolCommand>>()
+                .ToList();
+
+            // prepare tool selectors
+            var toolSelectors = EnsureToolSelectors().OrderBy(s => s.Sort);
+
+            commands.Insert(0, toolSelectors);
+
+            return commands;
+        }
+
+        private void ResetToolCommands()
+        {
+            if (_toolCommands == null)
+                return;
+
+            _toolCommands.Clear();
+            var cmds = GetCommands();
+            foreach (var cmd in cmds)
+            {
+                _toolCommands.Add(cmd);
+            }
         }
 
         private class SelectToolCommand : ToolCommand
