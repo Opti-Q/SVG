@@ -22,13 +22,12 @@ namespace Svg.Editor.Forms.Droid
                 Control.DrawingCanvas = null;
             }
 
-            if (Element != null)
-            {
-                var oleElement = (SKFormsView) Element;
-                oleElement.BindingContextChanged -= OnElementBindingContextChanged;
+            //if (Element != null)
+            //{
+            //    var oleElement = (SKFormsView) Element;
 
-                // do clean up old element
-            }
+            //    // do clean up old element
+            //}
 
             base.OnElementChanged(e);
 
@@ -36,7 +35,6 @@ namespace Svg.Editor.Forms.Droid
             if (e.NewElement != null)
             {
                 var newElement = e.NewElement;
-                newElement.BindingContextChanged += OnElementBindingContextChanged;
                 UpdateBindings(newElement);
             }
         }
@@ -54,17 +52,7 @@ namespace Svg.Editor.Forms.Droid
                 {
                     Control.DrawingCanvas = fwe.BindingContext as SvgDrawingCanvas;
                 }
-
-                var canvas = fwe.BindingContext as SvgDrawingCanvas;
-
-                canvas.CanvasInvalidated -= OnCanvasInvalidated;
-                canvas.CanvasInvalidated += OnCanvasInvalidated;
             }
-        }
-
-        private void OnCanvasInvalidated(object sender, EventArgs e)
-        {
-            this.Element?.InvalidateSurface();
         }
     }
 }
