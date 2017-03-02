@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using Xamarin.Forms;
 
 namespace Svg.Editor.Sample.Forms
@@ -22,7 +23,7 @@ namespace Svg.Editor.Sample.Forms
                 page.ToolbarItems.Clear();
             }
 
-            var items = newValue as List<ToolbarItem>;
+            var items = newValue as IEnumerable<ToolbarItem>;
             if (items != null)
             {
                 foreach (var item in items)
