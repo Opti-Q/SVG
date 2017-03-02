@@ -38,13 +38,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\" />
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SKCanvasViewRendererBase.cs" />
     <Compile Include="SvgCanvasEditorViewRenderer.cs" />
     <Compile Include="SvgGlEditorViewRenderer.cs" />
