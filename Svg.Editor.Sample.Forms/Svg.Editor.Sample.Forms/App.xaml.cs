@@ -1,4 +1,6 @@
-﻿namespace Svg.Editor.Sample.Forms
+﻿using Xamarin.Forms;
+
+namespace Svg.Editor.Sample.Forms
 {
     public partial class App
     {
@@ -6,7 +8,7 @@
         {
             InitializeComponent();
 
-            MainPage = new Svg.Editor.Sample.Forms.MainPage();
+            MainPage = new MainPage();
         }
 
         protected override void OnStart()

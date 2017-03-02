@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using Xamarin.Forms;
 
-namespace Svg.Editor.Forms
+namespace Svg.Editor.Sample.Forms
 {
     public static class BindableToolbarProperty
     {
@@ -22,7 +23,7 @@ namespace Svg.Editor.Forms
                 page.ToolbarItems.Clear();
             }
 
-            var items = newValue as List<ToolbarItem>;
+            var items = newValue as IEnumerable<ToolbarItem>;
             if (items != null)
             {
                 foreach (var item in items)

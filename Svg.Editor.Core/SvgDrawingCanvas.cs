@@ -747,6 +747,7 @@ namespace Svg.Editor
             ResetToolCommands();
 
             ToolCommandsChanged?.Invoke(this, EventArgs.Empty);
+            OnPropertyChanged(nameof(ToolCommands));
         }
 
         public void Dispose()

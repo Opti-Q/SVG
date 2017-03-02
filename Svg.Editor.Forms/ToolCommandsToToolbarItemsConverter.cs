@@ -11,8 +11,8 @@ namespace Svg.Editor.Forms
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var commands = value as IEnumerable<IToolCommand>;
-
+            var commands = (value as IEnumerable<IEnumerable<IToolCommand>>)?.SelectMany(x => x);
+            
             return commands?
                 .OrderBy(a => a.Sort)
                 .Select
