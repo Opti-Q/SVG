@@ -43,8 +43,6 @@ namespace Svg.Editor.Views.Droid
 
         public SvgCanvasEditorView(Context context, IAttributeSet attr) : base(context, attr)
         {
-            var gestureRecognizer = Engine.Resolve<IGestureRecognizer>() as ReactiveGestureRecognizer;
-            gestureRecognizer?.SubscribeTo(_detectedGestures.AsObservable());
         }
 
         public override bool OnTouchEvent(MotionEvent ev)

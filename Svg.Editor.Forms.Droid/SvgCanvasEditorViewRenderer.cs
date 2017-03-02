@@ -13,24 +13,26 @@ namespace Svg.Editor.Forms.Droid
     {
         protected override void OnElementChanged(ElementChangedEventArgs<SKFormsView> e)
         {
+            // do clean up old control
             if (Control != null)
             {
                 Control.DrawingCanvas = null;
             }
 
-            //if (Element != null)
-            //{
-            //    var oleElement = (SKFormsView) Element;
-
-            //    // do clean up old element
-            //}
+            // do clean up old element
+            if (Element != null)
+            {
+                var oldElement = (SKFormsView)Element;
+                oldElement.BindingContextChanged -= OnElementBindingContextChanged;
+            }
 
             base.OnElementChanged(e);
 
-
+            // setup new element
             if (e.NewElement != null)
             {
                 var newElement = e.NewElement;
+                newElement.BindingContextChanged -= OnElementBindingContextChanged;
                 UpdateBindings(newElement);
             }
         }
