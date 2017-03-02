@@ -44,6 +44,11 @@
     </Compile>
     <Compile Include="MainViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ColorInputService.cs" />
+    <Compile Include="Services\MarkerOptionsInputService.cs" />
+    <Compile Include="Services\StrokeStyleOptionsInputService.cs" />
+    <Compile Include="Services\SvgCachingService.cs" />
+    <Compile Include="Services\TextInputService.cs" />
     <Compile Include="SvgEditorView.cs" />
   </ItemGroup>
   <ItemGroup>

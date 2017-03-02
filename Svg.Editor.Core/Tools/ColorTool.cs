@@ -21,7 +21,7 @@ namespace Svg.Editor.Tools
 
         private static IColorInputService ColorInputService => Engine.Resolve<IColorInputService>();
 
-        private static ISvgCachingService SvgCachingService => Engine.Resolve<ISvgCachingService>();
+        private static ISvgCachingService SvgCachingService => Engine.TryResolve<ISvgCachingService>();
 
         private static IFileSystem FileSystemService => Engine.Resolve<IFileSystem>();
 
@@ -255,7 +255,7 @@ namespace Svg.Editor.Tools
                 }));
             }
 
-            public override string IconName => SvgCachingService.GetCachedPngPath(Tool.IconName, StringifyColor(Tool.SelectedColor), FileSystemService);
+            public override string IconName => SvgCachingService?.GetCachedPngPath(Tool.IconName, StringifyColor(Tool.SelectedColor), FileSystemService);
         }
 
         #endregion

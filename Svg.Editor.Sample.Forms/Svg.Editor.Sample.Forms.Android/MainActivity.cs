@@ -1,4 +1,5 @@
-﻿using Android.App;
+﻿using Acr.UserDialogs;
+using Android.App;
 using Android.Content.PM;
 using Android.OS;
 
@@ -15,9 +16,8 @@ namespace Svg.Editor.Sample.Forms.Droid
             base.OnCreate(bundle);
 
             Xamarin.Forms.Forms.Init(this, bundle);
-
-            SvgPlatform.Init();
             Editor.Init();
+            UserDialogs.Init(() => (Activity) Android.App.Application.Context);
 
             LoadApplication(new App());
         }

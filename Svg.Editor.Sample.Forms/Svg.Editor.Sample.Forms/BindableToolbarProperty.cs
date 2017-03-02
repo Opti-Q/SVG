@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace Svg.Editor.Sample.Forms
@@ -20,8 +21,39 @@ namespace Svg.Editor.Sample.Forms
 
             if (oldValue != null)
             {
+                var otbi = oldValue as IEnumerable<ToolbarItem>;
+                var ntbi = newValue as IEnumerable<ToolbarItem>;
+                if (otbi?.Count() == ntbi?.Count())
+                {
+                    var ots = otbi.ToArray();
+                    var nts = ntbi.ToArray();
+                    var differ = false;
+                    for (int i = 0; i < ots.Length; i++)
+                    {
+                        var ot = ots[i];
+                        var nt = nts[i];
+
+                        if (ot.Name != nt.Name)
+                        {
+                            differ = true;
+                            break;
+                        }
+
+                        if (ot.Command.CanExecute(null) != nt.Command.CanExecute(null))
+                        {
+                            differ = true;
+                            break;
+                        }
+                    }
+
+                    if (!differ)
+                        return;
+                }
+
                 page.ToolbarItems.Clear();
             }
+
+
 
             var items = newValue as IEnumerable<ToolbarItem>;
             if (items != null)
