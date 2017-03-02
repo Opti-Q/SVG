@@ -160,6 +160,10 @@
       <Project>{d93c5b6a-7f1c-4904-89ef-4679784c7ad1}</Project>
       <Name>Svg.Editor.Forms.UWP</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Svg.Editor.Forms\Svg.Editor.Forms.csproj">
+      <Project>{2c90ee6d-52e3-4ba0-92d4-8162800f698d}</Project>
+      <Name>Svg.Editor.Forms</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Svg.Editor.Views.UWP\Svg.Editor.Views.UWP.csproj">
       <Project>{98f6b246-19bf-4929-bd26-54d06aad6389}</Project>
       <Name>Svg.Editor.Views.UWP</Name>

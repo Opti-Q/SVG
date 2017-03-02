@@ -164,6 +164,15 @@ namespace Svg.Editor
         }
 
         public Color BackgroundColor { get; set; }
+        public IGestureRecognizer GestureRecognizer
+        {
+            set
+            {
+                _onGestureToken?.Dispose();
+                if (value == null) return;
+                _onGestureToken = value.RecognizedGestures.Subscribe(async g => await OnGesture(g));
+            }
+        }
 
         #endregion
 
@@ -181,6 +190,7 @@ namespace Svg.Editor
             _selectedElements.CollectionChanged += OnSelectionChanged;
 
             UndoRedoService = Engine.Resolve<IUndoRedoService>();
+            GestureRecognizer = new Svg.Editor.Services.GestureRecognizer(Engine.Resolve<ISchedulerProvider>());
 
             var toolProvider = Engine.Resolve<ToolFactoryProvider>();
 
@@ -907,15 +917,6 @@ namespace Svg.Editor
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public IGestureRecognizer GestureRecognizer
-        {
-            set
-            {
-                _onGestureToken?.Dispose();
-                if (value == null) return;
-                _onGestureToken = value.RecognizedGestures.Subscribe(async g => await OnGesture(g));
-            }
-        }
     }
 
     public enum ConstraintsMode { FitUniform, FillUniform }
