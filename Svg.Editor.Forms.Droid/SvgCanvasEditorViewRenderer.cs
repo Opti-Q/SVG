@@ -37,50 +37,34 @@ namespace Svg.Editor.Forms.Droid
             {
                 var newElement = e.NewElement;
                 newElement.BindingContextChanged += OnElementBindingContextChanged;
-                if (Control != null)
-                {
-
-                    #region Register tools
-
-                    // this part should be in the designer, when the iCL is created
-                    var gridToolProperties = new Dictionary<string, object>
-                    {
-                        { "angle", 30.0f },
-                        { "stepsizey", 20.0f },
-                        { "issnappingenabled", true }
-                    };
-
-                    var zoomToolProperties = new Dictionary<string, object>();
-
-                    var panToolProperties = new Dictionary<string, object>();
-
-                    var undoRedoService = Engine.Resolve<IUndoRedoService>();
-
-                    Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
-                    {
-                        () => new GridTool(gridToolProperties, undoRedoService),
-                        () => new MoveTool(undoRedoService),
-                        () => new PanTool(panToolProperties),
-                        () => new ZoomTool(zoomToolProperties),
-                        () => new SelectionTool(undoRedoService)
-                    }));
-
-                    #endregion
-
-                    var drawingCanvas = new SvgDrawingCanvas();
-                    Control.DrawingCanvas = drawingCanvas;
-                }
+                UpdateBindings(newElement);
             }
         }
 
         private void OnElementBindingContextChanged(object sender, EventArgs e)
         {
-            var fwe = sender as BindableObject;
+            UpdateBindings(sender as BindableObject);
+        }
 
-            if (fwe != null && Control != null)
+        private void UpdateBindings(BindableObject fwe)
+        {
+            if (fwe != null)
             {
-                Control.DrawingCanvas = fwe.BindingContext as SvgDrawingCanvas;
+                if (Control != null)
+                {
+                    Control.DrawingCanvas = fwe.BindingContext as SvgDrawingCanvas;
+                }
+
+                var canvas = fwe.BindingContext as SvgDrawingCanvas;
+
+                canvas.CanvasInvalidated -= OnCanvasInvalidated;
+                canvas.CanvasInvalidated += OnCanvasInvalidated;
             }
+        }
+
+        private void OnCanvasInvalidated(object sender, EventArgs e)
+        {
+            this.Element?.InvalidateSurface();
         }
     }
 }

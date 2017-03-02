@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Android.App;
@@ -14,7 +13,6 @@ using Svg.Editor.Events;
 using Svg.Editor.Interfaces;
 using Svg.Editor.Services;
 using Svg.Editor.Shared;
-using Svg.Editor.Tools;
 
 namespace Svg.Editor.Views.Droid
 {
