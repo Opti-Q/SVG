@@ -36,6 +36,7 @@ namespace Svg.Editor.Interfaces
 
         ITool ActiveTool { get; set; }
         Color BackgroundColor { get; set; }
+        IGestureRecognizer GestureRecognizer { set; }
         event EventHandler CanvasInvalidated;
         event EventHandler ToolCommandsChanged;
 

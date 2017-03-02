@@ -34,6 +34,7 @@ namespace Svg.Editor
         private bool _isDebugEnabled;
         private bool _documentIsDirty;
         private PointF _zoomFocus;
+        private IDisposable _onGestureToken;
         private IUndoRedoService UndoRedoService { get; }
 
         #endregion
@@ -178,9 +179,6 @@ namespace Svg.Editor
 
             _selectedElements = new ObservableCollection<SvgVisualElement>();
             _selectedElements.CollectionChanged += OnSelectionChanged;
-
-            var gestureRecognizer = Engine.Resolve<IGestureRecognizer>();
-            gestureRecognizer.RecognizedGestures.Subscribe(async g => await OnGesture(g));
 
             UndoRedoService = Engine.Resolve<IUndoRedoService>();
 
@@ -907,6 +905,16 @@ namespace Svg.Editor
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public IGestureRecognizer GestureRecognizer
+        {
+            set
+            {
+                _onGestureToken?.Dispose();
+                if (value == null) return;
+                _onGestureToken = value.RecognizedGestures.Subscribe(async g => await OnGesture(g));
+            }
         }
     }
 

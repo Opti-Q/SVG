@@ -1,16 +1,14 @@
 ﻿using System.Reactive.Concurrency;
 using System.Threading;
-using System.Threading.Tasks;
 using Svg.Editor.Interfaces;
 using Svg.Editor.Services;
 using Svg.Editor.UndoRedo;
-using Svg.Interfaces;
 
 namespace Svg.Editor
 {
     public static class Editor
     {
-        private static bool _initialized = false;
+        private static bool _initialized;
         private static readonly SemaphoreSlim _lock = new SemaphoreSlim(1);
 
         public static void Init()
@@ -44,8 +42,6 @@ namespace Svg.Editor
             {
                 _lock.Release();
             }
-
-            return;
         }
     }
 }
