@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Svg.Interfaces;
 
-namespace SvgW3CTestSuite.Assets
+namespace Svg.Platform
 {
     public class EmbeddedResourceSource : ISvgSource
     {
@@ -63,9 +63,9 @@ namespace SvgW3CTestSuite.Assets
             return string.Join(".", arr.Take(arr.Length - 1));
         }
 
-        public static ISvgSource Create(string name)
+        public static ISvgSource Create(string name, Assembly assembly)
         {
-            return new EmbeddedResourceSource(name, typeof(AssetHelper).GetTypeInfo().Assembly);
+            return new EmbeddedResourceSource(name, assembly);
         }
     }
 }

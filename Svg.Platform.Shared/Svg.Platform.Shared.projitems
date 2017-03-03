@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CharConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CultureHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DefaultLogger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddedResourceSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Marshal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SKFactory.cs" />

@@ -39,7 +39,7 @@ namespace Svg.Editor.Sample.Forms.Services
         public string GetCachedPngPath(string svgFilePath, string nameModifier, IFileSystem fs)
         {
             var fileName = System.IO.Path.GetFileNameWithoutExtension(svgFilePath);
-            return fs.PathCombine(fs.GetDefaultStoragePath(), $"{fileName}_{nameModifier}.png");
+            return fs.PathCombine(fs.GetDefaultStoragePath(), "SvgCache", $"{fileName}_{nameModifier}.png");
         }
     }
 }

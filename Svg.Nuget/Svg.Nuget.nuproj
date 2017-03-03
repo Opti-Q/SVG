@@ -26,14 +26,13 @@
   <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
     <Id>Svg</Id>
-    <Version>2.0.2</Version>
+    <Version>2.0.3</Version>
     <Title>Svg</Title>
     <Authors>alexa</Authors>
     <Owners>alexa</Owners>
     <Summary>Svg.Nuget</Summary>
     <Description>Svg.Nuget</Description>
-    <ReleaseNotes>
-    </ReleaseNotes>
+    <ReleaseNotes>EmbeddedResourceSource</ReleaseNotes>
     <ProjectUrl>
     </ProjectUrl>
     <LicenseUrl>

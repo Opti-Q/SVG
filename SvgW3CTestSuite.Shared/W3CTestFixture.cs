@@ -45,7 +45,7 @@ namespace SvgW3CTestSuite
                                                         AssetHelper.GetPngForSvg(path)
                                                     })
                                                     .ToArray();
-            FileSourceProvider = (path) => EmbeddedResourceSource.Create(path);
+            FileSourceProvider = (path) => EmbeddedResourceSource.Create(path, typeof(AssetHelper).Assembly);
         }
 
 #if xUNIT
