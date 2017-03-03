@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Windows.Foundation;
@@ -37,6 +35,11 @@ namespace Svg.Editor.Views.UWP
 
     internal class ManipulationInputProcessor : IDisposable
     {
+        // Why 960, you ask?
+        // One wheel-step is defined as 120 (see: https://msdn.microsoft.com/en-us/library/windows/desktop/ms645617(v=vs.85).aspx)
+        // The faster the wheel is scrolled, the higher the value will be, but it maxes out at 960
+        private const float MaxMouseWheelStep = 960;
+
         private readonly GestureRecognizer _recognizer;
         private readonly UIElement _element;
         private TransformGroup _cumulativeTransform;
@@ -47,6 +50,9 @@ namespace Svg.Editor.Views.UWP
         private readonly Subject<UserInputEvent> _eventsSubject = new Subject<UserInputEvent>();
         private Point _startPoint;
         private Point _currentPoint;
+
+        // DIPs = pixels / (DPI/96.0), see: https://msdn.microsoft.com/en-us/library/windows/desktop/ff684173(v=vs.85).aspx
+        private static float PixelDensityFactor => DisplayInformation.GetForCurrentView().LogicalDpi / 96;
 
         public IObservable<UserGesture> RecognizedGestures => _gesturesSubject.AsObservable();
         public IObservable<UserInputEvent> DetectedEvents => _eventsSubject.AsObservable();
@@ -85,7 +91,7 @@ namespace Svg.Editor.Views.UWP
             var pointerPoint = args.GetCurrentPoint(_element);
             var wheelDelta = pointerPoint.Properties.MouseWheelDelta;
 
-            _eventsSubject.OnNext(new ScaleEvent(ScaleStatus.Scaling, 1 + wheelDelta / 960f, (float) pointerPoint.Position.X, (float) pointerPoint.Position.Y));
+            _eventsSubject.OnNext(new ScaleEvent(ScaleStatus.Scaling, 1 + wheelDelta / MaxMouseWheelStep, (float) pointerPoint.Position.X, (float) pointerPoint.Position.Y));
         }
 
         private void ElementOnDoubleTapped(object sender, DoubleTappedRoutedEventArgs args)
@@ -145,6 +151,11 @@ namespace Svg.Editor.Views.UWP
         private void OnPointerMoved(object sender, PointerRoutedEventArgs args)
         {
             var pointerPoint = args.GetCurrentPoint(_element);
+
+            // return here if no relevant pointer is pressed
+            if (!(pointerPoint.Properties.IsLeftButtonPressed || pointerPoint.Properties.IsMiddleButtonPressed))
+                return;
+
             var previousPointF = PointF.Create((float) _currentPoint.X, (float) _currentPoint.Y);
             _currentPoint = pointerPoint.Position;
             var currentPointF = PointF.Create((float) _currentPoint.X, (float) _currentPoint.Y);
@@ -152,11 +163,6 @@ namespace Svg.Editor.Views.UWP
             var delta = currentPointF - previousPointF;
             if (pointerPoint.Properties.IsMiddleButtonPressed)
                 _eventsSubject.OnNext(new MoveEvent(startPointF, previousPointF, currentPointF, delta, 2));
-            //else if (pointerPoint.Properties.IsLeftButtonPressed)
-            //{
-            //    var distance = Math.Sqrt(Math.Pow(delta.X, 2) + Math.Pow(delta.Y, 2));
-            //    _gesturesSubject.OnNext(new DragGesture(currentPointF, startPointF, SizeF.Create(delta.X, delta.Y), distance));
-            //}
 
             // Feed the set of points into the gesture recognizer as a move event
             if (pointerPoint.Properties.IsLeftButtonPressed)
@@ -194,9 +200,7 @@ namespace Svg.Editor.Views.UWP
         // Process the change resulting from a manipulation
         private void OnManipulationUpdated(object sender, ManipulationUpdatedEventArgs e)
         {
-            var displayInformation = DisplayInformation.GetForCurrentView();
-            var pixelDensityFactor = displayInformation.LogicalDpi / 96;
-
+            var pixelDensityFactor = PixelDensityFactor;
             var position = PointF.Create((float) e.Position.X, (float) e.Position.Y) * pixelDensityFactor;
             var delta = SizeF.Create((float) e.Cumulative.Translation.X * pixelDensityFactor, (float) e.Cumulative.Translation.Y * pixelDensityFactor);
             var start = PointF.Create((float) _startPoint.X * pixelDensityFactor, (float) _startPoint.Y * pixelDensityFactor);
@@ -270,13 +274,17 @@ namespace Svg.Editor.Views.UWP
 
         public void Dispose()
         {
-            // Unregister pointer event handlers. These receive input events that are used by the gesture recognizer.
+            // Unregister pointer event handlers
             _element.PointerPressed -= OnPointerPressed;
             _element.PointerMoved -= OnPointerMoved;
             _element.PointerReleased -= OnPointerReleased;
             _element.PointerCanceled -= OnPointerCanceled;
 
-            // Unregister event handlers to respond to gesture recognizer output
+            _element.Tapped -= ElementOnTapped;
+            _element.DoubleTapped -= ElementOnDoubleTapped;
+            _element.PointerWheelChanged -= ElementOnPointerWheelChanged;
+
+            // Unregister event handlers
             _recognizer.ManipulationStarted -= OnManipulationStarted;
             _recognizer.ManipulationUpdated -= OnManipulationUpdated;
             _recognizer.ManipulationCompleted -= OnManipulationCompleted;
