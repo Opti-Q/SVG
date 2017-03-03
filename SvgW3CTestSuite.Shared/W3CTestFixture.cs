@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using SkiaSharp;
@@ -45,7 +46,13 @@ namespace SvgW3CTestSuite
                                                         AssetHelper.GetPngForSvg(path)
                                                     })
                                                     .ToArray();
+#if WINDOWS_UWP
+            FileSourceProvider =
+                path =>
+                    EmbeddedResourceSource.Create(path, typeof(AssetHelper).GetTypeInfo().Assembly);
+#else
             FileSourceProvider = (path) => EmbeddedResourceSource.Create(path, typeof(AssetHelper).Assembly);
+#endif
         }
 
 #if xUNIT

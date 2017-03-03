@@ -18,5 +18,6 @@ namespace Svg.Interfaces
 
         string PathCombine(params string[] segments);
         void DeleteFile(string storagePath);
+        void EnsureDirectoryExists(string directoryName);
     }
 }

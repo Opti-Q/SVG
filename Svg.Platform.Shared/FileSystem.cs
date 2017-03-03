@@ -34,7 +34,7 @@ namespace Svg
         public string GetDefaultStoragePath()
         {
 #if WINDOWS_UWP
-            return Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
+            return Windows.Storage.ApplicationData.Current.LocalFolder.Path;
 #else
             return System.Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 #endif
@@ -48,6 +48,13 @@ namespace Svg
         public void DeleteFile(string storagePath)
         {
             File.Delete(storagePath);
+        }
+
+        public void EnsureDirectoryExists(string directoryName)
+        {
+            if (Directory.Exists(directoryName))
+                return;
+            Directory.CreateDirectory(directoryName);
         }
     }
 }

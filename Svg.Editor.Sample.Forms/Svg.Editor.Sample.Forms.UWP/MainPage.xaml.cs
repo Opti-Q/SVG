@@ -8,6 +8,7 @@
 
             SvgPlatform.Init();
             Editor.Init();
+            Svg.Editor.Forms.FormsPlatform.Init();
 
             LoadApplication(new Forms.App());
         }

@@ -16,7 +16,7 @@ namespace Svg.Editor.Sample.Forms
             Engine.Register<IColorInputService, ColorInputService>(() => new ColorInputService());
             Engine.Register<IMarkerOptionsInputService, MarkerOptionsInputService>(() => new MarkerOptionsInputService());
             Engine.Register<IStrokeStyleOptionsInputService, StrokeStyleOptionsInputService>(() => new StrokeStyleOptionsInputService());
-            //Engine.Register<ISvgCachingService, SvgCachingService>(() => new SvgCachingService());
+            Engine.Register<ISvgCachingService, SvgCachingService>(() => new SvgCachingService());
             Engine.Register<ITextInputService, TextInputService>(() => new TextInputService());
 
             #endregion

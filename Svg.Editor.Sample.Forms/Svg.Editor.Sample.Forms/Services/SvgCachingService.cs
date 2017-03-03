@@ -10,7 +10,7 @@ namespace Svg.Editor.Sample.Forms.Services
 
         public SvgCachingService()
         {
-            _sourceProvider = (src) => Engine.Resolve<ISvgSourceFactory>().Create(src);
+            _sourceProvider = path => Engine.Resolve<ISvgSourceFactory>().Create(path);
         }
 
         public void SaveAsPng(string svgFilePath, string nameModifier, Action<SvgDocument> preprocessAction)
@@ -39,7 +39,8 @@ namespace Svg.Editor.Sample.Forms.Services
         public string GetCachedPngPath(string svgFilePath, string nameModifier, IFileSystem fs)
         {
             var fileName = System.IO.Path.GetFileNameWithoutExtension(svgFilePath);
-            return fs.PathCombine(fs.GetDefaultStoragePath(), "SvgCache", $"{fileName}_{nameModifier}.png");
+            fs.EnsureDirectoryExists(fs.PathCombine(fs.GetDefaultStoragePath(), "SvgCache"));
+            return fs.PathCombine(fs.GetDefaultStoragePath(), "SvgCache", string.IsNullOrWhiteSpace(nameModifier) ? $"{fileName}.png" : $"{fileName}_{nameModifier}.png");
         }
     }
 }

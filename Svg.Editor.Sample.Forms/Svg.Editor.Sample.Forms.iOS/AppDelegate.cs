@@ -20,6 +20,7 @@ namespace Svg.Editor.Sample.Forms.iOS
         {
             global::Xamarin.Forms.Forms.Init();
             Svg.Editor.Editor.Init();
+            Svg.Editor.Forms.FormsPlatform.Init();
 
             LoadApplication(new App());
 

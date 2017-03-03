@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Svg.Editor.Interfaces;
 using Svg.Interfaces;
+using Svg.Platform;
 
 namespace Svg.Editor.Forms.Services
 {
