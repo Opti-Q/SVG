@@ -17,7 +17,7 @@ namespace Svg.Editor.Sample.Forms.Droid
 
             Xamarin.Forms.Forms.Init(this, bundle);
             Editor.Init();
-            UserDialogs.Init(() => (Activity) Android.App.Application.Context);
+            UserDialogs.Init(() => (Activity) this);
 
             LoadApplication(new App());
         }
