@@ -111,7 +111,12 @@ namespace Svg.Editor.Tools
                 foreach (var selectableColor in SelectableColors)
                 {
                     var color = Color.Create(selectableColor);
-                    cachingService.SaveAsPng(IconName, StringifyColor(color), SvgProcessingUtil.ColorAction(color));
+                    var options = new SaveAsPngOptions()
+                    {
+                        PreprocessAction = SvgProcessingUtil.ColorAction(color),
+                        CustomPostFix = (key, opt) => StringifyColor(color),
+                    };
+                    cachingService.GetCachedPng(IconName, options);
                 }
             }
 
@@ -255,7 +260,7 @@ namespace Svg.Editor.Tools
                 }));
             }
 
-            public override string IconName => SvgCachingService?.GetCachedPngPath(Tool.IconName, StringifyColor(Tool.SelectedColor), FileSystemService);
+            public override string IconName => SvgCachingService?.GetCachedPng(Tool.IconName, new SaveAsPngOptions() { CustomPostFix = (key, op) => StringifyColor(Tool.SelectedColor) });
         }
 
         #endregion

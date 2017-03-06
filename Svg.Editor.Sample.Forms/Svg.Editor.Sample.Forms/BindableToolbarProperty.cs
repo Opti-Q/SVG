@@ -33,17 +33,12 @@ namespace Svg.Editor.Sample.Forms
                         var ot = ots[i];
                         var nt = nts[i];
 
-                        if (ot.Name != nt.Name)
-                        {
-                            differ = true;
-                            break;
-                        }
+                        differ = !string.Equals(ot.Text, nt.Text) ||
+                                     ot.Command.CanExecute(null) != nt.Command.CanExecute(null) ||
+                                     !string.Equals(ot.Icon?.File, nt.Icon?.File);
 
-                        if (ot.Command.CanExecute(null) != nt.Command.CanExecute(null))
-                        {
-                            differ = true;
+                        if (differ)
                             break;
-                        }
                     }
 
                     if (!differ)

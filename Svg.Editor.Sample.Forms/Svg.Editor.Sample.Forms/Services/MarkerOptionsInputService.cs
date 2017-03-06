@@ -11,12 +11,22 @@ namespace Svg.Editor.Sample.Forms.Services
         public async Task<int[]> GetUserInput(string title, IEnumerable<string> markerStartOptions, int markerStartSelected, IEnumerable<string> markerEndOptions,
             int markerEndSelected)
         {
-            var result = await Application.Current.MainPage.DisplayActionSheet(title, "cancel", null, markerStartOptions.ToArray());
+            var mso = markerStartOptions.ToList();
+            var start = await Application.Current.MainPage.DisplayActionSheet("Start", "cancel", null, mso.ToArray());
 
-            if (result == null)
-                return new [] {0};
+            var startIndex = mso.IndexOf(start);
+            if (start == null || startIndex < 0)
+                return new [] {markerStartSelected, markerEndSelected};
 
-            return new [] { markerStartOptions.ToList().IndexOf(result)};
+            var meo = markerEndOptions.ToList();
+            var end = await Application.Current.MainPage.DisplayActionSheet("End", "cancel", null, meo.ToArray());
+
+            var endIndex = meo.IndexOf(end);
+            if (end == null || endIndex < 0)
+                return new[] { markerStartSelected, markerEndSelected };
+            
+
+            return new [] { startIndex, endIndex };
         }
     }
 }

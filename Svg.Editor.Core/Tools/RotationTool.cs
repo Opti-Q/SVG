@@ -63,7 +63,7 @@ namespace Svg.Editor.Tools
         public RotationTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Rotate", properties, undoRedoService)
         {
             ToolType = ToolType.Modify;
-            IconName = "ic_rotate_right_white_48dp.png";
+            IconName = "ic_rotate_right.svg";
         }
 
         #region Overrides
@@ -74,8 +74,8 @@ namespace Svg.Editor.Tools
 
             Commands = new[]
             {
-                new RotateStepCommand(this, "Rotate right", "ic_rotate_right_white_48dp.png", RotationStep),
-                new RotateStepCommand(this, "Rotate left", "ic_rotate_left_white_48dp.png", -RotationStep),
+                new RotateStepCommand(this, "Rotate right", "ic_rotate_right.svg", RotationStep),
+                new RotateStepCommand(this, "Rotate left", "ic_rotate_left.svg", -RotationStep),
             };
         }
 

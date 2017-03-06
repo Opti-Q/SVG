@@ -70,7 +70,7 @@ namespace Svg.Editor.Tools
 
         public StrokeStyleTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Stroke style", properties, undoRedoService)
         {
-            IconName = "ic_line_style_white_48dp.png";
+            IconName = "ic_line_style.svg";
             ToolType = ToolType.Modify;
         }
 

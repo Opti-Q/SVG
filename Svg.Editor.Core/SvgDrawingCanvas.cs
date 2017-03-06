@@ -887,6 +887,8 @@ namespace Svg.Editor
                 _canvas = canvas;
             }
 
+            public override int Sort => -1;
+
             public override void Execute(object parameter)
             {
                 _canvas.ActiveTool = Tool;

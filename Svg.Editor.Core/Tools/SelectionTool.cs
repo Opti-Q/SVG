@@ -22,8 +22,8 @@ namespace Svg.Editor.Tools
 
         #region Private properties
 
-        private string DeleteIconName { get; } = "ic_delete_white_48dp.png";
-        private string SelectIconName { get; } = "ic_select_tool_white_48dp.png";
+        private string DeleteIconName { get; } = "ic_delete.svg";
+        private string SelectIconName { get; } = "ic_select.svg";
         private Brush BlueBrush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
         private Pen BluePen => _pen ?? (_pen = Engine.Factory.CreatePen(BlueBrush, 5));
 

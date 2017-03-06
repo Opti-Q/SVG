@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.InteropServices;
+using Svg.Editor.Forms.Services;
 using Svg.Editor.Tools;
 using Xamarin.Forms;
 
@@ -10,6 +10,13 @@ namespace Svg.Editor.Forms
 {
     public class ToolCommandsToToolbarItemsConverter : IValueConverter
     {
+        private IImageSourceProvider GetImageProvider()
+        {
+            var isp = Engine.TryResolve<IImageSourceProvider>();
+
+            return isp ?? new DefaultImageSourceProvider();
+        }
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             int shownActions;
@@ -20,6 +27,8 @@ namespace Svg.Editor.Forms
                 shownActions = 3;
             }
 
+            var imageProvider = GetImageProvider();
+
             var commandLists = (value as IEnumerable<IEnumerable<IToolCommand>>);
             var items = new List<ToolbarItem>();
             foreach (var commands in commandLists.Where(l => l.Any()).OrderBy(l => l.Min(li => li.Sort)))
@@ -28,7 +37,7 @@ namespace Svg.Editor.Forms
                 if (cmds.Length == 0)
                     continue;
 
-                var itemOrder = cmds.Length >= shownActions ? ToolbarItemOrder.Primary : ToolbarItemOrder.Secondary;
+                var itemOrder = items.Count >= shownActions ? ToolbarItemOrder.Secondary : ToolbarItemOrder.Primary;
 
                 // single command => show as toolbaritem
                 if (cmds.Length == 1)
@@ -38,7 +47,7 @@ namespace Svg.Editor.Forms
                     {
                         Text = command.Name,
                         AutomationId = command.Name,
-                        Icon = command.IconName,
+                        Icon = imageProvider.GetImage(command.IconName),
                         Command = new Command(() => command.Execute(null), () => command.CanExecute(null)),
                         Order = itemOrder
                     });
@@ -50,14 +59,14 @@ namespace Svg.Editor.Forms
                     items.Add(new ToolbarItem
                     {
                         Text = cmd.Tool.Name,
-                        AutomationId = cmd.Tool.Name,
-                        Icon = cmd.Tool.IconName,
+                        AutomationId = cmd.GroupName,
+                        Icon = imageProvider.GetImage(cmd.GroupIconName),
                         Command = new Command(async () =>
                         {
                             var cs = cmds;
                             var tags = cs.Select(c => c.Name).ToArray();
 
-                            var result = await Application.Current.MainPage.DisplayActionSheet(cmd.Tool.Name, "cancel", null, tags);
+                            var result = await Application.Current.MainPage.DisplayActionSheet(cmd.GroupName, "cancel", null, tags);
 
                             var selectedCommand = cs.FirstOrDefault(c => c.Name == result);
                             selectedCommand?.Execute(null);

@@ -7,7 +7,7 @@
     "MvvmCross.Plugin.Email": "4.1.6",
     "MvvmCross.Plugin.PictureChooser": "4.2.3",
     "SkiaSharp": "1.56.1",
-    "Svg": "2.0.3"
+    "Svg": "2.0.4"
   },
   "frameworks": {
     "MonoAndroid,Version=v7.1": {}

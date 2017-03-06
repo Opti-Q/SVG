@@ -50,6 +50,11 @@ namespace Svg
             File.Delete(storagePath);
         }
 
+        public void DeleteFolder(string storagePath)
+        {
+            Directory.Delete(storagePath, true);
+        }
+
         public void EnsureDirectoryExists(string directoryName)
         {
             if (Directory.Exists(directoryName))

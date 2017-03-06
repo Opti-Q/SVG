@@ -59,7 +59,7 @@ namespace Svg.Editor.Tools
 
         public EllipseTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Ellipse", properties, undoRedoService)
         {
-            IconName = "ic_panorama_fish_eye_white_48dp.png";
+            IconName = "ic_panorama_fish_eye.svg";
             ToolUsage = ToolUsage.Explicit;
             ToolType = ToolType.Create;
             HandleDragExit = true;

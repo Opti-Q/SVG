@@ -61,7 +61,7 @@ namespace Svg.Editor.Tools
 
         public TextTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Text", properties, undoRedoService)
         {
-            IconName = "ic_text_fields_white_48dp.png";
+            IconName = "ic_text_fields.svg";
             ToolUsage = ToolUsage.Explicit;
             ToolType = ToolType.Create;
 

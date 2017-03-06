@@ -50,7 +50,7 @@ namespace Svg.Editor.Tools
         public const string MarkerEndIdsKey = "markerendids";
         public const string MarkerEndNamesKey = "markerendnames";
 
-        public string LineStyleIconName { get; set; } = "ic_line_endings_white_48dp.png";
+        public string LineStyleIconName { get; set; } = "ic_line_endings.svg";
 
         public override int InputOrder => 300;
 
@@ -131,7 +131,7 @@ namespace Svg.Editor.Tools
 
         public LineTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Line", properties, undoRedoService)
         {
-            IconName = "ic_mode_edit_white_48dp.png";
+            IconName = "ic_mode_edit.svg";
             ToolUsage = ToolUsage.Explicit;
             ToolType = ToolType.Create;
             HandleDragExit = true;

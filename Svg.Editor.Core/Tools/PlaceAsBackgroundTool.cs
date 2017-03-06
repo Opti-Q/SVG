@@ -13,7 +13,7 @@ namespace Svg.Editor.Tools
     {
         public PlaceAsBackgroundTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Background Image", properties, undoRedoService)
         {
-            IconName = "ic_insert_photo_white_48dp.png";
+            IconName = "ic_insert_photo.svg";
         }
 
         public override async Task Initialize(ISvgDrawingCanvas ws)
@@ -27,7 +27,7 @@ namespace Svg.Editor.Tools
                     ImagePath = await Engine.Resolve<IPickImageService>().PickImagePathAsync(Canvas.ScreenWidth);
                     if (ImagePath == null) return;
                     PlaceImage(ImagePath);
-                }, o => ChooseBackgroundEnabled, iconName: "ic_insert_photo_white_48dp.png"),
+                }, o => ChooseBackgroundEnabled, iconName: "ic_insert_photo.svg"),
                 new ToolCommand(this, "Remove background image", o =>
                 {
                     var children = Canvas.Document.Children;
@@ -44,7 +44,7 @@ namespace Svg.Editor.Tools
                         Canvas.FireInvalidateCanvas();
                         Canvas.FireToolCommandsChanged();
                     }
-                }, o => ChooseBackgroundEnabled && Canvas.Document.Children.Any(x => x.CustomAttributes.ContainsKey(BackgroundCustomAttributeKey)), iconName: "ic_delete_white_48dp.png")
+                }, o => ChooseBackgroundEnabled && Canvas.Document.Children.Any(x => x.CustomAttributes.ContainsKey(BackgroundCustomAttributeKey)), iconName: "ic_delete.svg")
             };
 
             if (ImagePath != null)

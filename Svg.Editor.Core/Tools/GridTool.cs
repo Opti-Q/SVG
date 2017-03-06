@@ -68,8 +68,8 @@ namespace Svg.Editor.Tools
 
         #region Public properties
 
-        public string IconGridOn { get; set; } = "ic_grid_on_white_48dp.png";
-        public string IconGridOff { get; set; } = "ic_grid_off_white_48dp.png";
+        public string IconGridOn { get; set; } = "ic_grid_on.svg";
+        public string IconGridOff { get; set; } = "ic_grid_off.svg";
 
         public const string IsSnappingEnabledKey = "issnappingenabled";
         public const string StepSizeYKey = "stepsizey";
