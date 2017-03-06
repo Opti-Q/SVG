@@ -4,6 +4,8 @@ using Svg.Editor.Interfaces;
 using Svg.Editor.Sample.Forms.Services;
 using Svg.Editor.Services;
 using Svg.Editor.Tools;
+using Svg.Interfaces;
+using Svg.Platform;
 
 namespace Svg.Editor.Sample.Forms
 {
@@ -18,6 +20,7 @@ namespace Svg.Editor.Sample.Forms
             Engine.Register<IStrokeStyleOptionsInputService, StrokeStyleOptionsInputService>(() => new StrokeStyleOptionsInputService());
             Engine.Register<ISvgCachingService, SvgCachingService>(() => new SvgCachingService());
             Engine.Register<ITextInputService, TextInputService>(() => new TextInputService());
+            Engine.Register<IAlternativeSvgTextRenderer, SkiaTextRenderer>(() => new SkiaTextRenderer());
 
             #endregion
 

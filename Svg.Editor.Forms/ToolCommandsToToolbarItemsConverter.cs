@@ -58,7 +58,7 @@ namespace Svg.Editor.Forms
                     var cmd = cmds.First();
                     items.Add(new ToolbarItem
                     {
-                        Text = cmd.Tool.Name,
+                        Text = cmd.GroupName,
                         AutomationId = cmd.GroupName,
                         Icon = imageProvider.GetImage(cmd.GroupIconName),
                         Command = new Command(async () =>

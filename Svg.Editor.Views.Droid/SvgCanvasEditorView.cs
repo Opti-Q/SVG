@@ -132,8 +132,11 @@ namespace Svg.Editor.Views.Droid
         {
             if (disposing)
             {
-                DrawingCanvas?.Dispose();
-                _detector?.Dispose();
+                if (!IsFormsMode)
+                {
+                    DrawingCanvas?.Dispose();
+                    _detector?.Dispose();
+                }
             }
             base.Dispose(disposing);
         }
