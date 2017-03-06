@@ -58,7 +58,6 @@
     <EmbeddedResource Include="Resources\svg\ic_colorTool.svg" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\svg\ic_add_circle_outline.svg" />
     <EmbeddedResource Include="Resources\svg\ic_arrow_downward.svg" />
     <EmbeddedResource Include="Resources\svg\ic_arrow_upward.svg" />
     <EmbeddedResource Include="Resources\svg\ic_aspect_ratio.svg" />
