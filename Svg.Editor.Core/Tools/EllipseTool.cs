@@ -331,7 +331,7 @@ namespace Svg.Editor.Tools
             {
                 renderer.Graphics.Save();
 
-                var radius = (int) (MaxPointerDistance / ws.ZoomFactor);
+                var radius = (int) (MaxPointerDistance / ws.ZoomFactor / 4);
                 var points = _currentEllipse.GetTransformedPoints();
                 renderer.DrawCircle(points[0].X - (radius >> 1), points[0].Y - (radius >> 1), radius, BluePen);
                 renderer.DrawCircle(points[1].X - (radius >> 1), points[1].Y - (radius >> 1), radius, BluePen);

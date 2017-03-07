@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-
-using System.Drawing.Drawing2D;
 using System.Linq;
 using Svg.Interfaces;
 
@@ -163,7 +161,7 @@ namespace Svg
                 }
 
                 var result = Engine.Factory.CreateLinearGradientBrush(effectiveStart, effectiveEnd,
-                    Engine.Factory.Colors.Transparent, Engine.Factory.Colors.Transparent);
+                    new ColorBlend() {Colors = new [] { Engine.Factory.Colors.Transparent, Engine.Factory.Colors.Transparent }, Positions = null});
                 result.InterpolationColors = CalculateColorBlend(renderer, opacity, points[0], effectiveStart, points[1], effectiveEnd);
                 result.WrapMode = WrapMode.TileFlipX;
 

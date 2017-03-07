@@ -1,5 +1,3 @@
-
-using System.Drawing.Drawing2D;
 using Svg.Interfaces;
 
 namespace Svg

@@ -154,6 +154,7 @@ namespace Svg.Editor.Tools
                 var m = renderer.Graphics.Transform.Clone();
                 m.Invert();
                 renderer.Graphics.Concat(m);
+                
                 renderer.DrawRectangle(_selectionRectangle, BluePen);
 
                 renderer.Graphics.Restore();

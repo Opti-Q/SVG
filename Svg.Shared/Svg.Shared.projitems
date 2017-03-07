@@ -219,6 +219,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Pen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\PixelFormat.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\PointF.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\RadialGradientBrush.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\RectangleF.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Region.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\SizeF.cs" />
@@ -273,6 +274,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Platform\SkiaFontFamilyProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Platform\SkiaGraphics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Platform\SkiaGraphicsPath.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platform\SkiaRadialGradientBrush.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Platform\SkiaLinearGradientBrush.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Platform\SkiaMatrix.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Platform\SkiaPen.cs" />
@@ -287,7 +289,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IGraphicsProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\ISvgRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\SvgRenderer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SKFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SKFactoryBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgAttributeAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgAttributeCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgContentNode.cs" />

@@ -21,10 +21,15 @@ namespace Svg.Platform
         }
         protected abstract SKPaint CreatePaint();
 
-        public virtual void Dispose()
+        protected void Reset()
         {
             _paint?.Dispose();
             _paint = null;
+        }
+
+        public virtual void Dispose()
+        {
+            Reset();
         }
     }
 }

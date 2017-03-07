@@ -2,31 +2,47 @@ using System;
 using System.Linq;
 using SkiaSharp;
 using Svg.Interfaces;
+using Svg.Shared.Interfaces;
 
 namespace Svg.Platform
 {
-    public class SkiaLinearGradientBrush : SkiaBrushBase, LinearGradientBrush, IDisposable
+    public class SkiaRadialGradientBrush : SkiaBrushBase, RadialGradientBrush, IDisposable
     {
-        private readonly Color[] _colors;
-        private readonly float[] _colorPositions;
-        private PointF _start;
-        private PointF _end;
-        private Color _colorStart;
-        private Color _colorEnd;
+        private PointF _center;
+        private float _radius;
         private SKShader _shader;
-        private ColorBlend _interpolationColors;
         private WrapMode _wrapMode;
+        private ColorBlend _interpolationColors;
 
-        public SkiaLinearGradientBrush(PointF start, PointF end, ColorBlend interpolationColors, WrapMode wrapMode = WrapMode.Tile)
+        public SkiaRadialGradientBrush(PointF center, float radius, ColorBlend interpolationColors, WrapMode wrapMode = WrapMode.Tile)
         {
-            if (start == null) throw new ArgumentNullException(nameof(start));
-            if (end == null) throw new ArgumentNullException(nameof(end));
+            if (center == null) throw new ArgumentNullException(nameof(center));
             if (interpolationColors == null) throw new ArgumentNullException(nameof(interpolationColors));
 
-            WrapMode = wrapMode;
+            _center = center;
+            _radius = radius;
             InterpolationColors = interpolationColors;
-            Start = start;
-            End = end;
+            WrapMode = wrapMode;
+        }
+        
+        public PointF Center
+        {
+            get { return _center; }
+            set
+            {
+                _center = value;
+                Reset();
+            }
+        }
+
+        public float Radius
+        {
+            get { return _radius; }
+            set
+            {
+                _radius = value;
+                Reset();
+            }
         }
 
         public ColorBlend InterpolationColors
@@ -45,26 +61,6 @@ namespace Svg.Platform
             set
             {
                 _wrapMode = value;
-                Reset();
-            }
-        }
-
-        public PointF Start
-        {
-            get { return _start; }
-            set
-            {
-                _start = value;
-                Reset();
-            }
-        }
-
-        public PointF End
-        {
-            get { return _end; }
-            set
-            {
-                _end = value;
                 Reset();
             }
         }
@@ -91,12 +87,13 @@ namespace Svg.Platform
             if(_shader != null)_shader.Dispose();
 
             var colors = InterpolationColors.Colors.Select(c => new SKColor(c.R, c.G, c.B, c.A)).ToArray();
-            var positions = InterpolationColors.Positions.Length == 0 ? null : InterpolationColors.Positions; // see: https://developer.xamarin.com/api/member/SkiaSharp.SKShader.CreateLinearGradient/p/SkiaSharp.SKPoint/SkiaSharp.SKPoint/SkiaSharp.SKColor[]/System.Single[]/SkiaSharp.SKShaderTileMode/
-            _shader = SKShader.CreateLinearGradient(new SKPoint(Start.X, Start.Y), new SKPoint(End.X, End.Y), colors, positions, tileMode);
-            
+            var positions = InterpolationColors.Positions.Length == 0 ? null : InterpolationColors.Positions; // see: https://developer.xamarin.com/api/member/SkiaSharp.SKShader.CreateRadialGradient/p/SkiaSharp.SKPoint/System.Single/SkiaSharp.SKColor[]/System.Single[]/SkiaSharp.SKShaderTileMode/
+            _shader = SKShader.CreateRadialGradient(new SKPoint(Center.X, Center.Y), Radius, colors, positions, tileMode);
+
             paint.Shader = _shader;
             return paint;
         }
+
 
         public override void Dispose()
         {

@@ -1,15 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml;
 using SkiaSharp;
 using Svg.Interfaces;
 using Svg.Interfaces.Xml;
 using Svg.Platform;
+using Svg.Shared.Interfaces;
 
 namespace Svg
 {
@@ -93,9 +92,14 @@ namespace Svg
             return new SkiaTextureBrush((SkiaBitmap)image);
         }
 
-        public virtual LinearGradientBrush CreateLinearGradientBrush(PointF start, PointF end, Color startColor, Color endColor)
+        public virtual LinearGradientBrush CreateLinearGradientBrush(PointF start, PointF end, ColorBlend colorblend, WrapMode tileMode = WrapMode.Tile)
         {
-            return new SkiaLinearGradientBrush(start, end, startColor, endColor);
+            return new SkiaLinearGradientBrush(start, end, colorblend, tileMode);
+        }
+
+        public virtual RadialGradientBrush CreateRadialGradientBrush(PointF center, float radius, ColorBlend colorblend, WrapMode wrapMode = WrapMode.Tile)
+        {
+            return new SkiaRadialGradientBrush(center, radius, colorblend, wrapMode);
         }
 
         public virtual PathGradientBrush CreatePathGradientBrush(GraphicsPath path)

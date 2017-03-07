@@ -1,4 +1,4 @@
-using System.Drawing.Drawing2D;
+using Svg.Interfaces;
 
 namespace Svg
 {
@@ -6,5 +6,7 @@ namespace Svg
     {
         ColorBlend InterpolationColors { get; set; }
         WrapMode WrapMode { get; set; }
+        PointF Start { get; set; }
+        PointF End { get; set; }
     }
 }
