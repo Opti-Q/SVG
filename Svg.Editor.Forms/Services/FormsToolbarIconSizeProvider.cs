@@ -8,7 +8,7 @@ namespace Svg.Editor.Forms.Services
     {
         public SizeF GetSize()
         {
-            return Device.OnPlatform(SizeF.Create(30, 30), SizeF.Create(30, 30), SizeF.Create(120, 120));
+            return Device.OnPlatform(SizeF.Create(32, 32), SizeF.Create(32, 32), SizeF.Create(32, 32));
         }
     }
 }
