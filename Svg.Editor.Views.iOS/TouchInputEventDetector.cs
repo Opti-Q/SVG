@@ -165,7 +165,7 @@ namespace Svg.Editor.iOS
                 if (!_owner.Frame.Contains(point))
                     return;
                 var pointF = point.ToPointF() * _scaleFactor;
-                var delta = pointF - _previousPointerPositions[e];
+                var delta = (pointF - _previousPointerPositions[e]) / _scaleFactor;
 
                 var pe = new MoveEvent(_pointerDownPositions[e], _previousPointerPositions[e], pointF, delta, NumberOfActivePointers);
                 _gestureSubject.OnNext(pe);
