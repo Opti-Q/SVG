@@ -27,6 +27,7 @@ namespace Svg.Editor.iOS
         private float _scaleFactor;
         private float _previousRotation = 0;
         private float _scaleStart;
+        private double _previousScale;
 
         public TouchInputEventDetector(UIView owner)
         {
@@ -61,7 +62,7 @@ namespace Svg.Editor.iOS
             if (state == UIGestureRecognizerState.Began)
             {
                 _scaleStart = (float) r.Scale/_scaleFactor;
-
+                _previousScale = 1;
 
                 var s = new ScaleEvent(ScaleStatus.Start, 1, focus.X, focus.Y);
                 System.Diagnostics.Debug.WriteLine($"Zoom Begin: {s}");
@@ -72,10 +73,14 @@ namespace Svg.Editor.iOS
                 var scale = (float) r.Scale/_scaleFactor;
                 var diff = 1 - _scaleStart;
                 scale += diff;
+                var relativeScale = (float)(1 + (scale - _previousScale));
 
-                var c = new ScaleEvent(ScaleStatus.Scaling, scale, focus.X, focus.Y);
+                _previousScale = scale;
+
+                var c = new ScaleEvent(ScaleStatus.Scaling, relativeScale, focus.X, focus.Y);
                 System.Diagnostics.Debug.WriteLine($"Zooming: {c}");
                 _gestureSubject.OnNext(c);
+                
             }
             else if( state == UIGestureRecognizerState.Cancelled ||
                 state == UIGestureRecognizerState.Ended ||
@@ -84,8 +89,9 @@ namespace Svg.Editor.iOS
                 var scale = (float) r.Scale/_scaleFactor;
                 var diff = 1 - _scaleStart;
                 scale += diff;
+                var relativeScale = (float)(1 + (scale - _previousScale));
 
-                var e = new ScaleEvent(ScaleStatus.End, scale, focus.X, focus.Y);
+                var e = new ScaleEvent(ScaleStatus.End, relativeScale, focus.X, focus.Y);
                 System.Diagnostics.Debug.WriteLine($"Zoom End: {e}");
                 _gestureSubject.OnNext(e);
             }
