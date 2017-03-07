@@ -9,7 +9,6 @@ using Svg.Editor.Interfaces;
 using Svg.Editor.Services;
 using Svg.Interfaces;
 using UIKit;
-using XLabs.Platform.Device;
 
 namespace Svg.Editor.iOS
 {
@@ -22,6 +21,11 @@ namespace Svg.Editor.iOS
         private readonly Subject<UserInputEvent> _gestureSubject = new Subject<UserInputEvent>();
         private UIPinchGestureRecognizer _zoomRecognizer;
         private UIRotationGestureRecognizer _rotationRecognizer;
+
+        private readonly Dictionary<UITouch, PointF> _pointerDownPositions = new Dictionary<UITouch, PointF>();
+        private readonly Dictionary<UITouch, PointF> _previousPointerPositions = new Dictionary<UITouch, PointF>();
+        private float _scaleFactor;
+        private float _previousRotation = 0;
 
         public TouchInputEventDetector(UIView owner)
         {
@@ -38,11 +42,10 @@ namespace Svg.Editor.iOS
             _zoomRecognizer.CancelsTouchesInView = false;
             _zoomRecognizer.ShouldRecognizeSimultaneously += (r1, r2) => true;
             
-            //_zoomRecognizer.RequireGestureRecognizerToFail(_rotationRecognizer);
-            //_rotationRecognizer.RequireGestureRecognizerToFail(_zoomRecognizer);
-
             _owner.AddGestureRecognizer(_zoomRecognizer);
             _owner.AddGestureRecognizer(_rotationRecognizer);
+
+            _scaleFactor = (float)UIScreen.MainScreen.Scale;
 
             var gestureRecognizer = Engine.Resolve<IGestureRecognizer>() as ReactiveGestureRecognizer;
             gestureRecognizer?.SubscribeTo(_gestureSubject.AsObservable());
@@ -51,19 +54,18 @@ namespace Svg.Editor.iOS
         private void OnZoom(UIPinchGestureRecognizer r)
         {
             var state = r.State;
-
-
+            
             if (state == UIGestureRecognizerState.Began)
             {
-                var f = _previousPointerPositions.Values.GetFocus();
-                var s = new ScaleEvent(ScaleStatus.Start, (float) r.Scale, f.X, f.Y);
+                var f = _previousPointerPositions.Values.GetFocus() * _scaleFactor;
+                var s = new ScaleEvent(ScaleStatus.Start, (float) r.Scale / _scaleFactor, f.X, f.Y);
                 System.Diagnostics.Debug.WriteLine($"Zoom Begin: {s}");
                 _gestureSubject.OnNext(s);
             }
             else if (state == UIGestureRecognizerState.Changed)
             {
-                var f = _previousPointerPositions.Values.GetFocus();
-                var c = new ScaleEvent(ScaleStatus.Scaling, (float) r.Scale, f.X, f.Y);
+                var f = _previousPointerPositions.Values.GetFocus() * _scaleFactor;
+                var c = new ScaleEvent(ScaleStatus.Scaling, (float) r.Scale / _scaleFactor, f.X, f.Y);
                 System.Diagnostics.Debug.WriteLine($"Zooming: {c}");
                 _gestureSubject.OnNext(c);
             }
@@ -71,14 +73,12 @@ namespace Svg.Editor.iOS
                 state == UIGestureRecognizerState.Ended ||
                 state ==UIGestureRecognizerState.Recognized)
             {
-                var f = _previousPointerPositions.Values.GetFocus();
-                var e = new ScaleEvent(ScaleStatus.End, (float)r.Scale, f.X, f.Y);
+                var f = _previousPointerPositions.Values.GetFocus() * _scaleFactor;
+                var e = new ScaleEvent(ScaleStatus.End, (float)r.Scale / _scaleFactor, f.X, f.Y);
                 System.Diagnostics.Debug.WriteLine($"Zoom End: {e}");
                 _gestureSubject.OnNext(e);
             }
         }
-
-        private float _previousRotation = 0;
 
         private void OnRotate(UIRotationGestureRecognizer r)
         {
@@ -122,14 +122,8 @@ namespace Svg.Editor.iOS
 
         public IObservable<UserInputEvent> DetectedGestures => _gestureSubject.AsObservable();
 
-        private readonly Dictionary<UITouch, PointF> _pointerDownPositions = new Dictionary<UITouch, PointF>();
-        private readonly Dictionary<UITouch, PointF> _previousPointerPositions = new Dictionary<UITouch, PointF>();
-
         internal void OnBegin(UITouch[] events)
         {
-            var dpi = AppleDevice.CurrentDevice.Display.Xdpi;
-            System.Diagnostics.Debug.WriteLine($"dpi: {dpi}");
-
             for (int i = events.Length - 1; i >= 0; i--)
             {
                 var e = events[i];
@@ -137,9 +131,7 @@ namespace Svg.Editor.iOS
                 
                 if (!_owner.Frame.Contains(point))
                     return;
-                var pointF = point.ToPointF();
-                //pointF.X = (float)AppleDevice.CurrentDevice.Display.WidthRequestInInches(pointF.X);
-                //pointF.Y = (float)AppleDevice.CurrentDevice.Display.HeightRequestInInches(pointF.Y);
+                var pointF = point.ToPointF() * _scaleFactor;
 
                 _pointerDownPositions[e] = pointF;
                 _previousPointerPositions[e] = pointF;
@@ -161,9 +153,7 @@ namespace Svg.Editor.iOS
 
                 if (!_owner.Frame.Contains(point))
                     return;
-                var pointF = point.ToPointF();
-                //pointF.X = (float)AppleDevice.CurrentDevice.Display.WidthRequestInInches(pointF.X);
-                //pointF.Y = (float)AppleDevice.CurrentDevice.Display.HeightRequestInInches(pointF.Y);
+                var pointF = point.ToPointF() * _scaleFactor;
 
                 var pe = new PointerEvent(EventType.Move, _pointerDownPositions[e], _previousPointerPositions[e], pointF, NumberOfActivePointers);
                 _gestureSubject.OnNext(pe);
@@ -186,9 +176,7 @@ namespace Svg.Editor.iOS
                 if (!_owner.Frame.Contains(point) && _pointerDownPositions.Count == 0)
                     return;
 
-                var pointF = point.ToPointF();
-                //pointF.X = (float)AppleDevice.CurrentDevice.Display.WidthRequestInInches(pointF.X);
-                //pointF.Y = (float)AppleDevice.CurrentDevice.Display.HeightRequestInInches(pointF.Y);
+                var pointF = point.ToPointF() * _scaleFactor;
 
                 var pe = new PointerEvent(EventType.PointerUp, _pointerDownPositions[e], _previousPointerPositions[e], pointF, NumberOfActivePointers);
                 _gestureSubject.OnNext(pe);
@@ -214,9 +202,7 @@ namespace Svg.Editor.iOS
                 // we do want to handle the events even if they happened outside of our owner control in case we are currently tracking pointers
                 if (!_owner.Frame.Contains(point) && _pointerDownPositions.Count == 0)
                     return;
-                var pointF = point.ToPointF();
-                //pointF.X = (float)AppleDevice.CurrentDevice.Display.WidthRequestInInches(pointF.X);
-                //pointF.Y = (float)AppleDevice.CurrentDevice.Display.HeightRequestInInches(pointF.Y);
+                var pointF = point.ToPointF() * _scaleFactor;
 
                 var pe = new PointerEvent(EventType.Cancel, _pointerDownPositions[e], _previousPointerPositions[e], pointF, NumberOfActivePointers);
                 _gestureSubject.OnNext(pe);

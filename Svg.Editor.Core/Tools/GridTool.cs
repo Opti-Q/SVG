@@ -90,7 +90,7 @@ namespace Svg.Editor.Tools
         public override int InputOrder => 100; // must be before movetool!
 
         public bool IsVisible { get; set; } = true;
-
+        
         #endregion
 
         public GridTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService)
@@ -610,9 +610,13 @@ namespace Svg.Editor.Tools
                 _canvas = canvas;
             }
 
+            private new GridTool Tool => (GridTool) base.Tool;
+
+            public override string GroupIconName => Tool.IsVisible ? Tool.IconGridOn : Tool.IconGridOff;
+
             public override void Execute(object parameter)
             {
-                var t = (GridTool) Tool;
+                var t = Tool;
                 t.IsVisible = !t.IsVisible;
                 IconName = t.IsVisible ? t.IconGridOff : t.IconGridOn;
                 _canvas.FireInvalidateCanvas();
@@ -629,6 +633,9 @@ namespace Svg.Editor.Tools
             {
                 _canvas = canvas;
             }
+            private new GridTool Tool => (GridTool)base.Tool;
+
+            public override string GroupIconName => Tool.IsVisible ? Tool.IconGridOn : Tool.IconGridOff;
 
             public override void Execute(object parameter)
             {
