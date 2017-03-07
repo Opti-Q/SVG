@@ -2,7 +2,7 @@
 using Svg.Interfaces;
 using Xamarin.Forms;
 
-namespace Svg.Editor.Forms.Services
+namespace Svg.Editor.Forms
 {
     public class FormsToolBarIconSizeProvider : IToolbarIconSizeProvider
     {

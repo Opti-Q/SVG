@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using Svg.Droid.SampleEditor.Core.Tools;
 using Svg.Editor.Interfaces;
 using Svg.Editor.Services;
 using Svg.Editor.Tools;

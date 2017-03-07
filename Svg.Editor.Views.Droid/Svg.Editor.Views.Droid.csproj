@@ -78,7 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Svg.Editor.Core\Svg.Editor.Core.csproj">
-      <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
+      <Project>{4CF34D1C-662C-400D-BEAF-E87CE1D08FAB}</Project>
       <Name>Svg.Editor.Core</Name>
     </ProjectReference>
   </ItemGroup>

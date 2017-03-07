@@ -1,4 +1,6 @@
-﻿namespace Svg.Editor.Sample.Forms.UWP
+﻿using Svg.Editor.Forms;
+
+namespace Svg.Editor.Sample.Forms.UWP
 {
     public sealed partial class MainPage
     {
@@ -7,8 +9,7 @@
             InitializeComponent();
 
             SvgPlatform.Init();
-            Editor.Init();
-            Svg.Editor.Forms.FormsPlatform.Init();
+            SvgEditorForms.Init();
 
             LoadApplication(new Forms.App());
         }

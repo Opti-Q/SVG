@@ -71,7 +71,7 @@ namespace Svg.Editor.Tools
 
         public ColorTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Color", properties, undoRedoService)
         {
-            IconName = "Svg.Editor.Forms.Resources.svg.ic_format_color_fill.svg";
+            IconName = "Svg.Editor.Resources.svg.ic_format_color_fill.svg";
             ToolType = ToolType.Modify;
 
             object selectedColorIndex;

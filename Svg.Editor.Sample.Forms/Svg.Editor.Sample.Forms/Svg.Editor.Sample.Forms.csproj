@@ -47,7 +47,6 @@
     <Compile Include="Services\ColorInputService.cs" />
     <Compile Include="Services\MarkerOptionsInputService.cs" />
     <Compile Include="Services\StrokeStyleOptionsInputService.cs" />
-    <Compile Include="Services\SvgCachingService.cs" />
     <Compile Include="Services\TextInputService.cs" />
     <Compile Include="SvgEditorView.cs" />
   </ItemGroup>
@@ -66,11 +65,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Svg.Editor.Core\Svg.Editor.Core.csproj">
-      <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
+      <Project>{4CF34D1C-662C-400D-BEAF-E87CE1D08FAB}</Project>
       <Name>Svg.Editor.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Svg.Editor.Forms\Svg.Editor.Forms.csproj">
-      <Project>{2c90ee6d-52e3-4ba0-92d4-8162800f698d}</Project>
+      <Project>{2C90EE6D-52E3-4BA0-92D4-8162800F698D}</Project>
       <Name>Svg.Editor.Forms</Name>
     </ProjectReference>
   </ItemGroup>

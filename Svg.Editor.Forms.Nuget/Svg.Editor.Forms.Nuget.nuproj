@@ -38,9 +38,6 @@
     <OutputPath>..\nuget\$(Configuration)\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="Readme.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Svg.Editor.Forms.Droid\Svg.Editor.Forms.Droid.csproj" />
     <ProjectReference Include="..\Svg.Editor.Forms.iOS\Svg.Editor.Forms.iOS.csproj" />
     <ProjectReference Include="..\Svg.Editor.Forms.UWP\Svg.Editor.Forms.UWP.csproj" />

@@ -11,6 +11,7 @@ namespace Svg
         private static readonly Dictionary<Type, Func<object>> _serviceRegistry = new Dictionary<Type, Func<object>>();
         private static readonly SvgElementFactory _elementFactory = new SvgElementFactory();
         private static readonly SvgTypeConverterRegistry _typeConverterRegistry = new SvgTypeConverterRegistry();
+        private static readonly SvgCachingService _cachingService = new SvgCachingService();
         private static ISvgTypeDescriptor _typeDescriptor = new SvgTypeDescriptor(_typeConverterRegistry);
         private static IFactory _factory;
         private static ISvgElementAttributeProvider _attributeProvider;
@@ -148,6 +149,7 @@ namespace Svg
             RegisterInternal<ISvgElementFactory, SvgElementFactory>(() => _elementFactory);
             RegisterInternal<ISvgTypeConverterRegistry, SvgTypeConverterRegistry>(() => _typeConverterRegistry);
             RegisterInternal<ISvgTypeDescriptor, SvgTypeDescriptor>(() => (SvgTypeDescriptor)_typeDescriptor);
+            RegisterInternal<ISvgCachingService, SvgCachingService>(() => _cachingService);
         }
     }
 }

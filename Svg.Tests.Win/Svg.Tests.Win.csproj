@@ -62,18 +62,18 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Svg.Win\Svg.Win.csproj">
-      <Project>{1A9890AB-E4B4-4282-89AC-CEF2610E30B0}</Project>
-      <Name>Svg.Win</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Bends_01.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Svg.Win\Svg.Win.csproj">
+      <Project>{1a9890ab-e4b4-4282-89ac-cef2610e30b0}</Project>
+      <Name>Svg.Win</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\Svg.Tests\Svg.Tests.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

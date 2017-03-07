@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Svg.Editor.Forms.Services;
+using Svg.Editor.Forms;
 using Svg.Editor.Interfaces;
 using Svg.Editor.Sample.Forms.Services;
 using Svg.Editor.Services;
@@ -21,8 +21,6 @@ namespace Svg.Editor.Sample.Forms
             Engine.Register<IMarkerOptionsInputService, MarkerOptionsInputService>(() => new MarkerOptionsInputService());
             Engine.Register<IStrokeStyleOptionsInputService, StrokeStyleOptionsInputService>(() => new StrokeStyleOptionsInputService());
             Engine.Register<ITextInputService, TextInputService>(() => new TextInputService());
-            Engine.Register<IAlternativeSvgTextRenderer, SkiaTextRenderer>(() => new SkiaTextRenderer());
-            Engine.Register<ISvgCachingService, SvgCachingService>(() => new SvgCachingService());
             Engine.RegisterSingleton<IToolbarIconSizeProvider, FormsToolBarIconSizeProvider>(() => new FormsToolBarIconSizeProvider());
 
             Engine.Resolve<ISvgCachingService>().Clear();

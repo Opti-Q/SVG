@@ -207,6 +207,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ISvgElementAttributeProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ISvgElementFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ISvgSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ISvgSourceFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ISvgTypeDescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ISvgUnitConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\LinearGradientBrush.cs" />
@@ -234,6 +235,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Xml\IXmlDocument.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Xml\IXmlReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Xml\IXmlTextWriter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ISvgCachingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IWebRequest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NonSvgElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Painting\GenericBoundable.cs" />
@@ -292,6 +294,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SKFactoryBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgAttributeAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgAttributeCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SvgCachingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgContentNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgDefinitionDefaults.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgDocument.cs" />

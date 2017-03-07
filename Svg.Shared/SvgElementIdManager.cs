@@ -39,7 +39,7 @@ namespace Svg
         {
             // if document was loaded from custom source, allow it to load element first
             // as the requested document might be from the very same source
-            if (_document.SvgSource != null)
+            if (_document.SvgSource != null && uri.OriginalString.Contains("#"))
             {
                 var hash = uri.OriginalString.Substring(uri.OriginalString.LastIndexOf('#'));
                 var str = _document.SvgSource.GetFileRelativeTo(uri);

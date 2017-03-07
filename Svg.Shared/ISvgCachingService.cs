@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using Svg.Interfaces;
 
-namespace Svg.Editor.Interfaces
+namespace Svg
 {
     public class SaveAsPngOptions
     {

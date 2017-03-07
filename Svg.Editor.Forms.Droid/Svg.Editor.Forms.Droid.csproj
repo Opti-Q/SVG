@@ -54,16 +54,8 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\Svg.Core\Svg.Core.csproj">
-      <Project>{13edb4db-3977-4c2e-998a-6103ca015881}</Project>
-      <Name>Svg.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Svg.Droid\Svg.Droid.csproj">
-      <Project>{03f31ec9-4f97-46da-b8f1-dce99c6954de}</Project>
-      <Name>Svg.Droid</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Svg.Editor.Core\Svg.Editor.Core.csproj">
-      <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
+      <Project>{4CF34D1C-662C-400D-BEAF-E87CE1D08FAB}</Project>
       <Name>Svg.Editor.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Svg.Editor.Forms\Svg.Editor.Forms.csproj">

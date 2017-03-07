@@ -2,6 +2,7 @@
 using Android.App;
 using Android.Content.PM;
 using Android.OS;
+using Svg.Editor.Forms;
 
 namespace Svg.Editor.Sample.Forms.Droid
 {
@@ -16,9 +17,8 @@ namespace Svg.Editor.Sample.Forms.Droid
             base.OnCreate(bundle);
 
             Xamarin.Forms.Forms.Init(this, bundle);
-            Editor.Init();
-            Svg.Editor.Forms.FormsPlatform.Init();
             UserDialogs.Init(() => (Activity) this);
+            SvgEditorForms.Init();
 
             LoadApplication(new App());
         }

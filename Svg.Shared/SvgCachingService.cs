@@ -1,16 +1,14 @@
 ﻿using System;
 using System.IO;
-using Svg.Editor.Interfaces;
 using Svg.Interfaces;
 
-namespace Svg.Editor.Sample.Forms.Services
+namespace Svg
 {
     public class SvgCachingService : ISvgCachingService
     {
         private readonly Func<string, ISvgSource> _sourceProvider;
 
         private Lazy<IFileSystem> _fs = new Lazy<IFileSystem>(() => Engine.Resolve<IFileSystem>());
-        private Lazy<IToolbarIconSizeProvider> _tbi = new Lazy<IToolbarIconSizeProvider>(() => Engine.TryResolve<IToolbarIconSizeProvider>());
 
         public SvgCachingService()
         {
@@ -76,7 +74,7 @@ namespace Svg.Editor.Sample.Forms.Services
 
         private SizeF GetDimension(SaveAsPngOptions options)
         {
-            return options.ImageDimension ?? _tbi.Value?.GetSize();
+            return options.ImageDimension;
         }
     }
 }

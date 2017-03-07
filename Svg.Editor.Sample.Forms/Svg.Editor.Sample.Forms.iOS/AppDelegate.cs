@@ -1,4 +1,5 @@
 ﻿using Foundation;
+using Svg.Editor.Forms;
 using UIKit;
 
 namespace Svg.Editor.Sample.Forms.iOS
@@ -19,8 +20,7 @@ namespace Svg.Editor.Sample.Forms.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
-            Svg.Editor.Editor.Init();
-            Svg.Editor.Forms.FormsPlatform.Init();
+            SvgEditorForms.Init();
 
             LoadApplication(new App());
 

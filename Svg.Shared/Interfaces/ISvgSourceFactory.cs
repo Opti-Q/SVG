@@ -1,6 +1,5 @@
-﻿using Svg.Interfaces;
-
-namespace Svg.Editor.Interfaces
+﻿
+namespace Svg.Interfaces
 {
     public interface ISvgSourceFactory
     {

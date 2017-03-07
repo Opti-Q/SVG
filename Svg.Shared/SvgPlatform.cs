@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Svg.Interfaces;
+using Svg.Platform;
 
 namespace Svg
 {
@@ -33,7 +34,8 @@ namespace Svg
                 Engine.RegisterSingleton<ICharConverter, SvgCharConverter>(() => new SvgCharConverter());
                 Engine.Register<IWebRequest, WebRequestSvc>(() => new WebRequestSvc());
                 Engine.RegisterSingleton<IFileSystem, FileSystem>(() => new FileSystem());
-
+                Engine.Register<IAlternativeSvgTextRenderer, SkiaTextRenderer>(() => new SkiaTextRenderer());
+                Engine.Register<ISvgCachingService, SvgCachingService>(() => new SvgCachingService());
                 // register platform specific services
 
                 Engine.Register<IFactory, IFactory>(() => new SKFactory());
