@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
 using Svg.Editor.Interfaces;
+using Svg.Interfaces;
 using Xamarin.Forms;
 
 namespace Svg.Editor.Forms.Services
@@ -12,7 +13,7 @@ namespace Svg.Editor.Forms.Services
         private static readonly Lazy<string[]> Resources = new Lazy<string[]>(() => typeof(DefaultImageSourceProvider).GetTypeInfo().Assembly.GetManifestResourceNames());
         private static readonly ConcurrentDictionary<string, string> Cache = new ConcurrentDictionary<string, string>();
 
-        public  virtual FileImageSource GetImage(string image)
+        public  virtual FileImageSource GetImage(string image, SizeF dimension = null)
         {
             if (image == null)
                 return GetDefaultImage();
@@ -27,9 +28,9 @@ namespace Svg.Editor.Forms.Services
                     if (Cache.ContainsKey(resource))
                         return Cache[resource];
 
-                    var cached = cache.GetCachedPng(resource, new SaveAsPngOptions());
+                    var cached = cache.GetCachedPng(resource, new SaveAsPngOptions() {ImageDimension = dimension});
                     Cache.AddOrUpdate(resource, cached, (o, n) => n);
-                    return cached;
+                    return (FileImageSource)ImageSource.FromFile(cached);
                 }
             }
 

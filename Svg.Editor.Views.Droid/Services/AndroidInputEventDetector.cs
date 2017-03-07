@@ -6,6 +6,7 @@ using Android.Views;
 using Svg.Editor.Events;
 using Svg.Editor.Interfaces;
 using Svg.Editor.Services;
+using Svg.Interfaces;
 
 namespace Svg.Editor.Droid.Services
 {
@@ -63,9 +64,9 @@ namespace Svg.Editor.Droid.Services
                 case (int) MotionEventActions.Down:
                 case (int) MotionEventActions.Pointer1Down:
                     uie = new PointerEvent(EventType.PointerDown,
-                        Engine.Factory.CreatePointF(_pointerDownX, _pointerDownY),
-                        Engine.Factory.CreatePointF(_lastTouchX, _lastTouchY),
-                        Engine.Factory.CreatePointF(x, y), ev.PointerCount);
+                        PointF.Create(_pointerDownX, _pointerDownY),
+                        PointF.Create(_lastTouchX, _lastTouchY),
+                        PointF.Create(x, y), ev.PointerCount);
 
                     _lastTouchX = x;
                     _lastTouchY = y;
@@ -79,27 +80,27 @@ namespace Svg.Editor.Droid.Services
                 case (int) MotionEventActions.Up:
                     ActivePointerId = InvalidPointerId;
                     uie = new PointerEvent(EventType.PointerUp,
-                        Engine.Factory.CreatePointF(_pointerDownX, _pointerDownY),
-                        Engine.Factory.CreatePointF(_lastTouchX, _lastTouchY),
-                        Engine.Factory.CreatePointF(x, y), ev.PointerCount);
+                        PointF.Create(_pointerDownX, _pointerDownY),
+                        PointF.Create(_lastTouchX, _lastTouchY),
+                        PointF.Create(x, y), ev.PointerCount);
                     break;
 
                 case (int) MotionEventActions.Cancel:
                     ActivePointerId = InvalidPointerId;
                     uie = new PointerEvent(EventType.Cancel,
-                        Engine.Factory.CreatePointF(_pointerDownX, _pointerDownY),
-                        Engine.Factory.CreatePointF(_lastTouchX, _lastTouchY),
-                        Engine.Factory.CreatePointF(x, y), 1);
+                        PointF.Create(_pointerDownX, _pointerDownY),
+                        PointF.Create(_lastTouchX, _lastTouchY),
+                        PointF.Create(x, y), 1);
                     break;
 
                 case (int) MotionEventActions.Move:
                     var relativeDeltaX = x - _lastTouchX;
                     var relativeDeltaY = y - _lastTouchY;
 
-                    uie = new MoveEvent(Engine.Factory.CreatePointF(_pointerDownX, _pointerDownY),
-                        Engine.Factory.CreatePointF(_lastTouchX, _lastTouchY),
-                        Engine.Factory.CreatePointF(x, y),
-                        Engine.Factory.CreatePointF(relativeDeltaX, relativeDeltaY),
+                    uie = new MoveEvent(PointF.Create(_pointerDownX, _pointerDownY),
+                        PointF.Create(_lastTouchX, _lastTouchY),
+                        PointF.Create(x, y),
+                        PointF.Create(relativeDeltaX, relativeDeltaY),
                         ev.PointerCount);
 
                     _lastTouchX = x;
@@ -120,9 +121,9 @@ namespace Svg.Editor.Droid.Services
                         x = ev.GetX(newPointerIndex);
                         y = ev.GetY(newPointerIndex);
                         uie = new PointerEvent(EventType.PointerUp,
-                            Engine.Factory.CreatePointF(_pointerDownX, _pointerDownY),
-                            Engine.Factory.CreatePointF(_lastTouchX, _lastTouchY),
-                            Engine.Factory.CreatePointF(x, y), 1);
+                            PointF.Create(_pointerDownX, _pointerDownY),
+                            PointF.Create(_lastTouchX, _lastTouchY),
+                            PointF.Create(x, y), 1);
 
                         _lastTouchX = x;
                         _lastTouchY = y;
@@ -134,9 +135,9 @@ namespace Svg.Editor.Droid.Services
                         x = ev.GetX(tempPointerIndex);
                         y = ev.GetY(tempPointerIndex);
                         uie = new PointerEvent(EventType.PointerUp,
-                            Engine.Factory.CreatePointF(_pointerDownX, _pointerDownY),
-                            Engine.Factory.CreatePointF(_lastTouchX, _lastTouchY),
-                            Engine.Factory.CreatePointF(x, y), 1);
+                            PointF.Create(_pointerDownX, _pointerDownY),
+                            PointF.Create(_lastTouchX, _lastTouchY),
+                            PointF.Create(x, y), 1);
 
                         _lastTouchX = ev.GetX(tempPointerIndex);
                         _lastTouchY = ev.GetY(tempPointerIndex);

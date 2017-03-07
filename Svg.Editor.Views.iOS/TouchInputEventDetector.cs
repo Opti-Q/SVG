@@ -138,8 +138,8 @@ namespace Svg.Editor.iOS
                 if (!_owner.Frame.Contains(point))
                     return;
                 var pointF = point.ToPointF();
-                pointF.X = (float)AppleDevice.CurrentDevice.Display.WidthRequestInInches(pointF.X);
-                pointF.Y = (float)AppleDevice.CurrentDevice.Display.HeightRequestInInches(pointF.Y);
+                //pointF.X = (float)AppleDevice.CurrentDevice.Display.WidthRequestInInches(pointF.X);
+                //pointF.Y = (float)AppleDevice.CurrentDevice.Display.HeightRequestInInches(pointF.Y);
 
                 _pointerDownPositions[e] = pointF;
                 _previousPointerPositions[e] = pointF;
@@ -162,8 +162,8 @@ namespace Svg.Editor.iOS
                 if (!_owner.Frame.Contains(point))
                     return;
                 var pointF = point.ToPointF();
-                pointF.X = (float)AppleDevice.CurrentDevice.Display.WidthRequestInInches(pointF.X);
-                pointF.Y = (float)AppleDevice.CurrentDevice.Display.HeightRequestInInches(pointF.Y);
+                //pointF.X = (float)AppleDevice.CurrentDevice.Display.WidthRequestInInches(pointF.X);
+                //pointF.Y = (float)AppleDevice.CurrentDevice.Display.HeightRequestInInches(pointF.Y);
 
                 var pe = new PointerEvent(EventType.Move, _pointerDownPositions[e], _previousPointerPositions[e], pointF, NumberOfActivePointers);
                 _gestureSubject.OnNext(pe);
@@ -187,8 +187,8 @@ namespace Svg.Editor.iOS
                     return;
 
                 var pointF = point.ToPointF();
-                pointF.X = (float)AppleDevice.CurrentDevice.Display.WidthRequestInInches(pointF.X);
-                pointF.Y = (float)AppleDevice.CurrentDevice.Display.HeightRequestInInches(pointF.Y);
+                //pointF.X = (float)AppleDevice.CurrentDevice.Display.WidthRequestInInches(pointF.X);
+                //pointF.Y = (float)AppleDevice.CurrentDevice.Display.HeightRequestInInches(pointF.Y);
 
                 var pe = new PointerEvent(EventType.PointerUp, _pointerDownPositions[e], _previousPointerPositions[e], pointF, NumberOfActivePointers);
                 _gestureSubject.OnNext(pe);
@@ -215,8 +215,8 @@ namespace Svg.Editor.iOS
                 if (!_owner.Frame.Contains(point) && _pointerDownPositions.Count == 0)
                     return;
                 var pointF = point.ToPointF();
-                pointF.X = (float)AppleDevice.CurrentDevice.Display.WidthRequestInInches(pointF.X);
-                pointF.Y = (float)AppleDevice.CurrentDevice.Display.HeightRequestInInches(pointF.Y);
+                //pointF.X = (float)AppleDevice.CurrentDevice.Display.WidthRequestInInches(pointF.X);
+                //pointF.Y = (float)AppleDevice.CurrentDevice.Display.HeightRequestInInches(pointF.Y);
 
                 var pe = new PointerEvent(EventType.Cancel, _pointerDownPositions[e], _previousPointerPositions[e], pointF, NumberOfActivePointers);
                 _gestureSubject.OnNext(pe);

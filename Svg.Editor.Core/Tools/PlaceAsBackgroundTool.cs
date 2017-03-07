@@ -24,7 +24,10 @@ namespace Svg.Editor.Tools
             {
                 new ToolCommand(this, "Choose background image", async o =>
                 {
-                    ImagePath = await Engine.Resolve<IPickImageService>().PickImagePathAsync(Canvas.ScreenWidth);
+                    var imgs = Engine.TryResolve<IPickImageService>();
+                    if (imgs == null) return;
+
+                    ImagePath = await imgs.PickImagePathAsync(Canvas.ScreenWidth);
                     if (ImagePath == null) return;
                     PlaceImage(ImagePath);
                 }, o => ChooseBackgroundEnabled, iconName: "ic_insert_photo.svg"),
@@ -106,6 +109,9 @@ namespace Svg.Editor.Tools
         {
             get
             {
+                if (Engine.TryResolve<IPickImageService>() == null)
+                    return false;
+
                 object chooseBackgroundEnabled;
                 return Properties.TryGetValue(ChooseBackgroundEnabledKey, out chooseBackgroundEnabled) && Convert.ToBoolean(chooseBackgroundEnabled);
             }

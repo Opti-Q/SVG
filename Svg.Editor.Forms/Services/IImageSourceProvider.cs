@@ -1,9 +1,10 @@
-﻿using Xamarin.Forms;
+﻿using Svg.Interfaces;
+using Xamarin.Forms;
 
 namespace Svg.Editor.Forms.Services
 {
     public interface IImageSourceProvider
     {
-        FileImageSource GetImage(string image);
+        FileImageSource GetImage(string image, SizeF dimension = null);
     }
 }

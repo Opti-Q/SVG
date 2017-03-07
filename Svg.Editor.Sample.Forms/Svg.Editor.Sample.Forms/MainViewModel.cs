@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Svg.Editor.Forms.Services;
 using Svg.Editor.Interfaces;
 using Svg.Editor.Sample.Forms.Services;
 using Svg.Editor.Services;
 using Svg.Editor.Tools;
 using Svg.Interfaces;
 using Svg.Platform;
+using Xamarin.Forms;
 
 namespace Svg.Editor.Sample.Forms
 {
@@ -18,9 +20,12 @@ namespace Svg.Editor.Sample.Forms
             Engine.Register<IColorInputService, ColorInputService>(() => new ColorInputService());
             Engine.Register<IMarkerOptionsInputService, MarkerOptionsInputService>(() => new MarkerOptionsInputService());
             Engine.Register<IStrokeStyleOptionsInputService, StrokeStyleOptionsInputService>(() => new StrokeStyleOptionsInputService());
-            Engine.Register<ISvgCachingService, SvgCachingService>(() => new SvgCachingService());
             Engine.Register<ITextInputService, TextInputService>(() => new TextInputService());
             Engine.Register<IAlternativeSvgTextRenderer, SkiaTextRenderer>(() => new SkiaTextRenderer());
+            Engine.Register<ISvgCachingService, SvgCachingService>(() => new SvgCachingService());
+            Engine.RegisterSingleton<IToolbarIconSizeProvider, FormsToolBarIconSizeProvider>(() => new FormsToolBarIconSizeProvider());
+
+            Engine.Resolve<ISvgCachingService>().Clear();
 
             #endregion
 
@@ -33,11 +38,11 @@ namespace Svg.Editor.Sample.Forms
                         { "stepsizey", 20.0f },
                         { "issnappingenabled", true }
                     };
-
+            
             var colorToolProperties = new Dictionary<string, object>
             {
                 { ColorTool.SelectableColorsKey, new [] { "#000000","#FF0000","#00FF00","#0000FF","#FFFF00","#FF00FF","#00FFFF", "#FFFFFF" } },
-                { ColorTool.SelectableColorNamesKey, new [] { "Black","Red","Green","Blue","Yellow","Magenta","Cyan","White" } }
+                { ColorTool.SelectableColorNamesKey, new [] { "Black","Red","Green","Blue","Yellow","Magenta","Cyan","White" } },
             };
 
             var strokeStyleToolProperties = new Dictionary<string, object>

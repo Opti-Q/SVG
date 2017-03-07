@@ -49,13 +49,11 @@
     <Compile Include="Services\DefaultImageSourceProvider.cs" />
     <Compile Include="Services\EmbeddedResourceSvgSourceFactory.cs" />
     <Compile Include="Services\IImageSourceProvider.cs" />
+    <Compile Include="Services\FormsToolbarIconSizeProvider.cs" />
     <Compile Include="ToolCommandsToToolbarItemsConverter.cs" />
     <Compile Include="SKCanvasViewX.cs" />
     <Compile Include="SvgCanvasEditorView.cs" />
     <Compile Include="SvgGlEditorView.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\svg\ic_colorTool.svg" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\svg\ic_arrow_downward.svg" />
@@ -91,6 +89,9 @@
     <EmbeddedResource Include="Resources\svg\ic_zoom.svg" />
     <EmbeddedResource Include="Resources\svg\ic_zoom_100.svg" />
     <EmbeddedResource Include="Resources\svg\ic_zoom_200.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_format_color_fill.svg" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

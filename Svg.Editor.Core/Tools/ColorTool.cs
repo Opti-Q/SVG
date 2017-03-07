@@ -23,9 +23,12 @@ namespace Svg.Editor.Tools
 
         private static ISvgCachingService SvgCachingService => Engine.TryResolve<ISvgCachingService>();
 
+        private static readonly Lazy<IToolbarIconSizeProvider> Tbi = new Lazy<IToolbarIconSizeProvider>(() => Engine.TryResolve<IToolbarIconSizeProvider>());
+
         private static IFileSystem FileSystemService => Engine.Resolve<IFileSystem>();
 
         private Color _defaultSelectedColor;
+        private SizeF _iconDimensions;
 
         #endregion
 
@@ -34,6 +37,7 @@ namespace Svg.Editor.Tools
         public const string SelectedColorIndexKey = "selectedcolorindex";
         public const string SelectableColorsKey = "selectablecolors";
         public const string SelectableColorNamesKey = "selectablecolornames";
+        public const string IconDimensionsKey = "icondimensions";
 
         public string[] SelectableColors
         {
@@ -57,28 +61,6 @@ namespace Svg.Editor.Tools
             }
         }
 
-        // implementation for per-tool selected color
-        //public Color SelectedColor
-        //{
-        //    get
-        //    {
-        //        Color selectedColor;
-        //        _selectedColors.TryGetValue(_canvas.ActiveTool?.GetType(), out selectedColor);
-        //        return selectedColor ?? _defaultSelectedColor;
-        //    }
-        //    set
-        //    {
-        //        if (_canvas.ActiveTool != null && _canvas.ActiveTool.ToolType == ToolType.Create)
-        //        {
-        //            _selectedColors[_canvas.ActiveTool.GetType()] = value;
-        //        }
-        //        else
-        //        {
-        //            _defaultSelectedColor = value;
-        //        }
-        //    }
-        //}
-
         public Color SelectedColor
         {
             get { return _defaultSelectedColor; }
@@ -89,13 +71,19 @@ namespace Svg.Editor.Tools
 
         public ColorTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Color", properties, undoRedoService)
         {
-            IconName = "Svg.Editor.Forms.Resources.svg.ic_colorTool.svg";
+            IconName = "Svg.Editor.Forms.Resources.svg.ic_format_color_fill.svg";
             ToolType = ToolType.Modify;
 
             object selectedColorIndex;
             SelectedColor = Properties.TryGetValue(SelectedColorIndexKey, out selectedColorIndex)
                 ? Color.Create(SelectableColors.ElementAtOrDefault(Convert.ToInt32(selectedColorIndex)) ?? "#000000")
                 : Color.Create(SelectableColors.FirstOrDefault() ?? "#000000");
+
+            object iconDimensions;
+            if (Properties.TryGetValue("IconDimensionsKey", out iconDimensions))
+            {
+                _iconDimensions = iconDimensions as SizeF;
+            }
         }
 
         #region Overrides
@@ -116,6 +104,12 @@ namespace Svg.Editor.Tools
                         PreprocessAction = SvgProcessingUtil.ColorAction(color),
                         CustomPostFix = (key, opt) => StringifyColor(color),
                     };
+                    // global config
+                    options.ImageDimension = Tbi.Value?.GetSize();
+                    // local config
+                    if (_iconDimensions != null)
+                        options.ImageDimension = _iconDimensions;
+
                     cachingService.GetCachedPng(IconName, options);
                 }
             }
@@ -260,7 +254,7 @@ namespace Svg.Editor.Tools
                 }));
             }
 
-            public override string IconName => SvgCachingService?.GetCachedPng(Tool.IconName, new SaveAsPngOptions() { CustomPostFix = (key, op) => StringifyColor(Tool.SelectedColor) });
+            public override string IconName => SvgCachingService?.GetCachedPng(Tool.IconName, new SaveAsPngOptions() { CustomPostFix = (key, op) => StringifyColor(Tool.SelectedColor), ImageDimension = Tbi.Value?.GetSize()});
         }
 
         #endregion

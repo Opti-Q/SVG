@@ -10,6 +10,7 @@ namespace Svg.Editor.Sample.Forms.Services
         private readonly Func<string, ISvgSource> _sourceProvider;
 
         private Lazy<IFileSystem> _fs = new Lazy<IFileSystem>(() => Engine.Resolve<IFileSystem>());
+        private Lazy<IToolbarIconSizeProvider> _tbi = new Lazy<IToolbarIconSizeProvider>(() => Engine.TryResolve<IToolbarIconSizeProvider>());
 
         public SvgCachingService()
         {
@@ -27,8 +28,9 @@ namespace Svg.Editor.Sample.Forms.Services
             // apply changes to svg
             options.PreprocessAction?.Invoke(document);
 
-            var dimension = GetDimension(options);
-            
+            var dimension = GetDimension(options) ?? document.CalculateDocumentBounds().Size;
+            options.ImageDimension = dimension;
+
             // save svg as png
             using (var bmp = Engine.Factory.CreateBitmap((int)dimension.Width, (int)dimension.Height))
             {
@@ -66,13 +68,15 @@ namespace Svg.Editor.Sample.Forms.Services
             var fs = _fs.Value;
             var dim = GetDimension(options);
             fs.EnsureDirectoryExists(fs.PathCombine(fs.GetDefaultStoragePath(), "SvgCache"));
-            var filename = options.NamingConvention(svgFilePath, options) ?? $"{Path.GetFileNameWithoutExtension(svgFilePath)}_{(int)dim.Width}px_{(int)dim.Height}px.png";
+            var name = Path.GetFileNameWithoutExtension(svgFilePath).ToLower().Replace(".", "_");
+            var filename = options.NamingConvention(svgFilePath, options) ?? $"{name}_{(int)dim.Width}px_{(int)dim.Height}px.png";
+
             return fs.PathCombine(fs.GetDefaultStoragePath(), "SvgCache", filename);
         }
 
-        private static SizeF GetDimension(SaveAsPngOptions options)
+        private SizeF GetDimension(SaveAsPngOptions options)
         {
-            return options.ImageDimension ?? SizeF.Create(120, 120);
+            return options.ImageDimension ?? _tbi.Value?.GetSize();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Svg.Editor.Forms.Services;
+using Svg.Editor.Interfaces;
 using Svg.Editor.Tools;
 using Xamarin.Forms;
 
@@ -10,12 +11,8 @@ namespace Svg.Editor.Forms
 {
     public class ToolCommandsToToolbarItemsConverter : IValueConverter
     {
-        private IImageSourceProvider GetImageProvider()
-        {
-            var isp = Engine.TryResolve<IImageSourceProvider>();
-
-            return isp ?? new DefaultImageSourceProvider();
-        }
+        private Lazy<IImageSourceProvider> _imageSourceProvider = new Lazy<IImageSourceProvider>(() => Engine.TryResolve<IImageSourceProvider>() ?? new DefaultImageSourceProvider());
+        private Lazy<IToolbarIconSizeProvider> _toolbarIconSizeProvider = new Lazy<IToolbarIconSizeProvider>(() => Engine.TryResolve<IToolbarIconSizeProvider>());
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -27,7 +24,8 @@ namespace Svg.Editor.Forms
                 shownActions = 3;
             }
 
-            var imageProvider = GetImageProvider();
+            var imageProvider = _imageSourceProvider.Value;
+            var iconDimension = _toolbarIconSizeProvider.Value?.GetSize();
 
             var commandLists = (value as IEnumerable<IEnumerable<IToolCommand>>);
             var items = new List<ToolbarItem>();
@@ -38,7 +36,7 @@ namespace Svg.Editor.Forms
                     continue;
 
                 var itemOrder = items.Count >= shownActions ? ToolbarItemOrder.Secondary : ToolbarItemOrder.Primary;
-
+                
                 // single command => show as toolbaritem
                 if (cmds.Length == 1)
                 {
@@ -47,7 +45,7 @@ namespace Svg.Editor.Forms
                     {
                         Text = command.Name,
                         AutomationId = command.Name,
-                        Icon = imageProvider.GetImage(command.IconName),
+                        Icon = imageProvider.GetImage(command.IconName, iconDimension),
                         Command = new Command(() => command.Execute(null), () => command.CanExecute(null)),
                         Order = itemOrder
                     });
@@ -60,7 +58,7 @@ namespace Svg.Editor.Forms
                     {
                         Text = cmd.GroupName,
                         AutomationId = cmd.GroupName,
-                        Icon = imageProvider.GetImage(cmd.GroupIconName),
+                        Icon = imageProvider.GetImage(cmd.GroupIconName, iconDimension),
                         Command = new Command(async () =>
                         {
                             var cs = cmds;
