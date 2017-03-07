@@ -154,7 +154,8 @@ namespace Svg.Editor.Tools
                 var m = renderer.Graphics.Transform.Clone();
                 m.Invert();
                 renderer.Graphics.Concat(m);
-                
+
+                BluePen.StrokeWidth = 5;
                 renderer.DrawRectangle(_selectionRectangle, BluePen);
 
                 renderer.Graphics.Restore();
@@ -164,9 +165,10 @@ namespace Svg.Editor.Tools
             foreach (var element in ws.SelectedElements)
             {
                 renderer.Graphics.Save();
-
+                
                 // we draw a selection adorner around all elements
                 // as the canvas is already translated and scaled, we just need the plai boundingbox (as poopsed to transformed one using element.GetBoundingBox(ws.GetCanvasTransformationMatrix()))
+                BluePen.StrokeWidth = 5 / ws.ZoomFactor;
                 renderer.DrawRectangle(element.GetBoundingBox(), BluePen);
 
                 renderer.Graphics.Restore();

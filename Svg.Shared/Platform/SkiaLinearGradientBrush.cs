@@ -91,7 +91,7 @@ namespace Svg.Platform
             if(_shader != null)_shader.Dispose();
 
             var colors = InterpolationColors.Colors.Select(c => new SKColor(c.R, c.G, c.B, c.A)).ToArray();
-            var positions = InterpolationColors.Positions.Length == 0 ? null : InterpolationColors.Positions; // see: https://developer.xamarin.com/api/member/SkiaSharp.SKShader.CreateLinearGradient/p/SkiaSharp.SKPoint/SkiaSharp.SKPoint/SkiaSharp.SKColor[]/System.Single[]/SkiaSharp.SKShaderTileMode/
+            var positions = (InterpolationColors.Positions?.Length >= 0) ? InterpolationColors.Positions : null;  // see: https://developer.xamarin.com/api/member/SkiaSharp.SKShader.CreateLinearGradient/p/SkiaSharp.SKPoint/SkiaSharp.SKPoint/SkiaSharp.SKColor[]/System.Single[]/SkiaSharp.SKShaderTileMode/
             _shader = SKShader.CreateLinearGradient(new SKPoint(Start.X, Start.Y), new SKPoint(End.X, End.Y), colors, positions, tileMode);
             
             paint.Shader = _shader;

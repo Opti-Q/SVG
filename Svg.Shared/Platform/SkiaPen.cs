@@ -155,7 +155,7 @@ namespace Svg.Platform
             set { _brush.Paint.TextSize = value; }
         }
 
-        public float StrokeWidth
+        public override float StrokeWidth
         {
             get { return _brush.Paint.StrokeWidth; }
             set { _brush.Paint.StrokeWidth = value; }

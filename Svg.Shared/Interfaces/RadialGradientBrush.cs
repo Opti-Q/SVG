@@ -5,7 +5,7 @@ using Svg.Interfaces;
 
 namespace Svg.Shared.Interfaces
 {
-    public interface RadialGradientBrush
+    public interface RadialGradientBrush : Brush
     {
         ColorBlend InterpolationColors { get; set; }
         PointF Center { get; set; }

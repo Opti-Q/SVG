@@ -11,6 +11,7 @@ namespace Svg
         public abstract float MiterLimit { get; set; }
         public abstract LineCap StartCap { get; set; }
         public abstract LineCap EndCap { get; set; }
+        public abstract float StrokeWidth { get; set; }
         public abstract void Dispose();
     }
 }

@@ -314,11 +314,13 @@ namespace Svg.Editor.Tools
             if (_currentLine != null)
             {
                 renderer.Graphics.Save();
-
-                var radius = (int) (MaxPointerDistance / ws.ZoomFactor);
+                
+                var radius = (float)MaxPointerDistance / 4 / ws.ZoomFactor;
+                var halfRadius = (float)radius / 2;
                 var points = _currentLine.GetTransformedLinePoints();
-                renderer.DrawCircle(points[0].X - (radius >> 1), points[0].Y - (radius >> 1), radius, BluePen);
-                renderer.DrawCircle(points[1].X - (radius >> 1), points[1].Y - (radius >> 1), radius, BluePen);
+                renderer.FillCircle(points[0].X - halfRadius, points[0].Y - halfRadius, radius, BlueBrush);
+                renderer.FillCircle(points[1].X - halfRadius, points[1].Y - halfRadius, radius, BlueBrush);
+
 
                 renderer.Graphics.Restore();
             }
