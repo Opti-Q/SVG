@@ -26,6 +26,7 @@ namespace Svg.Editor.iOS
         private readonly Dictionary<UITouch, PointF> _previousPointerPositions = new Dictionary<UITouch, PointF>();
         private float _scaleFactor;
         private float _previousRotation = 0;
+        private float _scaleStart;
 
         public TouchInputEventDetector(UIView owner)
         {
@@ -54,18 +55,25 @@ namespace Svg.Editor.iOS
         private void OnZoom(UIPinchGestureRecognizer r)
         {
             var state = r.State;
-            
+
+            var focus = r.LocationInView(_owner).ToPointF()*_scaleFactor;
+
             if (state == UIGestureRecognizerState.Began)
             {
-                var f = _previousPointerPositions.Values.GetFocus() * _scaleFactor;
-                var s = new ScaleEvent(ScaleStatus.Start, (float) r.Scale / _scaleFactor, f.X, f.Y);
+                _scaleStart = (float) r.Scale/_scaleFactor;
+
+
+                var s = new ScaleEvent(ScaleStatus.Start, 1, focus.X, focus.Y);
                 System.Diagnostics.Debug.WriteLine($"Zoom Begin: {s}");
                 _gestureSubject.OnNext(s);
             }
             else if (state == UIGestureRecognizerState.Changed)
             {
-                var f = _previousPointerPositions.Values.GetFocus() * _scaleFactor;
-                var c = new ScaleEvent(ScaleStatus.Scaling, (float) r.Scale / _scaleFactor, f.X, f.Y);
+                var scale = (float) r.Scale/_scaleFactor;
+                var diff = 1 - _scaleStart;
+                scale += diff;
+
+                var c = new ScaleEvent(ScaleStatus.Scaling, scale, focus.X, focus.Y);
                 System.Diagnostics.Debug.WriteLine($"Zooming: {c}");
                 _gestureSubject.OnNext(c);
             }
@@ -73,8 +81,11 @@ namespace Svg.Editor.iOS
                 state == UIGestureRecognizerState.Ended ||
                 state ==UIGestureRecognizerState.Recognized)
             {
-                var f = _previousPointerPositions.Values.GetFocus() * _scaleFactor;
-                var e = new ScaleEvent(ScaleStatus.End, (float)r.Scale / _scaleFactor, f.X, f.Y);
+                var scale = (float) r.Scale/_scaleFactor;
+                var diff = 1 - _scaleStart;
+                scale += diff;
+
+                var e = new ScaleEvent(ScaleStatus.End, scale, focus.X, focus.Y);
                 System.Diagnostics.Debug.WriteLine($"Zoom End: {e}");
                 _gestureSubject.OnNext(e);
             }
