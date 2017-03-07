@@ -108,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="UwpGestureRecognizer.cs" />
+    <Compile Include="UWPToolbarIconSizeProvider.cs" />
     <EmbeddedResource Include="Properties\Svg.Editor.UWP.rd.xml" />
   </ItemGroup>
   <ItemGroup>

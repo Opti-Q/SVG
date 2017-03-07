@@ -21,7 +21,6 @@ namespace Svg.Editor.Sample.Forms
             Engine.Register<IMarkerOptionsInputService, MarkerOptionsInputService>(() => new MarkerOptionsInputService());
             Engine.Register<IStrokeStyleOptionsInputService, StrokeStyleOptionsInputService>(() => new StrokeStyleOptionsInputService());
             Engine.Register<ITextInputService, TextInputService>(() => new TextInputService());
-            Engine.RegisterSingleton<IToolbarIconSizeProvider, FormsToolBarIconSizeProvider>(() => new FormsToolBarIconSizeProvider());
 
             Engine.Resolve<ISvgCachingService>().Clear();
 

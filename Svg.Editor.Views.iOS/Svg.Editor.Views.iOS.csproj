@@ -45,6 +45,7 @@
     <Compile Include="SvgCanvasEditorView.cs" />
     <Compile Include="SvgCanvasGLEditorView.cs" />
     <Compile Include="TouchInputEventDetector.cs" />
+    <Compile Include="TouchToolbarIconSizeProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />

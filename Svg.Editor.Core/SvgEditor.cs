@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Svg.Editor.Interfaces;
 using Svg.Editor.Services;
 using Svg.Editor.UndoRedo;
+using Svg.Interfaces;
 
 namespace Svg.Editor
 {
@@ -40,6 +41,7 @@ namespace Svg.Editor
                 }
 
                 Engine.RegisterSingleton<IUndoRedoService, UndoRedoService>(() => new UndoRedoService());
+                Engine.Register<ISvgSourceFactory, EmbeddedResourceSvgSourceFactory>(() => new EmbeddedResourceSvgSourceFactory());
 
                 _initialized = true;
             }

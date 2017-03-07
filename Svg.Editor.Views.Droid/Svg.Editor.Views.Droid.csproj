@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AndroidToolbarIconSizeProvider.cs" />
     <Compile Include="Services\AndroidContextProvider.cs" />
     <Compile Include="Services\AndroidStrokeStyleOptionsInputService.cs" />
     <Compile Include="Services\AndroidMarkerOptionsInputService.cs" />

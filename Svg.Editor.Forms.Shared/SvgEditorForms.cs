@@ -24,8 +24,8 @@ namespace Svg.Editor.Forms
 
                 SvgPlatform.Init();
                 SvgEditor.Init();
+                SvgEditorViews.Init();
 
-                Engine.Register<ISvgSourceFactory, EmbeddedResourceSvgSourceFactory>(() => new EmbeddedResourceSvgSourceFactory());
 
                 _initialized = true;
             }
