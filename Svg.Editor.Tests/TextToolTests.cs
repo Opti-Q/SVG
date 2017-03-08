@@ -192,6 +192,9 @@ namespace Svg.Editor.Tests
             using (var ms = new MemoryStream())
             {
                 Canvas.Document.Write(ms);
+
+                var str = System.Text.Encoding.UTF8.GetString(ms.ToArray());
+
                 ms.Seek(0, SeekOrigin.Begin);
 
                 var loadedDoc = SvgDocument.Open<SvgDocument>(ms);

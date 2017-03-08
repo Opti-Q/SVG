@@ -68,6 +68,9 @@
     <Content Include="Assets\Bends_01.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\nested_transformed_text.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Svg.Win\Svg.Win.csproj">

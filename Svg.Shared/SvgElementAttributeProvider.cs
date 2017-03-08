@@ -60,7 +60,7 @@ namespace Svg
     {
         internal static List<IPropertyDescriptor> GetProperties(Type elementType, string attributeName = null)
         {
-            var result = new List<IPropertyDescriptor>();
+            var result = new Dictionary<string, IPropertyDescriptor>();
 
             var ti = elementType.GetTypeInfo();
             var parent = ti;
@@ -91,13 +91,19 @@ namespace Svg
                 foreach (var p in properties)
                 {
                     var converter = Engine.TypeConverterRegistry.Get(p.PropertyType);
-                    result.Add(new PropertyDescriptor(p, converter, p.GetCustomAttributes().OfType<SvgAttributeAttribute>().Single()));
+                    var attribute = p.GetCustomAttributes().OfType<SvgAttributeAttribute>().Single();
+                    var key = attribute.NamespaceAndName;
+                    // make sure an overridden property is not added twice here!
+                    if (!result.ContainsKey(key))
+                    {
+                        result.Add(key, new PropertyDescriptor(p, converter, attribute));
+                    }
                 }
 
                 parent = parent.BaseType?.GetTypeInfo();
             }
 
-            return result;
+            return result.Values.ToList();
         }
         
         internal static IEnumerable<EventInfo> GetEvents(Type type)

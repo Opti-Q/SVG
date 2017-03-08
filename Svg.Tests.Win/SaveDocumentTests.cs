@@ -216,6 +216,35 @@ namespace Svg.Tests.Win
             Assert.True(doc2.Children.First(c => c.ElementName == "sodipodi:namedview").Children.Any(c => c.ElementName == "inkscape:grid"));
         }
 
+        [Test]
+        [TestCase("nested_transformed_text.svg")]
+        public void CanLoad_Save_AndReload_Document(string testFile)
+        {
+            var fileLoader = Engine.Resolve<IFileLoader>();
+            var document = fileLoader.Load(testFile);
+            SvgDocument document2 = null;
+
+            var saved1 = string.Empty;
+            var saved2 = string.Empty;
+
+            // Act
+            using (var ms = new MemoryStream())
+            {
+                document.Write(ms);
+                saved1 = Encoding.UTF8.GetString(ms.ToArray());
+                ms.Seek(0, SeekOrigin.Begin);
+                document2 = SvgDocument.Open<SvgDocument>(ms);
+            }
+
+            using (var ms = new MemoryStream())
+            {
+                document2.Write(ms);
+                saved2 = Encoding.UTF8.GetString(ms.ToArray());
+            }
+
+            Assert.AreEqual(saved1, saved2);
+        }
+
         private static void AssertInheritedAttribute(SvgRectangle r, string attributeName)
         {
             string val;

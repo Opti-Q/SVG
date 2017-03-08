@@ -234,7 +234,8 @@ namespace Svg
             return false;
         }
 
-
+        private static readonly Dictionary<string, string> _namespaceCaches = SvgAttributeAttribute.Namespaces.ToDictionary(x => x.Key, x => x.Value, StringComparer.OrdinalIgnoreCase);
+        private static readonly Dictionary<string, string> _namespaceUriCaches = SvgAttributeAttribute.Namespaces.ToDictionary(x => x.Value, x => x.Key, StringComparer.OrdinalIgnoreCase);
 
         public void SetPropertyValue(SvgElement element, string attributeName, string attributeValue, SvgDocument document)
         {
@@ -294,8 +295,13 @@ namespace Svg
             }
             else
             {
+                // ignore if it is a namespace attribute
+                if (_namespaceCaches.ContainsKey(attributeName) || _namespaceUriCaches.ContainsKey(attributeValue))
+                {
+                    // ignore namespaces
+                }
                 //check for namespace declaration in svg element
-                if (string.Equals(element.ElementName, "svg", StringComparison.OrdinalIgnoreCase))
+                else if (string.Equals(element.ElementName, "svg", StringComparison.OrdinalIgnoreCase))
                 {
                     if (string.Equals(attributeName, "xmlns", StringComparison.OrdinalIgnoreCase)
                         || string.Equals(attributeName, "xlink", StringComparison.OrdinalIgnoreCase)

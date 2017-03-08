@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using Svg.Transforms;
 using System.Reflection;
@@ -18,6 +20,7 @@ namespace Svg
         public const int StyleSpecificity_InlineStyle = 1 << 16;
 
         //optimization
+        [DebuggerDisplay("{Attribute}")]
         public class PropertyAttributeTuple
         {
             //public PropertyDescriptor Property;
@@ -71,7 +74,6 @@ namespace Svg
         {
             foreach (var s in _styles)
             {
-
                 SvgElementFactory.SetPropertyValue(this, s.Key, s.Value.Last().Value, OwnerDocument);
             }
             _styles = null;
