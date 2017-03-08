@@ -17,8 +17,8 @@ namespace Svg.Editor.Forms.UWP
             base.OnElementChanged(e);
 
             _gestureRecognizer = new UwpGestureRecognizer(Control);
+            _gestureRecognizer.UserInputEvents.Subscribe(async uie => await Element.DrawingCanvas.OnEvent(uie));
             Element.DrawingCanvas.GestureRecognizer = _gestureRecognizer;
-            _gestureRecognizer.DetectedEvents.Subscribe(async uie => await Element.DrawingCanvas.OnEvent(uie));
         }
 
         protected override void Dispose(bool disposing)

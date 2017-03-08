@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Concurrency;
-using System.Text;
+﻿using System.Reactive.Concurrency;
 using System.Threading;
-using System.Threading.Tasks;
 using Svg.Editor.Interfaces;
 using Svg.Editor.Services;
 using Svg.Editor.UndoRedo;

@@ -18,7 +18,12 @@ namespace Svg.Editor.Tests
         [SetUp]
         public virtual void SetUp()
         {
+            SvgPlatform.Init();
+            SvgEditor.Init();
+
             Engine.Register<SchedulerProvider, SchedulerProvider>(() => SchedulerProvider);
+            Engine.RegisterSingleton<IGestureRecognizer, ReactiveGestureRecognizer>(() => new ReactiveGestureRecognizer(SchedulerProvider));
+            Engine.Register<IFileLoader, FileLoader>(() => new FileLoader());
 
             Canvas = new SvgDrawingCanvas();
         }

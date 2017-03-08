@@ -5,7 +5,6 @@ using Android.Content;
 using Android.Views;
 using Svg.Editor.Events;
 using Svg.Editor.Interfaces;
-using Svg.Editor.Services;
 using Svg.Interfaces;
 
 namespace Svg.Editor.Droid.Services
@@ -24,7 +23,7 @@ namespace Svg.Editor.Droid.Services
         private float _pointerDownY;
         private readonly Subject<UserInputEvent> _detectedGestures = new Subject<UserInputEvent>();
 
-        public IObservable<UserInputEvent> DetectedGestures => _detectedGestures.AsObservable();
+        public IObservable<UserInputEvent> UserInputEvents => _detectedGestures.AsObservable();
 
         public AndroidInputEventDetector(Context ctx)
         {
@@ -33,10 +32,6 @@ namespace Svg.Editor.Droid.Services
             _scaleDetector = new ScaleGestureDetector(ctx, scaleListener);
             _rotateDetector = new RotateDetector();
             _rotateDetector.OnRotate += (sender, ev) => _detectedGestures.OnNext(ev);
-
-
-            var gestureRecognizer = Engine.Resolve<IGestureRecognizer>() as ReactiveGestureRecognizer;
-            gestureRecognizer?.SubscribeTo(_detectedGestures.AsObservable());
         }
 
         public void OnTouch(MotionEvent ev)

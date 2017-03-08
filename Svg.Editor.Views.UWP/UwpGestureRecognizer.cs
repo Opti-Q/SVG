@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.UI.Input;
@@ -14,12 +15,17 @@ using Svg.Interfaces;
 
 namespace Svg.Editor.Views.UWP
 {
-    public class UwpGestureRecognizer : IGestureRecognizer, IDisposable
+    public class UwpGestureRecognizer : IGestureRecognizer, IInputEventDetector, IDisposable
     {
         private readonly ManipulationInputProcessor _inputProcessor;
 
+        public void OnNext(UserInputEvent e)
+        {
+            // do nothing - everything is handled in the manipulationinputprocessor directly
+        }
+
         public IObservable<UserGesture> RecognizedGestures => _inputProcessor.RecognizedGestures;
-        public IObservable<UserInputEvent> DetectedEvents => _inputProcessor.DetectedEvents;
+        public IObservable<UserInputEvent> UserInputEvents => _inputProcessor.UserInputEvents;
 
         public UwpGestureRecognizer(UIElement control)
         {
@@ -31,6 +37,7 @@ namespace Svg.Editor.Views.UWP
         {
             _inputProcessor.Dispose();
         }
+
     }
 
     internal class ManipulationInputProcessor : IDisposable
@@ -47,7 +54,7 @@ namespace Svg.Editor.Views.UWP
         private CompositeTransform _deltaTransform;
 
         private readonly Subject<UserGesture> _gesturesSubject = new Subject<UserGesture>();
-        private readonly Subject<UserInputEvent> _eventsSubject = new Subject<UserInputEvent>();
+        private readonly Subject<UserInputEvent> _inputEventSubject = new Subject<UserInputEvent>();
         private Point _startPoint;
         private Point _currentPoint;
 
@@ -55,7 +62,7 @@ namespace Svg.Editor.Views.UWP
         private static float PixelDensityFactor => DisplayInformation.GetForCurrentView().LogicalDpi / 96;
 
         public IObservable<UserGesture> RecognizedGestures => _gesturesSubject.AsObservable();
-        public IObservable<UserInputEvent> DetectedEvents => _eventsSubject.AsObservable();
+        public IObservable<UserInputEvent> UserInputEvents => _inputEventSubject.AsObservable();
 
         public ManipulationInputProcessor(GestureRecognizer gestureRecognizer, UIElement referenceFrame)
         {
@@ -91,7 +98,7 @@ namespace Svg.Editor.Views.UWP
             var pointerPoint = args.GetCurrentPoint(_element);
             var wheelDelta = pointerPoint.Properties.MouseWheelDelta;
 
-            _eventsSubject.OnNext(new ScaleEvent(ScaleStatus.Scaling, 1 + wheelDelta / MaxMouseWheelStep, (float) pointerPoint.Position.X, (float) pointerPoint.Position.Y));
+            _inputEventSubject.OnNext(new ScaleEvent(ScaleStatus.Scaling, 1 + wheelDelta / MaxMouseWheelStep, (float) pointerPoint.Position.X, (float) pointerPoint.Position.Y));
         }
 
         private void ElementOnDoubleTapped(object sender, DoubleTappedRoutedEventArgs args)
@@ -141,7 +148,7 @@ namespace Svg.Editor.Views.UWP
             var pointerPosition = pointerPoint.Position;
             var pointerPointF = PointF.Create((float) pointerPosition.X, (float) pointerPosition.Y);
 
-            _eventsSubject.OnNext(new PointerEvent(EventType.PointerDown, pointerPointF, pointerPointF, pointerPointF, 1));
+            _inputEventSubject.OnNext(new PointerEvent(EventType.PointerDown, pointerPointF, pointerPointF, pointerPointF, 1));
 
             _currentPoint = _startPoint = pointerPosition;
         }
@@ -162,7 +169,7 @@ namespace Svg.Editor.Views.UWP
             var startPointF = PointF.Create((float) _startPoint.X, (float) _startPoint.Y);
             var delta = currentPointF - previousPointF;
             if (pointerPoint.Properties.IsMiddleButtonPressed)
-                _eventsSubject.OnNext(new MoveEvent(startPointF, previousPointF, currentPointF, delta, 2));
+                _inputEventSubject.OnNext(new MoveEvent(startPointF, previousPointF, currentPointF, delta, 2));
 
             // Feed the set of points into the gesture recognizer as a move event
             if (pointerPoint.Properties.IsLeftButtonPressed)
@@ -179,7 +186,7 @@ namespace Svg.Editor.Views.UWP
             // Release the pointer
             _element.ReleasePointerCapture(args.Pointer);
 
-            _eventsSubject.OnNext(new PointerEvent(EventType.PointerUp, PointF.Empty, PointF.Empty, PointF.Empty, 0));
+            _inputEventSubject.OnNext(new PointerEvent(EventType.PointerUp, PointF.Empty, PointF.Empty, PointF.Empty, 0));
         }
 
         // Route the pointer canceled event to the gesture recognizer.

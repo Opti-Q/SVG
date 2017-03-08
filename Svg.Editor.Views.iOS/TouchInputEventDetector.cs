@@ -48,9 +48,6 @@ namespace Svg.Editor.iOS
             _owner.AddGestureRecognizer(_rotationRecognizer);
 
             _scaleFactor = (float)UIScreen.MainScreen.Scale;
-
-            var gestureRecognizer = Engine.Resolve<IGestureRecognizer>() as ReactiveGestureRecognizer;
-            gestureRecognizer?.SubscribeTo(_gestureSubject.AsObservable());
         }
 
         private void OnZoom(UIPinchGestureRecognizer r)
@@ -137,7 +134,7 @@ namespace Svg.Editor.iOS
             return (float)(angle * (180.0 / Math.PI));
         }
 
-        public IObservable<UserInputEvent> DetectedGestures => _gestureSubject.AsObservable();
+        public IObservable<UserInputEvent> UserInputEvents => _gestureSubject.AsObservable();
 
         internal void OnBegin(UITouch[] events)
         {

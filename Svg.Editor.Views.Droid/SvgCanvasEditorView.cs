@@ -1,6 +1,4 @@
 using System;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using Android.App;
 using Android.Content;
 using Android.Graphics;
@@ -9,7 +7,6 @@ using Android.Views;
 using SkiaSharp;
 using SkiaSharp.Views.Android;
 using Svg.Editor.Droid.Services;
-using Svg.Editor.Events;
 using Svg.Editor.Interfaces;
 using Svg.Editor.Services;
 using Svg.Editor.Shared;
@@ -21,7 +18,6 @@ namespace Svg.Editor.Views.Droid
         private Android.Graphics.Bitmap _bitmap;
         private AndroidInputEventDetector _detector;
         private ISvgDrawingCanvas _drawingCanvas;
-        private readonly Subject<UserInputEvent> _detectedGestures = new Subject<UserInputEvent>();
 
         public bool IsFormsMode { get; set; }
 
@@ -34,8 +30,7 @@ namespace Svg.Editor.Views.Droid
                 if (value == null) return;
                 _detector?.Dispose();
                 _detector = new AndroidInputEventDetector(Context);
-                _detector.DetectedGestures.Subscribe(async uie => await DrawingCanvas.OnEvent(uie));
-                _detector.DetectedGestures.Subscribe(_detectedGestures.OnNext);
+                _detector.UserInputEvents.Subscribe(async uie => await DrawingCanvas.OnEvent(uie));
 
                 RegisterCallbacks();
             }

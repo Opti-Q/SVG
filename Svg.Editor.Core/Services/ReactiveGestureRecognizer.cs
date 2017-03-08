@@ -17,11 +17,17 @@ namespace Svg.Editor.Services
     public class ReactiveGestureRecognizer : IDisposable, IGestureRecognizer
     {
         private readonly Subject<UserGesture> _recognizedGestures = new Subject<UserGesture>();
+        private readonly Subject<UserInputEvent> _detectedInputEvents = new Subject<UserInputEvent>();
         private readonly IDictionary<string, IDisposable> _subscriptions = new Dictionary<string, IDisposable>();
         private readonly IScheduler _mainScheduler;
         private readonly IScheduler _backgroundScheduler;
 
         #region Public properties
+
+        public void OnNext(UserInputEvent e)
+        {
+            _detectedInputEvents.OnNext(e);
+        }
 
         /// <summary>
         /// Observable for recognized gestures.
@@ -61,9 +67,11 @@ namespace Svg.Editor.Services
 
             _mainScheduler = schedulerProvider.MainScheduer;
             _backgroundScheduler = schedulerProvider.BackgroundScheduler;
+
+            SubscribeTo(_detectedInputEvents);
         }
 
-        public void SubscribeTo(IObservable<UserInputEvent> detectedInputEvents)
+        private void SubscribeTo(IObservable<UserInputEvent> detectedInputEvents)
         {
             if (detectedInputEvents == null) throw new ArgumentNullException(nameof(detectedInputEvents));
 

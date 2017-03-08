@@ -7,9 +7,9 @@ namespace Svg.Editor.Tests
     {
         private readonly AssetManager _assets;
 
-        public FileLoader(AssetManager assets)
+        public FileLoader()
         {
-            _assets = assets;
+            _assets = Android.App.Application.Context.Assets;
         }
 
         public SvgDocument Load(string fileName)

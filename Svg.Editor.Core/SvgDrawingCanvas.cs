@@ -5,6 +5,8 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -35,6 +37,10 @@ namespace Svg.Editor
         private bool _documentIsDirty;
         private PointF _zoomFocus;
         private IDisposable _onGestureToken;
+        private IGestureRecognizer _gestureRecognizer;
+
+        private Subject<string> _propertyChangedSubject = new Subject<string>();
+
         private IUndoRedoService UndoRedoService { get; }
 
         #endregion
@@ -119,7 +125,6 @@ namespace Svg.Editor
         public RectangleF Constraints { get; set; }
 
         public ConstraintsMode ConstraintsMode { get; set; }
-
         /// <summary>
         /// If enabled, adds a DebugTool that brings some helpful visualizations
         /// </summary>
@@ -167,11 +172,13 @@ namespace Svg.Editor
 
         public IGestureRecognizer GestureRecognizer
         {
+            get { return _gestureRecognizer; }
             set
             {
                 _onGestureToken?.Dispose();
                 if (value == null) return;
-                _onGestureToken = value.RecognizedGestures.Subscribe(async g => await OnGesture(g));
+                _gestureRecognizer = value;
+                _onGestureToken = _gestureRecognizer.RecognizedGestures.Subscribe(async g => await OnGesture(g));
             }
         }
 
@@ -203,6 +210,8 @@ namespace Svg.Editor
             }
 
             _tools.CollectionChanged += OnToolsChanged;
+
+            _propertyChangedSubject.Throttle(TimeSpan.FromMilliseconds(250)).Subscribe(OnPropertyChanged);
         }
 
         /// <summary>
@@ -212,6 +221,9 @@ namespace Svg.Editor
         public async Task OnEvent(UserInputEvent ev)
         {
             await EnsureInitialized();
+
+            // call gesture recognizer first
+            GestureRecognizer?.OnNext(ev);
 
             foreach (var tool in Tools.OrderBy(t => t.InputOrder))
             {
@@ -741,13 +753,12 @@ namespace Svg.Editor
         {
             CanvasInvalidated?.Invoke(this, EventArgs.Empty);
         }
-
+        
         public void FireToolCommandsChanged()
         {
             ResetToolCommands();
-
-            //ToolCommandsChanged?.Invoke(this, EventArgs.Empty);
-            OnPropertyChanged(nameof(ToolCommands));
+            
+            _propertyChangedSubject.OnNext(nameof(ToolCommands));
         }
 
         public void Dispose()
@@ -918,6 +929,8 @@ namespace Svg.Editor
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
+            System.Diagnostics.Debug.WriteLine($"Propertychanged: {propertyName}");
+
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 

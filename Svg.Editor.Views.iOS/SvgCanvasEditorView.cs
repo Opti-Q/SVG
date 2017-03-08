@@ -29,8 +29,8 @@ namespace Svg.Editor.iOS
                 if (value == null) return;
                 _detector?.Dispose();
                 _detector = new TouchInputEventDetector(this);
-                _detector.DetectedGestures.Subscribe(async uie => await DrawingCanvas.OnEvent(uie));
-                _detector.DetectedGestures.Subscribe(_detectedGestures.OnNext);
+                _detector.UserInputEvents.Subscribe(async uie => await DrawingCanvas.OnEvent(uie));
+                _detector.UserInputEvents.Subscribe(_detectedGestures.OnNext);
             }
         }
         
