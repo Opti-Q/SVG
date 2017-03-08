@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using Svg.Editor.Shared;
 using Xamarin.Forms.Platform.Android;
 
 using SKFormsView = SkiaSharp.Views.Forms.SKCanvasViewX;

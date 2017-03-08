@@ -20,7 +20,7 @@ namespace Svg.Editor.Tests
         private MockStrokeStyleOptionsInputService _mockStrokeStyle;
 
         [SetUp]
-        public override void SetUp()
+        protected override void SetupOverride()
         {
             var textToolProperties = new Dictionary<string, object>
             {
@@ -63,7 +63,6 @@ namespace Svg.Editor.Tests
             _mockStrokeStyle = new MockStrokeStyleOptionsInputService();
             Engine.Register<IStrokeStyleOptionsInputService, MockStrokeStyleOptionsInputService>(() => _mockStrokeStyle);
 
-            base.SetUp();
         }
 
         [Test]
@@ -440,16 +439,6 @@ namespace Svg.Editor.Tests
 
             // Assert
             Assert.AreEqual(stroke, ellipse.StrokeDashArray?.ToString());
-        }
-
-        private class MockTextInputService : ITextInputService
-        {
-            public Func<string, string, TextTool.TextProperties> F { get; set; } = (x, y) => null;
-
-            public Task<TextTool.TextProperties> GetUserInput(string title, string textValue, IEnumerable<string> textSizeOptions, int textSizeSelected)
-            {
-                return Task.FromResult(F(title, textValue));
-            }
         }
 
         [Test]

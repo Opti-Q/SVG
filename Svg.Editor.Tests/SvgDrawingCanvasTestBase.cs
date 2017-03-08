@@ -16,7 +16,7 @@ namespace Svg.Editor.Tests
         protected SchedulerProvider SchedulerProvider { get; } = new SchedulerProvider(CurrentThreadScheduler.Instance, new TestScheduler());
 
         [SetUp]
-        public virtual void SetUp()
+        public void SetUp()
         {
             SvgPlatform.Init();
             SvgEditor.Init();
@@ -25,7 +25,14 @@ namespace Svg.Editor.Tests
             Engine.RegisterSingleton<IGestureRecognizer, ReactiveGestureRecognizer>(() => new ReactiveGestureRecognizer(SchedulerProvider));
             Engine.Register<IFileLoader, FileLoader>(() => new FileLoader());
 
+            SetupOverride();
+
             Canvas = new SvgDrawingCanvas();
+        }
+
+        protected virtual void SetupOverride()
+        {
+            
         }
 
         [TearDown]

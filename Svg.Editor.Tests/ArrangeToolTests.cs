@@ -12,15 +12,12 @@ namespace Svg.Editor.Tests
     public class ArrangeToolTests : SvgDrawingCanvasTestBase
     {
         [SetUp]
-        public override void SetUp()
+        protected override void SetupOverride()
         {
-
             Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
             {
                 () => new ArrangeTool(Engine.Resolve<IUndoRedoService>()), 
             }));
-
-            base.SetUp();
         }
 
         [Test]

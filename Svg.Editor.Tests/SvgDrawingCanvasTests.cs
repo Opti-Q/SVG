@@ -16,7 +16,7 @@ namespace Svg.Editor.Tests
         private MockTextInputService _textMock;
 
         [SetUp]
-        public override void SetUp()
+        protected override void SetupOverride()
         {
             // set up tools
             var textToolProperties = new Dictionary<string, object>
@@ -42,8 +42,7 @@ namespace Svg.Editor.Tests
             // register mock text input service for text tool
             _textMock = new MockTextInputService();
             Engine.Register<ITextInputService, MockTextInputService>(() => _textMock);
-
-            base.SetUp();
+            
         }
 
         [Test]

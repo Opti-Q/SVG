@@ -18,7 +18,7 @@ namespace Svg.Editor.Tests
     {
         private MockTextInputService _textMock;
 
-        public override void SetUp()
+        protected override void SetupOverride()
         {
             Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
             {
@@ -33,9 +33,7 @@ namespace Svg.Editor.Tests
             // register mock text input service
             _textMock = new MockTextInputService();
             Engine.Register<ITextInputService, MockTextInputService>(() => _textMock);
-
-            // set up canvas
-            base.SetUp();
+            
         }
 
         [Test]
@@ -171,7 +169,7 @@ namespace Svg.Editor.Tests
             var child = d.Children.OfType<SvgVisualElement>().Single(c => c.Visible && c.Displayable);
             Canvas.ScreenWidth = 800;
             Canvas.ScreenHeight = 500;
-            Canvas.AddItemInScreenCenter(child);
+            await Canvas.AddItemInScreenCenter(child);
 
             _textMock.F = (x, y) => new TextTool.TextProperties { Text = theText };
             
@@ -201,16 +199,6 @@ namespace Svg.Editor.Tests
                 Assert.AreEqual(expectedText, nestedLoaded.Text);
                 var parent = nestedLoaded.Parent;
                 Assert.AreEqual(0, parent.Nodes.OfType<SvgContentNode>().Count());
-            }
-        }
-
-        private class MockTextInputService : ITextInputService
-        {
-            public Func<string, string, TextTool.TextProperties> F { get; set; } = (x, y) => null;
-
-            public Task<TextTool.TextProperties> GetUserInput(string title, string textValue, IEnumerable<string> textSizeOptions, int textSizeSelected)
-            {
-                return Task.FromResult(F(title, textValue));
             }
         }
     }

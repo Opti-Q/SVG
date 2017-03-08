@@ -17,7 +17,7 @@ namespace Svg.Editor.Tests
         private MockColorInputService _colorMock;
 
         [SetUp]
-        public override void SetUp()
+        protected override void SetupOverride()
         {
             // register the tool provder with a single color tool
             var selectableColors = new[] { "#000000", "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF" };
@@ -33,9 +33,7 @@ namespace Svg.Editor.Tests
             // register the mock color input service
             _colorMock = new MockColorInputService();
             Engine.Register<IColorInputService, MockColorInputService>(() => _colorMock);
-
-            // set up the canvas
-            base.SetUp();
+            
         }
 
         [Test]

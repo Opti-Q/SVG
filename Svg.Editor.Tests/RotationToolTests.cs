@@ -14,7 +14,7 @@ namespace Svg.Editor.Tests
     public class RotationToolTests : SvgDrawingCanvasTestBase
     {
         [SetUp]
-        public override void SetUp()
+        protected override void SetupOverride()
         {
 
             Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
@@ -27,8 +27,7 @@ namespace Svg.Editor.Tests
 
                 () => new RotationTool(null, Engine.Resolve<IUndoRedoService>()), 
             }));
-
-            base.SetUp();
+            
         }
 
         [Test]

@@ -14,8 +14,7 @@ namespace Svg.Editor.Tests
     public class StrokeStyleToolTests : SvgDrawingCanvasTestBase
     {
         private MockStrokeStyleOptionsInputService _mockStrokeStyle;
-
-        public override void SetUp()
+        protected override void SetupOverride()
         {
 
             Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
@@ -34,9 +33,7 @@ namespace Svg.Editor.Tests
             // register stroke style options input service
             _mockStrokeStyle = new MockStrokeStyleOptionsInputService();
             Engine.Register<IStrokeStyleOptionsInputService, MockStrokeStyleOptionsInputService>(() => _mockStrokeStyle);
-
-            // set up canvas
-            base.SetUp();
+            
         }
 
         [Test]

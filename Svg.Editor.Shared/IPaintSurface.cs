@@ -8,7 +8,7 @@ using SkiaSharp.Views.Android;
 using SkiaSharp.Views.iOS;
 #endif
 
-namespace Svg.Editor.Shared
+namespace SkiaSharp.Views
 {
     public interface IPaintSurface
     {
