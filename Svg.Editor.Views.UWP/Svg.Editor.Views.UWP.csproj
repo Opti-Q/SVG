@@ -7,8 +7,8 @@
     <ProjectGuid>{98F6B246-19BF-4929-BD26-54D06AAD6389}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Svg.Editor.Views.UWP</RootNamespace>
-    <AssemblyName>Svg.Editor.Views.UWP</AssemblyName>
+    <RootNamespace>Svg.Editor.Views</RootNamespace>
+    <AssemblyName>Svg.Editor.Views</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>

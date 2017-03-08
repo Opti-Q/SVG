@@ -85,6 +85,5 @@ namespace Svg.Editor.iOS
                 action(touchesList.ToArray());
             }
         }
-
     }
 }

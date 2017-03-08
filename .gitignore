@@ -27,3 +27,5 @@ packages/
 /nuspec/nuget.exe
 *.csproj.bak
 /Tests/SvgW3CTestRunner.Droid/*.bak
+/Nuget/.vscode
+/Nuget/nuget.exe
