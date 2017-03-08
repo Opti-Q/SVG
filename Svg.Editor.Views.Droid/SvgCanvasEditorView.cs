@@ -5,11 +5,11 @@ using Android.Graphics;
 using Android.Util;
 using Android.Views;
 using SkiaSharp;
+using SkiaSharp.Views;
 using SkiaSharp.Views.Android;
 using Svg.Editor.Droid.Services;
 using Svg.Editor.Interfaces;
 using Svg.Editor.Services;
-using Svg.Editor.Shared;
 
 namespace Svg.Editor.Views.Droid
 {

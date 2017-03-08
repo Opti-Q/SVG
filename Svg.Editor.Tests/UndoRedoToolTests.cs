@@ -76,6 +76,8 @@ namespace Svg.Editor.Tests
             var color = colorTool.SelectedColor;
             var oldStroke = text.Stroke?.ToString();
             var oldFill = text.Fill?.ToString();
+            _textMock.F = (x, y) => null;
+
             await Canvas.AddItemInScreenCenter(text);
 
             // Preassert

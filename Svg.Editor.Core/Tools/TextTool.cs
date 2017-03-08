@@ -151,10 +151,14 @@ namespace Svg.Editor.Tools
         {
             if (_dialogShown) return null;
             _dialogShown = true;
-            var txtProperties =
-                await TextInputService.GetUserInput(title, text, FontSizeNames, index);
+            var txtProperties = await TextInputService.GetUserInput(title, text, FontSizeNames, index);
             _dialogShown = false;
-            SelectedFontSize = FontSizes[txtProperties.FontSizeIndex];
+
+            if (txtProperties != null)
+            {
+                SelectedFontSize = FontSizes[txtProperties.FontSizeIndex];
+            }
+
             return txtProperties;
         }
 

@@ -4,7 +4,7 @@ using Svg.Editor.Forms;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using SKFormsView = Svg.Editor.Forms.SvgCanvasEditorView;
-using SKNativeView = Svg.Editor.iOS.SvgCanvasEditorView;
+using SKNativeView = Svg.Editor.Views.iOS.SvgCanvasEditorView;
 
 [assembly: ExportRenderer(typeof(SKFormsView), typeof(SvgCanvasEditorViewRenderer))]
 

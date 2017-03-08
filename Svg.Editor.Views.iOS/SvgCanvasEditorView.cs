@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Reactive.Subjects;
 using Foundation;
+using SkiaSharp.Views;
 using SkiaSharp.Views.iOS;
 using Svg.Editor.Events;
+using Svg.Editor.iOS;
 using Svg.Editor.Interfaces;
-using Svg.Editor.Shared;
 using UIKit;
 
-namespace Svg.Editor.iOS
+namespace Svg.Editor.Views.iOS
 {
     [Register(nameof(SvgCanvasEditorView))]
     public class SvgCanvasEditorView

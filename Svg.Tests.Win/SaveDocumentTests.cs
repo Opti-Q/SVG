@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Text;
 using NUnit.Framework;
 using Svg.Editor.Tests;
 using Svg.Interfaces;
@@ -13,6 +14,7 @@ namespace Svg.Tests.Win
         public void SetUp()
         {
             SvgPlatform.Init();
+            Svg.Engine.Register<IFileLoader, FileLoader>(() => new FileLoader());
         }
 
         [Test]

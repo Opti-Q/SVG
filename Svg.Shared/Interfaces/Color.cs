@@ -35,5 +35,15 @@ namespace Svg.Interfaces
         public abstract float GetSaturation();
         public abstract float GetHue();
         public abstract int ToArgb();
+
+        public override string ToString()
+        {
+            if (A != 255)
+            {
+                return $"#{A:X2}{R:X2}{G:X2}{B:X2}";
+            }
+
+            return $"#{R:X2}{G:X2}{B:X2}";
+        }
     }
 }
