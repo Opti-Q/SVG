@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>Svg.Editor.Views</id>
+        <version>2.0.4</version>
+        <authors>gentledepp,bruzkovsky </authors>
+        <owners>gentledepp,bruzkovsky </owners>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Contains Xamarin.Forms viewrenderer for the Svg.Editor (iOS, Android and UWP)</description>
+        <dependencies>
+			<dependency id="Svg.Editor" version="2.0.4" exclude="Build,Analyzers" />
+			<dependency id="Svg.Editor.Views" version="2.0.4" exclude="Build,Analyzers" />
+			
+			<dependency id="Newtonsoft.Json" version="9.0.1" exclude="Build,Analyzers" />
+			<dependency id="SkiaSharp" version="1.56.1" exclude="Build,Analyzers" />
+			<dependency id="Svg" version="2.0.4" exclude="Build,Analyzers" />
+			<dependency id="System.Reactive" version="3.0.0" exclude="Build,Analyzers" />
+			<dependency id="System.Reactive.Core" version="3.0.0" exclude="Build,Analyzers" />
+			<dependency id="System.Reactive.Interfaces" version="3.0.0" exclude="Build,Analyzers" />
+			<dependency id="System.Reactive.Linq" version="3.0.0" exclude="Build,Analyzers" />
+			<dependency id="System.Reactive.PlatformServices" version="3.0.0" exclude="Build,Analyzers" />
+        </dependencies>
+    </metadata>
+	<!-- Insert below <metadata> element -->
+    <files>
+        <!-- iOS reference assemblies -->
+        <file src="..\Svg.Editor.Views.iOS\bin\Release\Svg.Editor.Views.dll" target="lib\Xamarin.iOS10\Svg.Editor.Views.dll" />
+
+        <!-- Android reference assemblies -->
+        <file src="..\Svg.Editor.Views.Droid\bin\Release\Svg.Editor.Views.dll" target="lib\MonoAndroid403\Svg.Editor.Views.dll" />
+
+        <!-- UWP reference assemblies -->
+        <file src="..\Svg.Editor.Views.UWP\bin\Release\Svg.Editor.Views.dll" target="lib\UAP10\Svg.Editor.Views.dll" />
+    </files>
+</package>
