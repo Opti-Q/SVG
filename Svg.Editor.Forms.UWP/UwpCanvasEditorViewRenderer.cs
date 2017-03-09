@@ -5,10 +5,10 @@ using Svg.Editor.Forms.UWP;
 using Svg.Editor.Views.UWP;
 using Xamarin.Forms.Platform.UWP;
 
-[assembly: ExportRenderer(typeof(SvgCanvasEditorView), typeof(SvgCanvasEditorViewRenderer))]
+[assembly: ExportRenderer(typeof(SvgCanvasEditorView), typeof(UwpCanvasEditorViewRenderer))]
 namespace Svg.Editor.Forms.UWP
 {
-    public class SvgCanvasEditorViewRenderer : SKCanvasViewRendererBase<SvgCanvasEditorView, SkiaSharp.Views.UWP.SKXamlCanvasX>
+    public class UwpCanvasEditorViewRenderer : UwpCanvasViewRendererBase<SvgCanvasEditorView, SkiaSharp.Views.UWP.SKXamlCanvasX>
     {
         private UwpGestureRecognizer _gestureRecognizer;
 

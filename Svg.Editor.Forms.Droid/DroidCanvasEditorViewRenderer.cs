@@ -1,16 +1,15 @@
 ﻿using System;
 using SkiaSharp.Views.Forms;
-using Svg.Editor.Forms;
+using Svg.Editor.Forms.Droid;
+using Svg.Editor.Views.Droid;
 using Xamarin.Forms;
-using Xamarin.Forms.Platform.iOS;
+using Xamarin.Forms.Platform.Android;
 using SKFormsView = Svg.Editor.Forms.SvgCanvasEditorView;
-using SKNativeView = Svg.Editor.Views.iOS.SvgCanvasEditorView;
 
-[assembly: ExportRenderer(typeof(SKFormsView), typeof(SvgCanvasEditorViewRenderer))]
-
-namespace Svg.Editor.Forms
+[assembly: ExportRenderer(typeof(SKFormsView), typeof(DroidCanvasEditorViewRenderer))]
+namespace Svg.Editor.Forms.Droid
 {
-    public class SvgCanvasEditorViewRenderer : SKCanvasViewRendererBase<SKFormsView, SKNativeView>
+    public class DroidCanvasEditorViewRenderer : DroidCanvasViewRendererBase<SKFormsView, AndroidSvgCanvasEditorView>
     {
         protected override void OnElementChanged(ElementChangedEventArgs<SKFormsView> e)
         {
@@ -38,7 +37,7 @@ namespace Svg.Editor.Forms
             }
         }
 
-        protected override SKNativeView CreateNativeView()
+        protected override AndroidSvgCanvasEditorView CreateNativeView()
         {
             var nv = base.CreateNativeView();
             nv.IsFormsMode = true;

@@ -1,13 +1,14 @@
+﻿
 using System;
 using System.ComponentModel;
-using Xamarin.Forms.Platform.Android;
+using Xamarin.Forms.Platform.iOS;
 
 using SKFormsView = SkiaSharp.Views.Forms.SKCanvasViewX;
-using SKNativeView = SkiaSharp.Views.Android.SKCanvasView;
+using SKNativeView = SkiaSharp.Views.iOS.SKCanvasView;
 
 namespace SkiaSharp.Views.Forms
 {
-    public class SKCanvasViewRendererBase<TFormsView, TNativeView> : ViewRenderer<TFormsView, TNativeView>
+    public class TouchCanvasViewRendererBase<TFormsView, TNativeView> : ViewRenderer<TFormsView, TNativeView>
         where TNativeView : SKNativeView, IPaintSurface
         where TFormsView : SKFormsView
     {
@@ -41,15 +42,15 @@ namespace SkiaSharp.Views.Forms
                 newController.GetCanvasSize += OnGetCanvasSize;
 
                 // paint for the first time
-                Control.Invalidate();
+                Control.SetNeedsDisplay();
             }
 
             base.OnElementChanged(e);
         }
-
+        
         protected virtual TNativeView CreateNativeView()
         {
-            var view = (TNativeView)Activator.CreateInstance(typeof(TNativeView), new object[] {Context, null});
+            var view = Activator.CreateInstance<TNativeView>();
             return view;
         }
 
@@ -75,22 +76,22 @@ namespace SkiaSharp.Views.Forms
             base.Dispose(disposing);
         }
 
-        private void OnSurfaceInvalidated(object sender, EventArgs eventArgs)
-        {
-            // repaint the native control
-            Control.Invalidate();
-        }
-
         // the user asked for the size
         private void OnGetCanvasSize(object sender, GetCanvasSizeEventArgs e)
         {
             e.CanvasSize = Control?.CanvasSize ?? SKSize.Empty;
         }
 
-        private void OnPaintSurface(object sender, Android.SKPaintSurfaceEventArgs e)
+        private void OnSurfaceInvalidated(object sender, EventArgs eventArgs)
+        {
+            // repaint the native control
+            Control.SetNeedsDisplay();
+        }
+
+        private void OnPaintSurface(object sender, iOS.SKPaintSurfaceEventArgs e)
         {
             var controller = this.Element as ISKCanvasViewController;
-            
+
             // the control is being repainted, let the user know
             controller?.OnPaintSurface(new SKPaintSurfaceEventArgs(e.Surface, e.Info));
         }

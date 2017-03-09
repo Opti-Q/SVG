@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Reactive.Subjects;
 using Foundation;
+using SkiaSharp.Views;
 using SkiaSharp.Views.iOS;
 using Svg.Editor.Events;
+using Svg.Editor.iOS;
 using Svg.Editor.Interfaces;
 using UIKit;
 
-namespace Svg.Editor.iOS
+namespace Svg.Editor.Views.iOS
 {
-    [Register(nameof(SvgCanvasGlEditorView))]
-    public class SvgCanvasGlEditorView : SKGLView
+    [Register(nameof(TouchSvgCanvasEditorView))]
+    public class TouchSvgCanvasEditorView
+        : SKCanvasView, IPaintSurface
     {
         private TouchInputEventDetector _detector;
         private ISvgDrawingCanvas _drawingCanvas;
@@ -31,7 +34,7 @@ namespace Svg.Editor.iOS
                 _detector.UserInputEvents.Subscribe(_detectedGestures.OnNext);
             }
         }
-
+        
         public override void TouchesBegan(NSSet touches, UIEvent evt)
         {
             base.TouchesBegan(touches, evt);

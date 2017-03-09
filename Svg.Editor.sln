@@ -56,6 +56,7 @@ Global
 		Svg.Editor.Shared\Svg.Editor.Shared.projitems*{1a4f1238-2571-4e51-9834-d2432f1d9c35}*SharedItemsImports = 4
 		Svg.Editor.Shared\Svg.Editor.Shared.projitems*{3e70de2e-b85a-4f33-8d23-d80bfa36aef1}*SharedItemsImports = 13
 		Svg.Editor.Forms.Shared\Svg.Editor.Forms.Shared.projitems*{40ec91e6-987e-4975-ab4e-dcf39fc01102}*SharedItemsImports = 13
+		Svg.Editor.Tests\Svg.Editor.Tests.projitems*{64e91d01-e670-4374-a30d-33585a1dc127}*SharedItemsImports = 4
 		Svg.Editor.Tests\Svg.Editor.Tests.projitems*{7eb296ed-b7e1-4929-9224-7469c00cfd6e}*SharedItemsImports = 13
 		Svg.Editor.Shared\Svg.Editor.Shared.projitems*{98f6b246-19bf-4929-bd26-54d06aad6389}*SharedItemsImports = 4
 		Svg.Editor.Tests\Svg.Editor.Tests.projitems*{c312d7d6-5fb7-4133-b735-99eb971c91a0}*SharedItemsImports = 4

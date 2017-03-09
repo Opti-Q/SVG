@@ -1,13 +1,13 @@
-﻿using System;
+using System;
 using System.ComponentModel;
-using Xamarin.Forms.Platform.UWP;
+using Xamarin.Forms.Platform.Android;
 
 using SKFormsView = SkiaSharp.Views.Forms.SKCanvasViewX;
-using SKNativeView = SkiaSharp.Views.UWP.SKXamlCanvas;
+using SKNativeView = SkiaSharp.Views.Android.SKCanvasView;
 
 namespace SkiaSharp.Views.Forms
 {
-    public class SKCanvasViewRendererBase<TFormsView, TNativeView> : ViewRenderer<TFormsView, TNativeView>
+    public class DroidCanvasViewRendererBase<TFormsView, TNativeView> : ViewRenderer<TFormsView, TNativeView>
         where TNativeView : SKNativeView, IPaintSurface
         where TFormsView : SKFormsView
     {
@@ -49,7 +49,7 @@ namespace SkiaSharp.Views.Forms
 
         protected virtual TNativeView CreateNativeView()
         {
-            var view = Activator.CreateInstance<TNativeView>();
+            var view = (TNativeView)Activator.CreateInstance(typeof(TNativeView), new object[] {Context, null});
             return view;
         }
 
@@ -70,7 +70,6 @@ namespace SkiaSharp.Views.Forms
             if (controller != null)
             {
                 controller.SurfaceInvalidated -= OnSurfaceInvalidated;
-                controller.GetCanvasSize -= OnGetCanvasSize;
             }
 
             base.Dispose(disposing);
@@ -88,10 +87,10 @@ namespace SkiaSharp.Views.Forms
             e.CanvasSize = Control?.CanvasSize ?? SKSize.Empty;
         }
 
-        private void OnPaintSurface(object sender, UWP.SKPaintSurfaceEventArgs e)
+        private void OnPaintSurface(object sender, Android.SKPaintSurfaceEventArgs e)
         {
             var controller = this.Element as ISKCanvasViewController;
-
+            
             // the control is being repainted, let the user know
             controller?.OnPaintSurface(new SKPaintSurfaceEventArgs(e.Surface, e.Info));
         }

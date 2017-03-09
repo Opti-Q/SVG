@@ -45,9 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SKCanvasViewRendererBase.cs" />
-    <Compile Include="SvgCanvasEditorViewRenderer.cs" />
-    <Compile Include="SvgGlEditorViewRenderer.cs" />
+    <Compile Include="TouchCanvasViewRendererBase.cs" />
+    <Compile Include="TouchCanvasEditorViewRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Svg.Editor.Core\Svg.Editor.Core.csproj">

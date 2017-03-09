@@ -13,7 +13,7 @@ using Svg.Editor.Services;
 
 namespace Svg.Editor.Views.Droid
 {
-    public class SvgCanvasEditorView : SKCanvasView, IPaintSurface
+    public class AndroidSvgCanvasEditorView : SKCanvasView, IPaintSurface
     {
         private Android.Graphics.Bitmap _bitmap;
         private AndroidInputEventDetector _detector;
@@ -36,7 +36,7 @@ namespace Svg.Editor.Views.Droid
             }
         }
 
-        public SvgCanvasEditorView(Context context, IAttributeSet attr) : base(context, attr)
+        public AndroidSvgCanvasEditorView(Context context, IAttributeSet attr) : base(context, attr)
         {
         }
 

@@ -1,14 +1,13 @@
-﻿
-using System;
+﻿using System;
 using System.ComponentModel;
-using Xamarin.Forms.Platform.iOS;
+using Xamarin.Forms.Platform.UWP;
 
 using SKFormsView = SkiaSharp.Views.Forms.SKCanvasViewX;
-using SKNativeView = SkiaSharp.Views.iOS.SKCanvasView;
+using SKNativeView = SkiaSharp.Views.UWP.SKXamlCanvas;
 
 namespace SkiaSharp.Views.Forms
 {
-    public class SKCanvasViewRendererBase<TFormsView, TNativeView> : ViewRenderer<TFormsView, TNativeView>
+    public class UwpCanvasViewRendererBase<TFormsView, TNativeView> : ViewRenderer<TFormsView, TNativeView>
         where TNativeView : SKNativeView, IPaintSurface
         where TFormsView : SKFormsView
     {
@@ -42,12 +41,12 @@ namespace SkiaSharp.Views.Forms
                 newController.GetCanvasSize += OnGetCanvasSize;
 
                 // paint for the first time
-                Control.SetNeedsDisplay();
+                Control.Invalidate();
             }
 
             base.OnElementChanged(e);
         }
-        
+
         protected virtual TNativeView CreateNativeView()
         {
             var view = Activator.CreateInstance<TNativeView>();
@@ -71,9 +70,16 @@ namespace SkiaSharp.Views.Forms
             if (controller != null)
             {
                 controller.SurfaceInvalidated -= OnSurfaceInvalidated;
+                controller.GetCanvasSize -= OnGetCanvasSize;
             }
 
             base.Dispose(disposing);
+        }
+
+        private void OnSurfaceInvalidated(object sender, EventArgs eventArgs)
+        {
+            // repaint the native control
+            Control.Invalidate();
         }
 
         // the user asked for the size
@@ -82,13 +88,7 @@ namespace SkiaSharp.Views.Forms
             e.CanvasSize = Control?.CanvasSize ?? SKSize.Empty;
         }
 
-        private void OnSurfaceInvalidated(object sender, EventArgs eventArgs)
-        {
-            // repaint the native control
-            Control.SetNeedsDisplay();
-        }
-
-        private void OnPaintSurface(object sender, iOS.SKPaintSurfaceEventArgs e)
+        private void OnPaintSurface(object sender, UWP.SKPaintSurfaceEventArgs e)
         {
             var controller = this.Element as ISKCanvasViewController;
 

@@ -55,13 +55,28 @@ task compileEditor -depends clean, installNuget {
     exec { & $base_dir\nuget\Nuget.exe restore $source_dir\svg.editor.sln }
     exec { & $msbuild /t:Clean /t:Build /p:Configuration=$config /v:q /p:NoWarn=1591 /nologo $source_dir\svg.editor.sln }
 }
-task packageSvg -depends compileSvg, configrelease {
-    &"$pwd\Nuget\package_svg.ps1"
+
+task compileSvgRelease -depends clean, configrelease, installNuget {
+    exec { & $base_dir\nuget\Nuget.exe restore $source_dir\svg.sln }
+    exec { & $msbuild /t:Clean /t:Build /p:Configuration=$config /v:q /p:NoWarn=1591 /nologo $source_dir\svg.sln }
 }
-task packageEditor -depends compileEditor, configrelease {
-    &"$pwd\Nuget\package_editor.ps1"
-    &"$pwd\Nuget\package_editor_views.ps1"
-    &"$pwd\Nuget\package_editor_forms.ps1"
+task compileEditorRelease -depends clean, configrelease, installNuget {
+    exec { & $base_dir\nuget\Nuget.exe restore $source_dir\svg.editor.sln }
+    exec { & $msbuild /t:Clean /t:Build /p:Configuration=$config /v:q /p:NoWarn=1591 /nologo $source_dir\svg.editor.sln }
+}
+task packageSvg -depends compileSvg, compileSvgRelease {
+	get-childitem -include obj -recurse -force | remove-item -recurse -force
+	nuget pack Svg.symbols.nuspec -symbols
+	nuget pack Svg.nuspec
+}
+task packageEditor -depends compileEditor, compileEditorRelease {
+	get-childitem -include obj -recurse -force | remove-item -recurse -force
+	nuget pack Svg.Editor.symbols.nuspec -symbols
+	nuget pack Svg.Editor.nuspec
+	nuget pack Svg.Editor.Forms.symbols.nuspec -symbols
+	nuget pack Svg.Editor.Forms.nuspec
+	nuget pack Svg.Editor.Views.symbols.nuspec -symbols
+	nuget pack Svg.Editor.Views.nuspec
 }
 
 # BUILD

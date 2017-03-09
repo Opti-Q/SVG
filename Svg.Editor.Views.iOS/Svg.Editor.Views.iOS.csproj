@@ -42,8 +42,8 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SvgCanvasEditorView.cs" />
-    <Compile Include="SvgCanvasGLEditorView.cs" />
+    <Compile Include="TouchSvgCanvasEditorView.cs" />
+    <Compile Include="TouchSvgCanvasGlEditorView.cs" />
     <Compile Include="TouchInputEventDetector.cs" />
     <Compile Include="TouchToolbarIconSizeProvider.cs" />
   </ItemGroup>
