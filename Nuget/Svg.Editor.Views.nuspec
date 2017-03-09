@@ -8,17 +8,24 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Contains Xamarin.Forms viewrenderer for the Svg.Editor (iOS, Android and UWP)</description>
         <dependencies>
-			<dependency id="Svg.Editor" version="2.0.4" exclude="Build,Analyzers" />
-			<dependency id="Svg.Editor.Views" version="2.0.4" exclude="Build,Analyzers" />
-			
-			<dependency id="Newtonsoft.Json" version="9.0.1" exclude="Build,Analyzers" />
-			<dependency id="SkiaSharp" version="1.56.1" exclude="Build,Analyzers" />
-			<dependency id="Svg" version="2.0.4" exclude="Build,Analyzers" />
-			<dependency id="System.Reactive" version="3.0.0" exclude="Build,Analyzers" />
-			<dependency id="System.Reactive.Core" version="3.0.0" exclude="Build,Analyzers" />
-			<dependency id="System.Reactive.Interfaces" version="3.0.0" exclude="Build,Analyzers" />
-			<dependency id="System.Reactive.Linq" version="3.0.0" exclude="Build,Analyzers" />
-			<dependency id="System.Reactive.PlatformServices" version="3.0.0" exclude="Build,Analyzers" />
+		  <group targetFramework="MonoAndroid403">
+			<dependency id="Svg.Editor" version="2.0.4" />
+			<dependency id="SkiaSharp" version="1.56.1" />
+			<dependency id="SkiaSharp.Views" version="1.56.1" />
+			<dependency id="Svg" version="2.0.4" />
+		  </group>
+		  <group targetFramework="Xamarin.iOS10">
+			<dependency id="Svg.Editor" version="2.0.4" />
+			<dependency id="SkiaSharp" version="1.56.1" />
+			<dependency id="SkiaSharp.Views" version="1.56.1" />
+			<dependency id="Svg" version="2.0.4" />
+		  </group>
+		  <group targetFramework="UAP10">
+			<dependency id="Svg.Editor" version="2.0.4" />
+			<dependency id="SkiaSharp" version="1.56.1" />
+			<dependency id="SkiaSharp.Views" version="1.56.1" />
+			<dependency id="Svg" version="2.0.4" />
+		  </group>
         </dependencies>
     </metadata>
 	<!-- Insert below <metadata> element -->
