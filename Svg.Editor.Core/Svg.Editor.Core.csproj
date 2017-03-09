@@ -43,6 +43,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="EmbeddedResourceRegistry.cs" />
     <Compile Include="Extensions\PointFExtensions.cs" />
     <Compile Include="Extensions\ReactiveExtensions.cs" />
     <Compile Include="Gestures\DragGesture.cs" />

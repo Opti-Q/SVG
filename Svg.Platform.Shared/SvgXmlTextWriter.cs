@@ -43,7 +43,7 @@ namespace Svg
         }
 
 #if WINDOWS_UWP
-        public Formatting Formatting { get { return _w.Settings.Indent?Formatting.Indented:Formatting.None; } set { _w.Settings.Indent = (value == Formatting.Indented); } }
+        public Formatting Formatting { get { return _w.Settings.Indent?Formatting.Indented:Formatting.None; } set { /*_w.Settings.Indent = (value == Formatting.Indented);*/ } }
 
 #else
         public Formatting Formatting { get { return _w.Formatting; } set { _w.Formatting = value; } }

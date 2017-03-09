@@ -8,8 +8,15 @@ namespace Svg.Editor.Services
 {
     public class DefaultImageSourceProvider : IImageSourceProvider
     {
-        private static readonly Lazy<string[]> Resources = new Lazy<string[]>(() => typeof(DefaultImageSourceProvider).GetTypeInfo().Assembly.GetManifestResourceNames());
+        private static readonly Lazy<string[]> Resources = new Lazy<string[]>(() =>
+            {
+                var registry = Engine.Resolve<IEmbeddedResourceRegistry>();
+                return registry.EmbeddedResourceTypes.SelectMany(t => t.GetTypeInfo().Assembly.GetManifestResourceNames()).ToArray();
+            }
+        );
         private static readonly ConcurrentDictionary<string, string> Cache = new ConcurrentDictionary<string, string>();
+
+        
 
         public  virtual string GetImage(string image, SizeF dimension = null)
         {
