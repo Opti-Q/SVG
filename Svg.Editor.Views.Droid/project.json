@@ -1,14 +1,13 @@
 ﻿{
   "dependencies": {
-    "SkiaSharp": "1.56.1",
-    "SkiaSharp.Views": "1.56.1",
+    "SkiaSharp": "1.56.2",
+    "SkiaSharp.Views": "1.56.2",
     "Svg": "2.0.4",
-    "System.Reactive": "3.0.0",
-    "System.Reactive.Core": "3.0.0",
-    "System.Reactive.Interfaces": "3.0.0",
-    "System.Reactive.Linq": "3.0.0",
-    "System.Reactive.PlatformServices": "3.0.0",
-    "System.Reflection": "4.1.0"
+    "System.Reactive": "3.1.1",
+    "System.Reactive.Core": "3.1.1",
+    "System.Reactive.Interfaces": "3.1.1",
+    "System.Reactive.Linq": "3.1.1",
+    "System.Reactive.PlatformServices": "3.1.1"
   },
   "frameworks": {
     "MonoAndroid,Version=v7.1": {}

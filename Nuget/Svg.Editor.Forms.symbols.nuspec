@@ -9,27 +9,27 @@
         <description>Contains views for the Svg.Editor for iOS, Android and UWP</description>
         <dependencies>
 		  <group>
-			<dependency id="SkiaSharp" version="1.56.1" />
+			<dependency id="SkiaSharp" version="1.56.2" />
 			<dependency id="Svg.Editor" version="2.0.4" />
 		  </group>
 		  <group targetFramework="MonoAndroid403">
-			<dependency id="SkiaSharp" version="1.56.1" />
-			<dependency id="SkiaSharp.Views" version="1.56.1" />
-			<dependency id="SkiaSharp.Views.Forms" version="1.56.1"/>
+			<dependency id="SkiaSharp" version="1.56.2" />
+			<dependency id="SkiaSharp.Views" version="1.56.2" />
+			<dependency id="SkiaSharp.Views.Forms" version="1.56.2"/>
 			<dependency id="Svg.Editor" version="2.0.4" />
 			<dependency id="Svg.Editor.Views" version="2.0.4" />
 		  </group>
 		  <group targetFramework="Xamarin.iOS10">
-			<dependency id="SkiaSharp" version="1.56.1" />
-			<dependency id="SkiaSharp.Views" version="1.56.1" />
-			<dependency id="SkiaSharp.Views.Forms" version="1.56.1"/>
+			<dependency id="SkiaSharp" version="1.56.2" />
+			<dependency id="SkiaSharp.Views" version="1.56.2" />
+			<dependency id="SkiaSharp.Views.Forms" version="1.56.2"/>
 			<dependency id="Svg.Editor" version="2.0.4" />
 			<dependency id="Svg.Editor.Views" version="2.0.4" />
 		  </group>
 		  <group targetFramework="UAP10">
-			<dependency id="SkiaSharp" version="1.56.1" />
-			<dependency id="SkiaSharp.Views" version="1.56.1" />
-			<dependency id="SkiaSharp.Views.Forms" version="1.56.1"/>
+			<dependency id="SkiaSharp" version="1.56.2" />
+			<dependency id="SkiaSharp.Views" version="1.56.2" />
+			<dependency id="SkiaSharp.Views.Forms" version="1.56.2"/>
 			<dependency id="Svg.Editor" version="2.0.4" />
 			<dependency id="Svg.Editor.Views" version="2.0.4" />
 		  </group>

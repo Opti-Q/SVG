@@ -1,6 +1,6 @@
 ﻿{
   "dependencies": {
-    "SkiaSharp": "1.56.1"
+    "SkiaSharp": "1.56.2"
   },
   "frameworks": {
     "MonoAndroid,Version=v7.1": {}

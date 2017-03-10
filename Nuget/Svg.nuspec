@@ -17,7 +17,7 @@
         <releaseNotes>merged github pull requests</releaseNotes>
         <tags>svg, vector graphics, rendering</tags>
         <dependencies>
-			<dependency id="SkiaSharp" version="1.56.1" exclude="Build,Analyzers" />
+			<dependency id="SkiaSharp" version="1.56.2" exclude="Build,Analyzers" />
 		</dependencies>
     </metadata>
     <files>

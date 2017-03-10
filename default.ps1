@@ -48,21 +48,21 @@ task installNuget {
     Set-Alias nuget $targetNugetExe -Scope Global -Verbose  
 }
 task compileSvg -depends clean, installNuget {
-    exec { & $base_dir\nuget\Nuget.exe restore $source_dir\svg.sln }
-    exec { & $msbuild /t:Clean /t:Build /p:Configuration=$config /v:q /p:NoWarn=1591 /nologo $source_dir\svg.sln }
+    exec { &.\Nuget\nuget.exe restore $source_dir\svg.sln}
+    #exec { & $msbuild /t:Clean /t:Build /p:Configuration=$config /v:q /p:NoWarn=1591 /nologo $source_dir\svg.sln }
 }
 task compileEditor -depends clean, installNuget {
-    exec { & $base_dir\nuget\Nuget.exe restore $source_dir\svg.editor.sln }
-    exec { & $msbuild /t:Clean /t:Build /p:Configuration=$config /v:q /p:NoWarn=1591 /nologo $source_dir\svg.editor.sln }
+     .\Nuget\nuget.exe restore svg.sln
+	#exec { & $msbuild /t:Clean /t:Build /p:Configuration=$config /v:q /p:NoWarn=1591 /nologo $source_dir\svg.editor.sln }
 }
 
 task compileSvgRelease -depends clean, configrelease, installNuget {
-    exec { & $base_dir\nuget\Nuget.exe restore $source_dir\svg.sln }
-    exec { & $msbuild /t:Clean /t:Build /p:Configuration=$config /v:q /p:NoWarn=1591 /nologo $source_dir\svg.sln }
+    exec { &.\Nuget\nuget.exe restore $source_dir\svg.sln}
+	#exec { & $msbuild /t:Clean /t:Build /p:Configuration=$config /v:q /p:NoWarn=1591 /nologo $source_dir\svg.sln }
 }
 task compileEditorRelease -depends clean, configrelease, installNuget {
-    exec { & $base_dir\nuget\Nuget.exe restore $source_dir\svg.editor.sln }
-    exec { & $msbuild /t:Clean /t:Build /p:Configuration=$config /v:q /p:NoWarn=1591 /nologo $source_dir\svg.editor.sln }
+    exec { &.\Nuget\nuget.exe restore $source_dir\svg.sln}
+	#exec { & $msbuild /t:Clean /t:Build /p:Configuration=$config /v:q /p:NoWarn=1591 /nologo $source_dir\svg.editor.sln }
 }
 task packageSvg -depends compileSvg, compileSvgRelease {
 	get-childitem -include obj -recurse -force | remove-item -recurse -force

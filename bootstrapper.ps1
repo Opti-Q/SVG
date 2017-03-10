@@ -28,7 +28,7 @@ if($psakeInstalled -eq $false){
     # after installing psake - we need to restart the console in order to have "psake" available as command (Path variable is loaded)
     Start-Process powershell -Verb runAs -ArgumentList $arguments
     
-    Set-Alias psake "$aup\chocolatey\lib\psake\tools\psake.ps1" -Scope Global -Verbose
+    #Set-Alias psake "$aup\chocolatey\lib\psake\tools\psake.ps1" -Scope Global -Verbose
 }
 
 # run the default build

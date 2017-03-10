@@ -1,7 +1,7 @@
 ﻿{
   "dependencies": {
-    "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
-    "SkiaSharp": "1.56.1",
+    "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.3",
+    "SkiaSharp": "1.56.2",
     "xunit": "2.2.0",
     "xunit.runner.visualstudio": "2.2.0"
   },

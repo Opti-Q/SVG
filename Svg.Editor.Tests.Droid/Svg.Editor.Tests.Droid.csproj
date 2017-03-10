@@ -88,7 +88,6 @@
   </ItemGroup>
   <Import Project="..\Svg.Editor.Tests\Svg.Editor.Tests.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
-  <Import Project="..\packages\Xamarin.Forms.1.5.0.6447\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.1.5.0.6447\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
   <PropertyGroup>
     <PreBuildEvent>xcopy "$(SolutionDir)Svg.Editor.Tests\Assets\*.*" "$(ProjectDir)Assets\" /Y/D/E</PreBuildEvent>
   </PropertyGroup>

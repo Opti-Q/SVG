@@ -10,20 +10,20 @@
         <dependencies>
 		  <group targetFramework="MonoAndroid403">
 			<dependency id="Svg.Editor" version="2.0.4" />
-			<dependency id="SkiaSharp" version="1.56.1" />
-			<dependency id="SkiaSharp.Views" version="1.56.1" />
+			<dependency id="SkiaSharp" version="1.56.2" />
+			<dependency id="SkiaSharp.Views" version="1.56.2" />
 			<dependency id="Svg" version="2.0.4" />
 		  </group>
 		  <group targetFramework="Xamarin.iOS10">
 			<dependency id="Svg.Editor" version="2.0.4" />
-			<dependency id="SkiaSharp" version="1.56.1" />
-			<dependency id="SkiaSharp.Views" version="1.56.1" />
+			<dependency id="SkiaSharp" version="1.56.2" />
+			<dependency id="SkiaSharp.Views" version="1.56.2" />
 			<dependency id="Svg" version="2.0.4" />
 		  </group>
 		  <group targetFramework="UAP10">
 			<dependency id="Svg.Editor" version="2.0.4" />
-			<dependency id="SkiaSharp" version="1.56.1" />
-			<dependency id="SkiaSharp.Views" version="1.56.1" />
+			<dependency id="SkiaSharp" version="1.56.2" />
+			<dependency id="SkiaSharp.Views" version="1.56.2" />
 			<dependency id="Svg" version="2.0.4" />
 		  </group>
         </dependencies>
