@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using Svg.Editor.Forms;
 using Svg.Editor.Interfaces;
+using Svg.Editor.Sample.Forms.Resources.svg;
 using Svg.Editor.Sample.Forms.Services;
+using Svg.Editor.Sample.Forms.Tools;
 using Svg.Editor.Services;
 using Svg.Editor.Tools;
 using Svg.Interfaces;
@@ -23,6 +25,9 @@ namespace Svg.Editor.Sample.Forms
             Engine.Register<ITextInputService, TextInputService>(() => new TextInputService());
 
             Engine.Resolve<ISvgCachingService>().Clear();
+
+            // register pseudo-type which is only used to mark an assembly that has embedded resources (Resources\svg)
+            Engine.Resolve<IEmbeddedResourceRegistry>().Register(typeof(ResourceMarker));
 
             #endregion
 
@@ -107,7 +112,7 @@ namespace Svg.Editor.Sample.Forms
                 () => new UndoRedoTool(undoRedoService),
                 () => new ArrangeTool(undoRedoService),
                 //() => new AuxiliaryLineTool(),
-                //() => new SaveTool(false),
+                () => new SaveTool(false),
                 () => new PlaceAsBackgroundTool(placeAsBackgroundToolProperties, undoRedoService),
                 //() => new AddRandomItemTool(Canvas) {SourceProvider = GetSource}
             }));

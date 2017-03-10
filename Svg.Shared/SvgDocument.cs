@@ -511,13 +511,13 @@ namespace Svg
             }
         }
 
-        public Bitmap DrawAllContents(Color backgroundColor = null)
+        public Bitmap DrawAllContents(Color backgroundColor = null, SizeF padding = null)
         {
             var bounds = CalculateDocumentBounds();
-            return DrawAllContents((int) bounds.Width, (int) bounds.Height, backgroundColor);
+            return DrawAllContents((int) bounds.Width, (int) bounds.Height, backgroundColor, padding);
         }
 
-        public Bitmap DrawAllContents(int maxWidth, int maxHeight, Color backgroundColor = null)
+        public Bitmap DrawAllContents(int maxWidth, int maxHeight, Color backgroundColor = null, SizeF padding = null)
         {
             Bitmap bitmap = null;
             try
@@ -540,7 +540,7 @@ namespace Svg
                 }
 
                 bitmap = Bitmap.Create((int) width, (int) height);
-                DrawAllContents(bitmap, backgroundColor);
+                DrawAllContents(bitmap, backgroundColor, padding);
                 return bitmap;
             }
             catch
@@ -551,7 +551,7 @@ namespace Svg
         }
 
 
-        public Bitmap DrawAllContents(int maxWidthHeight, Color backgroundColor = null)
+        public Bitmap DrawAllContents(int maxWidthHeight, Color backgroundColor = null, SizeF padding = null)
         {
             Bitmap bitmap = null;
             try
@@ -581,7 +581,7 @@ namespace Svg
                     }
                 }
                 bitmap = Bitmap.Create((int) width, (int) height);
-                DrawAllContents(bitmap, backgroundColor);
+                DrawAllContents(bitmap, backgroundColor, padding);
                 return bitmap;
             }
             catch
@@ -606,7 +606,7 @@ namespace Svg
 
         }
 
-        public void DrawAllContents(Bitmap bitmap, Color backgroundColor = null)
+        public void DrawAllContents(Bitmap bitmap, Color backgroundColor = null, SizeF padding = null)
         {
             // draw document
             var oldX = X;
@@ -617,7 +617,11 @@ namespace Svg
             var oldAspectRatio = AspectRatio;
             try
             {
-                var bounds = CalculateDocumentBounds().InflateAndCopy(10, 10);
+                var bounds = CalculateDocumentBounds();
+
+                if (padding != null)
+                    bounds = bounds.InflateAndCopy(padding.Width, padding.Height);
+
                 X = new SvgUnit(SvgUnitType.Pixel, 0);
                 Y = new SvgUnit(SvgUnitType.Pixel, 0);
                 Width = new SvgUnit(SvgUnitType.Pixel, bounds.Width);
