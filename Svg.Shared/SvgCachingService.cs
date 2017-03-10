@@ -32,7 +32,9 @@ namespace Svg
             // save svg as png
             using (var bmp = Engine.Factory.CreateBitmap((int)dimension.Width, (int)dimension.Height))
             {
-                document.DrawAllContents(bmp, options.BackgroundColor);
+                Action<SvgDocument,Bitmap,Color> draw = options.DrawingAction ?? ((s,b,c) => s.Draw(b, c));
+
+                draw(document, bmp, options.BackgroundColor);
                 var fs = _fs.Value;
                 var path = GetCachedPngPath(svgFilePath, options);
                 if (fs.FileExists(path))

@@ -54,6 +54,11 @@ namespace Svg
             _w.WriteAttributeString(xmlns, value);
         }
 
+        public void WriteAttributeString(string xmlns, string namespaceKey, string value)
+        {
+            _w.WriteAttributeString(xmlns, namespaceKey, null, value);
+        }
+
         public void WriteDocType(string name, string pubid, string sysid, string subset)
         {
             _w.WriteDocType(name, pubid, sysid, subset);
@@ -72,6 +77,16 @@ namespace Svg
         public void WriteStartElement(string elementName)
         {
             _w.WriteStartElement(elementName);
+        }
+
+        public void WriteStartElement(string elementName, string ns)
+        {
+            _w.WriteStartElement(elementName, ns);
+        }
+        
+        public void WriteStartElement(string elementName, string prefix, string ns)
+        {
+            _w.WriteStartElement(prefix, elementName, ns);
         }
 
         public void WriteEndElement()

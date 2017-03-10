@@ -561,12 +561,17 @@ namespace Svg
             return (ElementName != string.Empty);
         }
 
-        protected virtual void WriteStartElement(IXmlTextWriter writer)
+        protected virtual void WriteStartElementInternal(IXmlTextWriter writer)
         {
             if (ElementName != string.Empty)
             {
                 writer.WriteStartElement(ElementName);
             }
+        }
+
+        protected virtual void WriteStartElement(IXmlTextWriter writer)
+        {
+            WriteStartElementInternal(writer);
 
             WriteAttributes(writer);
         }

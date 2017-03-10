@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Xml;
 using Svg.Interfaces;
 using Svg.Interfaces.Xml;
@@ -325,6 +326,16 @@ namespace Svg
             return newObj;
         }
 
+        protected override void WriteStartElementInternal(IXmlTextWriter writer)
+        {
+            if (ElementName != string.Empty)
+            {
+                var baseNamespace = SvgAttributeAttribute.Namespaces.Single(x => string.IsNullOrEmpty(x.Key));
+
+                writer.WriteStartElement(ElementName, baseNamespace.Value);
+            }
+        }
+
         //Override the default behavior, writing out the namespaces.
         protected override void WriteStartElement(IXmlTextWriter writer)
         {
@@ -332,10 +343,8 @@ namespace Svg
 
             foreach (var ns in SvgAttributeAttribute.Namespaces)
             {
-                if (string.IsNullOrEmpty(ns.Key))
-                    writer.WriteAttributeString("xmlns", ns.Value);
-                else
-                    writer.WriteAttributeString("xmlns:" + ns.Key, ns.Value);
+                if (!string.IsNullOrEmpty(ns.Key))
+                    writer.WriteAttributeString("xmlns", ns.Key, ns.Value);
             }
 
             writer.WriteAttributeString("version", "1.1");
