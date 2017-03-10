@@ -1,6 +1,6 @@
 ﻿{
   "dependencies": {
-    "Microsoft.Reactive.Testing": "3.1.1",
+    "Microsoft.Reactive.Testing": "3.0.0",
     "NUnit": "3.6.1",
     "nunit.xamarin": "3.0.1",
     "SkiaSharp": "1.56.2",

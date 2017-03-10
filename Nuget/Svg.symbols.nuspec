@@ -38,10 +38,16 @@
         <file src="..\Svg.UWP\bin\Debug\Svg.dll" target="lib\UAP10\Svg.dll" />
 		
 		
+        <!-- Windows reference assemblies -->
+        <file src="..\Svg.Win\bin\x86\Debug\Svg.dll" target="lib\net452\Svg.dll" />
+        <file src="..\Svg.Win\bin\x86\Debug\Svg.dll" target="lib\net452\Svg.pdb" />
+		
+		
 		<file src="..\Svg.Shared\**\*.cs" target="src" />
 		<file src="..\Svg.Platform.Shared\**\*.cs" target="src" />
 		<file src="..\Svg.UWP\**\*.cs" target="src" />
 		<file src="..\Svg.Droid\**\*.cs" target="src" />
 		<file src="..\Svg.iOS\**\*.cs" target="src" />
+		<file src="..\Svg.Win\**\*.cs" target="src" />
     </files>
 </package>

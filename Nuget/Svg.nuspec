@@ -32,5 +32,8 @@
 		
         <!-- UWP reference assemblies -->
         <file src="..\Svg.UWP\bin\Release\Svg.dll" target="lib\UAP10\Svg.dll" />
+		
+        <!-- Windows reference assemblies -->
+        <file src="..\Svg.Win\bin\Release\Svg.dll" target="lib\net452\Svg.dll" />
     </files>
 </package>

@@ -2,11 +2,11 @@
   "dependencies": {
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.3",
     "SkiaSharp": "1.56.2",
-    "System.Reactive": "3.1.1",
-    "System.Reactive.Core": "3.1.1",
-    "System.Reactive.Interfaces": "3.1.1",
-    "System.Reactive.Linq": "3.1.1",
-    "System.Reactive.PlatformServices": "3.1.1",
+    "System.Reactive": "3.0.0",
+    "System.Reactive.Core": "3.0.0",
+    "System.Reactive.Interfaces": "3.0.0",
+    "System.Reactive.Linq": "3.0.0",
+    "System.Reactive.PlatformServices": "3.0.0",
     "System.Xml.ReaderWriter": "4.3.0"
   },
   "frameworks": {
