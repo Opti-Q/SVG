@@ -26,7 +26,7 @@ namespace Svg.Editor
 
                 SvgPlatform.Init();
 
-                var context = SynchronizationContext.Current;
+                var context = SynchronizationContext.Current ?? new SynchronizationContext();
                 if (context != null)
                 {
                     var mainScheduler = new SynchronizationContextScheduler(context);
