@@ -192,15 +192,15 @@ namespace Svg.Editor
             Translate = PointF.Create(0f, 0f);
             ZoomFactor = 1f;
 
-            BackgroundColor = Engine.Factory.Colors.White;
+            BackgroundColor = SvgEngine.Factory.Colors.White;
 
             _selectedElements = new ObservableCollection<SvgVisualElement>();
             _selectedElements.CollectionChanged += OnSelectionChanged;
 
-            UndoRedoService = Engine.Resolve<IUndoRedoService>();
-            GestureRecognizer = Engine.Resolve<IGestureRecognizer>();
+            UndoRedoService = SvgEngine.Resolve<IUndoRedoService>();
+            GestureRecognizer = SvgEngine.Resolve<IGestureRecognizer>();
 
-            var toolProvider = Engine.Resolve<ToolFactoryProvider>();
+            var toolProvider = SvgEngine.Resolve<ToolFactoryProvider>();
 
             _tools = new ObservableCollection<ITool>();
 
@@ -568,7 +568,7 @@ namespace Svg.Editor
 
         public Matrix GetCanvasTransformationMatrix()
         {
-            var m1 = Engine.Factory.CreateMatrix();
+            var m1 = SvgEngine.Factory.CreateMatrix();
             m1.Translate(Translate.X, Translate.Y);
             m1.Translate(ZoomFocus.X, ZoomFocus.Y);
             m1.Scale(ZoomFactor, ZoomFactor);
@@ -724,7 +724,7 @@ namespace Svg.Editor
             try
             {
                 SetDocumentViewbox(drawingClip);
-                Document.Draw(bitmap, backgroundColor ?? Engine.Factory.Colors.Black);
+                Document.Draw(bitmap, backgroundColor ?? SvgEngine.Factory.Colors.Black);
 
                 return bitmap;
             }

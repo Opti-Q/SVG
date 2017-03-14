@@ -19,15 +19,15 @@ namespace Svg.Editor.Sample.Forms
         {
             #region Register services
 
-            Engine.Register<IColorInputService, ColorInputService>(() => new ColorInputService());
-            Engine.Register<IMarkerOptionsInputService, MarkerOptionsInputService>(() => new MarkerOptionsInputService());
-            Engine.Register<IStrokeStyleOptionsInputService, StrokeStyleOptionsInputService>(() => new StrokeStyleOptionsInputService());
-            Engine.Register<ITextInputService, TextInputService>(() => new TextInputService());
+            SvgEngine.Register<IColorInputService>(() => new ColorInputService());
+            SvgEngine.Register<IMarkerOptionsInputService>(() => new MarkerOptionsInputService());
+            SvgEngine.Register<IStrokeStyleOptionsInputService>(() => new StrokeStyleOptionsInputService());
+            SvgEngine.Register<ITextInputService>(() => new TextInputService());
 
-            Engine.Resolve<ISvgCachingService>().Clear();
+            SvgEngine.Resolve<ISvgCachingService>().Clear();
 
             // register pseudo-type which is only used to mark an assembly that has embedded resources (Resources\svg)
-            Engine.Resolve<IEmbeddedResourceRegistry>().Register(typeof(ResourceMarker));
+            SvgEngine.Resolve<IEmbeddedResourceRegistry>().Register(typeof(ResourceMarker));
 
             #endregion
 
@@ -93,9 +93,9 @@ namespace Svg.Editor.Sample.Forms
                 { RotationTool.FilterKey, (Func<SvgVisualElement, bool>) (e => e is SvgTextBase) }
             };
 
-            var undoRedoService = Engine.Resolve<IUndoRedoService>();
+            var undoRedoService = SvgEngine.Resolve<IUndoRedoService>();
 
-            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            SvgEngine.Register<ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
             {
                 () => new GridTool(gridToolProperties, undoRedoService),
                 () => new MoveTool(undoRedoService),

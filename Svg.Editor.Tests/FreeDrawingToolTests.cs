@@ -16,9 +16,9 @@ namespace Svg.Editor.Tests
         [SetUp]
         protected override void SetupOverride()
         {
-            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            SvgEngine.Register<ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
             {
-                () => new FreeDrawingTool(null, Engine.Resolve<IUndoRedoService>())
+                () => new FreeDrawingTool(null, SvgEngine.Resolve<IUndoRedoService>())
             }));
         }
 

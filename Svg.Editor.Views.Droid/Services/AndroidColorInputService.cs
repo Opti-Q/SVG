@@ -16,7 +16,7 @@ namespace Svg.Editor.Droid.Services
         public Task<int> GetIndexFromUserInput(string title, string[] items, string[] colors)
         {
 
-            var cp = Engine.Resolve<IContextProvider>();
+            var cp = SvgEngine.Resolve<IContextProvider>();
             var context = cp.Context;
 
             var builder = new AlertDialog.Builder(context);

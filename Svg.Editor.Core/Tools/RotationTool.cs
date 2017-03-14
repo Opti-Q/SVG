@@ -19,8 +19,8 @@ namespace Svg.Editor.Tools
         private PointF _lastRotationCenter;
         private Brush _brush2;
         private Pen _pen2;
-        private Brush RedBrush => _brush2 ?? (_brush2 = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 255, 150, 150)));
-        private Pen RedPen => _pen2 ?? (_pen2 = Engine.Factory.CreatePen(RedBrush, 3));
+        private Brush RedBrush => _brush2 ?? (_brush2 = SvgEngine.Factory.CreateSolidBrush(SvgEngine.Factory.CreateColorFromArgb(255, 255, 150, 150)));
+        private Pen RedPen => _pen2 ?? (_pen2 = SvgEngine.Factory.CreatePen(RedBrush, 3));
         private readonly Dictionary<SvgElement, float> _rotations = new Dictionary<SvgElement, float>();
         private ITool _activatedFrom;
 

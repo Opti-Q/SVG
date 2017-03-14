@@ -90,7 +90,7 @@ namespace Svg.Editor.Tools
                 await ChangeText(svgText);
             });
 
-            TextInputService = Engine.TryResolve<ITextInputService>();
+            TextInputService = SvgEngine.TryResolve<ITextInputService>();
 
             if (TextInputService == null) throw new InvalidOperationException("Text input service needs to be registered before initializing this tool.");
         }
@@ -170,8 +170,8 @@ namespace Svg.Editor.Tools
             var svgText = new SvgText
             {
                 FontSize = new SvgUnit(SvgUnitType.Pixel, fontSize),
-                Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
-                Fill = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0))
+                Stroke = new SvgColourServer(SvgEngine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
+                Fill = new SvgColourServer(SvgEngine.Factory.CreateColorFromArgb(255, 0, 0, 0))
             };
 
             var lines = txt.Split('\n','\r');

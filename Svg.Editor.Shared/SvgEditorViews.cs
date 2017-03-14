@@ -25,11 +25,11 @@ namespace Svg.Editor
 
 
 #if WINDOWS_UWP
-                Engine.Register<IToolbarIconSizeProvider, Svg.Editor.Views.UWP.UWPToolbarIconSizeProvider>(() => new Svg.Editor.Views.UWP.UWPToolbarIconSizeProvider());
+                SvgEngine.Register<IToolbarIconSizeProvider>(() => new Svg.Editor.Views.UWP.UWPToolbarIconSizeProvider());
 #elif __IOS__
-                Engine.Register<IToolbarIconSizeProvider, Svg.Editor.Views.iOS.TouchToolbarIconSizeProvider>(() => new Svg.Editor.Views.iOS.TouchToolbarIconSizeProvider());
+                SvgEngine.Register<IToolbarIconSizeProvider>(() => new Svg.Editor.Views.iOS.TouchToolbarIconSizeProvider());
 #elif PLATFORM_ANDROID
-                Engine.Register<IToolbarIconSizeProvider, Svg.Editor.Views.Droid.AndroidToolbarIconSizeProvider>(() => new Svg.Editor.Views.Droid.AndroidToolbarIconSizeProvider());
+                SvgEngine.Register<IToolbarIconSizeProvider>(() => new Svg.Editor.Views.Droid.AndroidToolbarIconSizeProvider());
 #endif
 
                 _initialized = true;

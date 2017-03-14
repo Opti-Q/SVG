@@ -15,7 +15,7 @@ namespace Svg.Editor.Droid.Services
     {
         public Task<int[]> GetUserInput(string title, IEnumerable<string> markerStartOptions, int markerStartSelected, IEnumerable<string> markerEndOptions, int markerEndSelected)
         {
-            var cp = Engine.Resolve<IContextProvider>();
+            var cp = SvgEngine.Resolve<IContextProvider>();
             var context = cp.Context;
 
             var builder = new AlertDialog.Builder(context);

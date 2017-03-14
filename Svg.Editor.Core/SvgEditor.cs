@@ -31,13 +31,13 @@ namespace Svg.Editor
                 {
                     var mainScheduler = new SynchronizationContextScheduler(context);
                     var schedulerProvider = new SchedulerProvider(mainScheduler, NewThreadScheduler.Default);
-                    Engine.Register<ISchedulerProvider, SchedulerProvider>(() => schedulerProvider);
-                    Engine.RegisterSingleton<IGestureRecognizer, ReactiveGestureRecognizer>(() => new ReactiveGestureRecognizer(schedulerProvider));
+                    SvgEngine.Register<ISchedulerProvider>(() => schedulerProvider);
+                    SvgEngine.RegisterSingleton<IGestureRecognizer>(() => new ReactiveGestureRecognizer(schedulerProvider));
                 }
 
-                Engine.RegisterSingleton<IUndoRedoService, UndoRedoService>(() => new UndoRedoService());
-                Engine.RegisterSingleton<IEmbeddedResourceRegistry, EmbeddedResourceRegistry>(() => new EmbeddedResourceRegistry());
-                Engine.Register<ISvgSourceFactory, EmbeddedResourceSvgSourceFactory>(() => new EmbeddedResourceSvgSourceFactory(Engine.Resolve<IEmbeddedResourceRegistry>()));
+                SvgEngine.RegisterSingleton<IUndoRedoService>(() => new UndoRedoService());
+                SvgEngine.RegisterSingleton<IEmbeddedResourceRegistry>(() => new EmbeddedResourceRegistry());
+                SvgEngine.Register<ISvgSourceFactory>(() => new EmbeddedResourceSvgSourceFactory(SvgEngine.Resolve<IEmbeddedResourceRegistry>()));
 
 
                 _initialized = true;

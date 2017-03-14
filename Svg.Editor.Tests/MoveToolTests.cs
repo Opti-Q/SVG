@@ -17,11 +17,11 @@ namespace Svg.Editor.Tests
         protected override void SetupOverride()
         {
 
-            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            SvgEngine.Register<ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
             {
-                () => new SelectionTool(Engine.Resolve<IUndoRedoService>()),
+                () => new SelectionTool(SvgEngine.Resolve<IUndoRedoService>()),
 
-                () => new MoveTool(Engine.Resolve<IUndoRedoService>()), 
+                () => new MoveTool(SvgEngine.Resolve<IUndoRedoService>()), 
             }));
 
 

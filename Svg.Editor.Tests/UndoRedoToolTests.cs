@@ -29,9 +29,9 @@ namespace Svg.Editor.Tests
                 { "fontsizenames", new [] { "12px", "16px", "20px", "24px", "36px", "48px" } }
             };
 
-            var undoRedoService = Engine.Resolve<IUndoRedoService>();
+            var undoRedoService = SvgEngine.Resolve<IUndoRedoService>();
 
-            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            SvgEngine.Register<ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
             {
                 () => new GridTool(null, undoRedoService),
                 () => new MoveTool(undoRedoService),
@@ -55,13 +55,13 @@ namespace Svg.Editor.Tests
             }));
 
             _colorMock = new MockColorInputService();
-            Engine.Register<IColorInputService, MockColorInputService>(() => _colorMock);
+            SvgEngine.Register<IColorInputService>(() => _colorMock);
 
             _textMock = new MockTextInputService();
-            Engine.Register<ITextInputService, MockTextInputService>(() => _textMock);
+            SvgEngine.Register<ITextInputService>(() => _textMock);
 
             _mockStrokeStyle = new MockStrokeStyleOptionsInputService();
-            Engine.Register<IStrokeStyleOptionsInputService, MockStrokeStyleOptionsInputService>(() => _mockStrokeStyle);
+            SvgEngine.Register<IStrokeStyleOptionsInputService>(() => _mockStrokeStyle);
 
         }
 

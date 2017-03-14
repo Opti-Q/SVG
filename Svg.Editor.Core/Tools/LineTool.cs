@@ -22,7 +22,7 @@ namespace Svg.Editor.Tools
 
         private const double MaxPointerDistance = 20.0;
 
-        private static IMarkerOptionsInputService MarkerOptionsInputServiceProxy => Engine.Resolve<IMarkerOptionsInputService>();
+        private static IMarkerOptionsInputService MarkerOptionsInputServiceProxy => SvgEngine.Resolve<IMarkerOptionsInputService>();
         private SvgLine _currentLine;
         private Brush _brush;
         private Pen _pen;
@@ -36,8 +36,8 @@ namespace Svg.Editor.Tools
 
         #region Private properties
 
-        private Brush BlueBrush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
-        private Pen BluePen => _pen ?? (_pen = Engine.Factory.CreatePen(BlueBrush, 5));
+        private Brush BlueBrush => _brush ?? (_brush = SvgEngine.Factory.CreateSolidBrush(SvgEngine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
+        private Pen BluePen => _pen ?? (_pen = SvgEngine.Factory.CreatePen(BlueBrush, 5));
 
         #endregion
 
@@ -389,7 +389,7 @@ namespace Svg.Editor.Tools
         {
             var line = new SvgLine
             {
-                Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
+                Stroke = new SvgColourServer(SvgEngine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
                 Fill = SvgPaintServer.None,
                 StrokeWidth = new SvgUnit(SvgUnitType.Pixel, DefaultStrokeWidth),
                 StartX = new SvgUnit(SvgUnitType.Pixel, relativeStart.X),

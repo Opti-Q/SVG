@@ -24,7 +24,7 @@ namespace Svg.Editor.Tools
             {
                 new ToolCommand(this, "Choose background image", async o =>
                 {
-                    var imgs = Engine.TryResolve<IPickImageService>();
+                    var imgs = SvgEngine.TryResolve<IPickImageService>();
                     if (imgs == null) return;
 
                     ImagePath = await imgs.PickImagePathAsync(Canvas.ScreenWidth);
@@ -109,7 +109,7 @@ namespace Svg.Editor.Tools
         {
             get
             {
-                if (Engine.TryResolve<IPickImageService>() == null)
+                if (SvgEngine.TryResolve<IPickImageService>() == null)
                     return false;
 
                 object chooseBackgroundEnabled;

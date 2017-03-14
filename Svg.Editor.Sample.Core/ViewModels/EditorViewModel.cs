@@ -28,9 +28,9 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
             //tool.SourceProvider = GetSource;
             //Canvas.Tools.Add(new AuxiliaryLineTool()); // auxiliar line tool
             //Canvas.Tools.Add(new SaveTool(false));
-            //Canvas.Tools.Add(new PlaceAsBackgroundTool(null, Engine.Resolve<IUndoRedoService>()));
+            //Canvas.Tools.Add(new PlaceAsBackgroundTool(null, SvgEngine.Resolve<IUndoRedoService>()));
 
-            Engine.Register<IPickImageService, MvxPickImageService>(() => new MvxPickImageService());
+            SvgEngine.Register<IPickImageService>(() => new MvxPickImageService());
 
             #region Register tools
 
@@ -88,7 +88,7 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
 
             var panToolProperties = new Dictionary<string, object>();
 
-            //var fs = Engine.Resolve<IFileSystem>();
+            //var fs = SvgEngine.Resolve<IFileSystem>();
             //var path = fs.PathCombine(fs.GetDefaultStoragePath(), "background.png");
 
             var placeAsBackgroundToolProperties = new Dictionary<string, object>
@@ -103,9 +103,9 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
                 { RotationTool.FilterKey, (Func<SvgVisualElement, bool>) (e => e is SvgTextBase) }
             };
 
-            var undoRedoService = Engine.Resolve<IUndoRedoService>();
+            var undoRedoService = SvgEngine.Resolve<IUndoRedoService>();
 
-            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            SvgEngine.Register<ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
             {
                 () => new GridTool(gridToolProperties, undoRedoService),
                 () => new MoveTool(undoRedoService),
@@ -137,7 +137,7 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
 
         private ISvgSource GetSource(string source)
         {
-            return Engine.Resolve<ISvgSourceFactory>().Create(source);
+            return SvgEngine.Resolve<ISvgSourceFactory>().Create(source);
         }
     }
 }

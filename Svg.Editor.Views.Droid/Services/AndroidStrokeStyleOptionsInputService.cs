@@ -15,7 +15,7 @@ namespace Svg.Editor.Droid.Services
     {
         public Task<StrokeStyleTool.StrokeStyleOptions> GetUserInput(string title, IEnumerable<string> strokeDashOptions, int strokeDashSelected, IEnumerable<string> strokeWidthOptions, int strokeWidthSelected)
         {
-            var cp = Engine.Resolve<IContextProvider>();
+            var cp = SvgEngine.Resolve<IContextProvider>();
             var context = cp.Context;
 
             var builder = new AlertDialog.Builder(context);

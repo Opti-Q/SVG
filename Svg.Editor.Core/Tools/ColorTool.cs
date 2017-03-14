@@ -19,13 +19,13 @@ namespace Svg.Editor.Tools
     {
         #region Private fields and properties
 
-        private static IColorInputService ColorInputService => Engine.Resolve<IColorInputService>();
+        private static IColorInputService ColorInputService => SvgEngine.Resolve<IColorInputService>();
 
-        private static ISvgCachingService SvgCachingService => Engine.TryResolve<ISvgCachingService>();
+        private static ISvgCachingService SvgCachingService => SvgEngine.TryResolve<ISvgCachingService>();
 
-        private static readonly Lazy<IToolbarIconSizeProvider> Tbi = new Lazy<IToolbarIconSizeProvider>(() => Engine.TryResolve<IToolbarIconSizeProvider>());
+        private static readonly Lazy<IToolbarIconSizeProvider> Tbi = new Lazy<IToolbarIconSizeProvider>(() => SvgEngine.TryResolve<IToolbarIconSizeProvider>());
 
-        private static IFileSystem FileSystemService => Engine.Resolve<IFileSystem>();
+        private static IFileSystem FileSystemService => SvgEngine.Resolve<IFileSystem>();
 
         private Color _defaultSelectedColor;
         private SizeF _iconDimensions;
@@ -93,7 +93,7 @@ namespace Svg.Editor.Tools
             await base.Initialize(ws);
 
             // cache icons
-            var cachingService = Engine.TryResolve<ISvgCachingService>();
+            var cachingService = SvgEngine.TryResolve<ISvgCachingService>();
             if (cachingService != null)
             {
                 foreach (var selectableColor in SelectableColors)

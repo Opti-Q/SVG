@@ -10,7 +10,7 @@ namespace Svg.Editor.Services
     {
         private static readonly Lazy<string[]> Resources = new Lazy<string[]>(() =>
             {
-                var registry = Engine.Resolve<IEmbeddedResourceRegistry>();
+                var registry = SvgEngine.Resolve<IEmbeddedResourceRegistry>();
                 return registry.EmbeddedResourceTypes.SelectMany(t => t.GetTypeInfo().Assembly.GetManifestResourceNames()).ToArray();
             }
         );
@@ -27,7 +27,7 @@ namespace Svg.Editor.Services
             // if this is a local resource file
             if (resource != null && resource.EndsWith(".svg"))
             {
-                var cache = Engine.TryResolve<ISvgCachingService>();
+                var cache = SvgEngine.TryResolve<ISvgCachingService>();
                 if (cache != null)
                 {
                     if (Cache.ContainsKey(resource))

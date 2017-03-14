@@ -20,7 +20,7 @@ namespace Svg.Editor.Tools
         public const string StrokeWidthNamesKey = "strokewidthnames";
 
         private IStrokeStyleOptionsInputService StrokeStyleOptionsInputService
-            => Engine.Resolve<IStrokeStyleOptionsInputService>();
+            => SvgEngine.Resolve<IStrokeStyleOptionsInputService>();
 
         public string[] StrokeDashes
         {

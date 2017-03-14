@@ -94,7 +94,7 @@ namespace Svg.Editor.Tools
 
                 _currentPath = new SvgPath
                 {
-                    Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
+                    Stroke = new SvgColourServer(SvgEngine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
                     Fill = SvgPaintServer.None,
                     PathData = new SvgPathSegmentList(new List<SvgPathSegment> { new SvgMoveToSegment(canvasStartPosition) }),
                     StrokeLineCap = SvgStrokeLineCap.Round,

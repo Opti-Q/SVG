@@ -27,7 +27,7 @@ namespace Svg.Editor.Sample.Forms.Tools
             {
                 new ToolCommand(this, "Save", (obj) =>
                 {
-                    var fs = Engine.Resolve<IFileSystem>();
+                    var fs = SvgEngine.Resolve<IFileSystem>();
                     var path = fs.GetDefaultStoragePath();
                     var storagePath = fs.PathCombine(path, _fileName());
 
@@ -45,7 +45,7 @@ namespace Svg.Editor.Sample.Forms.Tools
                 (obj) => ws.Document != null, sortFunc: (x)=>1),
                 new ToolCommand(this, "Load", (obj) =>
                 {
-                    var fs = Engine.Resolve<IFileSystem>();
+                    var fs = SvgEngine.Resolve<IFileSystem>();
                     var path = fs.GetDefaultStoragePath();
                     var storagePath = fs.PathCombine(path, _fileName());
 
@@ -58,7 +58,7 @@ namespace Svg.Editor.Sample.Forms.Tools
                 }, 
                 (obj) =>
                 {
-                    var fs = Engine.Resolve<IFileSystem>();
+                    var fs = SvgEngine.Resolve<IFileSystem>();
                     var path = fs.GetDefaultStoragePath();
                     var storagePath = fs.PathCombine(path, _fileName());
                     return fs.FileExists(storagePath);

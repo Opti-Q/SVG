@@ -9,7 +9,8 @@ namespace Svg
         private static readonly Dictionary<Type, Func<object>> _serviceRegistry = new Dictionary<Type, Func<object>>();
 
         public void Register<TInterface, TType>()
-            where TType : TInterface
+            where TType : class, TInterface
+            where TInterface : class
         {
             lock (_lock)
             {
@@ -18,6 +19,7 @@ namespace Svg
         }
 
         public void Register<TInterface>(Func<TInterface> factory)
+            where TInterface : class
         {
             lock (_lock)
             {
@@ -26,6 +28,7 @@ namespace Svg
         }
 
         public void RegisterSingleton<TInterface>(Func<TInterface> factory)
+            where TInterface : class
         {
             lock (_lock)
             {
@@ -35,6 +38,7 @@ namespace Svg
         }
 
         public void RegisterSingleton<TInterface>(TInterface instance)
+            where TInterface : class
         {
             lock (_lock)
             {
@@ -43,6 +47,7 @@ namespace Svg
         }
 
         public TInterface Resolve<TInterface>()
+            where TInterface : class
         {
             lock (_lock)
             {
@@ -56,6 +61,7 @@ namespace Svg
         }
 
         public TInterface TryResolve<TInterface>()
+            where TInterface : class
         {
             lock (_lock)
             {
@@ -69,6 +75,7 @@ namespace Svg
         }
 
         public IEnumerable<T> ResolveAll<T>()
+            where T : class
         {
             throw new NotSupportedException();
         }

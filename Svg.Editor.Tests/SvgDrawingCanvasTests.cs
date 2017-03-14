@@ -26,9 +26,9 @@ namespace Svg.Editor.Tests
                 { "fontsizenames", new [] { "12px", "16px", "20px", "24px", "36px", "48px" } }
             };
 
-            var undoRedoService = Engine.Resolve<IUndoRedoService>();
+            var undoRedoService = SvgEngine.Resolve<IUndoRedoService>();
 
-            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            SvgEngine.Register<ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
             {
                 () => new GridTool(null, undoRedoService),
                 () => new MoveTool(undoRedoService),
@@ -41,7 +41,7 @@ namespace Svg.Editor.Tests
 
             // register mock text input service for text tool
             _textMock = new MockTextInputService();
-            Engine.Register<ITextInputService, MockTextInputService>(() => _textMock);
+            SvgEngine.Register<ITextInputService>(() => _textMock);
             
         }
 

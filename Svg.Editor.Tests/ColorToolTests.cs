@@ -21,18 +21,18 @@ namespace Svg.Editor.Tests
         {
             // register the tool provder with a single color tool
             var selectableColors = new[] { "#000000", "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF" };
-            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            SvgEngine.Register<ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
             {
                 () => new ColorTool(new Dictionary<string, object>
                 {
                     { ColorTool.SelectableColorsKey, selectableColors },
                     { ColorTool.SelectableColorNamesKey, new [] { "Black","Red","Green","Blue", "Yellow", "Magenta", "Cyan" } }
-                }, Engine.Resolve<IUndoRedoService>())
+                }, SvgEngine.Resolve<IUndoRedoService>())
             }));
 
             // register the mock color input service
             _colorMock = new MockColorInputService();
-            Engine.Register<IColorInputService, MockColorInputService>(() => _colorMock);
+            SvgEngine.Register<IColorInputService>(() => _colorMock);
             
         }
 
@@ -237,7 +237,7 @@ namespace Svg.Editor.Tests
 
             var selectableColors = new[] {"#000000", "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF"};
 
-            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            SvgEngine.Register<ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
             {
                 () => new ColorTool(new Dictionary<string, object>
                 {

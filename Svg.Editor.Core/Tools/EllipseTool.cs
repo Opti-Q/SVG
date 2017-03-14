@@ -32,7 +32,7 @@ namespace Svg.Editor.Tools
 
         #region Private properties
 
-        private Brush BlueBrush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
+        private Brush BlueBrush => _brush ?? (_brush = SvgEngine.Factory.CreateSolidBrush(SvgEngine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
         private IEnumerable<SvgMarker> Markers { get; }
 
         #endregion

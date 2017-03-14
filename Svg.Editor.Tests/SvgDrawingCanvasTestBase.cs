@@ -21,9 +21,9 @@ namespace Svg.Editor.Tests
             SvgPlatform.Init();
             SvgEditor.Init();
 
-            Engine.Register<SchedulerProvider, SchedulerProvider>(() => SchedulerProvider);
-            Engine.RegisterSingleton<IGestureRecognizer, ReactiveGestureRecognizer>(() => new ReactiveGestureRecognizer(SchedulerProvider));
-            Engine.Register<IFileLoader, FileLoader>(() => new FileLoader());
+            SvgEngine.Register<SchedulerProvider>(() => SchedulerProvider);
+            SvgEngine.RegisterSingleton<IGestureRecognizer>(() => new ReactiveGestureRecognizer(SchedulerProvider));
+            SvgEngine.Register<IFileLoader>(() => new FileLoader());
 
             SetupOverride();
 
@@ -43,7 +43,7 @@ namespace Svg.Editor.Tests
 
         protected SvgDocument LoadDocument(string fileName)
         {
-            var l = Engine.Resolve<IFileLoader>();
+            var l = SvgEngine.Resolve<IFileLoader>();
             return l.Load(fileName);
         }
         

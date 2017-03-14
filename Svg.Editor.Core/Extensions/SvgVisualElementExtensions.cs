@@ -99,7 +99,7 @@ namespace Svg.Editor.Extensions
                 byte[] imageBytes = Convert.FromBase64String(uriString.Substring(dataIdx));
                 using (var stream = new MemoryStream(imageBytes))
                 {
-                    var img = Engine.Factory.CreateImageFromStream(stream);
+                    var img = SvgEngine.Factory.CreateImageFromStream(stream);
                     return SizeF.Create(img.Width, img.Height);
                 }
             }
@@ -112,7 +112,7 @@ namespace Svg.Editor.Extensions
             //// should work with http: and file: protocol urls
             //var httpRequest = WebRequest.Create(uri);
             //using (WebResponse webResponse = httpRequest.GetResponse())
-            using (var stream = Engine.Resolve<IWebRequest>().GetResponse(image.Href))
+            using (var stream = SvgEngine.Resolve<IWebRequest>().GetResponse(image.Href))
             {
                 stream.Position = 0;
                 if (image.Href.LocalPath.ToLowerInvariant().EndsWith(".svg"))
@@ -123,7 +123,7 @@ namespace Svg.Editor.Extensions
                 }
                 else
                 {
-                    var img = Engine.Factory.CreateBitmapFromStream(stream);
+                    var img = SvgEngine.Factory.CreateBitmapFromStream(stream);
                     return SizeF.Create(img.Width, img.Height);
                 }
             }

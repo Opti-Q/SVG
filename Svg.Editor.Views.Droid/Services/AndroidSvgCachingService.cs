@@ -12,11 +12,11 @@ namespace Svg.Editor.Views.Droid.Services
     {
         private readonly Func<string, ISvgSource> _sourceProvider;
 
-        private Lazy<IFileSystem> _fs = new Lazy<IFileSystem>(() => Engine.Resolve<IFileSystem>());
+        private Lazy<IFileSystem> _fs = new Lazy<IFileSystem>(() => SvgEngine.Resolve<IFileSystem>());
 
         public AndroidSvgCachingService()
         {
-            _sourceProvider = path => Engine.Resolve<ISvgSourceFactory>().Create(path);
+            _sourceProvider = path => SvgEngine.Resolve<ISvgSourceFactory>().Create(path);
         }
 
         public string GetCachedPng(string svgFilePath, SaveAsPngOptions options)
@@ -33,7 +33,7 @@ namespace Svg.Editor.Views.Droid.Services
             var dimension = GetDimension(options);
 
             // save svg as png
-            using (var bmp = Engine.Factory.CreateBitmap((int)dimension.Width, (int)dimension.Height))
+            using (var bmp = SvgEngine.Factory.CreateBitmap((int)dimension.Width, (int)dimension.Height))
             {
                 document.DrawAllContents(bmp, options.BackgroundColor);
                 var fs = _fs.Value;

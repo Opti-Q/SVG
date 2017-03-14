@@ -17,9 +17,9 @@ namespace Svg.Editor.Tests
         protected override void SetupOverride()
         {
 
-            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            SvgEngine.Register<ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
             {
-                () => new SelectionTool(Engine.Resolve<IUndoRedoService>()),
+                () => new SelectionTool(SvgEngine.Resolve<IUndoRedoService>()),
 
                 () => new StrokeStyleTool(new Dictionary<string, object>
                 {
@@ -27,12 +27,12 @@ namespace Svg.Editor.Tests
                     { StrokeStyleTool.StrokeDashNamesKey, new [] { "----------", "- - - - - -", "--  --  --", "---   ---" } },
                     { StrokeStyleTool.StrokeWidthsKey, new [] { 2, 6, 12, 24 } },
                     { StrokeStyleTool.StrokeWidthNamesKey, new [] { "thin", "normal", "thick", "ultra-thick" } }
-                }, Engine.Resolve<IUndoRedoService>()),
+                }, SvgEngine.Resolve<IUndoRedoService>()),
             }));
 
             // register stroke style options input service
             _mockStrokeStyle = new MockStrokeStyleOptionsInputService();
-            Engine.Register<IStrokeStyleOptionsInputService, MockStrokeStyleOptionsInputService>(() => _mockStrokeStyle);
+            SvgEngine.Register<IStrokeStyleOptionsInputService>(() => _mockStrokeStyle);
             
         }
 

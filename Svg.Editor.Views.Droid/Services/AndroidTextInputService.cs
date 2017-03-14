@@ -21,7 +21,7 @@ namespace Svg.Editor.Droid.Services
         {
             var tcs = new TaskCompletionSource<TextTool.TextProperties>();
 
-            var cp = Engine.Resolve<IContextProvider>();
+            var cp = SvgEngine.Resolve<IContextProvider>();
             var context = cp.Context;
             var result = new TextTool.TextProperties();
 

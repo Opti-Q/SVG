@@ -14,7 +14,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
             {
                 if (inStream == null) return null;
 
-                var fs = Engine.Resolve<IFileSystem>();
+                var fs = SvgEngine.Resolve<IFileSystem>();
                 var path = fs.PathCombine(fs.GetDefaultStoragePath(), "background.png");
 
                 if (fs.FileExists(path))
