@@ -73,6 +73,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Document Structure\SvgSymbol.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Document Structure\SvgTitle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Document Structure\SvgUse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IoC\DefaultServiceLocator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IoC\IServiceLocator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgEngine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\SvgException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensibility\SvgForeignObject.cs" />
@@ -308,6 +310,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SvgElementStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgExtentions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgPlatform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SvgPlatformOptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgServiceAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgTypeConverterRegistry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgTypeDescriptor.cs" />

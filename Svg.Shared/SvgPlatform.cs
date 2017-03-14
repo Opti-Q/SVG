@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
 using Svg.Interfaces;
 using Svg.Platform;
 
@@ -13,7 +9,7 @@ namespace Svg
         private static bool _initialized = false;
         private static readonly SemaphoreSlim _lock = new SemaphoreSlim(1);
 
-        public static void Init()
+        public static void Init(SvgPlatformOptions options = null)
         {
             if (_initialized)
                 return;
@@ -25,6 +21,8 @@ namespace Svg
                 if (_initialized)
                     return;
 #if !PCL
+                if (options?.ServiceLocator != null)
+                    SvgEngine.ServiceLocator = options.ServiceLocator;
                 // register base services
                 SvgEngine.RegisterSingleton<IMarshal>(() => new SvgMarshal());
                 SvgEngine.RegisterSingleton<ISvgElementAttributeProvider>(
