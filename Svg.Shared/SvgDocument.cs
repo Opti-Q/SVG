@@ -89,7 +89,7 @@ namespace Svg
 
         private IFileSystem FileSystem
         {
-            get { return _fileSystem ?? (_fileSystem = Engine.Resolve<IFileSystem>()); }
+            get { return _fileSystem ?? (_fileSystem = SvgEngine.Resolve<IFileSystem>()); }
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace Svg
             if (temp.Result != null)
                 return temp.Result;
 
-            var fs = Engine.Resolve<IFileSystem>();
+            var fs = SvgEngine.Resolve<IFileSystem>();
 
             if (!fs.FileExists(path))
             {
@@ -214,7 +214,7 @@ namespace Svg
                 //reader.XmlResolver = new SvgDtdResolver();
                 //reader.WhitespaceHandling = WhitespaceHandling.None;
 
-                using (var reader = Engine.Factory.CreateSvgTextReader(strReader, null))
+                using (var reader = SvgEngine.Factory.CreateSvgTextReader(strReader, null))
                     return Open<T>(reader);
             }
         }
@@ -236,7 +236,7 @@ namespace Svg
             //var reader = new SvgTextReader(stream, entities);
             //reader.XmlResolver = new SvgDtdResolver();
             //reader.WhitespaceHandling = WhitespaceHandling.None;
-            using (var reader = Engine.Factory.CreateSvgTextReader(stream, entities))
+            using (var reader = SvgEngine.Factory.CreateSvgTextReader(stream, entities))
                 return Open<T>(reader);
         }
 
@@ -260,7 +260,7 @@ namespace Svg
                             // Does this element have a value or children
                             // (Must do this check here before we progress to another node)
                             elementEmpty = reader.IsEmptyElement;
-                            var factory = Engine.Resolve<ISvgElementFactory>();
+                            var factory = SvgEngine.Resolve<ISvgElementFactory>();
                             // Create element
                             if (elementStack.Count > 0)
                             {
@@ -662,7 +662,7 @@ namespace Svg
 
         public override void Write(IXmlTextWriter writer)
         {
-            using (var c = Engine.Resolve<ICultureHelper>().UsingCulture(CultureInfo.InvariantCulture))
+            using (var c = SvgEngine.Resolve<ICultureHelper>().UsingCulture(CultureInfo.InvariantCulture))
             {
                 base.Write(writer);
             }
@@ -670,7 +670,7 @@ namespace Svg
 
         public void Write(Stream stream)
         {
-            var xmlWriter = Engine.Factory.CreateXmlTextWriter(stream, Encoding.UTF8);
+            var xmlWriter = SvgEngine.Factory.CreateXmlTextWriter(stream, Encoding.UTF8);
 
             xmlWriter.WriteStartDocument();
             //xmlWriter.WriteDocType("svg", "-//W3C//DTD SVG 1.1//EN", "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd", null);
@@ -685,7 +685,7 @@ namespace Svg
 
         public void Write(string path)
         {
-            using (var fs = Engine.Resolve<IFileSystem>().OpenWrite(path))
+            using (var fs = SvgEngine.Resolve<IFileSystem>().OpenWrite(path))
             {
                 this.Write(fs);
             }

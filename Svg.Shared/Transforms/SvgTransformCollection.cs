@@ -48,7 +48,7 @@ namespace Svg.Transforms
     	/// <returns>The result of all transforms</returns>
     	public Matrix GetMatrix()
         {
-            var transformMatrix = Engine.Factory.CreateMatrix();
+            var transformMatrix = SvgEngine.Factory.CreateMatrix();
     		
     		// Return if there are no transforms
             if (this.Count == 0)

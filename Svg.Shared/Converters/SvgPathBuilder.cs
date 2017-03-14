@@ -45,7 +45,7 @@ namespace Svg.Converters
             }
             catch (Exception exc)
             {
-                Engine.Logger.Error($"Error parsing path \"{path}\": {exc.Message}");
+                SvgEngine.Logger.Error($"Error parsing path \"{path}\": {exc.Message}");
             }
 
             return segments;

@@ -45,7 +45,7 @@ namespace Svg.Transforms
                  * rx, ry is rotation/skew
                  * tx, ty is translation
                  */
-                matrix = Engine.Factory.CreateMatrix(
+                matrix = SvgEngine.Factory.CreateMatrix(
                     this.points[ScaleX],
                     this.points[RotateX],
                     this.points[RotateY],

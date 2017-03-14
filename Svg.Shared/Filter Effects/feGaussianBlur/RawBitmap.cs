@@ -17,7 +17,7 @@ namespace Svg.FilterEffects
 
         private IMarshal Marshal
         {
-            get { return _marshal ?? (_marshal = Engine.Resolve<IMarshal>()); }
+            get { return _marshal ?? (_marshal = SvgEngine.Resolve<IMarshal>()); }
         }
 
         public RawBitmap(Bitmap originBitmap)

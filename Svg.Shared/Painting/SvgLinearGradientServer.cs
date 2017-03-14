@@ -87,8 +87,8 @@ namespace Svg
             {
                 var stopColor = this.Stops[0].GetColor(renderingElement); 
                 int alpha = (int)((opacity * (stopColor.A/255.0f) ) * 255);
-                Color colour = Engine.Factory.CreateColorFromArgb(alpha, stopColor);
-                return Engine.Factory.CreateSolidBrush(colour);
+                Color colour = SvgEngine.Factory.CreateColorFromArgb(alpha, stopColor);
+                return SvgEngine.Factory.CreateSolidBrush(colour);
             }
 
             try
@@ -160,8 +160,8 @@ namespace Svg
                     effectiveEnd = expansion.EndPoint;
                 }
 
-                var result = Engine.Factory.CreateLinearGradientBrush(effectiveStart, effectiveEnd,
-                    new ColorBlend() {Colors = new [] { Engine.Factory.Colors.Transparent, Engine.Factory.Colors.Transparent }, Positions = null});
+                var result = SvgEngine.Factory.CreateLinearGradientBrush(effectiveStart, effectiveEnd,
+                    new ColorBlend() {Colors = new [] { SvgEngine.Factory.Colors.Transparent, SvgEngine.Factory.Colors.Transparent }, Positions = null});
                 result.InterpolationColors = CalculateColorBlend(renderer, opacity, points[0], effectiveStart, points[1], effectiveEnd);
                 result.WrapMode = WrapMode.TileFlipX;
 
@@ -222,7 +222,7 @@ namespace Svg
             var pointsToMove = PointsToMove(boundable, specifiedStart, specifiedEnd);
             if (pointsToMove == LinePoints.None)
             {
-                Engine.Logger.Fatal("Unexpectedly expanding gradient when not needed!");
+                SvgEngine.Logger.Fatal("Unexpectedly expanding gradient when not needed!");
                 return new GradientPoints(specifiedStart, specifiedEnd);
             }
 

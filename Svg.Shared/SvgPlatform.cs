@@ -26,19 +26,19 @@ namespace Svg
                     return;
 #if !PCL
                 // register base services
-                Engine.RegisterSingleton<IMarshal, SvgMarshal>(() => new SvgMarshal());
-                Engine.RegisterSingleton<ISvgElementAttributeProvider, SvgElementAttributeProvider>(
+                SvgEngine.RegisterSingleton<IMarshal>(() => new SvgMarshal());
+                SvgEngine.RegisterSingleton<ISvgElementAttributeProvider>(
                     () => new SvgElementAttributeProvider());
-                Engine.RegisterSingleton<ICultureHelper, CultureHelper>(() => new CultureHelper());
-                Engine.RegisterSingleton<ILogger, DefaultLogger>(() => new DefaultLogger());
-                Engine.RegisterSingleton<ICharConverter, SvgCharConverter>(() => new SvgCharConverter());
-                Engine.Register<IWebRequest, WebRequestSvc>(() => new WebRequestSvc());
-                Engine.RegisterSingleton<IFileSystem, FileSystem>(() => new FileSystem());
-                Engine.Register<IAlternativeSvgTextRenderer, SkiaTextRenderer>(() => new SkiaTextRenderer());
-                Engine.Register<ISvgCachingService, SvgCachingService>(() => new SvgCachingService());
+                SvgEngine.RegisterSingleton<ICultureHelper>(() => new CultureHelper());
+                SvgEngine.RegisterSingleton<ILogger>(() => new DefaultLogger());
+                SvgEngine.RegisterSingleton<ICharConverter>(() => new SvgCharConverter());
+                SvgEngine.Register<IWebRequest>(() => new WebRequestSvc());
+                SvgEngine.RegisterSingleton<IFileSystem>(() => new FileSystem());
+                SvgEngine.Register<IAlternativeSvgTextRenderer>(() => new SkiaTextRenderer());
+                SvgEngine.Register<ISvgCachingService>(() => new SvgCachingService());
                 // register platform specific services
 
-                Engine.Register<IFactory, IFactory>(() => new SKFactory());
+                SvgEngine.Register<IFactory>(() => new SKFactory());
 #endif
                 _initialized = true;
             }

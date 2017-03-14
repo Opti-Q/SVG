@@ -174,7 +174,7 @@ namespace Svg.Editor.Tools
                 Fill = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0))
             };
 
-            var lines = txt.Split('\n');
+            var lines = txt.Split('\n','\r');
             if (lines.Length > 1)
             {
                 var spans = lines.
@@ -221,7 +221,7 @@ namespace Svg.Editor.Tools
             // joining the spans as newlines
             var text = !string.IsNullOrWhiteSpace(svgText.Text)
                 ? svgText.Text
-                : string.Join("\n", svgText.Children.OfType<SvgTextSpan>().Select(x => x.Text));
+                : string.Join(Environment.NewLine, svgText.Children.OfType<SvgTextSpan>().Select(x => x.Text));
 
             var txtProperties =
                 await
@@ -275,7 +275,7 @@ namespace Svg.Editor.Tools
             var formerFontSize = svgText.FontSize;
             UndoRedoService.ExecuteCommand(new UndoableActionCommand("Edit text", o =>
             {
-                var lines = text.Split('\n');
+                var lines = text.Split('\n','\r');
                 // if we have more lines, we need to put each in a different span
                 if (lines.Length > 1)
                 {

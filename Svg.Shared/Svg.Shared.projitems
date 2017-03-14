@@ -73,7 +73,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Document Structure\SvgSymbol.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Document Structure\SvgTitle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Document Structure\SvgUse.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Engine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SvgEngine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\SvgException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensibility\SvgForeignObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />

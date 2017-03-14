@@ -4,8 +4,8 @@ namespace Svg.Interfaces.Xml
 {
     public interface IXmlTextWriter : IDisposable
     {
-        void WriteAttributeString(string xmlns, string value);
-        void WriteAttributeString(string xmlns, string namespaceKey, string value);
+        void WriteAttributeString(string localName, string value);
+        void WriteAttributeString(string localName, string namespaceKey, string value);
         void WriteDocType(string name, string pubid, string sysid, string subset);
         void WriteProcessingInstruction(string name, string text);
         void Flush();

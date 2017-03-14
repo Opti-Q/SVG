@@ -43,7 +43,7 @@ namespace Svg.Transforms
                 if (matrix != null)
                     return matrix;
 
-                matrix = Engine.Factory.CreateMatrix();
+                matrix = SvgEngine.Factory.CreateMatrix();
                 matrix.Translate(this.CenterX, this.CenterY);
                 matrix.Rotate(this.Angle);
                 matrix.Translate(-this.CenterX, -this.CenterY);

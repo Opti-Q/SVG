@@ -34,22 +34,22 @@ namespace Svg.Interfaces
         public static RectangleF FromLTRB(float left, float top,
                            float right, float bottom)
         {
-            return Engine.Factory.CreateRectangleF(left, top, right - left, bottom - top);
+            return SvgEngine.Factory.CreateRectangleF(left, top, right - left, bottom - top);
         }
 
         public static RectangleF Create()
         {
-            return Engine.Factory.CreateRectangleF();
+            return SvgEngine.Factory.CreateRectangleF();
         }
 
         public static RectangleF Create(float x, float y, float width, float height)
         {
-            return Engine.Factory.CreateRectangleF(x, y, width, height);
+            return SvgEngine.Factory.CreateRectangleF(x, y, width, height);
         }
 
         public static RectangleF Create(PointF location, SizeF size)
         {
-            return Engine.Factory.CreateRectangleF(location, size);
+            return SvgEngine.Factory.CreateRectangleF(location, size);
         }
 
         /// <summary>

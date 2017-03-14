@@ -21,7 +21,7 @@ namespace Svg.Interfaces
 
         public static PointF Create(float x, float y)
         {
-            return Svg.Engine.Factory.CreatePointF(x, y);
+            return Svg.SvgEngine.Factory.CreatePointF(x, y);
         }
 
         // -----------------------

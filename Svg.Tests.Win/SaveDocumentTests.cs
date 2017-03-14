@@ -14,7 +14,7 @@ namespace Svg.Tests.Win
         public void SetUp()
         {
             SvgPlatform.Init();
-            Svg.Engine.Register<IFileLoader, FileLoader>(() => new FileLoader());
+            Svg.SvgEngine.Register<IFileLoader>(() => new FileLoader());
         }
 
         [Test]
@@ -200,7 +200,7 @@ namespace Svg.Tests.Win
         [Test]
         public void WhenSavingDocument_KeepNamespacesIntact()
         {
-            var fileLoader = Engine.Resolve<IFileLoader>();
+            var fileLoader = SvgEngine.Resolve<IFileLoader>();
             var document = fileLoader.Load("Bends_01.svg");
             SvgDocument doc2 = null;
 
@@ -221,8 +221,7 @@ namespace Svg.Tests.Win
             // Arrange
             var doc = new SvgDocument();
             SvgDocument doc2 = null;
-            //var expectedSvg = "﻿<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?><svg width=\"100%\" height=\"100%\" preserveAspectRatio=\"xMidYMid\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\" xmlns:xml=\"http://www.w3.org/XML/1998/namespace\" version=\"1.1\" />";
-            var expectedSvg = "﻿<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?><svg width=\"100%\" height=\"100%\" preserveAspectRatio=\"xMidYMid\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\" xmlns:xml=\"http://www.w3.org/XML/1998/namespace\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" />";
+            var expectedSvg = "﻿<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?><svg xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\" xmlns:xml=\"http://www.w3.org/XML/1998/namespace\" version=\"1.1\" width=\"100%\" height=\"100%\" preserveAspectRatio=\"xMidYMid\" xmlns=\"http://www.w3.org/2000/svg\" />";
             var svg = string.Empty;
 
             // Act
@@ -244,7 +243,7 @@ namespace Svg.Tests.Win
         [TestCase("nested_transformed_text.svg")]
         public void CanLoad_Save_AndReload_Document(string testFile)
         {
-            var fileLoader = Engine.Resolve<IFileLoader>();
+            var fileLoader = SvgEngine.Resolve<IFileLoader>();
             var document = fileLoader.Load(testFile);
             SvgDocument document2 = null;
 

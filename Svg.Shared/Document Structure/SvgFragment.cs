@@ -209,7 +209,7 @@ namespace Svg
         {
             get
             {
-                var path = Engine.Factory.CreateGraphicsPath();
+                var path = SvgEngine.Factory.CreateGraphicsPath();
 
                 AddPaths(this, path);
 
@@ -334,17 +334,12 @@ namespace Svg
 
                 writer.WriteStartElement(ElementName, baseNamespace.Value);
             }
-        }
 
-        //Override the default behavior, writing out the namespaces.
-        protected override void WriteStartElement(IXmlTextWriter writer)
-        {
-            base.WriteStartElement(writer);
 
             foreach (var ns in SvgAttributeAttribute.Namespaces)
             {
                 if (!string.IsNullOrEmpty(ns.Key))
-                    writer.WriteAttributeString("xmlns", ns.Key, ns.Value);
+                    writer.WriteAttributeString(ns.Key, "xmlns", ns.Value);
             }
 
             writer.WriteAttributeString("version", "1.1");

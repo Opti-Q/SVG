@@ -49,14 +49,14 @@ namespace Svg
         public Formatting Formatting { get { return _w.Formatting; } set { _w.Formatting = value; } }
 #endif
 
-        public void WriteAttributeString(string xmlns, string value)
+        public void WriteAttributeString(string localName, string value)
         {
-            _w.WriteAttributeString(xmlns, value);
+            _w.WriteAttributeString(localName, value);
         }
 
-        public void WriteAttributeString(string xmlns, string namespaceKey, string value)
+        public void WriteAttributeString(string localName, string namespaceKey, string value)
         {
-            _w.WriteAttributeString(xmlns, namespaceKey, null, value);
+            _w.WriteAttributeString(namespaceKey, localName, null, value);
         }
 
         public void WriteDocType(string name, string pubid, string sysid, string subset)

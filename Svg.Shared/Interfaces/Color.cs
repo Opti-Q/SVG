@@ -9,17 +9,17 @@ namespace Svg.Interfaces
     {
         public static Color Create(int r, int g, int b)
         {
-            return Engine.Factory.CreateColorFromArgb(255, r, g, b);
+            return SvgEngine.Factory.CreateColorFromArgb(255, r, g, b);
         }
 
         public static Color Create(int a, int r, int g, int b)
         {
-            return Engine.Factory.CreateColorFromArgb(a, r, g, b);
+            return SvgEngine.Factory.CreateColorFromArgb(a, r, g, b);
         }
 
         public static Color Create(string hex)
         {
-            return Engine.Factory.CreateColorFromHexString(hex);
+            return SvgEngine.Factory.CreateColorFromHexString(hex);
         }
 
         public abstract string Name { get; }

@@ -8,12 +8,12 @@ namespace Svg
     {
         public static Bitmap Create(int width, int height)
         {
-            return Engine.Factory.CreateBitmap(width, height);
+            return SvgEngine.Factory.CreateBitmap(width, height);
         }
 
         public static Bitmap Create(Image image)
         {
-            return Engine.Factory.CreateBitmap(image);
+            return SvgEngine.Factory.CreateBitmap(image);
         }
 
         public abstract BitmapData LockBits(RectangleF rectangle, ImageLockMode lockmode, PixelFormat pixelFormat);

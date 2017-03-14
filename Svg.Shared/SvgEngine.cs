@@ -5,7 +5,7 @@ using Svg.Shared;
 
 namespace Svg
 {
-    public static class Engine
+    public static class SvgEngine
     {
         private static readonly object _lock = new object();
         private static readonly Dictionary<Type, Func<object>> _serviceRegistry = new Dictionary<Type, Func<object>>();
@@ -62,27 +62,23 @@ namespace Svg
             }
         }
 
-        public static void RegisterSingleton<TInterface, TImplementation>(Func<TImplementation> factory)
+        public static void RegisterSingleton<TInterface>(Func<TInterface> factory)
             where TInterface : class
-            where TImplementation : class, TInterface
         {
             EnsureInitialized();
-            
-            var singleton = factory();
-            RegisterInternal<TInterface, TImplementation>(() => singleton);
+            var singleton = new Singleton<TInterface>(factory);
+            RegisterInternal(() => singleton.Instance);
         }
-
-        public static void Register<TInterface, TImplementation>(Func<TImplementation> factory)
+        
+        public static void Register<TInterface>(Func<TInterface> factory)
             where TInterface : class
-            where TImplementation : class, TInterface
         {
             EnsureInitialized();
 
-            RegisterInternal<TInterface, TImplementation>(factory);
+            RegisterInternal(factory);
         }
 
-        private static void RegisterInternal<TInterface, TImplementation>(Func<TImplementation> factory) where TInterface : class
-            where TImplementation : class, TInterface
+        private static void RegisterInternal<TInterface>(Func<TInterface> factory) where TInterface : class
         {
             lock (_lock)
             {
@@ -146,10 +142,21 @@ namespace Svg
 
         private static void RegisterBaseServices()
         {
-            RegisterInternal<ISvgElementFactory, SvgElementFactory>(() => _elementFactory);
-            RegisterInternal<ISvgTypeConverterRegistry, SvgTypeConverterRegistry>(() => _typeConverterRegistry);
-            RegisterInternal<ISvgTypeDescriptor, SvgTypeDescriptor>(() => (SvgTypeDescriptor)_typeDescriptor);
-            RegisterInternal<ISvgCachingService, SvgCachingService>(() => _cachingService);
+            RegisterInternal<ISvgElementFactory>(() => _elementFactory);
+            RegisterInternal<ISvgTypeConverterRegistry>(() => _typeConverterRegistry);
+            RegisterInternal<ISvgTypeDescriptor>(() => (SvgTypeDescriptor)_typeDescriptor);
+            RegisterInternal<ISvgCachingService>(() => _cachingService);
+        }
+
+        private class Singleton<TInterface>
+        {
+            private Lazy<TInterface> _instanceHolder;
+            public Singleton(Func<TInterface> factory)
+            {
+                _instanceHolder = new Lazy<TInterface>(factory);
+            }
+
+            public TInterface Instance => _instanceHolder.Value;
         }
     }
 }

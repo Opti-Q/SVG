@@ -125,7 +125,7 @@ namespace Svg
             private PointF _p3;
             private double _length;
             private Func<double, double> _integral;
-            private ISortedList<double, double> _lengths = Engine.Factory.CreateSortedList<double, double>();
+            private ISortedList<double, double> _lengths = SvgEngine.Factory.CreateSortedList<double, double>();
 
             public double StartOffset { get; set; }
             public double Length { get { return _length; } }

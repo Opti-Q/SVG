@@ -49,7 +49,7 @@ namespace Svg.FilterEffects
                                                 this.Dy.ToDeviceValue(null, UnitRenderingType.Vertical, null)) };
             buffer.Transform.TransformVectors(pts);
 
-            using (var g = Engine.Factory.CreateGraphicsFromImage(result))
+            using (var g = SvgEngine.Factory.CreateGraphicsFromImage(result))
             {
                 g.DrawImage(inputImage, RectangleF.Create((int)pts[0].X, (int)pts[0].Y, 
                                                       inputImage.Width, inputImage.Height),

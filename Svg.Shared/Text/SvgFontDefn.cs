@@ -63,7 +63,7 @@ namespace Svg
             var textPath = GetPath(renderer, text, null, false);
             if (textPath.PointCount > 0)
             {
-                using (var translate = Engine.Factory.CreateMatrix())
+                using (var translate = SvgEngine.Factory.CreateMatrix())
                 {
                     translate.Translate(location.X, location.Y);
                     textPath.Transform(translate);
@@ -86,7 +86,7 @@ namespace Svg
 
             var ascent = Ascent(renderer);
 
-            var result = Engine.Factory.CreateGraphicsPath();
+            var result = SvgEngine.Factory.CreateGraphicsPath();
             if (string.IsNullOrEmpty(text)) return result;
 
             for (int i = 0; i < text.Length; i++)
@@ -97,7 +97,7 @@ namespace Svg
                     xPos -= kern.Kerning * _emScale;
                 }
                 path = (GraphicsPath)glyph.Path(renderer).Clone();
-                scaleMatrix = Engine.Factory.CreateMatrix();
+                scaleMatrix = SvgEngine.Factory.CreateMatrix();
                 scaleMatrix.Scale(_emScale, -1 * _emScale, MatrixOrder.Append);
                 scaleMatrix.Translate(xPos, ascent, MatrixOrder.Append);
                 path.Transform(scaleMatrix);

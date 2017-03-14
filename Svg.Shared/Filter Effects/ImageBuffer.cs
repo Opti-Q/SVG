@@ -134,7 +134,7 @@ namespace Svg.FilterEffects
             using (var renderer = SvgRenderer.FromImage(graphic))
             {
                 renderer.SetBoundable(_renderer.GetBoundable());
-                var transform = Engine.Factory.CreateMatrix();
+                var transform = SvgEngine.Factory.CreateMatrix();
                 transform.Translate(_bounds.Width * _inflate, _bounds.Height * _inflate);
                 renderer.Transform = transform;
                 //renderer.Transform = _renderer.Transform;
@@ -155,14 +155,14 @@ namespace Svg.FilterEffects
                    new float[] {0, 0, 0, 1, 1},        // alpha
                    new float[] {0, 0, 0, 0, 0} };    // translations
 
-            var matrix = Engine.Factory.CreateColorMatrix(colorMatrixElements);
+            var matrix = SvgEngine.Factory.CreateColorMatrix(colorMatrixElements);
 
-            ImageAttributes attributes = Engine.Factory.CreateImageAttributes();
+            ImageAttributes attributes = SvgEngine.Factory.CreateImageAttributes();
             attributes.SetColorMatrix(matrix);
 
             var sourceAlpha = Bitmap.Create(source.Width, source.Height);
 
-            using (var graphics = Engine.Factory.CreateGraphicsFromImage(sourceAlpha))
+            using (var graphics = SvgEngine.Factory.CreateGraphicsFromImage(sourceAlpha))
             {
 
                 graphics.DrawImage(source, RectangleF.Create(0, 0, source.Width, source.Height), 0, 0,

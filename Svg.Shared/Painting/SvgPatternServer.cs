@@ -170,7 +170,7 @@ namespace Svg
         {
             get
             {
-                var transform = Engine.Factory.CreateMatrix();
+                var transform = SvgEngine.Factory.CreateMatrix();
 
                 if (PatternTransform != null)
                 {
@@ -235,7 +235,7 @@ namespace Svg
             {
                 if (patternUnits == SvgCoordinateUnits.ObjectBoundingBox) renderer.SetBoundable(renderingElement);
 
-                using (var patternMatrix = Engine.Factory.CreateMatrix())
+                using (var patternMatrix = SvgEngine.Factory.CreateMatrix())
                 {
                     var bounds = renderer.GetBoundable().Bounds;
                     var xScale = (patternUnits == SvgCoordinateUnits.ObjectBoundingBox ? bounds.Width : 1);
@@ -269,7 +269,7 @@ namespace Svg
                         }
                     }
 
-                    TextureBrush textureBrush = Engine.Factory.CreateTextureBrush(image);
+                    TextureBrush textureBrush = SvgEngine.Factory.CreateTextureBrush(image);
                     var brushTransform = EffectivePatternTransform.Clone();
                     brushTransform.Translate(x, y, MatrixOrder.Append);
                     textureBrush.Transform = brushTransform;

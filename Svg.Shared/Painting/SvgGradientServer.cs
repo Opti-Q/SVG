@@ -117,7 +117,7 @@ namespace Svg
         {
             get
             {
-                var transform = Engine.Factory.CreateMatrix();
+                var transform = SvgEngine.Factory.CreateMatrix();
 
                 if (GradientTransform != null)
                 {
@@ -175,13 +175,13 @@ namespace Svg
                 }
             }
 
-            ColorBlend blend = Engine.Factory.CreateColorBlend(colourBlends);
+            ColorBlend blend = SvgEngine.Factory.CreateColorBlend(colourBlends);
 
             // Set positions and colour values
             int actualStops = 0;
             float mergedOpacity = 0.0f;
             float position = 0.0f;
-            Color colour = Engine.Factory.Colors.Black;
+            Color colour = SvgEngine.Factory.Colors.Black;
 
             for (int i = 0; i < colourBlends; i++)
             {
@@ -193,7 +193,7 @@ namespace Svg
                     radial
                     ? 1 - (currentStop.Offset.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this) / boundWidth)
                     : (currentStop.Offset.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this) / boundWidth);
-                colour = Engine.Factory.CreateColorFromArgb((int)(mergedOpacity * 255), currentStop.GetColor(this));
+                colour = SvgEngine.Factory.CreateColorFromArgb((int)(mergedOpacity * 255), currentStop.GetColor(this));
 
                 actualStops++;
 

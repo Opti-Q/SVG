@@ -35,7 +35,7 @@ namespace Svg.Transforms
                 if (matrix != null)
                     return matrix;
 
-                matrix = Engine.Factory.CreateMatrix();
+                matrix = SvgEngine.Factory.CreateMatrix();
                 matrix.Shear(
                     (float)Math.Tan(AngleX/180*Math.PI),
                     (float)Math.Tan(AngleY/180*Math.PI));

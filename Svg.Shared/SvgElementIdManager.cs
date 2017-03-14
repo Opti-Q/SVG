@@ -68,7 +68,7 @@ namespace Svg
                     case "https":
                         //var httpRequest = WebRequest.Create(uri);
                         //using (WebResponse webResponse = httpRequest.GetResponse())
-                        using(var stream = Engine.Resolve<IWebRequest>().GetResponse(uri))
+                        using(var stream = SvgEngine.Resolve<IWebRequest>().GetResponse(uri))
                         {
                             doc = SvgDocument.Open<SvgDocument>(stream);
                             return doc.IdManager.GetElementById(hash);

@@ -85,7 +85,7 @@ namespace Svg
             string elementName = reader.LocalName;
             string elementNS = reader.NamespaceURI;
 
-            Engine.Logger.Debug($"Begin CreateElement: {elementName}");
+            SvgEngine.Logger.Debug($"Begin CreateElement: {elementName}");
 
             if (elementNS == SvgAttributeAttribute.SvgNamespace || string.IsNullOrEmpty(elementNS))
             {
@@ -118,14 +118,14 @@ namespace Svg
                 SetAttributes(createdElement, reader, document);
             }
 
-            Engine.Logger.Debug("End CreateElement");
+            SvgEngine.Logger.Debug("End CreateElement");
 
             return createdElement;
         }
 
         private void SetAttributes(SvgElement element, IXmlReader reader, SvgDocument document)
         {
-            Engine.Logger.Debug("Begin SetAttributes");
+            SvgEngine.Logger.Debug("Begin SetAttributes");
 
             //string[] styles = null;
             //string[] style = null;
@@ -161,7 +161,7 @@ namespace Svg
                 }
             }
 
-            Engine.Logger.Debug("End SetAttributes");
+            SvgEngine.Logger.Debug("End SetAttributes");
         }
 
         public bool IsStyleAttribute(string name)
@@ -290,7 +290,7 @@ namespace Svg
                 }
                 catch
                 {
-                    Engine.Logger.Warn($"Attribute '{attributeName}' cannot be set - type '{descriptor.PropertyType.FullName}' cannot convert from string '{attributeValue}'.");
+                    SvgEngine.Logger.Warn($"Attribute '{attributeName}' cannot be set - type '{descriptor.PropertyType.FullName}' cannot convert from string '{attributeValue}'.");
                 }
             }
             else

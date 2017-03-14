@@ -8,11 +8,11 @@ namespace Svg
     {
         private readonly Func<string, ISvgSource> _sourceProvider;
 
-        private Lazy<IFileSystem> _fs = new Lazy<IFileSystem>(() => Engine.Resolve<IFileSystem>());
+        private Lazy<IFileSystem> _fs = new Lazy<IFileSystem>(() => SvgEngine.Resolve<IFileSystem>());
 
         public SvgCachingService()
         {
-            _sourceProvider = path => Engine.Resolve<ISvgSourceFactory>().Create(path);
+            _sourceProvider = path => SvgEngine.Resolve<ISvgSourceFactory>().Create(path);
         }
 
         public string GetCachedPng(string svgFilePath, SaveAsPngOptions options)
@@ -30,7 +30,7 @@ namespace Svg
             options.ImageDimension = dimension;
 
             // save svg as png
-            using (var bmp = Engine.Factory.CreateBitmap((int)dimension.Width, (int)dimension.Height))
+            using (var bmp = SvgEngine.Factory.CreateBitmap((int)dimension.Width, (int)dimension.Height))
             {
                 Action<SvgDocument,Bitmap,Color> draw = options.DrawingAction ?? ((s,b,c) => s.Draw(b, c));
 

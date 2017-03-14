@@ -38,7 +38,7 @@ namespace Svg.Interfaces
 
         public static SizeF Create(float x, float y)
         {
-            return Engine.Factory.CreateSizeF(x, y);
+            return SvgEngine.Factory.CreateSizeF(x, y);
         }
 
         /// <summary>

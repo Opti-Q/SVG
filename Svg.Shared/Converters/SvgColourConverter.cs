@@ -52,13 +52,13 @@ namespace Svg.Converters
                         Color colorpart;
                         if (values[0].Trim().EndsWith("%"))
                         {
-                            colorpart = Engine.Factory.CreateColorFromArgb(alphaValue, (int)(255 * float.Parse(values[0].Trim().TrimEnd('%')) / 100f),
+                            colorpart = SvgEngine.Factory.CreateColorFromArgb(alphaValue, (int)(255 * float.Parse(values[0].Trim().TrimEnd('%')) / 100f),
                                                                                   (int)(255 * float.Parse(values[1].Trim().TrimEnd('%')) / 100f),
                                                                                   (int)(255 * float.Parse(values[2].Trim().TrimEnd('%')) / 100f));
                         }
                         else
                         {
-                            colorpart = Engine.Factory.CreateColorFromArgb(alphaValue, int.Parse(values[0]), int.Parse(values[1]), int.Parse(values[2]));
+                            colorpart = SvgEngine.Factory.CreateColorFromArgb(alphaValue, int.Parse(values[0]), int.Parse(values[1]), int.Parse(values[2]));
                         }
 
                         return colorpart;
@@ -71,7 +71,7 @@ namespace Svg.Converters
                 else if (colour.StartsWith("#"))
                 {
                     //colour = string.Format("#{0}{0}{1}{1}{2}{2}", colour[1], colour[2], colour[3]);
-                    return Engine.Factory.CreateColorFromHexString(colour);
+                    return SvgEngine.Factory.CreateColorFromHexString(colour);
                 }
 
                 if (!colour.StartsWith("#"))
@@ -80,10 +80,10 @@ namespace Svg.Converters
                     if (string.Equals(colour, "freeze", StringComparison.OrdinalIgnoreCase) ||
                         string.Equals(colour, "remove", StringComparison.OrdinalIgnoreCase))
                     {
-                        return Engine.Factory.Colors.Black;
+                        return SvgEngine.Factory.Colors.Black;
                     }
 
-                    return Engine.Factory.Colors.FromName(colour.ToLowerInvariant());
+                    return SvgEngine.Factory.Colors.FromName(colour.ToLowerInvariant());
                 }
             }
             finally
@@ -91,7 +91,7 @@ namespace Svg.Converters
                 CultureInfo.DefaultThreadCurrentCulture = oldCulture;
             }
 
-            return Engine.Factory.Colors.Black;
+            return SvgEngine.Factory.Colors.Black;
         }
     }
 }

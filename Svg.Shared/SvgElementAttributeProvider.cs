@@ -90,7 +90,7 @@ namespace Svg
 
                 foreach (var p in properties)
                 {
-                    var converter = Engine.TypeConverterRegistry.Get(p.PropertyType);
+                    var converter = SvgEngine.TypeConverterRegistry.Get(p.PropertyType);
                     var attribute = p.GetCustomAttributes().OfType<SvgAttributeAttribute>().Single();
                     var key = attribute.NamespaceAndName;
                     // make sure an overridden property is not added twice here!
