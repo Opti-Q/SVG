@@ -1,66 +1,47 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace Svg
 {
     /// <summary>
-    /// A class to convert string into <see cref="SvgUnitCollection"/> instances.
+    /// Represents a list of <see cref="SvgUnit"/>s.
     /// </summary>
-    internal class SvgUnitCollectionConverter : TypeConverter
+    //[TypeConverter(typeof(SvgUnitCollectionConverter))]
+    public class SvgUnitCollection : List<SvgUnit>
     {
-        private static readonly SvgUnitConverter _unitConverter = new SvgUnitConverter();
+
         /// <summary>
-        /// Converts the given object to the type of this converter, using the specified context and culture information.
+        /// Gets an <see cref="SvgUnitCollection"/> that should inherit from its parent.
         /// </summary>
-        /// <param name="context">An <see cref="T:System.ComponentModel.ITypeDescriptorContext"/> that provides a format context.</param>
-        /// <param name="culture">The <see cref="T:System.Globalization.CultureInfo"/> to use as the current culture.</param>
-        /// <param name="value">The <see cref="T:System.Object"/> to convert.</param>
-        /// <returns>
-        /// An <see cref="T:System.Object"/> that represents the converted value.
-        /// </returns>
-        /// <exception cref="T:System.NotSupportedException">The conversion cannot be performed. </exception>
-        public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+        public static readonly SvgUnitCollection Inherit = new SvgUnitCollection();
+
+        public override string ToString()
         {
-            if (value is string)
-            {
-                if (string.Compare(((string)value).Trim(), "none", StringComparison.InvariantCultureIgnoreCase) == 0) return null;
-                string[] points = ((string)value).Trim().Split(new char[] { ',', ' ', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-                SvgUnitCollection units = new SvgUnitCollection();
-
-                foreach (string point in points)
-                {
-                    SvgUnit newUnit = (SvgUnit)_unitConverter.ConvertFrom(point.Trim());
-                    if (!newUnit.IsNone)
-                        units.Add(newUnit);
-                }
-
-                return units;
-            }
-
-            return base.ConvertFrom(context, culture, value);
+            return string.Join<SvgUnit>(" ", this);
         }
 
-        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+        public static bool IsNullOrEmpty(SvgUnitCollection collection)
         {
-            if (destinationType == typeof(string))
-            {
-                return true;
-            }
-            return base.CanConvertTo(context, destinationType);
+            return collection == null || collection.Count < 1 ||
+                (collection.Count == 1 && (collection[0] == SvgUnit.Empty || collection[0] == SvgUnit.None));
         }
 
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        // TODO LX: is this correct?
+        public IEnumerable<float> ConvertAll(Func<SvgUnit, float> func)
         {
-            if (value != null && destinationType == typeof(string))
-            {
-                return ((SvgUnitCollection)value).ToString();
-            }
+            foreach (var unit in this)
+                yield return func(unit);
+        }
 
-            return base.ConvertTo(context, culture, value, destinationType);
+        public SvgUnitCollection Clone()
+        {
+            var values = this.Select(u => u.Clone());
+            var c = new SvgUnitCollection();
+            c.AddRange(values);
+            return c;
         }
     }
+    
 }

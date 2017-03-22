@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using Svg.Converters.Svg;
 using Svg.Interfaces;
 
 namespace Svg
@@ -23,14 +23,12 @@ namespace Svg
                 return attrs;
             }
 
-            attrs  = (from PropertyDescriptor a in TypeDescriptor.GetProperties(instance)
-            let attribute = a.Attributes[typeof(SvgAttributeAttribute)] as SvgAttributeAttribute//a.Attributes[typeof(SvgAttributeAttribute)] as SvgAttributeAttribute
-            where attribute != null
-            select new SvgElement.PropertyAttributeTuple { Property = new SvgPropertyDescriptor(a), Attribute = attribute }).ToArray();
+            attrs  = (from PropertyDescriptor a in TypeDescriptor.GetProperties(instance?.GetType())
+            select new SvgElement.PropertyAttributeTuple { Property = a, Attribute = a.Attribute }).ToArray();
 
             var visibilityAttribute = attrs.SingleOrDefault(a => a.Attribute.Name.ToLower() == "visibility");
             if(visibilityAttribute != null)
-                ((SvgPropertyDescriptor)visibilityAttribute.Property).Converter = new SvgTypeConverter(new SvgBoolConverter());
+                visibilityAttribute.Property.Converter = new SvgBoolConverter();
 
             PropertyCache.AddOrUpdate(instance.GetType(), attrs, (key, oldValue) => attrs);
 
@@ -46,66 +44,88 @@ namespace Svg
             {
                 return attrs;
             }
-            attrs = from EventDescriptor a in TypeDescriptor.GetEvents(instance)
-                   let attribute = a.Attributes[typeof(SvgAttributeAttribute)] as SvgAttributeAttribute
-                   where attribute != null
-                   select new SvgElement.EventAttributeTuple { Event = a.ComponentType.GetField(a.Name, BindingFlags.Instance | BindingFlags.NonPublic), Attribute = attribute };
+            //attrs = from EventInfo a in TypeDescriptor.GetEvents(instance?.GetType())
+            //       select new SvgElement.EventAttributeTuple { Event = a..ComponentType.GetField(a.Name, BindingFlags.Instance | BindingFlags.NonPublic), Attribute = attribute };
+            //throw new NotImplementedException("not implemented yet!");
 
-            EventCache.AddOrUpdate(instance.GetType(), attrs, (key, oldValue) => attrs);
+            //EventCache.AddOrUpdate(instance.GetType(), attrs, (key, oldValue) => attrs);
 
-            return attrs;
+            //return attrs;
+
+            return Enumerable.Empty<SvgElement.EventAttributeTuple>();
         }
     }
 
-    public class SvgPropertyDescriptor : IPropertyDescriptor
+    internal static class TypeDescriptor
     {
-        private readonly PropertyDescriptor _desc;
-        private ITypeConverter _conv;
-
-        public SvgPropertyDescriptor(PropertyDescriptor desc)
+        internal static List<IPropertyDescriptor> GetProperties(Type elementType, string attributeName = null)
         {
-            _desc = desc;
+            var result = new Dictionary<string, IPropertyDescriptor>();
+
+            var ti = elementType.GetTypeInfo();
+            var parent = ti;
+            while (parent != null)
+            {
+                List<PropertyInfo> properties;
+
+                if (string.IsNullOrEmpty(attributeName))
+                {
+                    properties = parent.DeclaredProperties.Where(
+                            p =>
+                                p.GetCustomAttributes()
+                                    .OfType<SvgAttributeAttribute>()
+                                    .Any())
+                        .ToList();
+                }
+                else
+                {
+                    properties = parent.DeclaredProperties.Where(
+                            p =>
+                                p.GetCustomAttributes()
+                                    .OfType<SvgAttributeAttribute>()
+                                    .Any(a => string.IsNullOrEmpty(attributeName) || a.Name == attributeName))
+                        .ToList();
+                }
+
+
+                foreach (var p in properties)
+                {
+                    var converter = SvgEngine.TypeConverterRegistry.Get(p.PropertyType);
+                    var attribute = p.GetCustomAttributes().OfType<SvgAttributeAttribute>().Single();
+                    var key = attribute.NamespaceAndName;
+                    // make sure an overridden property is not added twice here!
+                    if (!result.ContainsKey(key))
+                    {
+                        result.Add(key, new PropertyDescriptor(p, converter, attribute));
+                    }
+                }
+
+                parent = parent.BaseType?.GetTypeInfo();
+            }
+
+            return result.Values.ToList();
         }
-
-        public ITypeConverter Converter
+        
+        internal static IEnumerable<EventInfo> GetEvents(Type type)
         {
-            get { return _conv ?? (_conv = new SvgTypeConverter(_desc.Converter)); }
-            set { _conv = value; }
-        }
+            if(type == null)
+                yield break;
+            var ti = type.GetTypeInfo();
+            var parent = ti;
+            while (parent != null)
+            {
+                var events =
+                    parent.DeclaredEvents.Where(
+                            p => p.GetCustomAttributes().OfType<SvgAttributeAttribute>().Any())
+                        .ToList();
 
-        public object GetValue(object instance)
-        {
-            return _desc.GetValue(instance);
-        }
-    }
+                foreach (var p in events)
+                {
+                    yield return p;
+                }
 
-    public class SvgTypeConverter : ITypeConverter
-    {
-        private readonly TypeConverter _cov;
-
-        public SvgTypeConverter(TypeConverter cov)
-        {
-            _cov = cov;
-        }
-
-        public object ConvertFrom(string value)
-        {
-            return _cov.ConvertFrom(value);
-        }
-
-        public string ConvertToString(object obj)
-        {
-            return _cov.ConvertToString(obj);
-        }
-
-        public object ConvertTo(object propertyValue, Type type)
-        {
-            return _cov.ConvertTo(propertyValue, type);
-        }
-
-        public bool CanConvertTo(Type type)
-        {
-            return _cov.CanConvertTo(type);
+                parent = parent.BaseType?.GetTypeInfo();
+            }
         }
     }
 }

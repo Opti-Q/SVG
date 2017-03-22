@@ -7,8 +7,8 @@
     <ProjectGuid>{1A9890AB-E4B4-4282-89AC-CEF2610E30B0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Svg.Win</RootNamespace>
-    <AssemblyName>Svg.Win</AssemblyName>
+    <RootNamespace>Svg</RootNamespace>
+    <AssemblyName>Svg</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -38,7 +38,7 @@
     <OutputPath>bin\x86\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -64,103 +64,14 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Svg.Shared\CharConverter.cs">
-      <Link>CharConverter.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\CultureHelper.cs">
-      <Link>CultureHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\DataTypes\SvgAspectRatioConverter.cs">
-      <Link>DataTypes\SvgAspectRatioConverter.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\DataTypes\SvgOrientConverter.cs">
-      <Link>DataTypes\SvgOrientConverter.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\DataTypes\SvgPointCollection.cs">
-      <Link>DataTypes\SvgPointCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\DataTypes\SvgUnitCollection.cs">
-      <Link>DataTypes\SvgUnitCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\DataTypes\SvgUnitConverter.cs">
-      <Link>DataTypes\SvgUnitConverter.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\DataTypes\SvgViewBox.cs">
-      <Link>DataTypes\SvgViewBox.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\DefaultLogger.cs">
-      <Link>DefaultLogger.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\FileSystem.cs">
-      <Link>FileSystem.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\Marshal.cs">
-      <Link>Marshal.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\Painting\EnumConverters.cs">
-      <Link>Painting\EnumConverters.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\Painting\SvgColourConverter.cs">
-      <Link>Painting\SvgColourConverter.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\Painting\SvgPaintServerFactory.cs">
-      <Link>Painting\SvgPaintServerFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\Paths\SvgPathBuilder.cs">
-      <Link>Paths\SvgPathBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SKFactory.cs">
-      <Link>SKFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgDtdResolver.cs">
-      <Link>SvgDtdResolver.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgElementAttributeProvider.cs">
-      <Link>SvgElementAttributeProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgElementFactory.cs">
-      <Link>SvgElementFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgNodeReader.cs">
-      <Link>SvgNodeReader.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgPlatformSetup.cs">
-      <Link>SvgPlatformSetup.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgPlatformSetupBase.cs">
-      <Link>SvgPlatformSetupBase.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgSortedList.cs">
-      <Link>SvgSortedList.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgTextReader.cs">
-      <Link>SvgTextReader.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgTypeDescriptor.cs">
-      <Link>SvgTypeDescriptor.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgXmlTextWriter.cs">
-      <Link>SvgXmlTextWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\Transforms\SvgTransformConverter.cs">
-      <Link>Transforms\SvgTransformConverter.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\WebRequestSvc.cs">
-      <Link>WebRequestSvc.cs</Link>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Svg.Core\Svg.Core.csproj">
-      <Project>{13edb4db-3977-4c2e-998a-6103ca015881}</Project>
-      <Name>Svg.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="project.json" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="..\Svg.Platform.Shared\Svg.Platform.Shared.projitems" Label="Shared" />
+  <Import Project="..\Svg.Shared\Svg.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\SkiaSharp.1.54.0\build\net45\SkiaSharp.targets" Condition="Exists('..\packages\SkiaSharp.1.54.0\build\net45\SkiaSharp.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

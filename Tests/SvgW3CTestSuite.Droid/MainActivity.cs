@@ -27,26 +27,11 @@ namespace SvgW3CTestSuite.Droid
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
             // register Xamarin.Form.Toasts plugin so we can see the progress of our test
-            DependencyService.Register<ToastNotificatorImplementation>();
-            ToastNotificatorImplementation.Init(this);
+            DependencyService.Register<ToastNotification>();
+            ToastNotification.Init(this);
 
             if (nunit == null)
             {
-                // get all SVG assets
-                var svgFiles = Assets.List("svg").Take(400)/*.Where(s => !s.StartsWith("struct-image"))*/;
-                Func<string, string> getPngPath = (svgPath) =>
-                {
-                    var fileName = System.IO.Path.GetFileNameWithoutExtension(svgPath) + ".png";
-                    return System.IO.Path.Combine("png", fileName);
-                };
-                W3CTestFixture.SvgTestCases = svgFiles.Select(path => new object[]
-                                                        {
-                                                            System.IO.Path.Combine("svg", path),
-                                                            getPngPath(path)
-                                                        })
-                                                        .ToArray();
-                W3CTestFixture.FileSourceProvider = (path) => new SvgAssetSource(path, Assets);
-
                 // This will load all tests within the current project
                 nunit = new NUnit.Runner.App();
 

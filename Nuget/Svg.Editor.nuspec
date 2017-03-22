@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>Svg.Editor</id>
+        <version>2.0.5</version>
+        <authors>gentledepp,bruzkovsky </authors>
+        <owners>gentledepp,bruzkovsky </owners>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Contains the tools and input logic for a platform independant Svg.Editor </description>
+        <dependencies>
+            <group targetFramework=".NETPortable4.5-Profile111">
+                <dependency id="Newtonsoft.Json" version="9.0.1" exclude="Build,Analyzers" />
+                <dependency id="SkiaSharp" version="1.56.2" exclude="Build,Analyzers" />
+                <dependency id="Svg" version="2.0.4" exclude="Build,Analyzers" />
+                <dependency id="System.Reactive" version="3.1.1" exclude="Build,Analyzers" />
+                <dependency id="System.Reactive.Core" version="3.1.1" exclude="Build,Analyzers" />
+                <dependency id="System.Reactive.Interfaces" version="3.1.1" exclude="Build,Analyzers" />
+                <dependency id="System.Reactive.Linq" version="3.1.1" exclude="Build,Analyzers" />
+                <dependency id="System.Reactive.PlatformServices" version="3.1.1" exclude="Build,Analyzers" />
+            </group>
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="..\Svg.Editor.Core\bin\Release\Svg.Editor.dll" target="lib\portable45-net45+win8+wpa81\Svg.Editor.dll" />
+    </files>
+</package>

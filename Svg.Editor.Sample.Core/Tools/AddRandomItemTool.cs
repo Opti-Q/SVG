@@ -78,8 +78,8 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                     //                                              "AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0D" +
                     //                                              "HxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg ==", UriKind.Absolute)});
 
-                    //var fs = Engine.Resolve<IFileSystem>();
-                    //var svgCachingService = Engine.Resolve<ISvgCachingService>();
+                    //var fs = SvgEngine.Resolve<IFileSystem>();
+                    //var svgCachingService = SvgEngine.Resolve<ISvgCachingService>();
                     //var colorTool = Canvas.Tools.OfType<ColorTool>().Single();
                     //var selectedColor = colorTool.SelectedColor;
                     //var path = svgCachingService.GetCachedPngPath(colorTool.IconName, $"{selectedColor.R}_{selectedColor.G}_{selectedColor.B}", fs);

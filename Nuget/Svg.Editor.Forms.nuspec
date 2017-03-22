@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>Svg.Editor.Forms</id>
+        <version>2.0.5</version>
+        <authors>gentledepp,bruzkovsky </authors>
+        <owners>gentledepp,bruzkovsky </owners>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Contains views for the Svg.Editor for iOS, Android and UWP</description>
+        <dependencies>
+		  <group>
+			<dependency id="SkiaSharp" version="1.56.2" />
+			<dependency id="Svg.Editor" version="2.0.5" />
+		  </group>
+		  <group targetFramework="MonoAndroid403">
+			<dependency id="Xamarin.Forms" version="2.3.3.193" />
+			<dependency id="SkiaSharp" version="1.56.2" />
+			<dependency id="SkiaSharp.Views" version="1.56.2" />
+			<dependency id="SkiaSharp.Views.Forms" version="1.56.2"/>
+			<dependency id="Svg.Editor" version="2.0.5" />
+			<dependency id="Svg.Editor.Views" version="2.0.5" />
+		  </group>
+		  <group targetFramework="Xamarin.iOS10">
+			<dependency id="Xamarin.Forms" version="2.3.3.193" />
+			<dependency id="SkiaSharp" version="1.56.2" />
+			<dependency id="SkiaSharp.Views" version="1.56.2" />
+			<dependency id="SkiaSharp.Views.Forms" version="1.56.2"/>
+			<dependency id="Svg.Editor" version="2.0.5" />
+			<dependency id="Svg.Editor.Views" version="2.0.5" />
+		  </group>
+		  <group targetFramework="UAP10">
+			<dependency id="Xamarin.Forms" version="2.3.3.193" />
+			<dependency id="SkiaSharp" version="1.56.2" />
+			<dependency id="SkiaSharp.Views" version="1.56.2" />
+			<dependency id="SkiaSharp.Views.Forms" version="1.56.2"/>
+			<dependency id="Svg.Editor" version="2.0.5" />
+			<dependency id="Svg.Editor.Views" version="2.0.5" />
+		  </group>
+        </dependencies>
+    </metadata>
+	<!-- Insert below <metadata> element -->
+    <files>
+		<!-- platform independent assemblies --> 
+		<file src="..\Svg.Editor.Forms\bin\Release\Svg.Editor.Forms.dll" target="lib\portable45-net45+win8+wpa81\Svg.Editor.Forms.dll" />
+	
+        <!-- iOS reference assemblies -->
+        <file src="..\Svg.Editor.Forms\bin\Release\Svg.Editor.Forms.dll" target="lib\Xamarin.iOS10\Svg.Editor.Forms.dll" />
+        <file src="..\Svg.Editor.Forms.iOS\bin\Release\Svg.Editor.Forms.iOS.dll" target="lib\Xamarin.iOS10\Svg.Editor.Forms.iOS.dll" />
+
+        <!-- Android reference assemblies -->
+        <file src="..\Svg.Editor.Forms\bin\Release\Svg.Editor.Forms.dll" target="lib\MonoAndroid403\Svg.Editor.Forms.dll" />
+        <file src="..\Svg.Editor.Forms.Droid\bin\Release\Svg.Editor.Forms.Droid.dll" target="lib\MonoAndroid403\Svg.Editor.Forms.Droid.dll" />
+
+        <!-- UWP reference assemblies -->
+        <file src="..\Svg.Editor.Forms\bin\Release\Svg.Editor.Forms.dll" target="lib\UAP10\Svg.Editor.Forms.dll" />
+        <file src="..\Svg.Editor.Forms.UWP\bin\Release\Svg.Editor.Forms.UWP.dll" target="lib\UAP10\Svg.Editor.Forms.UWP.dll" />
+    </files>
+</package>

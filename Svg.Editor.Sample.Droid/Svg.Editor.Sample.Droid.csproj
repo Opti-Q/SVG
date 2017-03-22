@@ -16,7 +16,7 @@
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v7.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v7.1</TargetFrameworkVersion>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <TargetFrameworkProfile />
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -61,6 +61,9 @@
     <MandroidI18n>CJK,Mideast,Rare,West,Other</MandroidI18n>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Java.Interop">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\MonoAndroid\v1.0\Java.Interop.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="Mono.Android.Export" />
     <Reference Include="mscorlib" />
@@ -232,28 +235,6 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\isolib\Welds\solid\weld1.svg" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Svg.Core\Svg.Core.csproj">
-      <Project>{13edb4db-3977-4c2e-998a-6103ca015881}</Project>
-      <Name>Svg.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Svg.Editor.Core\Svg.Editor.Core.csproj">
-      <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
-      <Name>Svg.Editor.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Svg.Editor.Droid\Svg.Editor.Droid.csproj">
-      <Project>{ec21b42f-da0d-4e7b-a2f4-757abc917e07}</Project>
-      <Name>Svg.Editor.Droid</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Svg.Editor.Sample.Core\Svg.Editor.Sample.Core.csproj">
-      <Project>{8739ced3-5844-4f18-b2e3-c99036b31b33}</Project>
-      <Name>Svg.Editor.Sample.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Svg.Droid\Svg.Droid.csproj">
-      <Project>{03f31ec9-4f97-46da-b8f1-dce99c6954de}</Project>
-      <Name>Svg.Droid</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\SplashStyle.xml" />
@@ -564,6 +545,20 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\ic_rotate_right_white_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Svg.Editor.Core\Svg.Editor.Core.csproj">
+      <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
+      <Name>Svg.Editor.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Svg.Editor.Sample.Core\Svg.Editor.Sample.Core.csproj">
+      <Project>{8739CED3-5844-4F18-B2E3-C99036B31B33}</Project>
+      <Name>Svg.Editor.Sample.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Svg.Editor.Views.Droid\Svg.Editor.Views.Droid.csproj">
+      <Project>{EC21B42F-DA0D-4E7B-A2F4-757ABC917E07}</Project>
+      <Name>Svg.Editor.Views.Droid</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,34 +1,47 @@
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using Svg.Interfaces;
 
-namespace Svg
+namespace Svg.Shared
 {
-    public class SvgTypeDescriptor : ISvgTypeDescriptor
+    internal class SvgTypeDescriptor : ISvgTypeDescriptor
     {
+        private readonly ISvgTypeConverterRegistry _registry;
+
+        public SvgTypeDescriptor(ISvgTypeConverterRegistry registry)
+        {
+            _registry = registry;
+        }
+
         public IEnumerable<Attribute> GetAttributes(object obj)
         {
-            return TypeDescriptor.GetAttributes(obj).Cast<Attribute>();
+            if (obj == null)
+                return Enumerable.Empty<Attribute>();
+
+            return obj.GetType().GetTypeInfo().GetCustomAttributes<Attribute>();
         }
 
         public IEnumerable<EventInfo> GetEvents(object obj)
         {
-            return TypeDescriptor.GetEvents(obj).Cast<EventInfo>();
+            if (obj == null)
+                return Enumerable.Empty<EventInfo>();
+
+            return obj.GetType().GetTypeInfo().DeclaredEvents;
         }
 
         public IEnumerable<PropertyInfo> GetProperties(object obj)
         {
-            return TypeDescriptor.GetProperties(obj).Cast<PropertyInfo>();
+            if (obj == null)
+                return Enumerable.Empty<PropertyInfo>();
+
+            return obj.GetType().GetTypeInfo().DeclaredProperties;
         }
 
         public ITypeConverter GetConverter(Type type)
         {
-            return new SvgTypeConverter(TypeDescriptor.GetConverter(type));
+            return _registry.Get(type);
         }
     }
 }

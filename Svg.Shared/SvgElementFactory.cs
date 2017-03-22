@@ -5,9 +5,11 @@ using System.Xml;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using ExCSS;
 using Svg.Interfaces;
+using Svg.Interfaces.Xml;
 
 namespace Svg
 {
@@ -16,40 +18,37 @@ namespace Svg
     /// </summary>
     public class SvgElementFactory : ISvgElementFactory
     {
-        private static Dictionary<string, ElementInfo> availableElements;
+        private static readonly Lazy<Dictionary<string, ElementInfo>> _availableElements = new Lazy<Dictionary<string,ElementInfo>>(
+            () =>
+            {
+                var svgTypes = from t in typeof(SvgDocument).GetTypeInfo().Assembly.ExportedTypes
+                                where t.GetTypeInfo().GetCustomAttributes(typeof(SvgElementAttribute), true).Any()
+                                && t.GetTypeInfo().IsSubclassOf(typeof(SvgElement))
+                                select new ElementInfo { ElementName = ((SvgElementAttribute)t.GetTypeInfo().GetCustomAttributes(typeof(SvgElementAttribute), true).First()).ElementName, ElementType = t };
+
+                var availableElements = (from t in svgTypes
+                                        where t.ElementName != "svg"
+                                        group t by t.ElementName into types
+                                        select types).ToDictionary(e => e.Key, e => e.SingleOrDefault());
+
+                return availableElements;
+            });
         private static Parser cssParser = new Parser();
+        private static Dictionary<Type, Dictionary<string, List<IPropertyDescriptor>>> _propertyDescriptors = new Dictionary<Type, Dictionary<string, List<IPropertyDescriptor>>>();
+        private static object syncLock = new object();
 
         /// <summary>
         /// Gets a list of available types that can be used when creating an <see cref="SvgElement"/>.
         /// </summary>
-        public Dictionary<string, ElementInfo> AvailableElements
-        {
-            get
-            {
-                if (availableElements == null)
-                {
-                    var svgTypes = from t in typeof(SvgDocument).Assembly.GetExportedTypes()
-                                   where t.GetCustomAttributes(typeof(SvgElementAttribute), true).Length > 0
-                                   && t.IsSubclassOf(typeof(SvgElement))
-                                   select new ElementInfo { ElementName = ((SvgElementAttribute)t.GetCustomAttributes(typeof(SvgElementAttribute), true)[0]).ElementName, ElementType = t };
-
-                    availableElements = (from t in svgTypes
-                                         where t.ElementName != "svg"
-                                         group t by t.ElementName into types
-                                         select types).ToDictionary(e => e.Key, e => e.SingleOrDefault());
-                }
-
-                return availableElements;
-            }
-        }
+        public Dictionary<string, ElementInfo> AvailableElements => _availableElements.Value;
 
         /// <summary>
-        /// Creates an <see cref="SvgDocument"/> from the current node in the specified <see cref="XmlTextReader"/>.
+        /// Creates an <see cref="SvgDocument"/> from the current node in the specified <see cref="SvgXmlReader"/>.
         /// </summary>
-        /// <param name="reader">The <see cref="XmlTextReader"/> containing the node to parse into an <see cref="SvgDocument"/>.</param>
+        /// <param name="reader">The <see cref="SvgXmlReader"/> containing the node to parse into an <see cref="SvgDocument"/>.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="reader"/> parameter cannot be <c>null</c>.</exception>
         /// <exception cref="InvalidOperationException">The CreateDocument method can only be used to parse root &lt;svg&gt; elements.</exception>
-        public T CreateDocument<T>(XmlReader reader) where T : SvgDocument, new()
+        public T CreateDocument<T>(IXmlReader reader) where T : SvgDocument, new()
         {
             if (reader == null)
             {
@@ -65,12 +64,12 @@ namespace Svg
         }
 
         /// <summary>
-        /// Creates an <see cref="SvgElement"/> from the current node in the specified <see cref="XmlTextReader"/>.
+        /// Creates an <see cref="SvgElement"/> from the current node in the specified <see cref="SvgXmlReader"/>.
         /// </summary>
-        /// <param name="reader">The <see cref="XmlTextReader"/> containing the node to parse into a subclass of <see cref="SvgElement"/>.</param>
+        /// <param name="reader">The <see cref="SvgXmlReader"/> containing the node to parse into a subclass of <see cref="SvgElement"/>.</param>
         /// <param name="document">The <see cref="SvgDocument"/> that the created element belongs to.</param>
         /// <exception cref="ArgumentNullException">The <paramref name="reader"/> and <paramref name="document"/> parameters cannot be <c>null</c>.</exception>
-        public SvgElement CreateElement(XmlReader reader, SvgDocument document)
+        public SvgElement CreateElement(IXmlReader reader, SvgDocument document)
         {
             if (reader == null)
             {
@@ -80,13 +79,13 @@ namespace Svg
             return CreateElement<SvgDocument>(reader, false, document);
         }
 
-        private SvgElement CreateElement<T>(XmlReader reader, bool fragmentIsDocument, SvgDocument document) where T : SvgDocument, new()
+        private SvgElement CreateElement<T>(IXmlReader reader, bool fragmentIsDocument, SvgDocument document) where T : SvgDocument, new()
         {
             SvgElement createdElement = null;
             string elementName = reader.LocalName;
             string elementNS = reader.NamespaceURI;
 
-            Engine.Logger.Debug($"Begin CreateElement: {elementName}");
+            SvgEngine.Logger.Debug($"Begin CreateElement: {elementName}");
 
             if (elementNS == SvgAttributeAttribute.SvgNamespace || string.IsNullOrEmpty(elementNS))
             {
@@ -119,14 +118,14 @@ namespace Svg
                 SetAttributes(createdElement, reader, document);
             }
 
-            Engine.Logger.Debug("End CreateElement");
+            SvgEngine.Logger.Debug("End CreateElement");
 
             return createdElement;
         }
 
-        private void SetAttributes(SvgElement element, XmlReader reader, SvgDocument document)
+        private void SetAttributes(SvgElement element, IXmlReader reader, SvgDocument document)
         {
-            Engine.Logger.Debug("Begin SetAttributes");
+            SvgEngine.Logger.Debug("Begin SetAttributes");
 
             //string[] styles = null;
             //string[] style = null;
@@ -162,7 +161,7 @@ namespace Svg
                 }
             }
 
-            Engine.Logger.Debug("End SetAttributes");
+            SvgEngine.Logger.Debug("End SetAttributes");
         }
 
         public bool IsStyleAttribute(string name)
@@ -235,14 +234,14 @@ namespace Svg
             return false;
         }
 
-        private static Dictionary<Type, Dictionary<string, PropertyDescriptorCollection>> _propertyDescriptors = new Dictionary<Type, Dictionary<string, PropertyDescriptorCollection>>();
-        private static object syncLock = new object();
+        private static readonly Dictionary<string, string> _namespaceCaches = SvgAttributeAttribute.Namespaces.ToDictionary(x => x.Key, x => x.Value, StringComparer.OrdinalIgnoreCase);
+        private static readonly Dictionary<string, string> _namespaceUriCaches = SvgAttributeAttribute.Namespaces.ToDictionary(x => x.Value, x => x.Key, StringComparer.OrdinalIgnoreCase);
 
         public void SetPropertyValue(SvgElement element, string attributeName, string attributeValue, SvgDocument document)
         {
             var elementType = element.GetType();
 
-            PropertyDescriptorCollection properties;
+            List<IPropertyDescriptor> properties;
             lock (syncLock)
             {
                 if (_propertyDescriptors.Keys.Contains(elementType))
@@ -253,14 +252,14 @@ namespace Svg
                     }
                     else
                     {
-                        properties = TypeDescriptor.GetProperties(elementType, new[] { new SvgAttributeAttribute(attributeName) });
+                        properties = TypeDescriptor.GetProperties(elementType, attributeName);
                         _propertyDescriptors[elementType].Add(attributeName, properties);
                     }
                 }
                 else
                 {
-                    properties = TypeDescriptor.GetProperties(elementType, new[] { new SvgAttributeAttribute(attributeName) });
-                    _propertyDescriptors.Add(elementType, new Dictionary<string, PropertyDescriptorCollection>());
+                    properties = TypeDescriptor.GetProperties(elementType, attributeName);
+                    _propertyDescriptors.Add(elementType, new Dictionary<string, List<IPropertyDescriptor>>());
 
                     _propertyDescriptors[elementType].Add(attributeName, properties);
                 } 
@@ -268,7 +267,7 @@ namespace Svg
 
             if (properties.Count > 0)
             {
-                PropertyDescriptor descriptor = properties[0];
+                IPropertyDescriptor descriptor = properties[0];
 
                 try
                 {
@@ -276,31 +275,33 @@ namespace Svg
 					{
 						attributeValue = "1";
 					}
-
-                    var ctx = new SvgDocumentTypeDescriptorContext(document);
-
+                    
                     if (attributeName == "visibility")
                     {
                         bool visible = string.Equals(attributeValue, "visible",
-                            StringComparison.InvariantCultureIgnoreCase);
+                            StringComparison.CurrentCultureIgnoreCase);
                         descriptor.SetValue(element, visible);
                     }
                     else
                     {
-                        descriptor.SetValue(element,
-                            descriptor.Converter.ConvertFrom(ctx, CultureInfo.InvariantCulture, attributeValue));
+                        descriptor.SetValue(element, descriptor.Converter.ConvertFromString(attributeValue, descriptor.PropertyType, document));
                     }
 
                 }
                 catch
                 {
-                    Engine.Logger.Warn($"Attribute '{attributeName}' cannot be set - type '{descriptor.PropertyType.FullName}' cannot convert from string '{attributeValue}'.");
+                    SvgEngine.Logger.Warn($"Attribute '{attributeName}' cannot be set - type '{descriptor.PropertyType.FullName}' cannot convert from string '{attributeValue}'.");
                 }
             }
             else
             {
+                // ignore if it is a namespace attribute
+                if (_namespaceCaches.ContainsKey(attributeName) || _namespaceUriCaches.ContainsKey(attributeValue))
+                {
+                    // ignore namespaces
+                }
                 //check for namespace declaration in svg element
-                if (string.Equals(element.ElementName, "svg", StringComparison.OrdinalIgnoreCase))
+                else if (string.Equals(element.ElementName, "svg", StringComparison.OrdinalIgnoreCase))
                 {
                     if (string.Equals(attributeName, "xmlns", StringComparison.OrdinalIgnoreCase)
                         || string.Equals(attributeName, "xlink", StringComparison.OrdinalIgnoreCase)
@@ -323,59 +324,5 @@ namespace Svg
             }
         }
 
-    }
-
-    internal class SvgDocumentTypeDescriptorContext : ITypeDescriptorContext, ISvgDocumentProvider
-    {
-        private readonly SvgDocument _document;
-
-        public SvgDocumentTypeDescriptorContext(SvgDocument document)
-        {
-            _document = document;
-        }
-
-        #region ITypeDescriptorContext Members
-
-        IContainer ITypeDescriptorContext.Container
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        object ITypeDescriptorContext.Instance
-        {
-            get { return Document; }
-        }
-
-        void ITypeDescriptorContext.OnComponentChanged()
-        {
-            throw new NotImplementedException();
-        }
-
-        bool ITypeDescriptorContext.OnComponentChanging()
-        {
-            throw new NotImplementedException();
-        }
-
-        PropertyDescriptor ITypeDescriptorContext.PropertyDescriptor
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public SvgDocument Document
-        {
-            get { return _document; }
-        }
-
-        object IServiceProvider.GetService(Type serviceType)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
-        public static explicit operator SvgDocument(SvgDocumentTypeDescriptorContext other)
-        {
-            return other.Document;
-        }
     }
 }

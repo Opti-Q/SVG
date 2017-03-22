@@ -24,7 +24,7 @@ namespace Svg.Editor.Tools
 
         public const string DefaultStrokeWidthKey = "defaultstrokewidth";
 
-        public string LineStyleIconName { get; set; } = "ic_line_style_white_48dp.png";
+        public string LineStyleIconName { get; set; } = "ic_line_style.svg";
 
         public override bool IsActive
         {
@@ -53,7 +53,7 @@ namespace Svg.Editor.Tools
 
         public FreeDrawingTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Free draw", properties, undoRedoService)
         {
-            IconName = "ic_brush_white_48dp.png";
+            IconName = "ic_brush.svg";
             ToolUsage = ToolUsage.Explicit;
             HandleDragExit = true;
         }
@@ -94,7 +94,7 @@ namespace Svg.Editor.Tools
 
                 _currentPath = new SvgPath
                 {
-                    Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
+                    Stroke = new SvgColourServer(SvgEngine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
                     Fill = SvgPaintServer.None,
                     PathData = new SvgPathSegmentList(new List<SvgPathSegment> { new SvgMoveToSegment(canvasStartPosition) }),
                     StrokeLineCap = SvgStrokeLineCap.Round,

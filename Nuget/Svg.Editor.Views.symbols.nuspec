@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>Svg.Editor.Views</id>
+        <version>2.0.5</version>
+        <authors>gentledepp,bruzkovsky </authors>
+        <owners>gentledepp,bruzkovsky </owners>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Contains Xamarin.Forms viewrenderer for the Svg.Editor (iOS, Android and UWP)</description>
+        <dependencies>
+		  <group targetFramework="MonoAndroid403">
+			<dependency id="Svg.Editor" version="2.0.5" />
+			<dependency id="SkiaSharp" version="1.56.2" />
+			<dependency id="SkiaSharp.Views" version="1.56.2" />
+			<dependency id="Svg" version="2.0.4" />
+		  </group>
+		  <group targetFramework="Xamarin.iOS10">
+			<dependency id="Svg.Editor" version="2.0.5" />
+			<dependency id="SkiaSharp" version="1.56.2" />
+			<dependency id="SkiaSharp.Views" version="1.56.2" />
+			<dependency id="Svg" version="2.0.4" />
+		  </group>
+		  <group targetFramework="UAP10">
+			<dependency id="Svg.Editor" version="2.0.5" />
+			<dependency id="SkiaSharp" version="1.56.2" />
+			<dependency id="SkiaSharp.Views" version="1.56.2" />
+			<dependency id="Svg" version="2.0.4" />
+		  </group>
+        </dependencies>
+    </metadata>
+	<!-- Insert below <metadata> element -->
+    <files>
+        <!-- iOS reference assemblies -->
+        <file src="..\Svg.Editor.Views.iOS\bin\Debug\Svg.Editor.Views.dll" target="lib\Xamarin.iOS10\Svg.Editor.Views.dll" />
+        <file src="..\Svg.Editor.Views.iOS\bin\Debug\Svg.Editor.Views.pdb" target="lib\Xamarin.iOS10\Svg.Editor.Views.pdb" />
+		
+        <!-- Android reference assemblies -->
+        <file src="..\Svg.Editor.Views.Droid\bin\Debug\Svg.Editor.Views.dll" target="lib\MonoAndroid403\Svg.Editor.Views.dll" />
+        <file src="..\Svg.Editor.Views.Droid\bin\Debug\Svg.Editor.Views.pdb" target="lib\MonoAndroid403\Svg.Editor.Views.pdb" />
+
+        <!-- UWP reference assemblies -->
+        <file src="..\Svg.Editor.Views.UWP\bin\Debug\Svg.Editor.Views.dll" target="lib\UAP10\Svg.Editor.Views.dll" />
+        <file src="..\Svg.Editor.Views.UWP\bin\Debug\Svg.Editor.Views.pdb" target="lib\UAP10\Svg.Editor.Views.pdb" />
+				
+		
+		<file src="..\Svg.Editor.Views.iOS\**\*.cs" target="src" />
+		<file src="..\Svg.Editor.Views.Droid\**\*.cs" target="src" />
+		<file src="..\Svg.Editor.Views.UWP\**\*.cs" target="src" />
+		
+    </files>
+</package>

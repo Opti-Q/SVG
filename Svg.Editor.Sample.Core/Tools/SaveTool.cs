@@ -30,7 +30,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
             {
                 new ToolCommand(this, "Save", (obj) =>
                 {
-                    var fs = Engine.Resolve<IFileSystem>();
+                    var fs = SvgEngine.Resolve<IFileSystem>();
                     var path = fs.GetDefaultStoragePath();
                     var storagePath = fs.PathCombine(path, _fileName());
 
@@ -48,7 +48,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 (obj) => ws.Document != null),
                 new ToolCommand(this, "Load", (obj) =>
                 {
-                    var fs = Engine.Resolve<IFileSystem>();
+                    var fs = SvgEngine.Resolve<IFileSystem>();
                     var path = fs.GetDefaultStoragePath();
                     var storagePath = fs.PathCombine(path, _fileName());
 
@@ -61,14 +61,14 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 }, 
                 (obj) =>
                 {
-                    var fs = Engine.Resolve<IFileSystem>();
+                    var fs = SvgEngine.Resolve<IFileSystem>();
                     var path = fs.GetDefaultStoragePath();
                     var storagePath = fs.PathCombine(path, _fileName());
                     return fs.FileExists(storagePath);
                 }),
                 new ToolCommand(this, "Share SVG", (obj) =>
                 {
-                    var fs = Engine.Resolve<IFileSystem>();
+                    var fs = SvgEngine.Resolve<IFileSystem>();
 
                     var path = fs.GetDefaultStoragePath();
                     var storagePath = fs.PathCombine(path, _fileName());
@@ -85,17 +85,17 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 }, 
                 (obj) =>
                 {
-                    var fs = Engine.Resolve<IFileSystem>();
+                    var fs = SvgEngine.Resolve<IFileSystem>();
                     var path = fs.GetDefaultStoragePath();
                     var storagePath = fs.PathCombine(path, _fileName());
                     return fs.FileExists(storagePath);
                 }),
                 new ToolCommand(this, "Share PNG", (obj) =>
                 {
-                    var fs = Engine.Resolve<IFileSystem>();
+                    var fs = SvgEngine.Resolve<IFileSystem>();
                     
                     //using (var bmp = ws.GetOrCreate(ws.ScreenWidth, ws.ScreenHeight))
-                    using (var bmp = ws.Document.DrawAllContents(Engine.Factory.Colors.White)) // 2MP (see https://de.wikipedia.org/wiki/Bildaufl%C3%B6sungen_in_der_Digitalfotografie)
+                    using (var bmp = ws.Document.DrawAllContents(SvgEngine.Factory.Colors.White)) // 2MP (see https://de.wikipedia.org/wiki/Bildaufl%C3%B6sungen_in_der_Digitalfotografie)
                     {
                         if (bmp.Width == 0 || bmp.Height == 0)
                         {
@@ -123,16 +123,16 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 },
                 (obj) =>
                 {
-                    var fs = Engine.Resolve<IFileSystem>();
+                    var fs = SvgEngine.Resolve<IFileSystem>();
                     var path = fs.GetDefaultStoragePath();
                     var storagePath = fs.PathCombine(path, _fileName());
                     return Canvas.Document.Children.OfType<SvgVisualElement>().Any() && fs.FileExists(storagePath);
                 }),
                 new ToolCommand(this, "Share PNG thumb", (obj) =>
                 {
-                    var fs = Engine.Resolve<IFileSystem>();
+                    var fs = SvgEngine.Resolve<IFileSystem>();
                     
-                    using (var bmp = ws.Document.DrawAllContents(160, Engine.Factory.Colors.White))
+                    using (var bmp = ws.Document.DrawAllContents(160, SvgEngine.Factory.Colors.White))
                     {
                         if (bmp.Width == 0 || bmp.Height == 0)
                         {
@@ -160,16 +160,16 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 },
                 (obj) =>
                 {
-                    var fs = Engine.Resolve<IFileSystem>();
+                    var fs = SvgEngine.Resolve<IFileSystem>();
                     var path = fs.GetDefaultStoragePath();
                     var storagePath = fs.PathCombine(path, _fileName());
                     return Canvas.Document.Children.OfType<SvgVisualElement>().Any() && fs.FileExists(storagePath);
                 }),
                 new ToolCommand(this, "Share PNG XL", (obj) =>
                 {
-                    var fs = Engine.Resolve<IFileSystem>();
+                    var fs = SvgEngine.Resolve<IFileSystem>();
 
-                    using (var bmp = ws.Document.DrawAllContents(2048, Engine.Factory.Colors.White))
+                    using (var bmp = ws.Document.DrawAllContents(2048, SvgEngine.Factory.Colors.White))
                     {
                         if (bmp.Width == 0 || bmp.Height == 0)
                         {
@@ -197,14 +197,14 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 },
                 (obj) =>
                 {
-                    var fs = Engine.Resolve<IFileSystem>();
+                    var fs = SvgEngine.Resolve<IFileSystem>();
                     var path = fs.GetDefaultStoragePath();
                     var storagePath = fs.PathCombine(path, _fileName());
                     return Canvas.Document.Children.OfType<SvgVisualElement>().Any() && fs.FileExists(storagePath);
                 }),
                 new ToolCommand(this, "Share PNG Screen", (obj) =>
                 {
-                    var fs = Engine.Resolve<IFileSystem>();
+                    var fs = SvgEngine.Resolve<IFileSystem>();
 
                     using (var bmp = ws.CaptureScreenBitmap())
                     {
@@ -234,14 +234,14 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 },
                 (obj) =>
                 {
-                    var fs = Engine.Resolve<IFileSystem>();
+                    var fs = SvgEngine.Resolve<IFileSystem>();
                     var path = fs.GetDefaultStoragePath();
                     var storagePath = fs.PathCombine(path, _fileName());
                     return Canvas.Document.Children.OfType<SvgVisualElement>().Any() && fs.FileExists(storagePath);
                 }),
                 new ToolCommand(this, "Share PNG Constraints", obj =>
                 {
-                    var fs = Engine.Resolve<IFileSystem>();
+                    var fs = SvgEngine.Resolve<IFileSystem>();
 
                     using (var bmp = ws.CaptureDocumentBitmap())
                     {
@@ -271,7 +271,7 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 },
                 (obj) =>
                 {
-                    var fs = Engine.Resolve<IFileSystem>();
+                    var fs = SvgEngine.Resolve<IFileSystem>();
                     var path = fs.GetDefaultStoragePath();
                     var storagePath = fs.PathCombine(path, _fileName());
                     return Canvas.Document.Children.OfType<SvgVisualElement>().Any() && fs.FileExists(storagePath);

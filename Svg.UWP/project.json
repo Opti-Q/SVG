@@ -1,0 +1,20 @@
+﻿{
+  "dependencies": {
+    "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.3",
+    "SkiaSharp": "1.56.2",
+    "System.Reactive": "3.0.0",
+    "System.Reactive.Core": "3.0.0",
+    "System.Reactive.Interfaces": "3.0.0",
+    "System.Reactive.Linq": "3.0.0",
+    "System.Reactive.PlatformServices": "3.0.0",
+    "System.Xml.ReaderWriter": "4.3.0"
+  },
+  "frameworks": {
+    "uap10.0": {}
+  },
+  "runtimes": {
+    "win10-arm": {},
+    "win10-x86": {},
+    "win10-x64": {}
+  }
+}

@@ -28,5 +28,10 @@ namespace Svg.Editor.Events
         public int PointerCount { get; }
 
         public override string DebuggerDisplay => $"Rotate '{Enum.GetName(typeof(RotateStatus), Status)}' relative delta {RelativeRotationDegrees}, absolute delta {AbsoluteRotationDegrees}";
+
+        public override string ToString()
+        {
+            return DebuggerDisplay;
+        }
     }
 }

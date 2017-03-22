@@ -10,7 +10,7 @@ namespace Svg.Editor.Tools
         public PanTool(IDictionary<string, object> properties)
             : base("Pan", properties)
         {
-            IconName = "ic_pan_tool_white_48dp.png";
+            IconName = "ic_pan_tool.svg";
             ToolType = ToolType.View;
         }
 

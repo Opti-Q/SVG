@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>4094535b-5358-456b-87f5-deacec0ef6fa</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Svg.Platform.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CharConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CultureHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DefaultLogger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EmbeddedResourceSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Marshal.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SKFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SvgDtdResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SvgNodeReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SvgSortedList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SvgTextReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SvgXmlTextWriter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebRequestSvc.cs" />
+  </ItemGroup>
+</Project>

@@ -5,7 +5,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
@@ -29,6 +28,7 @@ namespace Svg.Editor
 
         private readonly ObservableCollection<SvgVisualElement> _selectedElements;
         private readonly ObservableCollection<ITool> _tools;
+        private ObservableCollection<IEnumerable<IToolCommand>> _toolCommands;
         private List<IToolCommand> _toolSelectors;
         private SvgDocument _document;
         private bool _initialized;
@@ -36,7 +36,11 @@ namespace Svg.Editor
         private bool _isDebugEnabled;
         private bool _documentIsDirty;
         private PointF _zoomFocus;
-        private readonly Subject<UserInputEvent> _detectedGestures;
+        private IDisposable _onGestureToken;
+        private IGestureRecognizer _gestureRecognizer;
+
+        private Subject<string> _propertyChangedSubject = new Subject<string>();
+
         private IUndoRedoService UndoRedoService { get; }
 
         #endregion
@@ -81,22 +85,20 @@ namespace Svg.Editor
 
         public ObservableCollection<ITool> Tools => _tools;
 
-        public IEnumerable<IEnumerable<IToolCommand>> ToolCommands
+        public ObservableCollection<IEnumerable<IToolCommand>> ToolCommands
         {
             get
             {
-                // prepare tool commands
-                var commands = Tools.Select(t => t.Commands.OrderBy(tc => tc.Sort))
-                    .OrderBy(t => t.FirstOrDefault()?.Sort ?? int.MaxValue)
-                    .Cast<IEnumerable<IToolCommand>>()
-                    .ToList();
-
-                // prepare tool selectors
-                var toolSelectors = EnsureToolSelectors().OrderBy(s => s.Sort);
-
-                commands.Insert(0, toolSelectors);
-
-                return commands;
+                if (_toolCommands == null)
+                {
+                    _toolCommands = new ObservableCollection<IEnumerable<IToolCommand>>();
+                    var cmds = GetCommands();
+                    foreach (var cmd in cmds)
+                    {
+                        _toolCommands.Add(cmd);
+                    }
+                }
+                return _toolCommands;
             }
         }
 
@@ -123,7 +125,6 @@ namespace Svg.Editor
         public RectangleF Constraints { get; set; }
 
         public ConstraintsMode ConstraintsMode { get; set; }
-
         /// <summary>
         /// If enabled, adds a DebugTool that brings some helpful visualizations
         /// </summary>
@@ -169,6 +170,18 @@ namespace Svg.Editor
 
         public Color BackgroundColor { get; set; }
 
+        public IGestureRecognizer GestureRecognizer
+        {
+            get { return _gestureRecognizer; }
+            set
+            {
+                _onGestureToken?.Dispose();
+                if (value == null) return;
+                _gestureRecognizer = value;
+                _onGestureToken = _gestureRecognizer.RecognizedGestures.Subscribe(async g => await OnGesture(g));
+            }
+        }
+
         #endregion
 
         public event EventHandler CanvasInvalidated;
@@ -179,26 +192,15 @@ namespace Svg.Editor
             Translate = PointF.Create(0f, 0f);
             ZoomFactor = 1f;
 
-            BackgroundColor = Engine.Factory.Colors.White;
+            BackgroundColor = SvgEngine.Factory.Colors.White;
 
             _selectedElements = new ObservableCollection<SvgVisualElement>();
             _selectedElements.CollectionChanged += OnSelectionChanged;
 
-            _detectedGestures = new Subject<UserInputEvent>();
-            var mainScheduler = Engine.TryResolve<IScheduler>();
-            var backgroundScheduler = (IScheduler) Scheduler.Default;
-            var p = Engine.TryResolve<SchedulerProvider>();
-            if (p != null)
-            {
-                mainScheduler = p.MainScheduer;
-                backgroundScheduler = p.BackgroundScheduler;
-            }
-            var gestureRecognizer = new GestureRecognizer(_detectedGestures.AsObservable(), mainScheduler, backgroundScheduler);
-            gestureRecognizer.RecognizedGestures.Subscribe(async g => await OnGesture(g));
+            UndoRedoService = SvgEngine.Resolve<IUndoRedoService>();
+            GestureRecognizer = SvgEngine.Resolve<IGestureRecognizer>();
 
-            UndoRedoService = Engine.Resolve<IUndoRedoService>();
-
-            var toolProvider = Engine.Resolve<ToolFactoryProvider>();
+            var toolProvider = SvgEngine.Resolve<ToolFactoryProvider>();
 
             _tools = new ObservableCollection<ITool>();
 
@@ -208,6 +210,8 @@ namespace Svg.Editor
             }
 
             _tools.CollectionChanged += OnToolsChanged;
+
+            _propertyChangedSubject.Throttle(TimeSpan.FromMilliseconds(250)).Subscribe(OnPropertyChanged);
         }
 
         /// <summary>
@@ -216,9 +220,10 @@ namespace Svg.Editor
         /// <param name="ev"></param>
         public async Task OnEvent(UserInputEvent ev)
         {
-            _detectedGestures.OnNext(ev);
-
             await EnsureInitialized();
+
+            // call gesture recognizer first
+            GestureRecognizer?.OnNext(ev);
 
             foreach (var tool in Tools.OrderBy(t => t.InputOrder))
             {
@@ -563,7 +568,7 @@ namespace Svg.Editor
 
         public Matrix GetCanvasTransformationMatrix()
         {
-            var m1 = Engine.Factory.CreateMatrix();
+            var m1 = SvgEngine.Factory.CreateMatrix();
             m1.Translate(Translate.X, Translate.Y);
             m1.Translate(ZoomFocus.X, ZoomFocus.Y);
             m1.Scale(ZoomFactor, ZoomFactor);
@@ -719,7 +724,7 @@ namespace Svg.Editor
             try
             {
                 SetDocumentViewbox(drawingClip);
-                Document.Draw(bitmap, backgroundColor ?? Engine.Factory.Colors.Black);
+                Document.Draw(bitmap, backgroundColor ?? SvgEngine.Factory.Colors.Black);
 
                 return bitmap;
             }
@@ -748,10 +753,12 @@ namespace Svg.Editor
         {
             CanvasInvalidated?.Invoke(this, EventArgs.Empty);
         }
-
+        
         public void FireToolCommandsChanged()
         {
-            ToolCommandsChanged?.Invoke(this, EventArgs.Empty);
+            ResetToolCommands();
+            
+            _propertyChangedSubject.OnNext(nameof(ToolCommands));
         }
 
         public void Dispose()
@@ -851,6 +858,35 @@ namespace Svg.Editor
             DocumentIsDirty = true;
         }
 
+        private IEnumerable<IEnumerable<IToolCommand>> GetCommands()
+        {
+            // prepare tool commands
+            var commands = Tools.Select(t => t.Commands.OrderBy(tc => tc.Sort))
+                .OrderBy(t => t.FirstOrDefault()?.Sort ?? int.MaxValue)
+                .Cast<IEnumerable<IToolCommand>>()
+                .ToList();
+
+            // prepare tool selectors
+            var toolSelectors = EnsureToolSelectors().OrderBy(s => s.Sort);
+
+            commands.Insert(0, toolSelectors);
+
+            return commands;
+        }
+
+        private void ResetToolCommands()
+        {
+            if (_toolCommands == null)
+                return;
+
+            _toolCommands.Clear();
+            var cmds = GetCommands();
+            foreach (var cmd in cmds)
+            {
+                _toolCommands.Add(cmd);
+            }
+        }
+
         private class SelectToolCommand : ToolCommand
         {
             private readonly ISvgDrawingCanvas _canvas;
@@ -861,6 +897,8 @@ namespace Svg.Editor
                 if (canvas == null) throw new ArgumentNullException(nameof(canvas));
                 _canvas = canvas;
             }
+
+            public override int Sort => -1;
 
             public override void Execute(object parameter)
             {
@@ -891,8 +929,11 @@ namespace Svg.Editor
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
+            System.Diagnostics.Debug.WriteLine($"Propertychanged: {propertyName}");
+
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
     }
 
     public enum ConstraintsMode { FitUniform, FillUniform }

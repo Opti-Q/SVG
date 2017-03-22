@@ -10,7 +10,7 @@ namespace Svg.Editor.Tools
     {
         public ArrangeTool(IUndoRedoService undoRedoService) : base("Arrange", undoRedoService)
         {
-            IconName = "ic_swap_vert_white_48dp.png";
+            IconName = "ic_swap_vert.svg";
         }
 
         public override async Task Initialize(ISvgDrawingCanvas ws)
@@ -42,7 +42,7 @@ namespace Svg.Editor.Tools
                             }
                         }), hasOwnUndoRedoScope: false);
                     }
-                }, o => Canvas.SelectedElements.Any(), iconName: "ic_flip_to_front_white_48dp.png"),
+                }, o => Canvas.SelectedElements.Any(), iconName: "ic_flip_to_front.svg"),
                 new ToolCommand(this, "Bring forward", o =>
                 {
                     var children = Canvas.Document.Children;
@@ -66,7 +66,7 @@ namespace Svg.Editor.Tools
                             }), hasOwnUndoRedoScope: false);
                         }
                     }
-                }, o => Canvas.SelectedElements.Any(), iconName: "ic_arrow_upward_white_48dp.png"),
+                }, o => Canvas.SelectedElements.Any(), iconName: "ic_arrow_upward.svg"),
                 new ToolCommand(this, "Send backward", o =>
                 {
                     var children = Canvas.Document.Children;
@@ -89,7 +89,7 @@ namespace Svg.Editor.Tools
                             }), hasOwnUndoRedoScope: false);
                         }
                     }
-                }, o => Canvas.SelectedElements.Any(), iconName: "ic_arrow_downward_white_48dp.png"),
+                }, o => Canvas.SelectedElements.Any(), iconName: "ic_arrow_downward.svg"),
                 new ToolCommand(this, "Send to back", o =>
                 {
                     var children = Canvas.Document.Children;
@@ -118,7 +118,7 @@ namespace Svg.Editor.Tools
                             }
                         }), hasOwnUndoRedoScope: false);
                     }
-                }, o => Canvas.SelectedElements.Any(), iconName: "ic_flip_to_back_white_48dp.png")
+                }, o => Canvas.SelectedElements.Any(), iconName: "ic_flip_to_back.svg")
             };
         }
     }

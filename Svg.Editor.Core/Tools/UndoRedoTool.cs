@@ -8,7 +8,7 @@ namespace Svg.Editor.Tools
     {
         public UndoRedoTool(IUndoRedoService undoRedoService) : base("Undo/Redo", undoRedoService)
         {
-            IconName = "ic_undo_white_48dp.png";
+            IconName = "ic_undo.svg";
         }
 
         public override async Task Initialize(ISvgDrawingCanvas ws)
@@ -17,8 +17,8 @@ namespace Svg.Editor.Tools
             // add tool commands
             Commands = new List<IToolCommand>
             {
-                new ToolCommand(this, "Undo", o => UndoRedoService.Undo(), o => UndoRedoService.CanUndo(), iconName: "ic_undo_white_48dp.png"),
-                new ToolCommand(this, "Redo", o => UndoRedoService.Redo(), o => UndoRedoService.CanRedo(), iconName: "ic_redo_white_48dp.png")
+                new ToolCommand(this, "Undo", o => UndoRedoService.Undo(), o => UndoRedoService.CanUndo(), iconName: "ic_undo.svg"),
+                new ToolCommand(this, "Redo", o => UndoRedoService.Redo(), o => UndoRedoService.CanRedo(), iconName: "ic_redo.svg")
             };
         }
 

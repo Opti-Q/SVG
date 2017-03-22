@@ -59,17 +59,17 @@ namespace Svg.Editor.Tools
 
         private Dictionary<double, double> CachedDiagonals { get; } = new Dictionary<double, double>();
 
-        private Brush Brush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 210, 210, 210)));
+        private Brush Brush => _brush ?? (_brush = SvgEngine.Factory.CreateSolidBrush(SvgEngine.Factory.CreateColorFromArgb(255, 210, 210, 210)));
         //private Brush Brush2 => _brush2 ?? (_brush2 = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(180, 0, 0, 0)));
-        private Pen Pen => _pen ?? (_pen = Engine.Factory.CreatePen(Brush, 1));
+        private Pen Pen => _pen ?? (_pen = SvgEngine.Factory.CreatePen(Brush, 1));
         //private Pen Pen2 => _pen2 ?? (_pen2 = Engine.Factory.CreatePen(Brush2, 1));
 
         #endregion
 
         #region Public properties
 
-        public string IconGridOn { get; set; } = "ic_grid_on_white_48dp.png";
-        public string IconGridOff { get; set; } = "ic_grid_off_white_48dp.png";
+        public string IconGridOn { get; set; } = "ic_grid_on.svg";
+        public string IconGridOff { get; set; } = "ic_grid_off.svg";
 
         public const string IsSnappingEnabledKey = "issnappingenabled";
         public const string StepSizeYKey = "stepsizey";
@@ -90,7 +90,7 @@ namespace Svg.Editor.Tools
         public override int InputOrder => 100; // must be before movetool!
 
         public bool IsVisible { get; set; } = true;
-
+        
         #endregion
 
         public GridTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService)
@@ -610,9 +610,13 @@ namespace Svg.Editor.Tools
                 _canvas = canvas;
             }
 
+            private new GridTool Tool => (GridTool) base.Tool;
+
+            public override string GroupIconName => Tool.IsVisible ? Tool.IconGridOn : Tool.IconGridOff;
+
             public override void Execute(object parameter)
             {
-                var t = (GridTool) Tool;
+                var t = Tool;
                 t.IsVisible = !t.IsVisible;
                 IconName = t.IsVisible ? t.IconGridOff : t.IconGridOn;
                 _canvas.FireInvalidateCanvas();
@@ -629,6 +633,9 @@ namespace Svg.Editor.Tools
             {
                 _canvas = canvas;
             }
+            private new GridTool Tool => (GridTool)base.Tool;
+
+            public override string GroupIconName => Tool.IsVisible ? Tool.IconGridOn : Tool.IconGridOff;
 
             public override void Execute(object parameter)
             {

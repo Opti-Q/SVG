@@ -24,7 +24,7 @@ namespace Svg.Editor.Tests
             var child = d.Children.OfType<SvgVisualElement>().Single(c => c.Visible && c.Displayable);
             Canvas.ScreenWidth = 800;
             Canvas.ScreenHeight = 500;
-            Canvas.AddItemInScreenCenter(child);
+            await Canvas.AddItemInScreenCenter(child);
             // Preassert
             Assert.AreEqual(0, Canvas.SelectedElements.Count);
 
@@ -51,7 +51,7 @@ namespace Svg.Editor.Tests
             var child = d.Children.OfType<SvgVisualElement>().Single(c => c.Visible && c.Displayable);
             Canvas.ScreenWidth = 800;
             Canvas.ScreenHeight = 500;
-            Canvas.AddItemInScreenCenter(child);
+            await Canvas.AddItemInScreenCenter(child);
 
             var pt1 = PointF.Create(370, 260);
             await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, pt1, pt1, pt1, 1));
@@ -88,7 +88,7 @@ namespace Svg.Editor.Tests
 
             var d = LoadDocument("nested_transformed_text.svg");
             var element2 = d.Children.OfType<SvgVisualElement>().Single(c => c.Visible && c.Displayable);
-            Canvas.AddItemInScreenCenter(element2);
+            await Canvas.AddItemInScreenCenter(element2);
             var b2 = element2.GetBoundingBox(Canvas.GetCanvasTransformationMatrix());
 
             // Preassert
@@ -129,7 +129,7 @@ namespace Svg.Editor.Tests
 
             var d = LoadDocument("nested_transformed_text.svg");
             var element2 = d.Children.OfType<SvgVisualElement>().Single(c => c.Visible && c.Displayable);
-            Canvas.AddItemInScreenCenter(element2);
+            await Canvas.AddItemInScreenCenter(element2);
             var b2 = element2.GetBoundingBox(Canvas.GetCanvasTransformationMatrix());
 
             // Preassert
@@ -166,7 +166,7 @@ namespace Svg.Editor.Tests
             Canvas.Document.Children.Add(element1);
             var d = LoadDocument("nested_transformed_text.svg");
             var element2 = d.Children.OfType<SvgVisualElement>().Single(c => c.Visible && c.Displayable);
-            Canvas.AddItemInScreenCenter(element2);
+            await Canvas.AddItemInScreenCenter(element2);
             Canvas.SelectedElements.Add(element1);
             Canvas.SelectedElements.Add(element2);
 

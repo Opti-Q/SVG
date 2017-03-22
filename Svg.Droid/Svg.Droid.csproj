@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Svg</RootNamespace>
-    <AssemblyName>Svg.Droid</AssemblyName>
+    <AssemblyName>Svg</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
@@ -20,8 +20,8 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup>
-  <CopyNuGetImplementations>true</CopyNuGetImplementations>
-</PropertyGroup>
+    <CopyNuGetImplementations>true</CopyNuGetImplementations>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -60,129 +60,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Svg.Shared\CharConverter.cs">
-      <Link>CharConverter.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\CultureHelper.cs">
-      <Link>CultureHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\DataTypes\SvgAspectRatioConverter.cs">
-      <Link>DataTypes\SvgAspectRatioConverter.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\DataTypes\SvgOrientConverter.cs">
-      <Link>DataTypes\SvgOrientConverter.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\DataTypes\SvgPointCollection.cs">
-      <Link>DataTypes\SvgPointCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\DataTypes\SvgUnitCollection.cs">
-      <Link>DataTypes\SvgUnitCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\DataTypes\SvgUnitConverter.cs">
-      <Link>DataTypes\SvgUnitConverter.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\DataTypes\SvgViewBox.cs">
-      <Link>DataTypes\SvgViewBox.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\DefaultLogger.cs">
-      <Link>DefaultLogger.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\FileSystem.cs">
-      <Link>FileSystem.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\Marshal.cs">
-      <Link>Marshal.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\Painting\EnumConverters.cs">
-      <Link>Painting\EnumConverters.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\Painting\SvgColourConverter.cs">
-      <Link>Painting\SvgColourConverter.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\Painting\SvgPaintServerFactory.cs">
-      <Link>Painting\SvgPaintServerFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\Paths\SvgPathBuilder.cs">
-      <Link>Paths\SvgPathBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SKFactory.cs">
-      <Link>SKFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgDtdResolver.cs">
-      <Link>SvgDtdResolver.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgElementAttributeProvider.cs">
-      <Link>SvgElementAttributeProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgElementFactory.cs">
-      <Link>SvgElementFactory.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgNodeReader.cs">
-      <Link>SvgNodeReader.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgPlatformSetup.cs">
-      <Link>SvgPlatformSetup.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgPlatformSetupBase.cs">
-      <Link>SvgPlatformSetupBase.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgSortedList.cs">
-      <Link>SvgSortedList.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgTextReader.cs">
-      <Link>SvgTextReader.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgTypeDescriptor.cs">
-      <Link>SvgTypeDescriptor.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\SvgXmlTextWriter.cs">
-      <Link>SvgXmlTextWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\Transforms\SvgTransformConverter.cs">
-      <Link>Transforms\SvgTransformConverter.cs</Link>
-    </Compile>
-    <Compile Include="..\Svg.Shared\WebRequestSvc.cs">
-      <Link>WebRequestSvc.cs</Link>
-    </Compile>
-    <Compile Include="Platform\AndroidBitmap.cs" />
-    <Compile Include="Platform\AndroidBrushBase.cs" />
-    <Compile Include="Platform\AndroidColor.cs" />
-    <Compile Include="Platform\AndroidColorMatrix.cs" />
-    <Compile Include="Platform\AndroidColors.cs" />
-    <Compile Include="Platform\AndroidFont.cs" />
-    <Compile Include="Platform\AndroidFontFamily.cs" />
-    <Compile Include="Platform\AndroidFontFamilyProvider.cs" />
-    <Compile Include="Platform\AndroidGraphics.cs" />
-    <Compile Include="Platform\AndroidGraphicsPath.cs" />
-    <Compile Include="Platform\AndroidLinearGradientBrush.cs" />
-    <Compile Include="Platform\AndroidMatrix.cs" />
-    <Compile Include="Platform\AndroidPen.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Platform\AndroidSizeF.cs" />
-    <Compile Include="Platform\AndroidPointF.cs" />
-    <Compile Include="Platform\AndroidRectangleF.cs" />
-    <Compile Include="Platform\AndroidSolidBrush.cs" />
-    <Compile Include="Platform\AndroidStringFormat.cs" />
-    <Compile Include="Platform\AndroidTextRenderer.cs" />
-    <Compile Include="Platform\AndroidTextureBrush.cs" />
-    <Compile Include="Platform\Extensions.cs" />
-    <Compile Include="Factory.cs" />
-    <Compile Include="Platform\SvgAssetSource.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
-    <None Include="svgkey.snk" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Svg.Core\Svg.Core.csproj">
-      <Project>{13edb4db-3977-4c2e-998a-6103ca015881}</Project>
-      <Name>Svg.Core</Name>
-    </ProjectReference>
+    <Folder Include="Properties\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="Platform\SvgAssetSource.cs" />
+  </ItemGroup>
+  <Import Project="..\Svg.Shared\Svg.Shared.projitems" Label="Shared" />
+  <Import Project="..\Svg.Platform.Shared\Svg.Platform.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
