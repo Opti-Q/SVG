@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Threading;
 using Xamarin.Forms.Platform.Android;
 
 using SKFormsView = SkiaSharp.Views.Forms.SKCanvasViewX;
@@ -11,6 +12,13 @@ namespace SkiaSharp.Views.Forms
         where TNativeView : SKNativeView, IPaintSurface
         where TFormsView : SKFormsView
     {
+        private readonly SynchronizationContext _syncContext;
+
+        public DroidCanvasViewRendererBase()
+        {
+            _syncContext = SynchronizationContext.Current ?? new SynchronizationContext();
+        }
+
         protected override void OnElementChanged(ElementChangedEventArgs<TFormsView> e)
         {
             if (e.OldElement != null)
@@ -78,7 +86,7 @@ namespace SkiaSharp.Views.Forms
         private void OnSurfaceInvalidated(object sender, EventArgs eventArgs)
         {
             // repaint the native control
-            Control.Invalidate();
+            _syncContext.Post((x) =>  Control.Invalidate(), null);
         }
 
         // the user asked for the size
