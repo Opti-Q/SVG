@@ -571,7 +571,7 @@ namespace Svg.Editor.Tests
             var formerText = child.Descendants().OfType<SvgTextSpan>().Single().Text;
             Canvas.ScreenWidth = 800;
             Canvas.ScreenHeight = 500;
-            Canvas.AddItemInScreenCenter(child);
+            await Canvas.AddItemInScreenCenter(child);
 
             _textMock.F = (x, y) => new TextTool.TextProperties { Text = theText, FontSizeIndex = 0 };
             var pt1 = PointF.Create(370, 260);

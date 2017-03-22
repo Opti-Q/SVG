@@ -16,7 +16,6 @@ namespace Svg.Editor.Tools
         private RectangleF _selectionRectangle;
         private Brush _brush;
         private Pen _pen;
-        private bool _handledPointerDown;
 
         #endregion
 
@@ -184,7 +183,6 @@ namespace Svg.Editor.Tools
 
         public override void Reset()
         {
-            _handledPointerDown = false;
             _selectionRectangle = null;
         }
 

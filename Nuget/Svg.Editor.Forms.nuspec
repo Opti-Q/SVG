@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>Svg.Editor.Forms</id>
-        <version>2.0.4</version>
+        <version>2.0.5</version>
         <authors>gentledepp,bruzkovsky </authors>
         <owners>gentledepp,bruzkovsky </owners>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -10,28 +10,31 @@
         <dependencies>
 		  <group>
 			<dependency id="SkiaSharp" version="1.56.2" />
-			<dependency id="Svg.Editor" version="2.0.4" />
+			<dependency id="Svg.Editor" version="2.0.5" />
 		  </group>
 		  <group targetFramework="MonoAndroid403">
+			<dependency id="Xamarin.Forms" version="2.3.3.193" />
 			<dependency id="SkiaSharp" version="1.56.2" />
 			<dependency id="SkiaSharp.Views" version="1.56.2" />
 			<dependency id="SkiaSharp.Views.Forms" version="1.56.2"/>
-			<dependency id="Svg.Editor" version="2.0.4" />
-			<dependency id="Svg.Editor.Views" version="2.0.4" />
+			<dependency id="Svg.Editor" version="2.0.5" />
+			<dependency id="Svg.Editor.Views" version="2.0.5" />
 		  </group>
 		  <group targetFramework="Xamarin.iOS10">
+			<dependency id="Xamarin.Forms" version="2.3.3.193" />
 			<dependency id="SkiaSharp" version="1.56.2" />
 			<dependency id="SkiaSharp.Views" version="1.56.2" />
 			<dependency id="SkiaSharp.Views.Forms" version="1.56.2"/>
-			<dependency id="Svg.Editor" version="2.0.4" />
-			<dependency id="Svg.Editor.Views" version="2.0.4" />
+			<dependency id="Svg.Editor" version="2.0.5" />
+			<dependency id="Svg.Editor.Views" version="2.0.5" />
 		  </group>
 		  <group targetFramework="UAP10">
+			<dependency id="Xamarin.Forms" version="2.3.3.193" />
 			<dependency id="SkiaSharp" version="1.56.2" />
 			<dependency id="SkiaSharp.Views" version="1.56.2" />
 			<dependency id="SkiaSharp.Views.Forms" version="1.56.2"/>
-			<dependency id="Svg.Editor" version="2.0.4" />
-			<dependency id="Svg.Editor.Views" version="2.0.4" />
+			<dependency id="Svg.Editor" version="2.0.5" />
+			<dependency id="Svg.Editor.Views" version="2.0.5" />
 		  </group>
         </dependencies>
     </metadata>

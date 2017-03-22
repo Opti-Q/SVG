@@ -100,7 +100,7 @@ namespace Svg.Editor.Tests
             gt.IsSnappingEnabled = false; // disable snapping in this case
 
             // Act
-            Canvas.AddItemInScreenCenter(element);
+            await Canvas.AddItemInScreenCenter(element);
 
             // Assert 
             var children = Canvas.Document.Children.OfType<SvgVisualElement>().ToList();

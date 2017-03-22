@@ -19,8 +19,6 @@ namespace Svg.Editor.Tools
         private const double MaxPointerDistance = 20.0;
         private SvgEllipse _currentEllipse;
         private Brush _brush;
-        private Brush _backgroundBrush;
-        private Pen _pen;
         private bool _isActive;
         private MovementHandle _movementHandle;
         private ITool _activatedFrom;
