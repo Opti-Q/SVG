@@ -1,7 +1,6 @@
 ﻿
 using System;
 using System.ComponentModel;
-using System.Threading;
 using Xamarin.Forms.Platform.iOS;
 
 using SKFormsView = SkiaSharp.Views.Forms.SKCanvasViewX;
@@ -13,13 +12,6 @@ namespace SkiaSharp.Views.Forms
         where TNativeView : SKNativeView, IPaintSurface
         where TFormsView : SKFormsView
     {
-        private readonly SynchronizationContext _syncContext;
-
-        public TouchCanvasViewRendererBase()
-        {
-            _syncContext = SynchronizationContext.Current ?? new SynchronizationContext();
-        }
-
         protected override void OnElementChanged(ElementChangedEventArgs<TFormsView> e)
         {
             if (e.OldElement != null)
@@ -93,7 +85,7 @@ namespace SkiaSharp.Views.Forms
         private void OnSurfaceInvalidated(object sender, EventArgs eventArgs)
         {
             // repaint the native control
-            _syncContext.Post((x) => Control.SetNeedsDisplay(), null);
+            Control.SetNeedsDisplay();
         }
 
         private void OnPaintSurface(object sender, iOS.SKPaintSurfaceEventArgs e)

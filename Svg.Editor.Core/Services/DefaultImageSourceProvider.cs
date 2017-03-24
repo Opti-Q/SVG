@@ -41,6 +41,31 @@ namespace Svg.Editor.Services
 
             return image;
         }
+
+        public virtual string GetImage(string image, SaveAsPngOptions options)
+        {
+            if (image == null)
+                return GetDefaultImage();
+
+            var resource = Resources.Value.FirstOrDefault(r => r.EndsWith(image));
+            // if this is a local resource file
+            if (resource != null && resource.EndsWith(".svg"))
+            {
+                var cache = SvgEngine.TryResolve<ISvgCachingService>();
+                if (cache != null)
+                {
+                    if (Cache.ContainsKey(resource))
+                        return Cache[resource];
+
+                    var cached = cache.GetCachedPng(resource, options);
+                    Cache.AddOrUpdate(resource, cached, (o, n) => n);
+                    return cached;
+                }
+            }
+
+            return image;
+        }
+
         protected virtual string GetDefaultImage()
         {
             return null;

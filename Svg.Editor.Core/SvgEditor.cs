@@ -38,6 +38,7 @@ namespace Svg.Editor
                 SvgEngine.RegisterSingleton<IUndoRedoService>(() => new UndoRedoService());
                 SvgEngine.RegisterSingleton<IEmbeddedResourceRegistry>(() => new EmbeddedResourceRegistry());
                 SvgEngine.Register<ISvgSourceFactory>(() => new EmbeddedResourceSvgSourceFactory(SvgEngine.Resolve<IEmbeddedResourceRegistry>()));
+                SvgEngine.RegisterSingleton<IImageSourceProvider>(() => new DefaultImageSourceProvider());
 
 
                 _initialized = true;
