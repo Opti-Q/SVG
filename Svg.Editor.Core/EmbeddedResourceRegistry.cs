@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 
 namespace Svg.Editor
 {
     public class EmbeddedResourceRegistry : IEmbeddedResourceRegistry
     {
         private readonly List<Type> _targetTypes;
+        private IEnumerable<string> _embeddedResourceNames;
 
         public EmbeddedResourceRegistry()
         {
@@ -36,14 +36,25 @@ namespace Svg.Editor
                 if (_targetTypes.Contains(type))
                     _targetTypes.Add(type);
             }
-        }
 
+            _embeddedResourceNames = null;
+        }
         public IEnumerable<Type> EmbeddedResourceTypes => _targetTypes.ToArray();
+        public IEnumerable<string> EmbeddedResouceNames
+        {
+            get
+            {
+                return _embeddedResourceNames ??
+                       (_embeddedResourceNames =
+                           _targetTypes.SelectMany(t => t.GetTypeInfo().Assembly.GetManifestResourceNames()).ToArray());
+            }
+        }
     }
 
     public interface IEmbeddedResourceRegistry
     {
         void Register(params Type[] types);
         IEnumerable<Type> EmbeddedResourceTypes { get; }
+        IEnumerable<string> EmbeddedResouceNames { get; }
     }
 }

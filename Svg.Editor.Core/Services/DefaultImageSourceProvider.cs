@@ -1,45 +1,19 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
-using System.Reflection;
 using Svg.Interfaces;
 
 namespace Svg.Editor.Services
 {
     public class DefaultImageSourceProvider : IImageSourceProvider
     {
-        private static readonly Lazy<string[]> Resources = new Lazy<string[]>(() =>
-            {
-                var registry = SvgEngine.Resolve<IEmbeddedResourceRegistry>();
-                return registry.EmbeddedResourceTypes.SelectMany(t => t.GetTypeInfo().Assembly.GetManifestResourceNames()).ToArray();
-            }
-        );
+        private static readonly Lazy<IEmbeddedResourceRegistry> Registry = new Lazy<IEmbeddedResourceRegistry>(() => SvgEngine.Resolve<IEmbeddedResourceRegistry>());
         private static readonly ConcurrentDictionary<string, string> Cache = new ConcurrentDictionary<string, string>();
-
-        
 
         public  virtual string GetImage(string image, SizeF dimension = null)
         {
-            if (image == null)
-                return GetDefaultImage();
-
-            var resource = Resources.Value.FirstOrDefault(r => r.EndsWith(image));
-            // if this is a local resource file
-            if (resource != null && resource.EndsWith(".svg"))
-            {
-                var cache = SvgEngine.TryResolve<ISvgCachingService>();
-                if (cache != null)
-                {
-                    if (Cache.ContainsKey(resource))
-                        return Cache[resource];
-
-                    var cached = cache.GetCachedPng(resource, new SaveAsPngOptions() {ImageDimension = dimension});
-                    Cache.AddOrUpdate(resource, cached, (o, n) => n);
-                    return cached;
-                }
-            }
-
-            return image;
+            var options = new SaveAsPngOptions() {ImageDimension = dimension};
+            return GetImage(image, options);
         }
 
         public virtual string GetImage(string image, SaveAsPngOptions options)
@@ -47,14 +21,14 @@ namespace Svg.Editor.Services
             if (image == null)
                 return GetDefaultImage();
 
-            var resource = Resources.Value.FirstOrDefault(r => r.EndsWith(image));
+            var resource = Registry.Value.EmbeddedResouceNames.FirstOrDefault(r => r.EndsWith(image));
             // if this is a local resource file
             if (resource != null && resource.EndsWith(".svg"))
             {
                 var cache = SvgEngine.TryResolve<ISvgCachingService>();
                 if (cache != null)
                 {
-                    if (Cache.ContainsKey(resource))
+                    if (!options.Force && Cache.ContainsKey(resource))
                         return Cache[resource];
 
                     var cached = cache.GetCachedPng(resource, options);
