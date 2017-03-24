@@ -33,7 +33,7 @@ namespace Svg.Editor
         {
             foreach (var type in types.Reverse())
             {
-                if (_targetTypes.Contains(type))
+                if (!_targetTypes.Contains(type))
                     _targetTypes.Add(type);
             }
 
