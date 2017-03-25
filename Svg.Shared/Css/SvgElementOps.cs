@@ -13,7 +13,7 @@ namespace Svg.Css
 
         public ISvgElementFactory Factory
         {
-            get { return _factory ?? (_factory = Engine.Resolve<ISvgElementFactory>()); }
+            get { return _factory ?? (_factory = SvgEngine.Resolve<ISvgElementFactory>()); }
         }
 
         public Selector<SvgElement> Type(NamespacePrefix prefix, string name)

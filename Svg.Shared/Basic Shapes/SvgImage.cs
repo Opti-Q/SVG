@@ -163,7 +163,7 @@ namespace Svg
                     var destRect = destClip;
 
                     PushTransforms(renderer);
-                    renderer.SetClip(Engine.Factory.CreateRegion(destClip), CombineMode.Intersect);
+                    renderer.SetClip(SvgEngine.Factory.CreateRegion(destClip), CombineMode.Intersect);
                     SetClip(renderer);
 
                     if (AspectRatio != null && AspectRatio.Align != SvgPreserveAspectRatio.none)
@@ -264,7 +264,7 @@ namespace Svg
                     byte[] imageBytes = Convert.FromBase64String(uriString.Substring(dataIdx));
                     using (var stream = new MemoryStream(imageBytes))
                     {
-                        return Engine.Factory.CreateImageFromStream(stream);
+                        return SvgEngine.Factory.CreateImageFromStream(stream);
                     }
                 }
 
@@ -273,7 +273,7 @@ namespace Svg
                     uri = new Uri(OwnerDocument.BaseUri, uri);
                 }
                 
-                using (var stream = Engine.Resolve<IWebRequest>().GetResponse(uri))
+                using (var stream = SvgEngine.Resolve<IWebRequest>().GetResponse(uri))
                 {
                     stream.Position = 0;
                     if (uri.LocalPath.ToLowerInvariant().EndsWith(".svg"))
@@ -284,7 +284,7 @@ namespace Svg
                     }
                     else
                     {
-                        return Engine.Factory.CreateBitmapFromStream(stream);
+                        return SvgEngine.Factory.CreateBitmapFromStream(stream);
                     }
                 }
             }

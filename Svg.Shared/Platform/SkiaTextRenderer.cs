@@ -37,7 +37,7 @@ namespace Svg.Platform
             if (txt.Stroke != null)
             {
                 var brush = txt.Stroke.GetBrush(txt, renderer, 1f);
-                using (var pen = (SkiaPen)Engine.Factory.CreatePen(brush, txt.StrokeWidth.Value))
+                using (var pen = (SkiaPen)SvgEngine.Factory.CreatePen(brush, txt.StrokeWidth.Value))
                 {
                     pen.TextSize = txt.FontSize.Value;
                     pen.TextAlign = FromAnchor(txt.TextAnchor);
@@ -57,7 +57,7 @@ namespace Svg.Platform
             if (txt.Fill != null)
             {
                 var brush = txt.Fill.GetBrush(txt, renderer, 1f);
-                using (var pen = (SkiaPen)Engine.Factory.CreatePen(brush, 0f))
+                using (var pen = (SkiaPen)SvgEngine.Factory.CreatePen(brush, 0f))
                 {
                     pen.TextSize = txt.FontSize.Value;
                     pen.TextAlign = FromAnchor(txt.TextAnchor);
@@ -97,7 +97,7 @@ namespace Svg.Platform
             if (!textIsEmpty)
             {
                 var brush = txt.Fill.GetBrush(txt, renderer, 1f);
-                using (var pen = (SkiaPen) Engine.Factory.CreatePen(brush, txt.StrokeWidth.Value))
+                using (var pen = (SkiaPen) SvgEngine.Factory.CreatePen(brush, txt.StrokeWidth.Value))
                 {
                     pen.TextSize = txt.FontSize.Value;
                     pen.TextAlign = FromAnchor(txt.TextAnchor);

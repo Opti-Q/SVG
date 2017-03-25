@@ -155,6 +155,12 @@ namespace Svg.Platform
             set { _brush.Paint.TextSize = value; }
         }
 
+        public override float StrokeWidth
+        {
+            get { return _brush.Paint.StrokeWidth; }
+            set { _brush.Paint.StrokeWidth = value; }
+        }
+
         public SKTextAlign TextAlign
         {
             get { return _brush.Paint.TextAlign; }

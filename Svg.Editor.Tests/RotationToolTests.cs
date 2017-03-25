@@ -14,21 +14,20 @@ namespace Svg.Editor.Tests
     public class RotationToolTests : SvgDrawingCanvasTestBase
     {
         [SetUp]
-        public override void SetUp()
+        protected override void SetupOverride()
         {
 
-            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            SvgEngine.Register<ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
             {
-                () => new GridTool(null, Engine.Resolve<IUndoRedoService>()),
+                () => new GridTool(null, SvgEngine.Resolve<IUndoRedoService>()),
 
-                () => new MoveTool(Engine.Resolve<IUndoRedoService>()),
+                () => new MoveTool(SvgEngine.Resolve<IUndoRedoService>()),
 
-                () => new SelectionTool(Engine.Resolve<IUndoRedoService>()),
+                () => new SelectionTool(SvgEngine.Resolve<IUndoRedoService>()),
 
-                () => new RotationTool(null, Engine.Resolve<IUndoRedoService>()), 
+                () => new RotationTool(null, SvgEngine.Resolve<IUndoRedoService>()), 
             }));
-
-            base.SetUp();
+            
         }
 
         [Test]

@@ -22,7 +22,7 @@ namespace Svg.Editor.Tools
 
         private const double MaxPointerDistance = 20.0;
 
-        private static IMarkerOptionsInputService MarkerOptionsInputServiceProxy => Engine.Resolve<IMarkerOptionsInputService>();
+        private static IMarkerOptionsInputService MarkerOptionsInputServiceProxy => SvgEngine.Resolve<IMarkerOptionsInputService>();
         private SvgLine _currentLine;
         private Brush _brush;
         private Pen _pen;
@@ -36,8 +36,8 @@ namespace Svg.Editor.Tools
 
         #region Private properties
 
-        private Brush BlueBrush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
-        private Pen BluePen => _pen ?? (_pen = Engine.Factory.CreatePen(BlueBrush, 5));
+        private Brush BlueBrush => _brush ?? (_brush = SvgEngine.Factory.CreateSolidBrush(SvgEngine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
+        private Pen BluePen => _pen ?? (_pen = SvgEngine.Factory.CreatePen(BlueBrush, 5));
 
         #endregion
 
@@ -50,7 +50,7 @@ namespace Svg.Editor.Tools
         public const string MarkerEndIdsKey = "markerendids";
         public const string MarkerEndNamesKey = "markerendnames";
 
-        public string LineStyleIconName { get; set; } = "ic_line_endings_white_48dp.png";
+        public string LineStyleIconName { get; set; } = "ic_line_endings.svg";
 
         public override int InputOrder => 300;
 
@@ -131,7 +131,7 @@ namespace Svg.Editor.Tools
 
         public LineTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Line", properties, undoRedoService)
         {
-            IconName = "ic_mode_edit_white_48dp.png";
+            IconName = "ic_mode_edit.svg";
             ToolUsage = ToolUsage.Explicit;
             ToolType = ToolType.Create;
             HandleDragExit = true;
@@ -314,11 +314,13 @@ namespace Svg.Editor.Tools
             if (_currentLine != null)
             {
                 renderer.Graphics.Save();
-
-                var radius = (int) (MaxPointerDistance / ws.ZoomFactor);
+                
+                var radius = (float)MaxPointerDistance / 4 / ws.ZoomFactor;
+                var halfRadius = (float)radius / 2;
                 var points = _currentLine.GetTransformedLinePoints();
-                renderer.DrawCircle(points[0].X - (radius >> 1), points[0].Y - (radius >> 1), radius, BluePen);
-                renderer.DrawCircle(points[1].X - (radius >> 1), points[1].Y - (radius >> 1), radius, BluePen);
+                renderer.FillCircle(points[0].X - halfRadius, points[0].Y - halfRadius, radius, BlueBrush);
+                renderer.FillCircle(points[1].X - halfRadius, points[1].Y - halfRadius, radius, BlueBrush);
+
 
                 renderer.Graphics.Restore();
             }
@@ -387,7 +389,7 @@ namespace Svg.Editor.Tools
         {
             var line = new SvgLine
             {
-                Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
+                Stroke = new SvgColourServer(SvgEngine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
                 Fill = SvgPaintServer.None,
                 StrokeWidth = new SvgUnit(SvgUnitType.Pixel, DefaultStrokeWidth),
                 StartX = new SvgUnit(SvgUnitType.Pixel, relativeStart.X),

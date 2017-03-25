@@ -30,7 +30,7 @@
 
 using Svg.Interfaces;
 
-namespace System.Drawing.Drawing2D
+namespace Svg.Interfaces
 {
     public sealed class ColorBlend
     {

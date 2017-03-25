@@ -1,11 +1,11 @@
 ﻿{
   "dependencies": {
-    "Microsoft.Reactive.Testing": "3.0.0",
-    "NUnit": "3.0.1",
+    "Microsoft.Reactive.Testing": "3.1.1",
+    "NUnit": "3.6.1",
     "nunit.xamarin": "3.0.1",
-    "SkiaSharp": "1.56.1",
-    "Xamarin.Android.Support.v4": "22.2.1.0",
-    "Xamarin.Forms": "2.3.3.193"
+    "SkiaSharp": "1.56.2",
+    "Svg": "2.0.4",
+    "Xamarin.Forms": "2.3.4.211-pre3"
   },
   "frameworks": {
     "MonoAndroid,Version=v7.1": {}

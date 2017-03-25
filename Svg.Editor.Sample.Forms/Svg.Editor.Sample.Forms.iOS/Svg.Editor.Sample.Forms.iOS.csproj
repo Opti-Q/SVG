@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
@@ -129,16 +129,6 @@
     <ProjectReference Include="..\..\Svg.Editor.Forms.iOS\Svg.Editor.Forms.iOS.csproj">
       <Project>{f99c92c2-1192-4cb8-8ce1-f90874669246}</Project>
       <Name>Svg.Editor.Forms.iOS</Name>
-      <IsAppExtension>false</IsAppExtension>
-      <IsWatchApp>false</IsWatchApp>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Svg.Editor.Forms\Svg.Editor.Forms.csproj">
-      <Project>{2c90ee6d-52e3-4ba0-92d4-8162800f698d}</Project>
-      <Name>Svg.Editor.Forms</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Svg.Editor.Views.iOS\Svg.Editor.Views.iOS.csproj">
-      <Project>{1a4f1238-2571-4e51-9834-d2432f1d9c35}</Project>
-      <Name>Svg.Editor.Views.iOS</Name>
       <IsAppExtension>false</IsAppExtension>
       <IsWatchApp>false</IsWatchApp>
     </ProjectReference>

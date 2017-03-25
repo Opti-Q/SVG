@@ -43,6 +43,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="EmbeddedResourceRegistry.cs" />
     <Compile Include="Extensions\PointFExtensions.cs" />
     <Compile Include="Extensions\ReactiveExtensions.cs" />
     <Compile Include="Gestures\DragGesture.cs" />
@@ -53,12 +54,17 @@
     <Compile Include="Interfaces\IInputEventDetector.cs" />
     <Compile Include="Interfaces\IPickImageService.cs" />
     <Compile Include="Interfaces\ISvgDrawingCanvas.cs" />
+    <Compile Include="Interfaces\IToolbarIconSizeProvider.cs" />
+    <Compile Include="Services\DefaultImageSourceProvider.cs" />
+    <Compile Include="Services\EmbeddedResourceSvgSourceFactory.cs" />
+    <Compile Include="Services\IImageSourceProvider.cs" />
     <Compile Include="Services\ReactiveGestureRecognizer.cs" />
     <Compile Include="Interfaces\IGestureRecognizer.cs" />
     <Compile Include="Interfaces\ISchedulerProvider.cs" />
     <Compile Include="Services\SchedulerProvider.cs" />
     <Compile Include="Services\SKCanvasRenderer.cs" />
     <Compile Include="Services\ToolFactoryProvider.cs" />
+    <Compile Include="SvgEditor.cs" />
     <Compile Include="Tools\ArrangeTool.cs" />
     <Compile Include="Tools\EllipseTool.cs" />
     <Compile Include="Tools\PlaceAsBackgroundTool.cs" />
@@ -70,8 +76,6 @@
     <Compile Include="Events\PointerEvent.cs" />
     <Compile Include="Extensions\SvgVisualElementExtensions.cs" />
     <Compile Include="Interfaces\ICanInvalidateCanvas.cs" />
-    <Compile Include="Interfaces\ISvgCachingService.cs" />
-    <Compile Include="Interfaces\ISvgSourceFactory.cs" />
     <Compile Include="Interfaces\IUndoableCommand.cs" />
     <Compile Include="Interfaces\IUndoRedoService.cs" />
     <Compile Include="Properties\Annotations.cs" />
@@ -103,6 +107,102 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_arrow_downward.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_arrow_upward.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_aspect_ratio.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_border_style.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_brush.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_code.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_color_lens.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_delete.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_flip_to_back.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_flip_to_front.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_format_color_fill.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_grid_off.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_grid_on.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_insert_photo.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_line_endings.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_line_style.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_mode_edit.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_pan_tool.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_panorama_fish_eye.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_redo.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_rotate_left.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_rotate_right.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_save.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_select.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_swap_vert.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_text_fields.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_undo.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_zoom.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_zoom_100.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_zoom_200.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_zoom_in.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_zoom_out.svg" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

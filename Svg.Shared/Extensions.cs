@@ -71,7 +71,7 @@ namespace Svg
             if (_converter == null)
             {
                 var oldConv = _converter;
-                var converter = Engine.Resolve<ICharConverter>();
+                var converter = SvgEngine.Resolve<ICharConverter>();
                 Interlocked.CompareExchange(ref _converter, converter, oldConv);
             }
 
@@ -84,7 +84,7 @@ namespace Svg
             if (_converter == null)
             {
                 var oldConv = _converter;
-                var converter = Engine.Resolve<ICharConverter>();
+                var converter = SvgEngine.Resolve<ICharConverter>();
                 Interlocked.CompareExchange(ref _converter, converter, oldConv);
             }
 

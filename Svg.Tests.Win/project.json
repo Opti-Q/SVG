@@ -1,8 +1,8 @@
 ﻿{
   "dependencies": {
-    "NUnit": "3.0.1",
-    "NUnit3TestAdapter": "3.4.0",
-    "SkiaSharp": "1.56.1"
+    "NUnit": "3.6.1",
+    "NUnit3TestAdapter": "3.7.0",
+    "SkiaSharp": "1.56.2"
   },
   "frameworks": {
     "net452": {}

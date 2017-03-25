@@ -9,6 +9,6 @@
     <Import_RootNamespace>Svg.Editor.Forms</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)FormsPlatform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SvgEditorForms.cs" />
   </ItemGroup>
 </Project>

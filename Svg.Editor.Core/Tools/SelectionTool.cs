@@ -16,16 +16,15 @@ namespace Svg.Editor.Tools
         private RectangleF _selectionRectangle;
         private Brush _brush;
         private Pen _pen;
-        private bool _handledPointerDown;
 
         #endregion
 
         #region Private properties
 
-        private string DeleteIconName { get; } = "ic_delete_white_48dp.png";
-        private string SelectIconName { get; } = "ic_select_tool_white_48dp.png";
-        private Brush BlueBrush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
-        private Pen BluePen => _pen ?? (_pen = Engine.Factory.CreatePen(BlueBrush, 5));
+        private string DeleteIconName { get; } = "ic_delete.svg";
+        private string SelectIconName { get; } = "ic_select.svg";
+        private Brush BlueBrush => _brush ?? (_brush = SvgEngine.Factory.CreateSolidBrush(SvgEngine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
+        private Pen BluePen => _pen ?? (_pen = SvgEngine.Factory.CreatePen(BlueBrush, 5));
 
         #endregion
 
@@ -154,6 +153,8 @@ namespace Svg.Editor.Tools
                 var m = renderer.Graphics.Transform.Clone();
                 m.Invert();
                 renderer.Graphics.Concat(m);
+
+                BluePen.StrokeWidth = 5;
                 renderer.DrawRectangle(_selectionRectangle, BluePen);
 
                 renderer.Graphics.Restore();
@@ -163,9 +164,10 @@ namespace Svg.Editor.Tools
             foreach (var element in ws.SelectedElements)
             {
                 renderer.Graphics.Save();
-
+                
                 // we draw a selection adorner around all elements
                 // as the canvas is already translated and scaled, we just need the plai boundingbox (as poopsed to transformed one using element.GetBoundingBox(ws.GetCanvasTransformationMatrix()))
+                BluePen.StrokeWidth = 5 / ws.ZoomFactor;
                 renderer.DrawRectangle(element.GetBoundingBox(), BluePen);
 
                 renderer.Graphics.Restore();
@@ -181,7 +183,6 @@ namespace Svg.Editor.Tools
 
         public override void Reset()
         {
-            _handledPointerDown = false;
             _selectionRectangle = null;
         }
 

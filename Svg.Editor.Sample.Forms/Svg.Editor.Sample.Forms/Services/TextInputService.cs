@@ -10,9 +10,31 @@ namespace Svg.Editor.Sample.Forms.Services
     {
         public async Task<TextTool.TextProperties> GetUserInput(string title, string textValue, IEnumerable<string> textSizeOptions, int textSizeSelected)
         {
-            var result = await UserDialogs.Instance.PromptAsync(textValue, title, null, null, "write text here", InputType.Default);
+            var result = await UserDialogs.Instance.PromptAsync("Text edit", title, "Ok", "Cancel", textValue ?? "enter text...", InputType.Default);
+            var defaultResult = new TextTool.TextProperties
+                {
+                    FontSizeIndex = textSizeSelected,
+                    LineHeight = 12f,
+                    Text = textValue
+                };
+            ;
+            var text = result.Text;
+            if (text == "Cancel")
+            {
+                return defaultResult;
+            }
 
-            return new TextTool.TextProperties {FontSizeIndex = textSizeOptions.Count()-1, LineHeight = 12f, Text = result.Text};
+            var sizeResult = await UserDialogs.Instance.ActionSheetAsync("Font size", "Cancel", null, null, textSizeOptions.ToArray());
+            
+            if(sizeResult == "Cancel")
+            {
+                return defaultResult;
+            }
+
+            var sizeIndex = textSizeOptions.ToList().IndexOf(sizeResult);
+            sizeIndex = sizeIndex >= 0 ? sizeIndex : textSizeSelected;
+
+            return new TextTool.TextProperties {FontSizeIndex = sizeIndex, LineHeight = 12f, Text = text};
         }
     }
 }

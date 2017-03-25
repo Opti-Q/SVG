@@ -1,7 +1,7 @@
 ﻿{
   "dependencies": {
-    "NUnit": "3.0.1",
-    "SkiaSharp": "1.56.1"
+    "NUnit": "3.6.1",
+    "SkiaSharp": "1.56.2"
   },
   "frameworks": {
     "net452": {}

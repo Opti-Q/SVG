@@ -20,7 +20,7 @@ namespace Svg.Editor.Tests
         private MockStrokeStyleOptionsInputService _mockStrokeStyle;
 
         [SetUp]
-        public override void SetUp()
+        protected override void SetupOverride()
         {
             var textToolProperties = new Dictionary<string, object>
             {
@@ -29,9 +29,9 @@ namespace Svg.Editor.Tests
                 { "fontsizenames", new [] { "12px", "16px", "20px", "24px", "36px", "48px" } }
             };
 
-            var undoRedoService = Engine.Resolve<IUndoRedoService>();
+            var undoRedoService = SvgEngine.Resolve<IUndoRedoService>();
 
-            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            SvgEngine.Register<ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
             {
                 () => new GridTool(null, undoRedoService),
                 () => new MoveTool(undoRedoService),
@@ -55,15 +55,14 @@ namespace Svg.Editor.Tests
             }));
 
             _colorMock = new MockColorInputService();
-            Engine.Register<IColorInputService, MockColorInputService>(() => _colorMock);
+            SvgEngine.Register<IColorInputService>(() => _colorMock);
 
             _textMock = new MockTextInputService();
-            Engine.Register<ITextInputService, MockTextInputService>(() => _textMock);
+            SvgEngine.Register<ITextInputService>(() => _textMock);
 
             _mockStrokeStyle = new MockStrokeStyleOptionsInputService();
-            Engine.Register<IStrokeStyleOptionsInputService, MockStrokeStyleOptionsInputService>(() => _mockStrokeStyle);
+            SvgEngine.Register<IStrokeStyleOptionsInputService>(() => _mockStrokeStyle);
 
-            base.SetUp();
         }
 
         [Test]
@@ -77,6 +76,8 @@ namespace Svg.Editor.Tests
             var color = colorTool.SelectedColor;
             var oldStroke = text.Stroke?.ToString();
             var oldFill = text.Fill?.ToString();
+            _textMock.F = (x, y) => null;
+
             await Canvas.AddItemInScreenCenter(text);
 
             // Preassert
@@ -442,16 +443,6 @@ namespace Svg.Editor.Tests
             Assert.AreEqual(stroke, ellipse.StrokeDashArray?.ToString());
         }
 
-        private class MockTextInputService : ITextInputService
-        {
-            public Func<string, string, TextTool.TextProperties> F { get; set; } = (x, y) => null;
-
-            public Task<TextTool.TextProperties> GetUserInput(string title, string textValue, IEnumerable<string> textSizeOptions, int textSizeSelected)
-            {
-                return Task.FromResult(F(title, textValue));
-            }
-        }
-
         [Test]
         public async Task WhenUserTapsToBlankArea_CreatesText_ThenUndo_TextIsRemoved()
         {
@@ -580,7 +571,7 @@ namespace Svg.Editor.Tests
             var formerText = child.Descendants().OfType<SvgTextSpan>().Single().Text;
             Canvas.ScreenWidth = 800;
             Canvas.ScreenHeight = 500;
-            Canvas.AddItemInScreenCenter(child);
+            await Canvas.AddItemInScreenCenter(child);
 
             _textMock.F = (x, y) => new TextTool.TextProperties { Text = theText, FontSizeIndex = 0 };
             var pt1 = PointF.Create(370, 260);

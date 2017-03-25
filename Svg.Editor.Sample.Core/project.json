@@ -1,13 +1,13 @@
 ﻿{
   "supports": {},
   "dependencies": {
-    "MvvmCross": "4.1.6",
-    "MvvmCross.Binding": "4.1.6",
-    "MvvmCross.Core": "4.1.6",
-    "MvvmCross.Platform": "4.2.3",
-    "MvvmCross.Plugin.Email": "4.1.6",
-    "MvvmCross.Plugin.PictureChooser": "4.2.3",
-    "Svg": "2.0.3"
+    "MvvmCross": "4.4.0",
+    "MvvmCross.Binding": "4.4.0",
+    "MvvmCross.Core": "4.4.0",
+    "MvvmCross.Platform": "4.4.0",
+    "MvvmCross.Plugin.Email": "4.4.0",
+    "MvvmCross.Plugin.PictureChooser": "4.4.0",
+    "Svg": "2.0.4"
   },
   "frameworks": {
     ".NETPortable,Version=v4.5,Profile=Profile111": {}

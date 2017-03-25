@@ -21,6 +21,7 @@ namespace Svg
         Oblique = 2,
 
         /// <summary>Specifies a font that is classified as 'italic' in the UA's font database, or, if that is not available, one labeled 'oblique'. Fonts with Italic, Cursive, or Kursiv in their names will typically be labeled 'italic'</summary>
-        Italic = 4
+        Italic = 4,
+        Inherit = 8
     }
 }

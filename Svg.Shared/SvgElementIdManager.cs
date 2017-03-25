@@ -39,7 +39,7 @@ namespace Svg
         {
             // if document was loaded from custom source, allow it to load element first
             // as the requested document might be from the very same source
-            if (_document.SvgSource != null)
+            if (_document.SvgSource != null && uri.OriginalString.Contains("#"))
             {
                 var hash = uri.OriginalString.Substring(uri.OriginalString.LastIndexOf('#'));
                 var str = _document.SvgSource.GetFileRelativeTo(uri);
@@ -68,7 +68,7 @@ namespace Svg
                     case "https":
                         //var httpRequest = WebRequest.Create(uri);
                         //using (WebResponse webResponse = httpRequest.GetResponse())
-                        using(var stream = Engine.Resolve<IWebRequest>().GetResponse(uri))
+                        using(var stream = SvgEngine.Resolve<IWebRequest>().GetResponse(uri))
                         {
                             doc = SvgDocument.Open<SvgDocument>(stream);
                             return doc.IdManager.GetElementById(hash);

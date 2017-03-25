@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ArrangeToolTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mocks\MockTextInputService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PerformanceTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UndoRedoToolTests.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FreeDrawingToolTests.cs" />

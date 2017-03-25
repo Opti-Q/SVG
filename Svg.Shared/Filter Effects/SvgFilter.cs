@@ -99,7 +99,7 @@ namespace Svg.FilterEffects
 
         private Matrix GetTransform(SvgVisualElement element)
         {
-            var transformMatrix = Engine.Factory.CreateMatrix();
+            var transformMatrix = SvgEngine.Factory.CreateMatrix();
             foreach (var transformation in element.Transforms)
             {
                 transformMatrix.Multiply(transformation.Matrix);

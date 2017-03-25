@@ -16,11 +16,23 @@ namespace Svg.Editor.Tests
         protected SchedulerProvider SchedulerProvider { get; } = new SchedulerProvider(CurrentThreadScheduler.Instance, new TestScheduler());
 
         [SetUp]
-        public virtual void SetUp()
+        public void SetUp()
         {
-            Engine.Register<SchedulerProvider, SchedulerProvider>(() => SchedulerProvider);
+            SvgPlatform.Init();
+            SvgEditor.Init();
+
+            SvgEngine.Register<SchedulerProvider>(() => SchedulerProvider);
+            SvgEngine.RegisterSingleton<IGestureRecognizer>(() => new ReactiveGestureRecognizer(SchedulerProvider));
+            SvgEngine.Register<IFileLoader>(() => new FileLoader());
+
+            SetupOverride();
 
             Canvas = new SvgDrawingCanvas();
+        }
+
+        protected virtual void SetupOverride()
+        {
+            
         }
 
         [TearDown]
@@ -31,7 +43,7 @@ namespace Svg.Editor.Tests
 
         protected SvgDocument LoadDocument(string fileName)
         {
-            var l = Engine.Resolve<IFileLoader>();
+            var l = SvgEngine.Resolve<IFileLoader>();
             return l.Load(fileName);
         }
         

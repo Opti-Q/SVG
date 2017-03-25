@@ -10,7 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AssemblyInfo.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Editor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SvgEditorViews.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IPaintSurface.cs" />
   </ItemGroup>
 </Project>

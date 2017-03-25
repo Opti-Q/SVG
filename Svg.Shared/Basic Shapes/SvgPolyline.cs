@@ -48,7 +48,7 @@ namespace Svg
         {
             if (_Path == null || this.IsPathDirty)
             {
-                _Path = Engine.Factory.CreateGraphicsPath();
+                _Path = SvgEngine.Factory.CreateGraphicsPath();
 
                 try
                 {

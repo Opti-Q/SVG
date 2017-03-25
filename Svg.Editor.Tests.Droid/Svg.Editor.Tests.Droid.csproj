@@ -78,26 +78,16 @@
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Svg.Droid\Svg.Droid.csproj">
-      <Project>{03F31EC9-4F97-46DA-B8F1-DCE99C6954DE}</Project>
-      <Name>Svg.Droid</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Svg.Editor.Core\Svg.Editor.Core.csproj">
       <Project>{4CF34D1C-662C-400D-BEAF-E87CE1D08FAB}</Project>
       <Name>Svg.Editor.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Svg.Editor.Sample.Core\Svg.Editor.Sample.Core.csproj">
-      <Project>{8739ced3-5844-4f18-b2e3-c99036b31b33}</Project>
-      <Name>Svg.Editor.Sample.Core</Name>
-    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <AndroidAsset Include="Assets\nested_transformed_text.svg" />
   </ItemGroup>
   <Import Project="..\Svg.Editor.Tests\Svg.Editor.Tests.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
-  <Import Project="..\packages\Xamarin.Forms.1.5.0.6447\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.1.5.0.6447\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
   <PropertyGroup>
     <PreBuildEvent>xcopy "$(SolutionDir)Svg.Editor.Tests\Assets\*.*" "$(ProjectDir)Assets\" /Y/D/E</PreBuildEvent>
   </PropertyGroup>

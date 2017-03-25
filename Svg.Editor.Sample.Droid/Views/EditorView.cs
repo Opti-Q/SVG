@@ -15,7 +15,7 @@ namespace Svg.Droid.SampleEditor.Views
     [Activity(Label = "Edit SVG", Exported = true)]
     public class EditorView : MvxActivity
     {
-        private SvgCanvasEditorView _padView;
+        private AndroidSvgCanvasEditorView _padView;
         private Dictionary<string, int> _iconCache = new Dictionary<string, int>();
 
         protected override void OnCreate(Bundle bundle)
@@ -25,7 +25,7 @@ namespace Svg.Droid.SampleEditor.Views
             base.OnCreate(bundle);
 
             SetContentView(Resource.Layout.EditorView);
-            _padView = FindViewById<SvgCanvasEditorView>(Resource.Id.pad);
+            _padView = FindViewById<AndroidSvgCanvasEditorView>(Resource.Id.pad);
 
             _padView.DrawingCanvas = ViewModel.Canvas;
         }

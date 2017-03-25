@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing.Drawing2D;
 using System.Linq;
 using Svg.Interfaces;
 
@@ -118,7 +117,7 @@ namespace Svg
                 var focals = new PointF[] {PointF.Create(NormalizeUnit(FocalX).ToDeviceValue(renderer, UnitRenderingType.Horizontal, this),
                                                       NormalizeUnit(FocalY).ToDeviceValue(renderer, UnitRenderingType.Vertical, this)) };
                 var specifiedRadius = NormalizeUnit(Radius).ToDeviceValue(renderer, UnitRenderingType.Other, this);
-                var path = Engine.Factory.CreateGraphicsPath();
+                var path = SvgEngine.Factory.CreateGraphicsPath();
                 path.AddEllipse(
                     center.X - specifiedRadius, center.Y - specifiedRadius,
                     specifiedRadius * 2, specifiedRadius * 2
@@ -146,12 +145,12 @@ namespace Svg
                 {
                     var stop = Stops.Last();
                     var origColor = stop.GetColor(renderingElement);
-                    var renderColor = Engine.Factory.CreateColorFromArgb((int)(opacity * stop.GetOpacity() * 255), origColor);
+                    var renderColor = SvgEngine.Factory.CreateColorFromArgb((int)(opacity * stop.GetOpacity() * 255), origColor);
 
                     var origClip = renderer.GetClip();
                     try
                     {
-                        using (var solidBrush = Engine.Factory.CreateSolidBrush(renderColor))
+                        using (var solidBrush = SvgEngine.Factory.CreateSolidBrush(renderColor))
                         {
                             var newClip = origClip.Clone();
                             newClip.Exclude(path);
@@ -160,7 +159,7 @@ namespace Svg
                             var renderPath = (GraphicsPath)renderingElement.Path(renderer);
                             if (forStroke)
                             {
-                                using (var pen = Engine.Factory.CreatePen(solidBrush, renderingElement.StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, renderingElement)))
+                                using (var pen = SvgEngine.Factory.CreatePen(solidBrush, renderingElement.StrokeWidth.ToDeviceValue(renderer, UnitRenderingType.Other, renderingElement)))
                                 {
                                     renderer.DrawPath(pen, renderPath);
                                 }
@@ -183,7 +182,7 @@ namespace Svg
                 // Transform the path based on the scaling
                 var gradBounds = path.GetBounds();
                 var transCenter = PointF.Create(gradBounds.Left + gradBounds.Width / 2, gradBounds.Top + gradBounds.Height / 2);
-                using (var scaleMat = Engine.Factory.CreateMatrix())
+                using (var scaleMat = SvgEngine.Factory.CreateMatrix())
                 {
                     scaleMat.Translate(-1 * transCenter.X, -1 * transCenter.Y, MatrixOrder.Append);
                     scaleMat.Scale(scale, scale, MatrixOrder.Append);
@@ -192,7 +191,7 @@ namespace Svg
                 }
 
                 // calculate the brush
-                var brush = Engine.Factory.CreatePathGradientBrush(path);
+                var brush = SvgEngine.Factory.CreatePathGradientBrush(path);
                 brush.CenterPoint = focals[0];
                 brush.InterpolationColors = blend;
 
@@ -224,7 +223,7 @@ namespace Svg
             };
             var pathBounds = path.GetBounds();
             var pathCenter = PointF.Create(pathBounds.X + pathBounds.Width / 2, pathBounds.Y + pathBounds.Height / 2);
-            using (var transform = Engine.Factory.CreateMatrix())
+            using (var transform = SvgEngine.Factory.CreateMatrix())
             {
                 transform.Translate(-1 * pathCenter.X, -1 * pathCenter.Y, MatrixOrder.Append);
                 transform.Scale(.95f, .95f, MatrixOrder.Append);
@@ -289,7 +288,7 @@ namespace Svg
             leftPoints.Add(point);
             rightPoints.Add(point);
 
-            var path = Engine.Factory.CreateGraphicsPath(FillMode.Winding);
+            var path = SvgEngine.Factory.CreateGraphicsPath(FillMode.Winding);
             path.AddPolygon(leftPoints.ToArray());
             yield return path;
 
@@ -300,7 +299,7 @@ namespace Svg
 
         private static GraphicsPath CreateGraphicsPath(PointF origin, PointF centerPoint, float effectiveRadius)
         {
-            var path = Engine.Factory.CreateGraphicsPath();
+            var path = SvgEngine.Factory.CreateGraphicsPath();
 
             path.AddEllipse(
                 origin.X + centerPoint.X - effectiveRadius,

@@ -9,22 +9,22 @@ namespace Svg
     	/// <summary>
         /// An unspecified <see cref="SvgPaintServer"/>.
         /// </summary>
-        public static readonly SvgPaintServer NotSet = new SvgColourServer(Engine.Factory.Colors.Black);
+        public static readonly SvgPaintServer NotSet = new SvgColourServer(SvgEngine.Factory.Colors.Black);
         /// <summary>
         /// A <see cref="SvgPaintServer"/> that should inherit from its parent.
         /// </summary>
-        public static readonly SvgPaintServer Inherit = new SvgColourServer(Engine.Factory.Colors.Black);
+        public static readonly SvgPaintServer Inherit = new SvgColourServer(SvgEngine.Factory.Colors.Black);
         /// <summary>
         /// A <see cref="SvgPaintServer"/> that should get the stroke color from its context object (e.g. marker or svg use)
         /// </summary>
-        public static readonly SvgPaintServer ContextStroke = new SvgColourServer(Engine.Factory.Colors.Black);
+        public static readonly SvgPaintServer ContextStroke = new SvgColourServer(SvgEngine.Factory.Colors.Black);
         /// <summary>
         /// A <see cref="SvgPaintServer"/> that should get the fill color from its context object (e.g. marker or svg use)
         /// </summary>
-        public static readonly SvgPaintServer ContextFill = new SvgColourServer(Engine.Factory.Colors.Black);
+        public static readonly SvgPaintServer ContextFill = new SvgColourServer(SvgEngine.Factory.Colors.Black);
 
         public SvgColourServer()
-            : this(Engine.Factory.Colors.Black)
+            : this(SvgEngine.Factory.Colors.Black)
         {
         }
 
@@ -44,12 +44,12 @@ namespace Svg
         public override Brush GetBrush(SvgVisualElement styleOwner, ISvgRenderer renderer, float opacity, bool forStroke = false)
         {
             //is none?
-            if (this == None) return Engine.Factory.CreateSolidBrush(Engine.Factory.Colors.Transparent);
+            if (this == None) return SvgEngine.Factory.CreateSolidBrush(SvgEngine.Factory.Colors.Transparent);
                 
             int alpha = (int)((opacity * (Colour.A/255.0f) ) * 255);
-            Color colour = Engine.Factory.CreateColorFromArgb(alpha, Colour);
+            Color colour = SvgEngine.Factory.CreateColorFromArgb(alpha, Colour);
 
-            return Engine.Factory.CreateSolidBrush(colour);
+            return SvgEngine.Factory.CreateSolidBrush(colour);
         }
 
         public override string ToString()

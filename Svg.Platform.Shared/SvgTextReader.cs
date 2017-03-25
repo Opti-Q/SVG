@@ -22,6 +22,7 @@ namespace Svg
                 XmlResolver = new SvgDtdResolver(),
 #endif
                 IgnoreWhitespace = false,
+                DtdProcessing = DtdProcessing.Ignore,
                 //WhitespaceHandling = WhitespaceHandling.Significant,
             };
             _xml = XmlReader.Create(stream, settings);
@@ -36,6 +37,7 @@ namespace Svg
                 XmlResolver = new SvgDtdResolver(),
 #endif
                 IgnoreWhitespace = false,
+                DtdProcessing = DtdProcessing.Ignore,
                 //WhitespaceHandling = WhitespaceHandling.Significant,
             };
             _xml = XmlReader.Create(reader, settings);

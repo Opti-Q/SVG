@@ -299,7 +299,7 @@ namespace Svg
                         }
                         catch (Exception ex)
                         {
-                            Engine.Logger.Info(ex.ToString());
+                            SvgEngine.Logger.Info(ex.ToString());
                         }
                         renderNormal = false;
                     }
@@ -399,14 +399,14 @@ namespace Svg
                             switch (this.StrokeLineCap)
                             {
                                 case SvgStrokeLineCap.Round:
-                                    using (var capPath = Engine.Factory.CreateGraphicsPath())
+                                    using (var capPath = SvgEngine.Factory.CreateGraphicsPath())
                                     {
                                         capPath.AddEllipse(path.PathPoints[0].X - strokeWidth / 2, path.PathPoints[0].Y - strokeWidth / 2, strokeWidth, strokeWidth);
                                         renderer.FillPath(brush, capPath);
                                     }
                                     break;
                                 case SvgStrokeLineCap.Square:
-                                    using (var capPath = Engine.Factory.CreateGraphicsPath())
+                                    using (var capPath = SvgEngine.Factory.CreateGraphicsPath())
                                     {
                                         capPath.AddRectangle(RectangleF.Create(path.PathPoints[0].X - strokeWidth / 2, path.PathPoints[0].Y - strokeWidth / 2, strokeWidth, strokeWidth));
                                         renderer.FillPath(brush, capPath);
@@ -416,7 +416,7 @@ namespace Svg
                         }
                         else
                         {
-                            using (var pen = Engine.Factory.CreatePen(brush, strokeWidth))
+                            using (var pen = SvgEngine.Factory.CreatePen(brush, strokeWidth))
                             {
                                 var strokeDashArray = StrokeDashArray;
                                 if (!SvgUnitCollection.IsNullOrEmpty(strokeDashArray))

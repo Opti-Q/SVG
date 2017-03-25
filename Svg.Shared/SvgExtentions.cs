@@ -51,10 +51,10 @@ namespace Svg
         {
             var result = "";
 
-            using (var c = Engine.Resolve<ICultureHelper>().UsingCulture(CultureInfo.InvariantCulture))
+            using (var c = SvgEngine.Resolve<ICultureHelper>().UsingCulture(CultureInfo.InvariantCulture))
             using (StringWriter str = new StringWriter())
             {
-                using (IXmlTextWriter xml = Engine.Factory.CreateXmlTextWriter(str))
+                using (IXmlTextWriter xml = SvgEngine.Factory.CreateXmlTextWriter(str))
                 {
                     elem.Write(xml);
                     result = str.ToString();

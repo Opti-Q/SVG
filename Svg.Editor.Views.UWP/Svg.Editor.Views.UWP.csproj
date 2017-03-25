@@ -7,8 +7,8 @@
     <ProjectGuid>{98F6B246-19BF-4929-BD26-54D06AAD6389}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Svg.Editor.Views.UWP</RootNamespace>
-    <AssemblyName>Svg.Editor.Views.UWP</AssemblyName>
+    <RootNamespace>Svg.Editor.Views</RootNamespace>
+    <AssemblyName>Svg.Editor.Views</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
@@ -108,11 +108,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="UwpGestureRecognizer.cs" />
+    <Compile Include="UWPToolbarIconSizeProvider.cs" />
     <EmbeddedResource Include="Properties\Svg.Editor.UWP.rd.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Svg.Editor.Core\Svg.Editor.Core.csproj">
-      <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
+      <Project>{4CF34D1C-662C-400D-BEAF-E87CE1D08FAB}</Project>
       <Name>Svg.Editor.Core</Name>
     </ProjectReference>
   </ItemGroup>

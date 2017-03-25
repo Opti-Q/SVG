@@ -61,7 +61,7 @@ namespace Svg.Editor.Tools
 
         public TextTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Text", properties, undoRedoService)
         {
-            IconName = "ic_text_fields_white_48dp.png";
+            IconName = "ic_text_fields.svg";
             ToolUsage = ToolUsage.Explicit;
             ToolType = ToolType.Create;
 
@@ -90,7 +90,7 @@ namespace Svg.Editor.Tools
                 await ChangeText(svgText);
             });
 
-            TextInputService = Engine.TryResolve<ITextInputService>();
+            TextInputService = SvgEngine.TryResolve<ITextInputService>();
 
             if (TextInputService == null) throw new InvalidOperationException("Text input service needs to be registered before initializing this tool.");
         }
@@ -151,10 +151,14 @@ namespace Svg.Editor.Tools
         {
             if (_dialogShown) return null;
             _dialogShown = true;
-            var txtProperties =
-                await TextInputService.GetUserInput(title, text, FontSizeNames, index);
+            var txtProperties = await TextInputService.GetUserInput(title, text, FontSizeNames, index);
             _dialogShown = false;
-            SelectedFontSize = FontSizes[txtProperties.FontSizeIndex];
+
+            if (txtProperties != null)
+            {
+                SelectedFontSize = FontSizes[txtProperties.FontSizeIndex];
+            }
+
             return txtProperties;
         }
 
@@ -166,11 +170,11 @@ namespace Svg.Editor.Tools
             var svgText = new SvgText
             {
                 FontSize = new SvgUnit(SvgUnitType.Pixel, fontSize),
-                Stroke = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
-                Fill = new SvgColourServer(Engine.Factory.CreateColorFromArgb(255, 0, 0, 0))
+                Stroke = new SvgColourServer(SvgEngine.Factory.CreateColorFromArgb(255, 0, 0, 0)),
+                Fill = new SvgColourServer(SvgEngine.Factory.CreateColorFromArgb(255, 0, 0, 0))
             };
 
-            var lines = txt.Split('\n');
+            var lines = txt.Split('\n','\r');
             if (lines.Length > 1)
             {
                 var spans = lines.
@@ -217,7 +221,7 @@ namespace Svg.Editor.Tools
             // joining the spans as newlines
             var text = !string.IsNullOrWhiteSpace(svgText.Text)
                 ? svgText.Text
-                : string.Join("\n", svgText.Children.OfType<SvgTextSpan>().Select(x => x.Text));
+                : string.Join(Environment.NewLine, svgText.Children.OfType<SvgTextSpan>().Select(x => x.Text));
 
             var txtProperties =
                 await
@@ -271,7 +275,7 @@ namespace Svg.Editor.Tools
             var formerFontSize = svgText.FontSize;
             UndoRedoService.ExecuteCommand(new UndoableActionCommand("Edit text", o =>
             {
-                var lines = text.Split('\n');
+                var lines = text.Split('\n','\r');
                 // if we have more lines, we need to put each in a different span
                 if (lines.Length > 1)
                 {

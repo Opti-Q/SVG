@@ -1,5 +1,4 @@
 using System;
-using System.Drawing.Drawing2D;
 using System.Linq;
 using SkiaSharp;
 using Svg.Interfaces;
@@ -8,24 +7,68 @@ namespace Svg.Platform
 {
     public class SkiaLinearGradientBrush : SkiaBrushBase, LinearGradientBrush, IDisposable
     {
-        private readonly PointF _start;
-        private readonly PointF _end;
-        private readonly SKColor _colorStart;
-        private readonly SKColor _colorEnd;
+        private readonly Color[] _colors;
+        private readonly float[] _colorPositions;
+        private PointF _start;
+        private PointF _end;
+        private Color _colorStart;
+        private Color _colorEnd;
         private SKShader _shader;
+        private ColorBlend _interpolationColors;
+        private WrapMode _wrapMode;
 
-        public SkiaLinearGradientBrush(PointF start, PointF end, Color colorStart, Color colorEnd)
+        public SkiaLinearGradientBrush(PointF start, PointF end, ColorBlend interpolationColors, WrapMode wrapMode = WrapMode.Tile)
         {
-            _start = start;
-            _end = end;
-            _colorStart = new SKColor(colorStart.R, colorStart.G, colorStart.B, colorStart.A);
-            _colorEnd = new SKColor(colorEnd.R, colorEnd.G, colorEnd.B, colorEnd.A);
+            if (start == null) throw new ArgumentNullException(nameof(start));
+            if (end == null) throw new ArgumentNullException(nameof(end));
+            if (interpolationColors == null) throw new ArgumentNullException(nameof(interpolationColors));
+
+            WrapMode = wrapMode;
+            InterpolationColors = interpolationColors;
+            Start = start;
+            End = end;
         }
 
-        public ColorBlend InterpolationColors { get; set; }
+        public ColorBlend InterpolationColors
+        {
+            get { return _interpolationColors; }
+            set
+            {
+                _interpolationColors = value;
+                Reset();
+            }
+        }
 
-        public WrapMode WrapMode { get; set; }
-        
+        public WrapMode WrapMode
+        {
+            get { return _wrapMode; }
+            set
+            {
+                _wrapMode = value;
+                Reset();
+            }
+        }
+
+        public PointF Start
+        {
+            get { return _start; }
+            set
+            {
+                _start = value;
+                Reset();
+            }
+        }
+
+        public PointF End
+        {
+            get { return _end; }
+            set
+            {
+                _end = value;
+                Reset();
+            }
+        }
+
         protected override SKPaint CreatePaint()
         {
             var paint = new SKPaint();
@@ -47,13 +90,10 @@ namespace Svg.Platform
 
             if(_shader != null)_shader.Dispose();
 
-            if(InterpolationColors == null)
-                _shader = SKShader.CreateLinearGradient(new SKPoint( _start.X, _start.Y), new SKPoint(_end.X, _end.Y), new [] { _colorStart, _colorEnd}, null,  tileMode);
-            else
-            {
-                _shader = SKShader.CreateLinearGradient(new SKPoint(_start.X, _start.Y), new SKPoint(_end.X, _end.Y), InterpolationColors.Colors.Select(c => new SKColor(c.R, c.G, c.B, c.A)).ToArray(), InterpolationColors.Positions, tileMode);
-            }
-
+            var colors = InterpolationColors.Colors.Select(c => new SKColor(c.R, c.G, c.B, c.A)).ToArray();
+            var positions = (InterpolationColors.Positions?.Length >= 0) ? InterpolationColors.Positions : null;  // see: https://developer.xamarin.com/api/member/SkiaSharp.SKShader.CreateLinearGradient/p/SkiaSharp.SKPoint/SkiaSharp.SKPoint/SkiaSharp.SKColor[]/System.Single[]/SkiaSharp.SKShaderTileMode/
+            _shader = SKShader.CreateLinearGradient(new SKPoint(Start.X, Start.Y), new SKPoint(End.X, End.Y), colors, positions, tileMode);
+            
             paint.Shader = _shader;
             return paint;
         }

@@ -1,9 +1,9 @@
 ﻿{
   "dependencies": {
-    "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
-    "SkiaSharp.Views": "1.56.1",
-    "Svg": "2.0.3",
-    "System.Reactive": "3.0.0"
+    "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.3",
+    "SkiaSharp.Views": "1.56.2",
+    "Svg": "2.0.4",
+    "System.Reactive": "3.1.1"
   },
   "frameworks": {
     "uap10.0": {}

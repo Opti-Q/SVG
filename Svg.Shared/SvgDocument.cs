@@ -89,7 +89,7 @@ namespace Svg
 
         private IFileSystem FileSystem
         {
-            get { return _fileSystem ?? (_fileSystem = Engine.Resolve<IFileSystem>()); }
+            get { return _fileSystem ?? (_fileSystem = SvgEngine.Resolve<IFileSystem>()); }
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace Svg
             if (temp.Result != null)
                 return temp.Result;
 
-            var fs = Engine.Resolve<IFileSystem>();
+            var fs = SvgEngine.Resolve<IFileSystem>();
 
             if (!fs.FileExists(path))
             {
@@ -214,7 +214,7 @@ namespace Svg
                 //reader.XmlResolver = new SvgDtdResolver();
                 //reader.WhitespaceHandling = WhitespaceHandling.None;
 
-                using (var reader = Engine.Factory.CreateSvgTextReader(strReader, null))
+                using (var reader = SvgEngine.Factory.CreateSvgTextReader(strReader, null))
                     return Open<T>(reader);
             }
         }
@@ -236,7 +236,7 @@ namespace Svg
             //var reader = new SvgTextReader(stream, entities);
             //reader.XmlResolver = new SvgDtdResolver();
             //reader.WhitespaceHandling = WhitespaceHandling.None;
-            using (var reader = Engine.Factory.CreateSvgTextReader(stream, entities))
+            using (var reader = SvgEngine.Factory.CreateSvgTextReader(stream, entities))
                 return Open<T>(reader);
         }
 
@@ -260,7 +260,7 @@ namespace Svg
                             // Does this element have a value or children
                             // (Must do this check here before we progress to another node)
                             elementEmpty = reader.IsEmptyElement;
-                            var factory = Engine.Resolve<ISvgElementFactory>();
+                            var factory = SvgEngine.Resolve<ISvgElementFactory>();
                             // Create element
                             if (elementStack.Count > 0)
                             {
@@ -511,13 +511,13 @@ namespace Svg
             }
         }
 
-        public Bitmap DrawAllContents(Color backgroundColor = null)
+        public Bitmap DrawAllContents(Color backgroundColor = null, SizeF padding = null)
         {
             var bounds = CalculateDocumentBounds();
-            return DrawAllContents((int) bounds.Width, (int) bounds.Height, backgroundColor);
+            return DrawAllContents((int) bounds.Width, (int) bounds.Height, backgroundColor, padding);
         }
 
-        public Bitmap DrawAllContents(int maxWidth, int maxHeight, Color backgroundColor = null)
+        public Bitmap DrawAllContents(int maxWidth, int maxHeight, Color backgroundColor = null, SizeF padding = null)
         {
             Bitmap bitmap = null;
             try
@@ -540,7 +540,7 @@ namespace Svg
                 }
 
                 bitmap = Bitmap.Create((int) width, (int) height);
-                DrawAllContents(bitmap, backgroundColor);
+                DrawAllContents(bitmap, backgroundColor, padding);
                 return bitmap;
             }
             catch
@@ -551,7 +551,7 @@ namespace Svg
         }
 
 
-        public Bitmap DrawAllContents(int maxWidthHeight, Color backgroundColor = null)
+        public Bitmap DrawAllContents(int maxWidthHeight, Color backgroundColor = null, SizeF padding = null)
         {
             Bitmap bitmap = null;
             try
@@ -581,7 +581,7 @@ namespace Svg
                     }
                 }
                 bitmap = Bitmap.Create((int) width, (int) height);
-                DrawAllContents(bitmap, backgroundColor);
+                DrawAllContents(bitmap, backgroundColor, padding);
                 return bitmap;
             }
             catch
@@ -606,7 +606,7 @@ namespace Svg
 
         }
 
-        public void DrawAllContents(Bitmap bitmap, Color backgroundColor = null)
+        public void DrawAllContents(Bitmap bitmap, Color backgroundColor = null, SizeF padding = null)
         {
             // draw document
             var oldX = X;
@@ -617,7 +617,11 @@ namespace Svg
             var oldAspectRatio = AspectRatio;
             try
             {
-                var bounds = CalculateDocumentBounds().InflateAndCopy(10, 10);
+                var bounds = CalculateDocumentBounds();
+
+                if (padding != null)
+                    bounds = bounds.InflateAndCopy(padding.Width, padding.Height);
+
                 X = new SvgUnit(SvgUnitType.Pixel, 0);
                 Y = new SvgUnit(SvgUnitType.Pixel, 0);
                 Width = new SvgUnit(SvgUnitType.Pixel, bounds.Width);
@@ -658,7 +662,7 @@ namespace Svg
 
         public override void Write(IXmlTextWriter writer)
         {
-            using (var c = Engine.Resolve<ICultureHelper>().UsingCulture(CultureInfo.InvariantCulture))
+            using (var c = SvgEngine.Resolve<ICultureHelper>().UsingCulture(CultureInfo.InvariantCulture))
             {
                 base.Write(writer);
             }
@@ -666,7 +670,7 @@ namespace Svg
 
         public void Write(Stream stream)
         {
-            var xmlWriter = Engine.Factory.CreateXmlTextWriter(stream, Encoding.UTF8);
+            var xmlWriter = SvgEngine.Factory.CreateXmlTextWriter(stream, Encoding.UTF8);
 
             xmlWriter.WriteStartDocument();
             //xmlWriter.WriteDocType("svg", "-//W3C//DTD SVG 1.1//EN", "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd", null);
@@ -681,7 +685,7 @@ namespace Svg
 
         public void Write(string path)
         {
-            using (var fs = Engine.Resolve<IFileSystem>().OpenWrite(path))
+            using (var fs = SvgEngine.Resolve<IFileSystem>().OpenWrite(path))
             {
                 this.Write(fs);
             }

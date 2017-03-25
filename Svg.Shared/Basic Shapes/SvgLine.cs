@@ -125,7 +125,7 @@ namespace Svg
                 PointF end = PointF.Create(this.EndX.ToDeviceValue(renderer, UnitRenderingType.Horizontal, this), 
                                         this.EndY.ToDeviceValue(renderer, UnitRenderingType.Vertical, this));
 
-                this._path = Engine.Factory.CreateGraphicsPath();
+                this._path = SvgEngine.Factory.CreateGraphicsPath();
                 this._path.AddLine(start, end);
                 this.IsPathDirty = false;
             }

@@ -62,22 +62,24 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Svg.Win\Svg.Win.csproj">
-      <Project>{1A9890AB-E4B4-4282-89AC-CEF2610E30B0}</Project>
-      <Name>Svg.Win</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Bends_01.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\nested_transformed_text.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Svg.Win\Svg.Win.csproj">
+      <Project>{1a9890ab-e4b4-4282-89ac-cef2610e30b0}</Project>
+      <Name>Svg.Win</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\Svg.Tests\Svg.Tests.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\SkiaSharp.1.54.0\build\net45\SkiaSharp.targets" Condition="Exists('..\packages\SkiaSharp.1.54.0\build\net45\SkiaSharp.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

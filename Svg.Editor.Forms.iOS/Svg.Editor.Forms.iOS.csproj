@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -45,15 +45,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SKCanvasViewRendererBase.cs" />
-    <Compile Include="SvgCanvasEditorViewRenderer.cs" />
-    <Compile Include="SvgGlEditorViewRenderer.cs" />
+    <Compile Include="TouchCanvasViewRendererBase.cs" />
+    <Compile Include="TouchCanvasEditorViewRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Svg.Core\Svg.Core.csproj">
-      <Project>{13edb4db-3977-4c2e-998a-6103ca015881}</Project>
-      <Name>Svg.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Svg.Editor.Core\Svg.Editor.Core.csproj">
       <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
       <Name>Svg.Editor.Core</Name>
@@ -65,12 +60,6 @@
     <ProjectReference Include="..\Svg.Editor.Views.iOS\Svg.Editor.Views.iOS.csproj">
       <Project>{1a4f1238-2571-4e51-9834-d2432f1d9c35}</Project>
       <Name>Svg.Editor.Views.iOS</Name>
-      <IsAppExtension>false</IsAppExtension>
-      <IsWatchApp>false</IsWatchApp>
-    </ProjectReference>
-    <ProjectReference Include="..\Svg.iOS\Svg.iOS.csproj">
-      <Project>{46070862-fd10-4154-861a-657d4d9dde36}</Project>
-      <Name>Svg.iOS</Name>
       <IsAppExtension>false</IsAppExtension>
       <IsWatchApp>false</IsWatchApp>
     </ProjectReference>

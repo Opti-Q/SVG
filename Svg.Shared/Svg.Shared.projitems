@@ -73,7 +73,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Document Structure\SvgSymbol.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Document Structure\SvgTitle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Document Structure\SvgUse.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Engine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IoC\DefaultServiceLocator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IoC\IServiceLocator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SvgEngine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\SvgException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensibility\SvgForeignObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
@@ -207,6 +209,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ISvgElementAttributeProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ISvgElementFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ISvgSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ISvgSourceFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ISvgTypeDescriptor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ISvgUnitConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\LinearGradientBrush.cs" />
@@ -219,6 +222,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Pen.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\PixelFormat.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\PointF.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\RadialGradientBrush.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\RectangleF.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Region.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\SizeF.cs" />
@@ -233,6 +237,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Xml\IXmlDocument.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Xml\IXmlReader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Xml\IXmlTextWriter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ISvgCachingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IWebRequest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NonSvgElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Painting\GenericBoundable.cs" />
@@ -273,6 +278,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Platform\SkiaFontFamilyProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Platform\SkiaGraphics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Platform\SkiaGraphicsPath.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Platform\SkiaRadialGradientBrush.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Platform\SkiaLinearGradientBrush.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Platform\SkiaMatrix.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Platform\SkiaPen.cs" />
@@ -287,9 +293,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IGraphicsProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\ISvgRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\SvgRenderer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SKFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SKFactoryBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgAttributeAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgAttributeCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SvgCachingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgContentNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgDefinitionDefaults.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgDocument.cs" />
@@ -303,6 +310,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SvgElementStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgExtentions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgPlatform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SvgPlatformOptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgServiceAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgTypeConverterRegistry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SvgTypeDescriptor.cs" />

@@ -108,10 +108,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SKCanvasViewRendererBase.cs" />
+    <Compile Include="UwpCanvasViewRendererBase.cs" />
     <Compile Include="SKXamlCanvasX.cs" />
-    <Compile Include="SvgCanvasEditorViewRenderer.cs" />
-    <Compile Include="SvgGlEditorViewRenderer.cs" />
+    <Compile Include="UwpCanvasEditorViewRenderer.cs" />
     <EmbeddedResource Include="Properties\Svg.Editor.UWP.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -126,10 +125,6 @@
     <ProjectReference Include="..\Svg.Editor.Views.UWP\Svg.Editor.Views.UWP.csproj">
       <Project>{98f6b246-19bf-4929-bd26-54d06aad6389}</Project>
       <Name>Svg.Editor.Views.UWP</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Svg.UWP\Svg.UWP.csproj">
-      <Project>{934b0e99-c2c9-4b41-8705-e79c223362ca}</Project>
-      <Name>Svg.UWP</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\Svg.Editor.Forms.Shared\Svg.Editor.Forms.Shared.projitems" Label="Shared" />

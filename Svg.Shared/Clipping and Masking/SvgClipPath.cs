@@ -42,7 +42,7 @@ namespace Svg
         {
             if (cachedClipPath == null || this._pathDirty)
             {
-                cachedClipPath = Engine.Factory.CreateGraphicsPath();
+                cachedClipPath = SvgEngine.Factory.CreateGraphicsPath();
 
                 foreach (SvgElement element in this.Children)
                 {
@@ -56,7 +56,7 @@ namespace Svg
             if (ClipPathUnits == SvgCoordinateUnits.ObjectBoundingBox)
             {
                 result = (GraphicsPath)cachedClipPath.Clone();
-                using (var transform = Engine.Factory.CreateMatrix())
+                using (var transform = SvgEngine.Factory.CreateMatrix())
                 {
                     var bounds = owner.Bounds;
                     transform.Scale(bounds.Width, bounds.Height, MatrixOrder.Append);

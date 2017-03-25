@@ -21,6 +21,6 @@ namespace Svg.Platform
         public FontFamily GenericSerif { get { return new SkiaFontFamily(SKTypeface.FromFamilyName("Serif"), "Serif"); } }
         public FontFamily GenericSansSerif { get { return new SkiaFontFamily(SKTypeface.FromFamilyName("SansSerif"), "SansSerif"); } }
         public FontFamily GenericMonospace { get { return new SkiaFontFamily(SKTypeface.FromFamilyName("Monospace"), "Monospace"); } }
-        public StringFormat GenericTypographic { get { return Engine.Factory.CreateStringFormatGenericTypographic(); } }
+        public StringFormat GenericTypographic { get { return SvgEngine.Factory.CreateStringFormatGenericTypographic(); } }
     }
 }

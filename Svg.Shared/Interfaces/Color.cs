@@ -9,17 +9,17 @@ namespace Svg.Interfaces
     {
         public static Color Create(int r, int g, int b)
         {
-            return Engine.Factory.CreateColorFromArgb(255, r, g, b);
+            return SvgEngine.Factory.CreateColorFromArgb(255, r, g, b);
         }
 
         public static Color Create(int a, int r, int g, int b)
         {
-            return Engine.Factory.CreateColorFromArgb(a, r, g, b);
+            return SvgEngine.Factory.CreateColorFromArgb(a, r, g, b);
         }
 
         public static Color Create(string hex)
         {
-            return Engine.Factory.CreateColorFromHexString(hex);
+            return SvgEngine.Factory.CreateColorFromHexString(hex);
         }
 
         public abstract string Name { get; }
@@ -35,5 +35,15 @@ namespace Svg.Interfaces
         public abstract float GetSaturation();
         public abstract float GetHue();
         public abstract int ToArgb();
+
+        public override string ToString()
+        {
+            if (A != 255)
+            {
+                return $"#{A:X2}{R:X2}{G:X2}{B:X2}";
+            }
+
+            return $"#{R:X2}{G:X2}{B:X2}";
+        }
     }
 }

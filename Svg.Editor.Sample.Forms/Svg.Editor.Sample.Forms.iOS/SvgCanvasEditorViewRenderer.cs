@@ -3,5 +3,5 @@ using Svg.Editor.Forms;
 using Svg.Editor.Sample.Forms;
 using Xamarin.Forms;
 
-[assembly: ExportRenderer(typeof(SvgEditorView), typeof(SvgCanvasEditorViewRenderer))]
+[assembly: ExportRenderer(typeof(SvgEditorView), typeof(TouchCanvasEditorViewRenderer))]
 

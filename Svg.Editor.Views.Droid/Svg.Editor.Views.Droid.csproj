@@ -9,8 +9,8 @@
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Svg.Editor.Views.Droid</RootNamespace>
-    <AssemblyName>Svg.Editor.Views.Droid</AssemblyName>
+    <RootNamespace>Svg.Editor.Views</RootNamespace>
+    <AssemblyName>Svg.Editor.Views</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
@@ -34,7 +34,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;PLATFORM_ANDROID</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AndroidToolbarIconSizeProvider.cs" />
     <Compile Include="Services\AndroidContextProvider.cs" />
     <Compile Include="Services\AndroidStrokeStyleOptionsInputService.cs" />
     <Compile Include="Services\AndroidMarkerOptionsInputService.cs" />
@@ -65,7 +66,7 @@
     <Compile Include="Services\AndroidSvgCachingService.cs" />
     <Compile Include="Services\AndroidSvgSourceFactory.cs" />
     <Compile Include="Services\AndroidTextInputService.cs" />
-    <Compile Include="SvgCanvasEditorView.cs" />
+    <Compile Include="AndroidSvgCanvasEditorView.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Services\AndroidInputEventDetector.cs" />
   </ItemGroup>
@@ -78,7 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Svg.Editor.Core\Svg.Editor.Core.csproj">
-      <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
+      <Project>{4CF34D1C-662C-400D-BEAF-E87CE1D08FAB}</Project>
       <Name>Svg.Editor.Core</Name>
     </ProjectReference>
   </ItemGroup>

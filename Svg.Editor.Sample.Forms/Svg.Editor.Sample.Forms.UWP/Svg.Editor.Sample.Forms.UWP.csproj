@@ -14,7 +14,6 @@
     <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
-    <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>Svg.Editor.Sample.Forms.UWP_TemporaryKey.pfx</PackageCertificateKeyFile>
@@ -86,7 +85,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
@@ -163,10 +162,6 @@
     <ProjectReference Include="..\..\Svg.Editor.Forms\Svg.Editor.Forms.csproj">
       <Project>{2c90ee6d-52e3-4ba0-92d4-8162800f698d}</Project>
       <Name>Svg.Editor.Forms</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Svg.Editor.Views.UWP\Svg.Editor.Views.UWP.csproj">
-      <Project>{98f6b246-19bf-4929-bd26-54d06aad6389}</Project>
-      <Name>Svg.Editor.Views.UWP</Name>
     </ProjectReference>
     <ProjectReference Include="..\Svg.Editor.Sample.Forms\Svg.Editor.Sample.Forms.csproj">
       <Project>{af05ff4e-ef14-4cb9-afd6-fb1231f62245}</Project>

@@ -8,7 +8,7 @@ namespace Svg
         private SvgUnit y;
 
         private ISvgTypeDescriptor _typeDescriptor;
-        public ISvgTypeDescriptor TypeDescriptor => _typeDescriptor ?? (_typeDescriptor = Engine.Resolve<ISvgTypeDescriptor>());
+        public ISvgTypeDescriptor TypeDescriptor => _typeDescriptor ?? (_typeDescriptor = SvgEngine.Resolve<ISvgTypeDescriptor>());
 
         public SvgUnit X
         {
@@ -49,7 +49,7 @@ namespace Svg
 
         public SvgPoint(string x, string y)
         {
-            _typeDescriptor = Engine.TypeDescriptor;
+            _typeDescriptor = SvgEngine.TypeDescriptor;
 
             ITypeConverter converter = _typeDescriptor.GetConverter(typeof(SvgUnit));
 
@@ -59,7 +59,7 @@ namespace Svg
 
         public SvgPoint(SvgUnit x, SvgUnit y)
         {
-            _typeDescriptor = Engine.TypeDescriptor;
+            _typeDescriptor = SvgEngine.TypeDescriptor;
             this.x = x;
             this.y = y;
         }

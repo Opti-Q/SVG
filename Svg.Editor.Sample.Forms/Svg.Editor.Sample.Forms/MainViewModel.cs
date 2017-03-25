@@ -1,9 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using Svg.Editor.Forms;
 using Svg.Editor.Interfaces;
+using Svg.Editor.Sample.Forms.Resources.svg;
 using Svg.Editor.Sample.Forms.Services;
+using Svg.Editor.Sample.Forms.Tools;
 using Svg.Editor.Services;
 using Svg.Editor.Tools;
+using Svg.Interfaces;
+using Svg.Platform;
+using Xamarin.Forms;
 
 namespace Svg.Editor.Sample.Forms
 {
@@ -13,11 +19,15 @@ namespace Svg.Editor.Sample.Forms
         {
             #region Register services
 
-            Engine.Register<IColorInputService, ColorInputService>(() => new ColorInputService());
-            Engine.Register<IMarkerOptionsInputService, MarkerOptionsInputService>(() => new MarkerOptionsInputService());
-            Engine.Register<IStrokeStyleOptionsInputService, StrokeStyleOptionsInputService>(() => new StrokeStyleOptionsInputService());
-            Engine.Register<ISvgCachingService, SvgCachingService>(() => new SvgCachingService());
-            Engine.Register<ITextInputService, TextInputService>(() => new TextInputService());
+            SvgEngine.Register<IColorInputService>(() => new ColorInputService());
+            SvgEngine.Register<IMarkerOptionsInputService>(() => new MarkerOptionsInputService());
+            SvgEngine.Register<IStrokeStyleOptionsInputService>(() => new StrokeStyleOptionsInputService());
+            SvgEngine.Register<ITextInputService>(() => new TextInputService());
+
+            SvgEngine.Resolve<ISvgCachingService>().Clear();
+
+            // register pseudo-type which is only used to mark an assembly that has embedded resources (Resources\svg)
+            SvgEngine.Resolve<IEmbeddedResourceRegistry>().Register(typeof(ResourceMarker));
 
             #endregion
 
@@ -30,11 +40,11 @@ namespace Svg.Editor.Sample.Forms
                         { "stepsizey", 20.0f },
                         { "issnappingenabled", true }
                     };
-
+            
             var colorToolProperties = new Dictionary<string, object>
             {
                 { ColorTool.SelectableColorsKey, new [] { "#000000","#FF0000","#00FF00","#0000FF","#FFFF00","#FF00FF","#00FFFF", "#FFFFFF" } },
-                { ColorTool.SelectableColorNamesKey, new [] { "Black","Red","Green","Blue","Cyan","Magenta","Yellow","White" } }
+                { ColorTool.SelectableColorNamesKey, new [] { "Black","Red","Green","Blue","Yellow","Magenta","Cyan","White" } },
             };
 
             var strokeStyleToolProperties = new Dictionary<string, object>
@@ -83,9 +93,9 @@ namespace Svg.Editor.Sample.Forms
                 { RotationTool.FilterKey, (Func<SvgVisualElement, bool>) (e => e is SvgTextBase) }
             };
 
-            var undoRedoService = Engine.Resolve<IUndoRedoService>();
+            var undoRedoService = SvgEngine.Resolve<IUndoRedoService>();
 
-            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            SvgEngine.Register<ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
             {
                 () => new GridTool(gridToolProperties, undoRedoService),
                 () => new MoveTool(undoRedoService),
@@ -102,7 +112,7 @@ namespace Svg.Editor.Sample.Forms
                 () => new UndoRedoTool(undoRedoService),
                 () => new ArrangeTool(undoRedoService),
                 //() => new AuxiliaryLineTool(),
-                //() => new SaveTool(false),
+                () => new SaveTool(false),
                 () => new PlaceAsBackgroundTool(placeAsBackgroundToolProperties, undoRedoService),
                 //() => new AddRandomItemTool(Canvas) {SourceProvider = GetSource}
             }));

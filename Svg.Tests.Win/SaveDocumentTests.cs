@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Text;
 using NUnit.Framework;
 using Svg.Editor.Tests;
 using Svg.Interfaces;
@@ -13,6 +14,7 @@ namespace Svg.Tests.Win
         public void SetUp()
         {
             SvgPlatform.Init();
+            Svg.SvgEngine.Register<IFileLoader>(() => new FileLoader());
         }
 
         [Test]
@@ -135,7 +137,6 @@ namespace Svg.Tests.Win
             AssertInheritedAttribute(r, "stroke-dasharray");
         }
 
-
         [Test]
         public void SavingDocument_KeepsNoneIfNoneIsSetExplicitly()
         {
@@ -191,7 +192,7 @@ namespace Svg.Tests.Win
             AssertInheritedAttribute(r, "fill");
             AssertInheritedAttribute(r, "stroke-dasharray");
         }
-
+        
         /*
          * style="fill:none;fill-opacity:0;stroke:none"
          */
@@ -199,7 +200,7 @@ namespace Svg.Tests.Win
         [Test]
         public void WhenSavingDocument_KeepNamespacesIntact()
         {
-            var fileLoader = Engine.Resolve<IFileLoader>();
+            var fileLoader = SvgEngine.Resolve<IFileLoader>();
             var document = fileLoader.Load("Bends_01.svg");
             SvgDocument doc2 = null;
 
@@ -212,6 +213,59 @@ namespace Svg.Tests.Win
             }
 
             Assert.True(doc2.Children.First(c => c.ElementName == "sodipodi:namedview").Children.Any(c => c.ElementName == "inkscape:grid"));
+        }
+
+        [Test]
+        public void CanSaveEmptyDocument()
+        {
+            // Arrange
+            var doc = new SvgDocument();
+            SvgDocument doc2 = null;
+            var expectedSvg = "﻿<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?><svg xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\" xmlns:xml=\"http://www.w3.org/XML/1998/namespace\" version=\"1.1\" width=\"100%\" height=\"100%\" preserveAspectRatio=\"xMidYMid\" xmlns=\"http://www.w3.org/2000/svg\" />";
+            var svg = string.Empty;
+
+            // Act
+            using (var ms = new MemoryStream())
+            {
+                doc.Write(ms);
+                ms.Seek(0, SeekOrigin.Begin);
+                doc2 = SvgDocument.Open<SvgDocument>(ms);
+                svg = Encoding.UTF8.GetString(ms.ToArray());
+            }
+
+            // Assert
+            Assert.IsNotNull(doc2);
+            Assert.AreEqual(expectedSvg, svg);
+        }
+
+
+        [Test]
+        [TestCase("nested_transformed_text.svg")]
+        public void CanLoad_Save_AndReload_Document(string testFile)
+        {
+            var fileLoader = SvgEngine.Resolve<IFileLoader>();
+            var document = fileLoader.Load(testFile);
+            SvgDocument document2 = null;
+
+            var saved1 = string.Empty;
+            var saved2 = string.Empty;
+
+            // Act
+            using (var ms = new MemoryStream())
+            {
+                document.Write(ms);
+                saved1 = Encoding.UTF8.GetString(ms.ToArray());
+                ms.Seek(0, SeekOrigin.Begin);
+                document2 = SvgDocument.Open<SvgDocument>(ms);
+            }
+
+            using (var ms = new MemoryStream())
+            {
+                document2.Write(ms);
+                saved2 = Encoding.UTF8.GetString(ms.ToArray());
+            }
+
+            Assert.AreEqual(saved1, saved2);
         }
 
         private static void AssertInheritedAttribute(SvgRectangle r, string attributeName)

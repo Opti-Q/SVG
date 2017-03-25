@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using Svg.Droid.SampleEditor.Core.Tools;
 using Svg.Editor.Interfaces;
 using Svg.Editor.Services;
 using Svg.Editor.Tools;
@@ -17,7 +16,7 @@ namespace Svg.Editor.Tests
         private MockTextInputService _textMock;
 
         [SetUp]
-        public override void SetUp()
+        protected override void SetupOverride()
         {
             // set up tools
             var textToolProperties = new Dictionary<string, object>
@@ -27,9 +26,9 @@ namespace Svg.Editor.Tests
                 { "fontsizenames", new [] { "12px", "16px", "20px", "24px", "36px", "48px" } }
             };
 
-            var undoRedoService = Engine.Resolve<IUndoRedoService>();
+            var undoRedoService = SvgEngine.Resolve<IUndoRedoService>();
 
-            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            SvgEngine.Register<ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
             {
                 () => new GridTool(null, undoRedoService),
                 () => new MoveTool(undoRedoService),
@@ -42,9 +41,8 @@ namespace Svg.Editor.Tests
 
             // register mock text input service for text tool
             _textMock = new MockTextInputService();
-            Engine.Register<ITextInputService, MockTextInputService>(() => _textMock);
-
-            base.SetUp();
+            SvgEngine.Register<ITextInputService>(() => _textMock);
+            
         }
 
         [Test]
@@ -102,7 +100,7 @@ namespace Svg.Editor.Tests
             gt.IsSnappingEnabled = false; // disable snapping in this case
 
             // Act
-            Canvas.AddItemInScreenCenter(element);
+            await Canvas.AddItemInScreenCenter(element);
 
             // Assert 
             var children = Canvas.Document.Children.OfType<SvgVisualElement>().ToList();

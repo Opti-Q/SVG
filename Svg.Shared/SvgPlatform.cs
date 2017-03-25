@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
 using Svg.Interfaces;
+using Svg.Platform;
 
 namespace Svg
 {
@@ -12,7 +9,7 @@ namespace Svg
         private static bool _initialized = false;
         private static readonly SemaphoreSlim _lock = new SemaphoreSlim(1);
 
-        public static void Init()
+        public static void Init(SvgPlatformOptions options = null)
         {
             if (_initialized)
                 return;
@@ -24,19 +21,22 @@ namespace Svg
                 if (_initialized)
                     return;
 #if !PCL
+                if (options?.ServiceLocator != null)
+                    SvgEngine.ServiceLocator = options.ServiceLocator;
                 // register base services
-                Engine.RegisterSingleton<IMarshal, SvgMarshal>(() => new SvgMarshal());
-                Engine.RegisterSingleton<ISvgElementAttributeProvider, SvgElementAttributeProvider>(
+                SvgEngine.RegisterSingleton<IMarshal>(() => new SvgMarshal());
+                SvgEngine.RegisterSingleton<ISvgElementAttributeProvider>(
                     () => new SvgElementAttributeProvider());
-                Engine.RegisterSingleton<ICultureHelper, CultureHelper>(() => new CultureHelper());
-                Engine.RegisterSingleton<ILogger, DefaultLogger>(() => new DefaultLogger());
-                Engine.RegisterSingleton<ICharConverter, SvgCharConverter>(() => new SvgCharConverter());
-                Engine.Register<IWebRequest, WebRequestSvc>(() => new WebRequestSvc());
-                Engine.RegisterSingleton<IFileSystem, FileSystem>(() => new FileSystem());
-
+                SvgEngine.RegisterSingleton<ICultureHelper>(() => new CultureHelper());
+                SvgEngine.RegisterSingleton<ILogger>(() => new DefaultLogger());
+                SvgEngine.RegisterSingleton<ICharConverter>(() => new SvgCharConverter());
+                SvgEngine.Register<IWebRequest>(() => new WebRequestSvc());
+                SvgEngine.RegisterSingleton<IFileSystem>(() => new FileSystem());
+                SvgEngine.Register<IAlternativeSvgTextRenderer>(() => new SkiaTextRenderer());
+                SvgEngine.Register<ISvgCachingService>(() => new SvgCachingService());
                 // register platform specific services
 
-                Engine.Register<IFactory, IFactory>(() => new SKFactory());
+                SvgEngine.Register<IFactory>(() => new SKFactory());
 #endif
                 _initialized = true;
             }

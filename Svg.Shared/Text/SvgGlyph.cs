@@ -67,7 +67,7 @@ namespace Svg
         {
             if (this._path == null || this.IsPathDirty)
             {
-                _path = Engine.Factory.CreateGraphicsPath();
+                _path = SvgEngine.Factory.CreateGraphicsPath();
 
                 foreach (SvgPathSegment segment in this.PathData)
                 {

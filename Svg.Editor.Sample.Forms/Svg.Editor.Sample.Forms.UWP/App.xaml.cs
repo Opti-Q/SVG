@@ -4,6 +4,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Svg.Editor.Forms;
 
 namespace Svg.Editor.Sample.Forms.UWP
 {
@@ -49,7 +50,7 @@ namespace Svg.Editor.Sample.Forms.UWP
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
                 Xamarin.Forms.Forms.Init(e);
-                Svg.Editor.Editor.Init();
+                SvgEditorForms.Init();
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {

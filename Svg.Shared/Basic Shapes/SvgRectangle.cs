@@ -196,14 +196,14 @@ namespace Svg
                     var rectangle = RectangleF.Create(Location.ToDeviceValue(renderer, this),
                         SvgUnit.GetDeviceSize(this.Width, this.Height, renderer, this));
 
-                    _path = Engine.Factory.CreateGraphicsPath();
+                    _path = SvgEngine.Factory.CreateGraphicsPath();
                     _path.StartFigure();
                     _path.AddRectangle(rectangle);
                     _path.CloseFigure();
                 }
                 else
                 {
-                    _path = Engine.Factory.CreateGraphicsPath();
+                    _path = SvgEngine.Factory.CreateGraphicsPath();
                     var arcBounds = RectangleF.Create();
                     var lineStart = PointF.Create(0f,0f);
                     var lineEnd = PointF.Create(0f,0f);

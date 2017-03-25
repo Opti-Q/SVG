@@ -19,11 +19,11 @@ namespace Svg.Editor.Tools
             ToolType = ToolType.View;
         }
 
-        private Brush RedBrush => _brush2 ?? (_brush2 = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 255, 150, 150)));
-        private Pen RedPen => _pen2 ?? (_pen2 = Svg.Engine.Factory.CreatePen(RedBrush, 5));
+        private Brush RedBrush => _brush2 ?? (_brush2 = SvgEngine.Factory.CreateSolidBrush(SvgEngine.Factory.CreateColorFromArgb(255, 255, 150, 150)));
+        private Pen RedPen => _pen2 ?? (_pen2 = SvgEngine.Factory.CreatePen(RedBrush, 5));
 
-        private Brush GreenBrush => _brush3 ?? (_brush3 = Svg.Engine.Factory.CreateSolidBrush(Svg.Engine.Factory.CreateColorFromArgb(255, 0, 128, 0)));
-        private Pen GreenPen => _pen3 ?? (_pen3 = Svg.Engine.Factory.CreatePen(GreenBrush, 5));
+        private Brush GreenBrush => _brush3 ?? (_brush3 = SvgEngine.Factory.CreateSolidBrush(SvgEngine.Factory.CreateColorFromArgb(255, 0, 128, 0)));
+        private Pen GreenPen => _pen3 ?? (_pen3 = SvgEngine.Factory.CreatePen(GreenBrush, 5));
 
         public override async Task Initialize(ISvgDrawingCanvas ws)
         {

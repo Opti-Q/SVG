@@ -262,7 +262,7 @@ namespace Svg
                                 sizes = part.Split('/');
                                 try
                                 {
-                                    fontSize = (SvgUnit)(Engine.Resolve<ISvgUnitConverter>().ConvertFromInvariantString(sizes[0]));
+                                    fontSize = (SvgUnit)(SvgEngine.Resolve<ISvgUnitConverter>().ConvertFromInvariantString(sizes[0]));
                                     success = true;
                                     this.FontSize = fontSize;
                                 }
@@ -362,7 +362,7 @@ namespace Svg
                 }
 
                 // Get the font-family
-                return new GdiFontDefn(Engine.Factory.CreateFont(ff, fontSize, fontStyle, GraphicsUnit.Pixel));
+                return new GdiFontDefn(SvgEngine.Factory.CreateFont(ff, fontSize, fontStyle, GraphicsUnit.Pixel));
             }
             else
             {
@@ -381,7 +381,7 @@ namespace Svg
             // Split font family list on "," and then trim start and end spaces and quotes.
             var fontParts = (fontFamilyList ?? "").Split(new[] { ',' }).Select(fontName => fontName.Trim(new[] { '"', ' ', '\'' }));
 
-            var ffProvider = Engine.Factory.GetFontFamilyProvider();
+            var ffProvider = SvgEngine.Factory.GetFontFamilyProvider();
 
             var families = ffProvider.Families;
             FontFamily family;

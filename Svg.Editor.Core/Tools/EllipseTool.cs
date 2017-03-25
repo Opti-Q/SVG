@@ -8,6 +8,7 @@ using Svg.Editor.Interfaces;
 using Svg.Editor.UndoRedo;
 using Svg.Interfaces;
 using Svg.Pathing;
+using Svg.Shared.Interfaces;
 
 namespace Svg.Editor.Tools
 {
@@ -18,7 +19,6 @@ namespace Svg.Editor.Tools
         private const double MaxPointerDistance = 20.0;
         private SvgEllipse _currentEllipse;
         private Brush _brush;
-        private Pen _pen;
         private bool _isActive;
         private MovementHandle _movementHandle;
         private ITool _activatedFrom;
@@ -30,8 +30,7 @@ namespace Svg.Editor.Tools
 
         #region Private properties
 
-        private Brush BlueBrush => _brush ?? (_brush = Engine.Factory.CreateSolidBrush(Engine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
-        private Pen BluePen => _pen ?? (_pen = Engine.Factory.CreatePen(BlueBrush, 5));
+        private Brush BlueBrush => _brush ?? (_brush = SvgEngine.Factory.CreateSolidBrush(SvgEngine.Factory.CreateColorFromArgb(255, 80, 210, 210)));
         private IEnumerable<SvgMarker> Markers { get; }
 
         #endregion
@@ -59,7 +58,7 @@ namespace Svg.Editor.Tools
 
         public EllipseTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Ellipse", properties, undoRedoService)
         {
-            IconName = "ic_panorama_fish_eye_white_48dp.png";
+            IconName = "ic_panorama_fish_eye.svg";
             ToolUsage = ToolUsage.Explicit;
             ToolType = ToolType.Create;
             HandleDragExit = true;
@@ -330,13 +329,14 @@ namespace Svg.Editor.Tools
             if (_currentEllipse != null)
             {
                 renderer.Graphics.Save();
-
-                var radius = (int) (MaxPointerDistance / ws.ZoomFactor);
+                
+                var radius = (float)MaxPointerDistance / 4 / ws.ZoomFactor;
+                var halfRadius = (float)radius/2;
                 var points = _currentEllipse.GetTransformedPoints();
-                renderer.DrawCircle(points[0].X - (radius >> 1), points[0].Y - (radius >> 1), radius, BluePen);
-                renderer.DrawCircle(points[1].X - (radius >> 1), points[1].Y - (radius >> 1), radius, BluePen);
-                renderer.DrawCircle(points[2].X - (radius >> 1), points[2].Y - (radius >> 1), radius, BluePen);
-                renderer.DrawCircle(points[3].X - (radius >> 1), points[3].Y - (radius >> 1), radius, BluePen);
+                renderer.FillCircle(points[0].X - halfRadius, points[0].Y - halfRadius, radius, BlueBrush);
+                renderer.FillCircle(points[1].X - halfRadius, points[1].Y - halfRadius, radius, BlueBrush);
+                renderer.FillCircle(points[2].X - halfRadius, points[2].Y - halfRadius, radius, BlueBrush);
+                renderer.FillCircle(points[3].X - halfRadius, points[3].Y - halfRadius, radius, BlueBrush);
 
                 renderer.Graphics.Restore();
             }

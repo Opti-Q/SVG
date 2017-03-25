@@ -28,7 +28,7 @@ namespace Svg
 
         public void AddStringToPath(ISvgRenderer renderer, GraphicsPath path, string text, PointF location)
         {
-            path.AddString(text, _font.FontFamily, (int)_font.Style, _font.Size, location, Engine.Factory.CreateStringFormatGenericTypographic());
+            path.AddString(text, _font.FontFamily, (int)_font.Style, _font.Size, location, SvgEngine.Factory.CreateStringFormatGenericTypographic());
         }
 
         //Baseline calculation to match http://bobpowell.net/formattingtext.aspx
@@ -47,7 +47,7 @@ namespace Svg
             StringFormat format;
             for (int s = 0; s <= (text.Length - 1) / 32; s++)
             {
-                format = Engine.Factory.CreateStringFormatGenericTypographic();
+                format = SvgEngine.Factory.CreateStringFormatGenericTypographic();
                 format.FormatFlags |= StringFormatFlags.MeasureTrailingSpaces;
                 format.SetMeasurableCharacterRanges((from r in Enumerable.Range(32 * s, Math.Min(32, text.Length - 32 * s))
                                                      select new CharacterRange(r, 1)).ToArray());
@@ -60,7 +60,7 @@ namespace Svg
         public SizeF MeasureString(ISvgRenderer renderer, string text)
         {
             var g = GetGraphics(renderer);
-            var provider = Engine.Factory.GetFontFamilyProvider();
+            var provider = SvgEngine.Factory.GetFontFamilyProvider();
             StringFormat format = provider.GenericTypographic;
             format.SetMeasurableCharacterRanges(new CharacterRange[] { new CharacterRange(0, text.Length) });
             format.FormatFlags |= StringFormatFlags.MeasureTrailingSpaces;
@@ -79,7 +79,7 @@ namespace Svg
                 if (_graphics == null)
                 {
                     var bmp = Bitmap.Create(1, 1);
-                    _graphics = Engine.Factory.CreateGraphicsFromImage(bmp);
+                    _graphics = SvgEngine.Factory.CreateGraphicsFromImage(bmp);
                 }
                 return _graphics;
             }

@@ -43,15 +43,20 @@ namespace Svg
         }
 
 #if WINDOWS_UWP
-        public Formatting Formatting { get { return _w.Settings.Indent?Formatting.Indented:Formatting.None; } set { _w.Settings.Indent = (value == Formatting.Indented); } }
+        public Formatting Formatting { get { return _w.Settings.Indent?Formatting.Indented:Formatting.None; } set { /*_w.Settings.Indent = (value == Formatting.Indented);*/ } }
 
 #else
         public Formatting Formatting { get { return _w.Formatting; } set { _w.Formatting = value; } }
 #endif
 
-        public void WriteAttributeString(string xmlns, string value)
+        public void WriteAttributeString(string localName, string value)
         {
-            _w.WriteAttributeString(xmlns, value);
+            _w.WriteAttributeString(localName, value);
+        }
+
+        public void WriteAttributeString(string localName, string namespaceKey, string value)
+        {
+            _w.WriteAttributeString(namespaceKey, localName, null, value);
         }
 
         public void WriteDocType(string name, string pubid, string sysid, string subset)
@@ -72,6 +77,16 @@ namespace Svg
         public void WriteStartElement(string elementName)
         {
             _w.WriteStartElement(elementName);
+        }
+
+        public void WriteStartElement(string elementName, string ns)
+        {
+            _w.WriteStartElement(elementName, ns);
+        }
+        
+        public void WriteStartElement(string elementName, string prefix, string ns)
+        {
+            _w.WriteStartElement(prefix, elementName, ns);
         }
 
         public void WriteEndElement()

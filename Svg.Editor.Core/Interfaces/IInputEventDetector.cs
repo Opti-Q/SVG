@@ -15,6 +15,6 @@ namespace Svg.Editor.Interfaces
     /// </summary>
     public interface IInputEventDetector
     {
-        IObservable<UserInputEvent> DetectedGestures { get; }
+        IObservable<UserInputEvent> UserInputEvents { get; }
     }
 }

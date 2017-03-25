@@ -29,7 +29,7 @@ namespace Svg.Transforms
             {
                 if (matrix != null) return matrix;
 
-                matrix = Engine.Factory.CreateMatrix();
+                matrix = SvgEngine.Factory.CreateMatrix();
                 matrix.Translate(this.X, this.Y);
                 return matrix;
             }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Svg
@@ -8,6 +9,7 @@ namespace Svg
     /// Specifies the SVG attribute name of the associated property.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property|AttributeTargets.Event)]
+    [DebuggerDisplay("{DebuggerDisplay}")]
     public class SvgAttributeAttribute : System.Attribute
     {
 		/// <summary>
@@ -125,6 +127,13 @@ namespace Svg
         {
             this._name = name;
             this._namespace = nameSpace;
+        }
+
+        private string DebuggerDisplay => $"{NamespaceAndName}";
+
+        public override string ToString()
+        {
+            return DebuggerDisplay;
         }
     }
 }

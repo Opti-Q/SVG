@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using Svg.Transforms;
 using System.Reflection;
@@ -18,6 +20,7 @@ namespace Svg
         public const int StyleSpecificity_InlineStyle = 1 << 16;
 
         //optimization
+        [DebuggerDisplay("{Attribute}")]
         public class PropertyAttributeTuple
         {
             //public PropertyDescriptor Property;
@@ -50,9 +53,9 @@ namespace Svg
         private Dictionary<string, IDictionary<int, string>> _styles = new Dictionary<string, IDictionary<int, string>>();
 
         private ISvgElementFactory _elementFactory;
-        public ISvgElementFactory SvgElementFactory => _elementFactory ?? (_elementFactory = Engine.Resolve<ISvgElementFactory>());
+        public ISvgElementFactory SvgElementFactory => _elementFactory ?? (_elementFactory = SvgEngine.Resolve<ISvgElementFactory>());
         private ISvgTypeDescriptor _typeDescriptor;
-        public ISvgTypeDescriptor TypeDescriptor => _typeDescriptor ?? (_typeDescriptor = Engine.Resolve<ISvgTypeDescriptor>());
+        public ISvgTypeDescriptor TypeDescriptor => _typeDescriptor ?? (_typeDescriptor = SvgEngine.Resolve<ISvgTypeDescriptor>());
 
 
         public void AddStyle(string name, string value, int specificity)
@@ -61,7 +64,7 @@ namespace Svg
             if (!_styles.TryGetValue(name, out rules))
             {
                 //rules = new SortedDictionary<int, string>();
-                rules = Engine.Factory.CreateSortedDictionary<int, string>();
+                rules = SvgEngine.Factory.CreateSortedDictionary<int, string>();
                 _styles[name] = rules;
             }
             while (rules.ContainsKey(specificity)) specificity++;
@@ -71,7 +74,6 @@ namespace Svg
         {
             foreach (var s in _styles)
             {
-
                 SvgElementFactory.SetPropertyValue(this, s.Key, s.Value.Last().Value, OwnerDocument);
             }
             _styles = null;
@@ -312,7 +314,7 @@ namespace Svg
             get { return _customAttributes; }
         }
 
-        private static readonly Matrix _zeroMatrix = Engine.Factory.CreateMatrix(0, 0, 0, 0, 0, 0);
+        private static readonly Matrix _zeroMatrix = SvgEngine.Factory.CreateMatrix(0, 0, 0, 0, 0, 0);
 
         /// <summary>
         /// Applies the required transforms to <see cref="ISvgRenderer"/>.
@@ -515,7 +517,7 @@ namespace Svg
         public SvgElement()
         {
             _children = new SvgElementCollection(this);
-            _eventHandlers = Engine.Factory.CreateSortedList<object, Delegate>();/*new EventHandlerList();*/
+            _eventHandlers = SvgEngine.Factory.CreateSortedList<object, Delegate>();/*new EventHandlerList();*/
             _elementName = string.Empty;
             _customAttributes = new SvgCustomAttributeCollection(this);
 
@@ -526,9 +528,9 @@ namespace Svg
             CustomAttributes.AttributeChanged += Attributes_AttributeChanged;
 
             //find svg attribute descriptions
-            _svgPropertyAttributes = Engine.SvgElementAttributeProvider.GetPropertyAttributes(this);
+            _svgPropertyAttributes = SvgEngine.SvgElementAttributeProvider.GetPropertyAttributes(this);
 
-            _svgEventAttributes = Engine.SvgElementAttributeProvider.GetEventAttributes(this);
+            _svgEventAttributes = SvgEngine.SvgElementAttributeProvider.GetEventAttributes(this);
         }
 
         //dispatch attribute event
@@ -559,12 +561,17 @@ namespace Svg
             return (ElementName != string.Empty);
         }
 
-        protected virtual void WriteStartElement(IXmlTextWriter writer)
+        protected virtual void WriteStartElementInternal(IXmlTextWriter writer)
         {
             if (ElementName != string.Empty)
             {
                 writer.WriteStartElement(ElementName);
             }
+        }
+
+        protected virtual void WriteStartElement(IXmlTextWriter writer)
+        {
+            WriteStartElementInternal(writer);
 
             WriteAttributes(writer);
         }
@@ -622,7 +629,15 @@ namespace Svg
                         }
                         else
                         {
-                            writer.WriteAttributeString(attr.Attribute.NamespaceAndName, value);
+                            var vals = attr.Attribute.NamespaceAndName.Split(':');
+                            if (vals.Length == 1)
+                            {
+                               writer.WriteAttributeString(vals[0], value);
+                            }
+                            else if (vals.Length == 2)
+                            {
+                                writer.WriteAttributeString(vals[1], vals[0], value);
+                            }
                         }
                     }
                 }
@@ -792,7 +807,7 @@ namespace Svg
         /// <param name="path"></param>
         protected GraphicsPath GetPaths(SvgElement elem, ISvgRenderer renderer)
         {
-            var ret = Engine.Factory.CreateGraphicsPath();
+            var ret = SvgEngine.Factory.CreateGraphicsPath();
 
             foreach (var child in elem.Children)
             {

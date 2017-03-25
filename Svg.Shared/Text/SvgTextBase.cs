@@ -19,7 +19,7 @@ namespace Svg
 
         static SvgTextBase()
         {
-            _alternativeTextRenderer = Engine.TryResolve<IAlternativeSvgTextRenderer>();
+            _alternativeTextRenderer = SvgEngine.TryResolve<IAlternativeSvgTextRenderer>();
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace Svg
         /// <value>The fill.</value>
         public override SvgPaintServer Fill
         {
-            get { return (Attributes["fill"] == null) ? new SvgColourServer(Engine.Factory.Colors.Black) : (SvgPaintServer) Attributes["fill"]; }
+            get { return (Attributes["fill"] == null) ? new SvgColourServer(SvgEngine.Factory.Colors.Black) : (SvgPaintServer) Attributes["fill"]; }
             set { Attributes["fill"] = value; }
         }
 
@@ -382,7 +382,7 @@ namespace Svg
                 }
             }
 
-            var path = state.GetPath() ?? Engine.Factory.CreateGraphicsPath();
+            var path = state.GetPath() ?? SvgEngine.Factory.CreateGraphicsPath();
 
             // Apply any text length adjustments
             if (doMeasurements)
@@ -403,7 +403,7 @@ namespace Svg
                         }
                         else
                         {
-                            using (var matrix = Engine.Factory.CreateMatrix())
+                            using (var matrix = SvgEngine.Factory.CreateMatrix())
                             {
                                 matrix.Translate(-1 * bounds.X, 0, MatrixOrder.Append);
                                 matrix.Scale(specLength / actLength, 1, MatrixOrder.Append);
@@ -677,7 +677,7 @@ namespace Svg
                                 baselineShift = -1 * new SvgUnit(SvgUnitType.Ex, 1).ToDeviceValue(Renderer, UnitRenderingType.Vertical, Element);
                                 break;
                             default:
-                                var convert = Engine.Resolve<ISvgUnitConverter>();
+                                var convert = SvgEngine.Resolve<ISvgUnitConverter>();
                                 var shiftUnit = (SvgUnit) convert.ConvertFromInvariantString(baselineShiftText);
                                 baselineShift = -1 * shiftUnit.ToDeviceValue(Renderer, UnitRenderingType.Vertical, Element);
                                 break;
@@ -792,11 +792,11 @@ namespace Svg
             private void DrawStringOnCurrPath(string value, IFontDefn font, PointF location, float fontBaselineHeight, float rotation)
             {
                 var drawPath = _currPath;
-                if (rotation != 0.0f) drawPath = Engine.Factory.CreateGraphicsPath();
+                if (rotation != 0.0f) drawPath = SvgEngine.Factory.CreateGraphicsPath();
                 font.AddStringToPath(Renderer, drawPath, value, PointF.Create(location.X, location.Y - fontBaselineHeight));
                 if (rotation != 0.0f && drawPath.PointCount > 0)
                 {
-                    using (var matrix = Engine.Factory.CreateMatrix())
+                    using (var matrix = SvgEngine.Factory.CreateMatrix())
                     {
                         matrix.Translate(-1 * location.X, -1 * location.Y, MatrixOrder.Append);
                         matrix.Rotate(rotation, MatrixOrder.Append);
@@ -812,7 +812,7 @@ namespace Svg
             {
                 if (_currPath == null)
                 {
-                    _currPath = Engine.Factory.CreateGraphicsPath();
+                    _currPath = SvgEngine.Factory.CreateGraphicsPath();
                     _currPath.StartFigure();
 
                     var currState = this;
@@ -864,7 +864,7 @@ namespace Svg
 
                         if (xOffset != 0)
                         {
-                            using (var matrix = Engine.Factory.CreateMatrix())
+                            using (var matrix = SvgEngine.Factory.CreateMatrix())
                             {
                                 matrix.Translate(xOffset, 0);
                                 foreach (var path in _anchoredPaths)

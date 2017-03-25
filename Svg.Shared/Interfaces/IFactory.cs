@@ -1,10 +1,9 @@
 using System.Collections.Generic;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.Text;
-using System.Xml;
 using Svg.Interfaces;
 using Svg.Interfaces.Xml;
+using Svg.Shared.Interfaces;
 
 namespace Svg
 {
@@ -25,7 +24,8 @@ namespace Svg
         SolidBrush CreateSolidBrush(Color color);
         ColorBlend CreateColorBlend(int colourBlends);
         TextureBrush CreateTextureBrush(Bitmap image);
-        LinearGradientBrush CreateLinearGradientBrush(PointF start, PointF end, Color startColor, Color endColor);
+        LinearGradientBrush CreateLinearGradientBrush(PointF start, PointF end, ColorBlend colorblend, WrapMode tileMode = WrapMode.Tile);
+        RadialGradientBrush CreateRadialGradientBrush(PointF center, float radius, ColorBlend colorblend, WrapMode wrapMode = WrapMode.Tile);
         PathGradientBrush CreatePathGradientBrush(GraphicsPath path);
         StringFormat CreateStringFormatGenericTypographic();
         Font CreateFont(FontFamily fontFamily, float fontSize, FontStyle fontStyle, GraphicsUnit graphicsUnit);

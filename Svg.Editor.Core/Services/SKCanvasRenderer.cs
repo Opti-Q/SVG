@@ -47,13 +47,30 @@ namespace Svg.Editor.Services
             _canvas.Translate(deltaX, deltaY);
         }
 
-        public void DrawCircle(float x, float y, int radius, Pen pen)
+        public void DrawCircle(float x, float y, float radius, Pen pen)
         {
             //_canvas.DrawCircle(x, y, radius, ((SkiaPen)pen).Paint);
             
             var r = new SKRect(x - radius, y - radius, x + 2*radius, y + 2*radius);
 
             _canvas.DrawOval(r, ((SkiaPen)pen).Paint);
+        }
+
+        public void FillCircle(float x, float y, float radius, Brush brush)
+        {
+            var r = new SKRect(x - radius, y - radius, x + 2 * radius, y + 2 * radius);
+
+            var skBrush = (SkiaBrushBase) brush;
+            var wasStroke = skBrush.Paint.IsStroke;
+            try
+            {
+                skBrush.Paint.IsStroke = false;
+                _canvas.DrawOval(r, skBrush.Paint);
+            }
+            finally
+            {
+                skBrush.Paint.IsStroke = wasStroke;
+            }
         }
 
         public void DrawRectangle(RectangleF rectangleF, Pen pen)

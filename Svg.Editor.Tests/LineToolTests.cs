@@ -16,18 +16,18 @@ namespace Svg.Editor.Tests
     public class LineToolTests : SvgDrawingCanvasTestBase
     {
         [SetUp]
-        public override void SetUp()
+        protected override void SetupOverride()
         {
 
-            Engine.Register<ToolFactoryProvider, ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
+            SvgEngine.Register<ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
             {
-                () => new SelectionTool(Engine.Resolve<IUndoRedoService>()), 
+                () => new SelectionTool(SvgEngine.Resolve<IUndoRedoService>()), 
                 () => new GridTool(new Dictionary<string, object>
                 {
                     { GridTool.AlphaAngleKey, 30.0f },
                     { GridTool.StepSizeYKey, 20.0f },
                     { GridTool.IsSnappingEnabledKey, true }
-                }, Engine.Resolve<IUndoRedoService>()),
+                }, SvgEngine.Resolve<IUndoRedoService>()),
 
                 () => new LineTool(new Dictionary<string, object>
                 {
@@ -35,10 +35,9 @@ namespace Svg.Editor.Tests
                     { LineTool.MarkerStartNamesKey, new [] { "---", "<--", "O--" } },
                     { LineTool.MarkerEndIdsKey, new [] { "none", "arrowEnd", "circle" } },
                     { LineTool.MarkerEndNamesKey, new [] { "---", "-->", "--O" } }
-                }, Engine.Resolve<IUndoRedoService>()),
+                }, SvgEngine.Resolve<IUndoRedoService>()),
             }));
 
-            base.SetUp();
         }
 
         [Test]
