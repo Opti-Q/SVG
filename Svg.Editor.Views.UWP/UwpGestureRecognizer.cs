@@ -84,6 +84,7 @@ namespace Svg.Editor.Views.UWP
             _element.PointerCanceled += OnPointerCanceled;
 
             _element.Tapped += ElementOnTapped;
+            _element.RightTapped += ElementRightTapped;
             _element.DoubleTapped += ElementOnDoubleTapped;
             _element.PointerWheelChanged += ElementOnPointerWheelChanged;
 
@@ -91,6 +92,12 @@ namespace Svg.Editor.Views.UWP
             _recognizer.ManipulationStarted += OnManipulationStarted;
             _recognizer.ManipulationUpdated += OnManipulationUpdated;
             _recognizer.ManipulationCompleted += OnManipulationCompleted;
+        }
+
+        private void ElementRightTapped(object sender, RightTappedRoutedEventArgs args)
+        {
+            var position = args.GetPosition(_element);
+            _gesturesSubject.OnNext(new LongPressGesture(PointF.Create((float) position.X, (float) position.Y)));
         }
 
         private void ElementOnPointerWheelChanged(object sender, PointerRoutedEventArgs args)
