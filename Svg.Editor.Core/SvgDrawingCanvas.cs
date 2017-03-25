@@ -40,6 +40,7 @@ namespace Svg.Editor
         private IGestureRecognizer _gestureRecognizer;
 
         private Subject<string> _propertyChangedSubject = new Subject<string>();
+        private readonly ISchedulerProvider _schedulerProvider;
 
         private IUndoRedoService UndoRedoService { get; }
 
@@ -199,6 +200,7 @@ namespace Svg.Editor
 
             UndoRedoService = SvgEngine.Resolve<IUndoRedoService>();
             GestureRecognizer = SvgEngine.Resolve<IGestureRecognizer>();
+            _schedulerProvider = SvgEngine.Resolve<ISchedulerProvider>();
 
             var toolProvider = SvgEngine.Resolve<ToolFactoryProvider>();
 
@@ -751,7 +753,12 @@ namespace Svg.Editor
 
         public void FireInvalidateCanvas()
         {
-            CanvasInvalidated?.Invoke(this, EventArgs.Empty);
+            _schedulerProvider.MainScheduer.Schedule(this, (s, st) =>
+                {
+                    CanvasInvalidated?.Invoke(s, EventArgs.Empty);
+                    return null;
+                }
+            );
         }
         
         public void FireToolCommandsChanged()
