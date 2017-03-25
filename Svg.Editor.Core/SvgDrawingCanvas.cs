@@ -755,6 +755,7 @@ namespace Svg.Editor
             foreach (var tool in Tools)
                 tool.Dispose();
 
+            _onGestureToken?.Dispose();
             _document?.Dispose();
         }
 

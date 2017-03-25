@@ -16,6 +16,7 @@ namespace Svg.Editor.Forms.Droid
             // do clean up old control
             if (Control != null)
             {
+                Control.DrawingCanvas.Dispose();
                 Control.DrawingCanvas = null;
             }
 
