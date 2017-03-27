@@ -41,7 +41,6 @@ namespace Svg.Editor
 
         private Subject<string> _propertyChangedSubject = new Subject<string>();
         private readonly ISchedulerProvider _schedulerProvider;
-        private int _mainSchedulerId;
 
         private IUndoRedoService UndoRedoService { get; }
 
@@ -202,12 +201,6 @@ namespace Svg.Editor
             UndoRedoService = SvgEngine.Resolve<IUndoRedoService>();
             GestureRecognizer = SvgEngine.Resolve<IGestureRecognizer>();
             _schedulerProvider = SvgEngine.Resolve<ISchedulerProvider>();
-
-            _schedulerProvider.MainScheduer.Schedule(this, (s, st) =>
-            {
-                st._mainSchedulerId = TaskScheduler.Current.Id;
-                return null;
-            });
 
             var toolProvider = SvgEngine.Resolve<ToolFactoryProvider>();
 
@@ -760,17 +753,12 @@ namespace Svg.Editor
 
         public void FireInvalidateCanvas()
         {
-            if (_mainSchedulerId == 0 || TaskScheduler.Current.Id != _mainSchedulerId)
-            {
-                _schedulerProvider.MainScheduer.Schedule(this, (s, st) =>
-                    {
-                        CanvasInvalidated?.Invoke(st, EventArgs.Empty);
-                        return null;
-                    }
-                );
-            }
-            else
-                CanvasInvalidated?.Invoke(this, EventArgs.Empty);
+            _schedulerProvider.MainScheduer.Schedule(this, (s, st) =>
+                {
+                    CanvasInvalidated?.Invoke(st, EventArgs.Empty);
+                    return null;
+                }
+            );
         }
         
         public void FireToolCommandsChanged()
