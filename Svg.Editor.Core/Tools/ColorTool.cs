@@ -228,7 +228,19 @@ namespace Svg.Editor.Tools
             {
                 var t = Tool;
 
-                var color = Color.Create(t.SelectableColors[await ColorInputService.GetIndexFromUserInput("Choose color", t.SelectableColorNames, t.SelectableColors)]);
+                int selectedColorIndex = 0;
+
+                try
+                {
+                    selectedColorIndex = await ColorInputService.GetIndexFromUserInput("Choose color", t.SelectableColorNames, t.SelectableColors);
+                }
+                catch (TaskCanceledException)
+                {
+                    return;
+                }
+
+
+                var color = Color.Create(t.SelectableColors[selectedColorIndex]);
 
                 if (_canvas.SelectedElements.Any())
                 {

@@ -517,9 +517,18 @@ namespace Svg.Editor.Tools
                 markerStartIndex = Array.IndexOf(t.MarkerStartIds, markerStartId);
                 markerEndIndex = Array.IndexOf(t.MarkerEndIds, markerEndId);
 
-                var selectedOptions = await MarkerOptionsInputServiceProxy.GetUserInput("Choose line endings",
-                    t.MarkerStartNames, markerStartIndex,
-                    t.MarkerEndNames, markerEndIndex);
+                int[] selectedOptions;
+
+                try
+                {
+                    selectedOptions = await MarkerOptionsInputServiceProxy.GetUserInput("Choose line endings",
+                        t.MarkerStartNames, markerStartIndex,
+                        t.MarkerEndNames, markerEndIndex);
+                }
+                catch (TaskCanceledException)
+                {
+                    return;
+                }
 
                 var selectedMarkerStartId = t.MarkerStartIds[selectedOptions[0]];
                 var selectedMarkerEndId = t.MarkerEndIds[selectedOptions[1]];
