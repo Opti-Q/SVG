@@ -119,6 +119,9 @@ namespace Svg.Editor.Tools
 
         private void SetStrokeStyle(SvgElement element, StrokeStyleOptions styleOptions)
         {
+            if (styleOptions == null)
+                return;
+
             var visualElement = element as SvgVisualElement;
 
             if (visualElement == null || !(visualElement is SvgLine || visualElement is SvgPath || visualElement is SvgEllipse)) return;
