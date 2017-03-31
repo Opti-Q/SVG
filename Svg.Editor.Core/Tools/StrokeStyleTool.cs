@@ -183,10 +183,18 @@ namespace Svg.Editor.Tools
                         StrokeWidthIndex = Array.IndexOf(t.StrokeWidths, selectedElement.StrokeWidth)
                     };
 
-                    var selectedStrokeStyle =
-                        await
-                            t.StrokeStyleOptionsInputService.GetUserInput("Change stroke style for selection", t.StrokeDashNames, formerStrokeStyle.StrokeDashIndex,
-                                t.StrokeWidthNames, formerStrokeStyle.StrokeWidthIndex);
+                    StrokeStyleOptions selectedStrokeStyle = null;
+
+                    try { 
+                        selectedStrokeStyle =
+                            await
+                                t.StrokeStyleOptionsInputService.GetUserInput("Change stroke style for selection", t.StrokeDashNames, formerStrokeStyle.StrokeDashIndex,
+                                    t.StrokeWidthNames, formerStrokeStyle.StrokeWidthIndex);
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        return;
+                    }
 
                     // prepare command for the whole operation
                     t.UndoRedoService.ExecuteCommand(new UndoableActionCommand("Change stroke style operation", _ => t.Canvas.FireInvalidateCanvas(), _ => t.Canvas.FireInvalidateCanvas()));
@@ -197,10 +205,19 @@ namespace Svg.Editor.Tools
                 else
                 {
                     var formerSelectedOptions = t.SelectedStrokeStyleOptions;
-                    var strokeStyleOptions =
-                        await
-                            t.StrokeStyleOptionsInputService.GetUserInput("Select global stroke style", t.StrokeDashNames, 0,
-                                t.StrokeWidthNames, 0);
+                    StrokeStyleOptions strokeStyleOptions = null;
+                    try
+                    { 
+                        strokeStyleOptions =
+                            await
+                                t.StrokeStyleOptionsInputService.GetUserInput("Select global stroke style", t.StrokeDashNames, 0,
+                                    t.StrokeWidthNames, 0);
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        return;
+                    }
+
                     t.UndoRedoService.ExecuteCommand(new UndoableActionCommand
                     (
                         "Select global stroke style",

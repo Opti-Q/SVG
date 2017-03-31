@@ -151,7 +151,17 @@ namespace Svg.Editor.Tools
         {
             if (_dialogShown) return null;
             _dialogShown = true;
-            var txtProperties = await TextInputService.GetUserInput(title, text, FontSizeNames, index);
+
+            TextProperties txtProperties;
+            try
+            { 
+                txtProperties = await TextInputService.GetUserInput(title, text, FontSizeNames, index);
+            }
+            catch (TaskCanceledException)
+            {
+                txtProperties = null;
+            }
+
             _dialogShown = false;
 
             if (txtProperties != null)
