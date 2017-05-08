@@ -107,7 +107,6 @@ namespace Svg.Editor.Services
                         ? tup.Item2.Value
                         : new DoubleTapGesture(tup.Item2.Value.Position)
             )
-            .SubscribeOn(_backgroundScheduler)
             .ObserveOn(_mainScheduler)
             .Subscribe(tg => _recognizedGestures.OnNext(tg));
 
@@ -124,7 +123,6 @@ namespace Svg.Editor.Services
                 .Buffer(TimeSpan.FromSeconds(LongPressDuration), 2)
                 .Take(1);
             })
-            .SubscribeOn(_backgroundScheduler)
             .ObserveOn(_mainScheduler)
             .Subscribe
             (
@@ -156,7 +154,6 @@ namespace Svg.Editor.Services
                         if (pe.EventType == EventType.Cancel) dragLifetime.OnCompleted();
                         return pe;
                     })
-                    .SubscribeOn(_backgroundScheduler)
                     .ObserveOn(_mainScheduler)
                     .Subscribe
                     (
