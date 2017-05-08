@@ -16,6 +16,7 @@ namespace Svg.Editor.Forms.Droid
             // do clean up old control
             if (Control != null)
             {
+                Control.DrawingCanvas?.Dispose();
                 Control.DrawingCanvas = null;
             }
 
@@ -32,7 +33,7 @@ namespace Svg.Editor.Forms.Droid
             if (e.NewElement != null)
             {
                 var newElement = e.NewElement;
-                newElement.BindingContextChanged -= OnElementBindingContextChanged;
+                newElement.BindingContextChanged += OnElementBindingContextChanged;
                 UpdateBindings(newElement);
             }
         }
@@ -55,6 +56,7 @@ namespace Svg.Editor.Forms.Droid
             {
                 if (Control != null)
                 {
+                    Control.DrawingCanvas?.Dispose();
                     Control.DrawingCanvas = fwe.BindingContext as SvgDrawingCanvas;
                 }
             }

@@ -14,6 +14,8 @@ namespace Svg.Editor.Views.iOS
                 return SizeF.Create(22, 22);
             if (scale == 2f)
                 return SizeF.Create(44, 44);
+            if (scale == 3f)
+                return SizeF.Create(66, 66);
 
             return SizeF.Create(22, 22);
         });

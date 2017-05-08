@@ -11,8 +11,8 @@ namespace Svg.Editor.Forms
 {
     public class ToolCommandsToToolbarItemsConverter : IValueConverter
     {
-        private Lazy<IImageSourceProvider> _imageSourceProvider = new Lazy<IImageSourceProvider>(() => SvgEngine.TryResolve<IImageSourceProvider>());
-        private Lazy<IToolbarIconSizeProvider> _toolbarIconSizeProvider = new Lazy<IToolbarIconSizeProvider>(() => SvgEngine.TryResolve<IToolbarIconSizeProvider>());
+        private Lazy<IImageSourceProvider> _imageSourceProvider = new Lazy<IImageSourceProvider>(SvgEngine.TryResolve<IImageSourceProvider>);
+        private Lazy<IToolbarIconSizeProvider> _toolbarIconSizeProvider = new Lazy<IToolbarIconSizeProvider>(SvgEngine.TryResolve<IToolbarIconSizeProvider>);
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

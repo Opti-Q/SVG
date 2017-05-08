@@ -53,6 +53,7 @@
     <Compile Include="Services\StrokeStyleOptionsInputService.cs" />
     <Compile Include="Services\TextInputService.cs" />
     <Compile Include="SvgEditorView.cs" />
+    <Compile Include="Tools\AddItemTool.cs" />
     <Compile Include="Tools\SaveTool.cs" />
   </ItemGroup>
   <ItemGroup>

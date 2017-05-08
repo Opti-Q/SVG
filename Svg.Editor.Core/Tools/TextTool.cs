@@ -154,12 +154,12 @@ namespace Svg.Editor.Tools
             var txtProperties = await TextInputService.GetUserInput(title, text, FontSizeNames, index);
             _dialogShown = false;
 
-            if (txtProperties != null)
-            {
-                SelectedFontSize = FontSizes[txtProperties.FontSizeIndex];
-            }
+	        if (txtProperties == null)
+				return null;
 
-            return txtProperties;
+	        SelectedFontSize = FontSizes[txtProperties.FontSizeIndex];
+
+	        return txtProperties;
         }
 
         private void CreateSvgText(string txt, float fontSize, float lineHeight, PointF position)

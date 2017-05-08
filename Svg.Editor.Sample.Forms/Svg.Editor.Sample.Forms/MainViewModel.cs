@@ -40,7 +40,7 @@ namespace Svg.Editor.Sample.Forms
                         { "stepsizey", 20.0f },
                         { "issnappingenabled", true }
                     };
-            
+
             var colorToolProperties = new Dictionary<string, object>
             {
                 { ColorTool.SelectableColorsKey, new [] { "#000000","#FF0000","#00FF00","#0000FF","#FFFF00","#FF00FF","#00FFFF", "#FFFFFF" } },
@@ -114,15 +114,19 @@ namespace Svg.Editor.Sample.Forms
                 //() => new AuxiliaryLineTool(),
                 () => new SaveTool(false),
                 () => new PlaceAsBackgroundTool(placeAsBackgroundToolProperties, undoRedoService),
-                //() => new AddRandomItemTool(Canvas) {SourceProvider = GetSource}
+                () => new AddItemTool()
             }));
 
             #endregion
 
-            var drawingCanvas = new SvgDrawingCanvas();
-            DrawingCanvas = drawingCanvas;
+            DrawingCanvas = new SvgDrawingCanvas();
         }
 
         public SvgDrawingCanvas DrawingCanvas { get; set; }
+
+        public void OnDisappearing()
+        {
+            DrawingCanvas.Dispose();
+        }
     }
 }

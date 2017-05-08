@@ -14,7 +14,7 @@ namespace Svg.Editor.Sample.Forms.Services
             var result = await Application.Current.MainPage.DisplayActionSheet(title, "cancel", null, items);
 
             if (result == null)
-                return 0;
+                return -1;
 
             var index = items.ToList().IndexOf(result);
             if (index < 0)

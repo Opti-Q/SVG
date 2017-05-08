@@ -6,5 +6,13 @@
         {
             InitializeComponent();
         }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+
+            var viewModel = BindingContext as MainViewModel;
+            viewModel?.OnDisappearing();
+        }
     }
 }

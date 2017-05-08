@@ -521,6 +521,9 @@ namespace Svg.Editor.Tools
                     t.MarkerStartNames, markerStartIndex,
                     t.MarkerEndNames, markerEndIndex);
 
+	            if (selectedOptions == null)
+		            return;
+
                 var selectedMarkerStartId = t.MarkerStartIds[selectedOptions[0]];
                 var selectedMarkerEndId = t.MarkerEndIds[selectedOptions[1]];
 

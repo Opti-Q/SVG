@@ -83,8 +83,6 @@ namespace Svg.Editor.Tools
             {
                 new ChangeStrokeStyleCommand(this, "Change stroke")
             };
-
-            SelectedStrokeStyleOptions = new StrokeStyleOptions();
         }
 
         public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
@@ -121,7 +119,8 @@ namespace Svg.Editor.Tools
         {
             var visualElement = element as SvgVisualElement;
 
-            if (visualElement == null || !(visualElement is SvgLine || visualElement is SvgPath || visualElement is SvgEllipse)) return;
+            if (styleOptions == null || visualElement == null || !(visualElement is SvgLine || visualElement is SvgPath || visualElement is SvgEllipse))
+				return;
 
             var strokeDash = StrokeDashes.ElementAtOrDefault(styleOptions.StrokeDashIndex) ?? "none";
             var strokeWidth = new SvgUnit(SvgUnitType.Pixel,
@@ -183,28 +182,35 @@ namespace Svg.Editor.Tools
                         StrokeWidthIndex = Array.IndexOf(t.StrokeWidths, selectedElement.StrokeWidth)
                     };
 
-                    var selectedStrokeStyle =
+                    var selectedStrokeStyleOptions =
                         await
                             t.StrokeStyleOptionsInputService.GetUserInput("Change stroke style for selection", t.StrokeDashNames, formerStrokeStyle.StrokeDashIndex,
                                 t.StrokeWidthNames, formerStrokeStyle.StrokeWidthIndex);
+
+	                if (selectedStrokeStyleOptions == null)
+		                return;
 
                     // prepare command for the whole operation
                     t.UndoRedoService.ExecuteCommand(new UndoableActionCommand("Change stroke style operation", _ => t.Canvas.FireInvalidateCanvas(), _ => t.Canvas.FireInvalidateCanvas()));
 
                     // change the stroke style of selected element
-                    t.SetStrokeStyle(selectedElement, selectedStrokeStyle);
+                    t.SetStrokeStyle(selectedElement, selectedStrokeStyleOptions);
                 }
                 else
                 {
                     var formerSelectedOptions = t.SelectedStrokeStyleOptions;
-                    var strokeStyleOptions =
+                    var selectedStrokeStyleOptions =
                         await
                             t.StrokeStyleOptionsInputService.GetUserInput("Select global stroke style", t.StrokeDashNames, 0,
                                 t.StrokeWidthNames, 0);
+
+	                if (selectedStrokeStyleOptions == null)
+		                return;
+
                     t.UndoRedoService.ExecuteCommand(new UndoableActionCommand
                     (
                         "Select global stroke style",
-                        _ => t.SelectedStrokeStyleOptions = strokeStyleOptions,
+                        _ => t.SelectedStrokeStyleOptions = selectedStrokeStyleOptions,
                         _ => t.SelectedStrokeStyleOptions = formerSelectedOptions
                     ));
                 }
