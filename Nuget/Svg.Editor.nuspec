@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>Svg.Editor</id>
-        <version>2.0.5</version>
+        <version>$version$</version>
         <authors>gentledepp,bruzkovsky </authors>
         <owners>gentledepp,bruzkovsky </owners>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>

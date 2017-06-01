@@ -1,4 +1,4 @@
-
+param([string]$version = "1.0.0")
 $rootPath = $pwd;
 $targetNugetExe = "$rootPath\nuget.exe"
 
@@ -10,6 +10,6 @@ Set-Alias nuget $targetNugetExe -Scope Global -Verbose
 
 
 
-nuget pack Svg.Editor.nuspec
+nuget pack Svg.Editor.nuspec /Version $version
 #nuget pack "..\Svg.Editor.Core\Svg.Editor.Core.csproj"
 #nuget pack "..\Svg.Editor.Core\Svg.Editor.Core.csproj" -Symbols

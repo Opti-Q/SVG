@@ -1,4 +1,4 @@
-
+param([string]$version = "1.0.0")
 $rootPath = $pwd;
 $targetNugetExe = "$rootPath\nuget.exe"
 
@@ -10,4 +10,4 @@ Set-Alias nuget $targetNugetExe -Scope Global -Verbose
 
 
 
-nuget pack Svg.nuspec
+nuget pack Svg.nuspec /Version $version
