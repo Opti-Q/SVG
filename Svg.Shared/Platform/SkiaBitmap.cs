@@ -50,11 +50,20 @@ namespace Svg.Platform
             _image.UnlockPixels();
         }
 
-        public override void SavePng(Stream stream, int quality = 100)
+        public override void SavePng(Stream stream, int quality = 76)
         {
             using (var img = SKImage.FromBitmap(_image))
             {
                 var data = img.Encode(SKImageEncodeFormat.Png, quality: quality);
+                data.SaveTo(stream);
+            }
+        }
+
+        public override void SaveJpeg(Stream stream, int quality = 76)
+        {
+            using (var img = SKImage.FromBitmap(_image))
+            {
+                var data = img.Encode(SKImageEncodeFormat.Jpeg, quality: quality);
                 data.SaveTo(stream);
             }
         }
