@@ -15,12 +15,14 @@ namespace Svg.Droid.SampleEditor.Core.Tools
                 if (inStream == null) return null;
 
                 var fs = SvgEngine.Resolve<IFileSystem>();
-                var path = fs.PathCombine(fs.GetDefaultStoragePath(), "background.png");
+	            var path = "background.png";
 
-                if (fs.FileExists(path))
-                    fs.DeleteFile(path);
+				var fullPath = fs.PathCombine(fs.GetDefaultStoragePath(), path);
 
-                using (var outStream = fs.OpenWrite(path))
+                if (fs.FileExists(fullPath))
+                    fs.DeleteFile(fullPath);
+
+                using (var outStream = fs.OpenWrite(fullPath))
                 {
                     inStream.CopyTo(outStream);
                 }

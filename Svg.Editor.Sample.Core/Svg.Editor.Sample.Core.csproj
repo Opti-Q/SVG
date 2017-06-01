@@ -35,6 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Resources\svg\ResourceMarker.cs" />
     <Compile Include="Tools\AddRandomItemTool.cs" />
     <Compile Include="App.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -51,6 +52,9 @@
       <Project>{4CF34D1C-662C-400D-BEAF-E87CE1D08FAB}</Project>
       <Name>Svg.Editor.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\findingmarker.svg" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

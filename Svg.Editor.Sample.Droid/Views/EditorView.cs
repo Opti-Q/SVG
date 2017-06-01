@@ -1,13 +1,19 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Android.App;
 using Android.OS;
 using Android.Views;
 using System.Linq;
+using System.Reflection;
 using Android.Graphics.Drawables;
 using MvvmCross.Droid.Views;
 using Svg.Droid.SampleEditor.Core.ViewModels;
+using Svg.Editor.Interfaces;
+using Svg.Editor.Services;
 using Svg.Editor.Views.Droid;
+using Svg.Interfaces;
+using Svg.Platform;
 using Path = System.IO.Path;
 
 namespace Svg.Droid.SampleEditor.Views
@@ -17,8 +23,9 @@ namespace Svg.Droid.SampleEditor.Views
     {
         private AndroidSvgCanvasEditorView _padView;
         private Dictionary<string, int> _iconCache = new Dictionary<string, int>();
+	    private Lazy<IToolbarIconSizeProvider> _toolbarIconSizeProvider = new Lazy<IToolbarIconSizeProvider>(SvgEngine.TryResolve<IToolbarIconSizeProvider>);
 
-        protected override void OnCreate(Bundle bundle)
+		protected override void OnCreate(Bundle bundle)
         {
             SetupIconCache();
 
@@ -96,8 +103,10 @@ namespace Svg.Droid.SampleEditor.Views
                 return;
 
             var n = Path.GetFileNameWithoutExtension(name);
+	        var iconDimension = _toolbarIconSizeProvider.Value?.GetSize();
 
-            if (string.IsNullOrWhiteSpace(n))
+
+			if (string.IsNullOrWhiteSpace(n))
                 return;
 
             int value;
@@ -105,9 +114,14 @@ namespace Svg.Droid.SampleEditor.Views
             {
                 item.SetIcon(value);
             }
-            else if(File.Exists(name))
+            else if (File.Exists(name))
             {
-                item.SetIcon(Drawable.CreateFromPath(name));
+	            item.SetIcon(Drawable.CreateFromPath(name));
+            }
+            else
+            {
+	            var path = SvgEngine.Resolve<IImageSourceProvider>().GetImage(name, iconDimension);
+	            item.SetIcon(Drawable.CreateFromPath(path));
             }
         }
 
@@ -128,5 +142,12 @@ namespace Svg.Droid.SampleEditor.Views
             }
             return base.OnOptionsItemSelected(item);
         }
+
+	    protected override void OnPause()
+	    {
+		    base.OnPause();
+
+			ViewModel.SaveToolPropertiesCommand.Execute();
+	    }
     }
 }
