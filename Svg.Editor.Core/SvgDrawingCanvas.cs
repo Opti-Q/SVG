@@ -10,6 +10,7 @@ using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Svg.Editor.Events;
 using Svg.Editor.Extensions;
 using Svg.Editor.Gestures;
@@ -42,7 +43,7 @@ namespace Svg.Editor
         private Subject<string> _propertyChangedSubject = new Subject<string>();
         private readonly ISchedulerProvider _schedulerProvider;
 
-        private IUndoRedoService UndoRedoService { get; }
+	    private IUndoRedoService UndoRedoService { get; }
 
         #endregion
 
@@ -186,6 +187,7 @@ namespace Svg.Editor
         #endregion
 
         public event EventHandler CanvasInvalidated;
+		[Obsolete("ToolCommandsChanged will be removed, subscribe to PropertyChanged instead.")]
         public event EventHandler ToolCommandsChanged;
 
         public SvgDrawingCanvas()
@@ -766,6 +768,8 @@ namespace Svg.Editor
             ResetToolCommands();
             
             _propertyChangedSubject.OnNext(nameof(ToolCommands));
+			// remain backwards compatible
+			ToolCommandsChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public void Dispose()
@@ -882,20 +886,20 @@ namespace Svg.Editor
             return commands;
         }
 
-        private void ResetToolCommands()
-        {
-            if (_toolCommands == null)
-                return;
+		private void ResetToolCommands()
+		{
+			if (_toolCommands == null)
+				return;
 
-            _toolCommands.Clear();
-            var cmds = GetCommands();
-            foreach (var cmd in cmds)
-            {
-                _toolCommands.Add(cmd);
-            }
-        }
+			_toolCommands.Clear();
+			var cmds = GetCommands();
+			foreach (var cmd in cmds)
+			{
+				_toolCommands.Add(cmd);
+			}
+		}
 
-        private class SelectToolCommand : ToolCommand
+		private class SelectToolCommand : ToolCommand
         {
             private readonly ISvgDrawingCanvas _canvas;
 
