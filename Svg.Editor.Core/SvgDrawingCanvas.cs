@@ -42,6 +42,7 @@ namespace Svg.Editor
 
         private Subject<string> _propertyChangedSubject = new Subject<string>();
         private readonly ISchedulerProvider _schedulerProvider;
+	    private readonly object _lockObject = new object();
 
 	    private IUndoRedoService UndoRedoService { get; }
 
@@ -886,20 +887,23 @@ namespace Svg.Editor
             return commands;
         }
 
-		private void ResetToolCommands()
-		{
-			if (_toolCommands == null)
-				return;
+        private void ResetToolCommands()
+        {
+            if (_toolCommands == null)
+                return;
 
-			_toolCommands.Clear();
-			var cmds = GetCommands();
-			foreach (var cmd in cmds)
-			{
-				_toolCommands.Add(cmd);
-			}
-		}
+	        lock (_lockObject)
+	        {
+		        _toolCommands.Clear();
+		        var cmds = GetCommands();
+		        foreach (var cmd in cmds)
+		        {
+			        _toolCommands.Add(cmd);
+		        }
+	        }
+        }
 
-		private class SelectToolCommand : ToolCommand
+        private class SelectToolCommand : ToolCommand
         {
             private readonly ISvgDrawingCanvas _canvas;
 
