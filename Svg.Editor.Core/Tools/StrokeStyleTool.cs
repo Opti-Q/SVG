@@ -7,235 +7,265 @@ using Svg.Editor.UndoRedo;
 
 namespace Svg.Editor.Tools
 {
-    public interface IStrokeStyleOptionsInputService
-    {
-        Task<StrokeStyleTool.StrokeStyleOptions> GetUserInput(string title, IEnumerable<string> strokeDashOptions, int strokeDashSelected, IEnumerable<string> strokeWidthOptions, int strokeWidthSelected);
-    }
+	public interface IStrokeStyleOptionsInputService
+	{
+		Task<StrokeStyleTool.StrokeStyleOptions> GetUserInput(
+			string title,
+			IEnumerable<string> strokeDashOptions,
+			int strokeDashSelected,
+			IEnumerable<string> strokeWidthOptions,
+			int strokeWidthSelected);
+	}
 
-    public class StrokeStyleTool : UndoableToolBase
-    {
-        public const string StrokeDashesKey = "strokedashes";
-        public const string StrokeDashNamesKey = "strokedashnames";
-        public const string StrokeWidthsKey = "strokewidths";
-        public const string StrokeWidthNamesKey = "strokewidthnames";
+	public class StrokeStyleTool : UndoableToolBase
+	{
+		public const string DefaultStrokeDashIndexKey = "defaultstrokedash";
+		public const string StrokeDashesKey = "strokedashes";
+		public const string StrokeDashNamesKey = "strokedashnames";
+		public const string DefaultStrokeWidthIndexKey = "defaultstrokewidth";
+		public const string StrokeWidthsKey = "strokewidths";
+		public const string StrokeWidthNamesKey = "strokewidthnames";
 
-        private IStrokeStyleOptionsInputService StrokeStyleOptionsInputService
-            => SvgEngine.Resolve<IStrokeStyleOptionsInputService>();
+		private IStrokeStyleOptionsInputService StrokeStyleOptionsInputService
+			=> SvgEngine.Resolve<IStrokeStyleOptionsInputService>();
 
-        public string[] StrokeDashes
-        {
-            get
-            {
-                object lineStyles;
-                if (!Properties.TryGetValue(StrokeDashesKey, out lineStyles))
-                    lineStyles = Enumerable.Empty<string>();
-                return (string[]) lineStyles;
-            }
-        }
+		public string[] StrokeDashes
+		{
+			get
+			{
+				object lineStyles;
+				if (!Properties.TryGetValue(StrokeDashesKey, out lineStyles))
+					lineStyles = Enumerable.Empty<string>();
+				return (string[]) lineStyles;
+			}
+		}
 
-        public string[] StrokeDashNames
-        {
-            get
-            {
-                object lineStyleNames;
-                if (!Properties.TryGetValue(StrokeDashNamesKey, out lineStyleNames))
-                    lineStyleNames = Enumerable.Empty<string>();
-                return (string[]) lineStyleNames;
-            }
-        }
+		public string[] StrokeDashNames
+		{
+			get
+			{
+				object lineStyleNames;
+				if (!Properties.TryGetValue(StrokeDashNamesKey, out lineStyleNames))
+					lineStyleNames = Enumerable.Empty<string>();
+				return (string[]) lineStyleNames;
+			}
+		}
 
-        public int[] StrokeWidths
-        {
-            get
-            {
-                object strokeWidths;
-                if (!Properties.TryGetValue(StrokeWidthsKey, out strokeWidths))
-                    strokeWidths = Enumerable.Empty<int>();
-                return (int[]) strokeWidths;
-            }
-        }
+		public int[] StrokeWidths
+		{
+			get
+			{
+				object strokeWidths;
+				if (!Properties.TryGetValue(StrokeWidthsKey, out strokeWidths))
+					strokeWidths = Enumerable.Empty<int>();
+				return (int[]) strokeWidths;
+			}
+		}
 
-        public string[] StrokeWidthNames
-        {
-            get
-            {
-                object strokeWidthNames;
-                if (!Properties.TryGetValue(StrokeWidthNamesKey, out strokeWidthNames))
-                    strokeWidthNames = Enumerable.Empty<string>();
-                return (string[]) strokeWidthNames;
-            }
-        }
+		public string[] StrokeWidthNames
+		{
+			get
+			{
+				object strokeWidthNames;
+				if (!Properties.TryGetValue(StrokeWidthNamesKey, out strokeWidthNames))
+					strokeWidthNames = Enumerable.Empty<string>();
+				return (string[]) strokeWidthNames;
+			}
+		}
 
-        public StrokeStyleOptions SelectedStrokeStyleOptions { get; set; }
+		public StrokeStyleOptions SelectedStrokeStyleOptions { get; set; }
 
-        public StrokeStyleTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Stroke style", properties, undoRedoService)
-        {
-            IconName = "ic_line_style.svg";
-            ToolType = ToolType.Modify;
-        }
+		public StrokeStyleTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base(
+			"Stroke style", properties, undoRedoService)
+		{
+			IconName = "ic_line_style.svg";
+			ToolType = ToolType.Modify;
 
-        public override async Task Initialize(ISvgDrawingCanvas ws)
-        {
-            await base.Initialize(ws);
+			// set default stroke style options
+			object strokeDashIndex, strokeWidthIndex;
+			if (!properties.TryGetValue(DefaultStrokeDashIndexKey, out strokeDashIndex))
+				strokeDashIndex = 0;
+			if (!properties.TryGetValue(DefaultStrokeWidthIndexKey, out strokeWidthIndex))
+				strokeWidthIndex = 0;
+			SelectedStrokeStyleOptions = new StrokeStyleOptions
+			{
+				StrokeDashIndex = (int) strokeDashIndex,
+				StrokeWidthIndex = (int) strokeWidthIndex
+			};
+		}
 
-            // add tool commands
-            Commands = new List<IToolCommand>
-            {
-                new ChangeStrokeStyleCommand(this, "Change stroke")
-            };
-        }
+		public override async Task Initialize(ISvgDrawingCanvas ws)
+		{
+			await base.Initialize(ws);
 
-        public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
-        {
-            // add watch for global colorizing
-            WatchDocument(newDocument);
-            UnWatchDocument(oldDocument);
-        }
+			// add tool commands
+			Commands = new List<IToolCommand>
+			{
+				new ChangeStrokeStyleCommand(this, "Change stroke")
+			};
+		}
 
-        #region Private helpers
-        private void WatchDocument(SvgDocument document)
-        {
-            if (document == null)
-                return;
+		public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
+		{
+			// add watch for global colorizing
+			WatchDocument(newDocument);
+			UnWatchDocument(oldDocument);
+		}
 
-            document.ChildAdded -= OnChildAdded;
-            document.ChildAdded += OnChildAdded;
-        }
+		#region Private helpers
 
-        private void UnWatchDocument(SvgDocument document)
-        {
-            if (document == null)
-                return;
-
-            document.ChildAdded -= OnChildAdded;
-        }
-
-        private void OnChildAdded(object sender, ChildAddedEventArgs e)
-        {
-            SetStrokeStyle(e.NewChild, SelectedStrokeStyleOptions);
-        }
-
-        private void SetStrokeStyle(SvgElement element, StrokeStyleOptions styleOptions)
-        {
-            var visualElement = element as SvgVisualElement;
-
-            if (styleOptions == null || visualElement == null || !(visualElement is SvgLine || visualElement is SvgPath || visualElement is SvgEllipse))
+		private void WatchDocument(SvgDocument document)
+		{
+			if (document == null)
 				return;
 
-            var strokeDash = StrokeDashes.ElementAtOrDefault(styleOptions.StrokeDashIndex) ?? "none";
-            var strokeWidth = new SvgUnit(SvgUnitType.Pixel,
-                Math.Max(StrokeWidths.ElementAtOrDefault(styleOptions.StrokeWidthIndex), 1));
-            var formerStrokeDash = visualElement.StrokeDashArray;
-            var formerStrokeWidth = visualElement.StrokeWidth;
-            UndoRedoService.ExecuteCommand(new UndoableActionCommand
-            (
-                "Set stroke style",
-                _ =>
-                {
-                    element.SvgElementFactory.SetPropertyValue(element, "stroke-dasharray", strokeDash, element.OwnerDocument);
-                    visualElement.StrokeWidth = strokeWidth;
-                },
-                _ =>
-                {
-                    visualElement.StrokeDashArray = formerStrokeDash;
-                    visualElement.StrokeWidth = formerStrokeWidth;
-                }
-            ), hasOwnUndoRedoScope: false);
-        }
+			document.ChildAdded -= OnChildAdded;
+			document.ChildAdded += OnChildAdded;
+		}
 
-        #endregion
+		private void UnWatchDocument(SvgDocument document)
+		{
+			if (document == null)
+				return;
 
-        public class StrokeStyleOptions
-        {
-            public int StrokeDashIndex { get; set; }
+			document.ChildAdded -= OnChildAdded;
+		}
 
-            public int StrokeWidthIndex { get; set; }
-        }
+		private void OnChildAdded(object sender, ChildAddedEventArgs e)
+		{
+			SetStrokeStyle(e.NewChild, SelectedStrokeStyleOptions);
+		}
 
-        /// <summary>
-        /// This command changes the color of selected items, or the global selected color, if no items are selected.
-        /// </summary>
-        private class ChangeStrokeStyleCommand : ToolCommand
-        {
-            private new StrokeStyleTool Tool => (StrokeStyleTool) base.Tool;
+		private void SetStrokeStyle(SvgElement element, StrokeStyleOptions styleOptions)
+		{
+			var visualElement = element as SvgVisualElement;
 
-            public ChangeStrokeStyleCommand(StrokeStyleTool tool, string name)
-                : base(tool, name, o => { }, iconName: tool.IconName, sortFunc: tc => 500)
-            {
-            }
+			if (styleOptions == null || visualElement == null || !(visualElement is SvgLine || visualElement is SvgPath ||
+			                                                       visualElement is SvgEllipse))
+				return;
 
-            /// <summary>
-            /// Changes the selected global stroke style or the stroke style of the selected element.
-            /// </summary>
-            /// <param name="parameter"></param>
-            public override async void Execute(object parameter)
-            {
-                var t = Tool;
+			var strokeDash = StrokeDashes.ElementAtOrDefault(styleOptions.StrokeDashIndex) ?? "none";
+			var strokeWidth = new SvgUnit(SvgUnitType.Pixel,
+				Math.Max(StrokeWidths.ElementAtOrDefault(styleOptions.StrokeWidthIndex), 1));
+			var formerStrokeDash = visualElement.StrokeDashArray;
+			var formerStrokeWidth = visualElement.StrokeWidth;
+			UndoRedoService.ExecuteCommand(new UndoableActionCommand
+			(
+				"Set stroke style",
+				_ =>
+				{
+					element.SvgElementFactory.SetPropertyValue(element, "stroke-dasharray", strokeDash, element.OwnerDocument);
+					visualElement.StrokeWidth = strokeWidth;
+				},
+				_ =>
+				{
+					visualElement.StrokeDashArray = formerStrokeDash;
+					visualElement.StrokeWidth = formerStrokeWidth;
+				}
+			), hasOwnUndoRedoScope: false);
+		}
 
-                var selectedElement = t.Canvas.SelectedElements.FirstOrDefault();
+		#endregion
 
-                if (selectedElement != null)
-                {
-                    var formerStrokeStyle = new StrokeStyleOptions
-                    {
-                        StrokeDashIndex = Array.IndexOf(t.StrokeDashes, selectedElement.StrokeDashArray.ToString()),
-                        StrokeWidthIndex = Array.IndexOf(t.StrokeWidths, selectedElement.StrokeWidth)
-                    };
+		public class StrokeStyleOptions
+		{
+			public int StrokeDashIndex { get; set; }
 
-                    StrokeStyleOptions selectedStrokeStyleOptions;
+			public int StrokeWidthIndex { get; set; }
+		}
 
-                    try { 
-                        selectedStrokeStyleOptions =
-                            await
-                                t.StrokeStyleOptionsInputService.GetUserInput("Change stroke style for selection", t.StrokeDashNames, formerStrokeStyle.StrokeDashIndex,
-                                    t.StrokeWidthNames, formerStrokeStyle.StrokeWidthIndex);
-                    }
-                    catch (TaskCanceledException)
-                    {
-                        return;
-                    }
+		/// <summary>
+		/// This command changes the color of selected items, or the global selected color, if no items are selected.
+		/// </summary>
+		private class ChangeStrokeStyleCommand : ToolCommand
+		{
+			private new StrokeStyleTool Tool => (StrokeStyleTool) base.Tool;
 
-	                if (selectedStrokeStyleOptions == null)
-		                return;
+			public ChangeStrokeStyleCommand(StrokeStyleTool tool, string name)
+				: base(tool, name, o => { }, iconName: tool.IconName, sortFunc: tc => 500)
+			{
+			}
 
-                    // prepare command for the whole operation
-                    t.UndoRedoService.ExecuteCommand(new UndoableActionCommand("Change stroke style operation", _ => t.Canvas.FireInvalidateCanvas(), _ => t.Canvas.FireInvalidateCanvas()));
+			/// <summary>
+			/// Changes the selected global stroke style or the stroke style of the selected element.
+			/// </summary>
+			/// <param name="parameter"></param>
+			public override async void Execute(object parameter)
+			{
+				var t = Tool;
 
-                    // change the stroke style of selected element
-                    t.SetStrokeStyle(selectedElement, selectedStrokeStyleOptions);
-                }
-                else
-                {
-                    var formerSelectedOptions = t.SelectedStrokeStyleOptions;
-                    StrokeStyleOptions selectedStrokeStyleOptions;
-                    try
-                    { 
-                        selectedStrokeStyleOptions =
-                            await
-                                t.StrokeStyleOptionsInputService.GetUserInput("Select global stroke style", t.StrokeDashNames, 0,
-                                    t.StrokeWidthNames, 0);
-                    }
-                    catch (TaskCanceledException)
-                    {
-                        return;
-                    }
+				var selectedElement = t.Canvas.SelectedElements.FirstOrDefault();
 
-	                if (selectedStrokeStyleOptions == null)
-		                return;
+				if (selectedElement != null)
+				{
+					var elementDash = selectedElement.StrokeDashArray.Any()
+						? selectedElement.StrokeDashArray.ToString()
+						: "none";
+					var elementWidth = (int) Math.Round(selectedElement.StrokeWidth.Value);
+					var formerStrokeStyle = new StrokeStyleOptions
+					{
+						StrokeDashIndex = Array.IndexOf(t.StrokeDashes, elementDash),
+						StrokeWidthIndex = Array.IndexOf(t.StrokeWidths, elementWidth)
+					};
+
+					StrokeStyleOptions selectedStrokeStyleOptions;
+
+					try
+					{
+						selectedStrokeStyleOptions =
+							await
+								t.StrokeStyleOptionsInputService.GetUserInput("Change stroke style for selection", t.StrokeDashNames,
+									formerStrokeStyle.StrokeDashIndex,
+									t.StrokeWidthNames, formerStrokeStyle.StrokeWidthIndex);
+					}
+					catch (TaskCanceledException)
+					{
+						return;
+					}
+
+					if (selectedStrokeStyleOptions == null)
+						return;
+
+					// prepare command for the whole operation
+					t.UndoRedoService.ExecuteCommand(new UndoableActionCommand("Change stroke style operation",
+						_ => t.Canvas.FireInvalidateCanvas(), _ => t.Canvas.FireInvalidateCanvas()));
+
+					// change the stroke style of selected element
+					t.SetStrokeStyle(selectedElement, selectedStrokeStyleOptions);
+				}
+				else
+				{
+					var formerSelectedOptions = t.SelectedStrokeStyleOptions;
+					StrokeStyleOptions selectedStrokeStyleOptions;
+					try
+					{
+						selectedStrokeStyleOptions =
+							await
+								t.StrokeStyleOptionsInputService.GetUserInput("Select global stroke style", t.StrokeDashNames,
+									formerSelectedOptions?.StrokeDashIndex ?? 0,
+									t.StrokeWidthNames, formerSelectedOptions?.StrokeWidthIndex ?? 0);
+					}
+					catch (TaskCanceledException)
+					{
+						return;
+					}
+
+					if (selectedStrokeStyleOptions == null)
+						return;
 
 					t.UndoRedoService.ExecuteCommand(new UndoableActionCommand
-                    (
-                        "Select global stroke style",
-                        _ => t.SelectedStrokeStyleOptions = selectedStrokeStyleOptions,
-                        _ => t.SelectedStrokeStyleOptions = formerSelectedOptions
-                    ));
-                }
-            }
+					(
+						"Select global stroke style",
+						_ => t.SelectedStrokeStyleOptions = selectedStrokeStyleOptions,
+						_ => t.SelectedStrokeStyleOptions = formerSelectedOptions
+					));
+				}
+			}
 
-            public override bool CanExecute(object parameter)
-            {
-                return Tool.Canvas.SelectedElements.Count < 2;
-            }
-        }
-    }
+			public override bool CanExecute(object parameter)
+			{
+				return Tool.Canvas.SelectedElements.Count < 2;
+			}
+		}
+	}
 }
