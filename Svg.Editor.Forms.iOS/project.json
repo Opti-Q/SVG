@@ -2,13 +2,11 @@
   "dependencies": {
     "SkiaSharp": "1.56.2",
     "SkiaSharp.Views.Forms": "1.56.2",
-    "Svg": "2.0.4",
     "System.Reactive": "3.1.1",
     "System.Reactive.Core": "3.1.1",
     "System.Reactive.Interfaces": "3.1.1",
     "System.Reactive.Linq": "3.1.1",
-    "System.Reactive.PlatformServices": "3.1.1",
-    "Xamarin.Forms": "2.3.4.211-pre3"
+    "System.Reactive.PlatformServices": "3.1.1"
   },
   "frameworks": {
     "Xamarin.iOS,Version=v1.0.0": {}

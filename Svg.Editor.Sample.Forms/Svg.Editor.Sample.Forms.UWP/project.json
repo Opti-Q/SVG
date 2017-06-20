@@ -10,8 +10,7 @@
     "System.Reactive.Interfaces": "3.1.1",
     "System.Reactive.Linq": "3.1.1",
     "System.Reactive.PlatformServices": "3.1.1",
-    "System.Xml.ReaderWriter": "4.3.0",
-    "Xamarin.Forms": "2.3.4.211-pre3"
+    "System.Xml.ReaderWriter": "4.3.0"
   },
   "frameworks": {
     "uap10.0": {}

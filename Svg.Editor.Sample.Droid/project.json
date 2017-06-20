@@ -5,6 +5,7 @@
     "MvvmCross.Core": "4.4.0",
     "MvvmCross.Platform": "4.4.0",
     "MvvmCross.Plugin.Email": "4.4.0",
+    "MvvmCross.Plugin.File": "4.4.0",
     "MvvmCross.Plugin.PictureChooser": "4.4.0",
     "SkiaSharp": "1.56.2",
     "Svg": "2.0.4"

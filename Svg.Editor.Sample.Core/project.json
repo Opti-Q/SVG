@@ -6,8 +6,8 @@
     "MvvmCross.Core": "4.4.0",
     "MvvmCross.Platform": "4.4.0",
     "MvvmCross.Plugin.Email": "4.4.0",
-    "MvvmCross.Plugin.PictureChooser": "4.4.0",
-    "Svg": "2.0.4"
+    "MvvmCross.Plugin.File": "4.4.0",
+    "MvvmCross.Plugin.PictureChooser": "4.4.0"
   },
   "frameworks": {
     ".NETPortable,Version=v4.5,Profile=Profile111": {}
