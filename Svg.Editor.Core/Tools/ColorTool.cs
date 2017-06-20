@@ -10,265 +10,269 @@ using Svg.Interfaces;
 
 namespace Svg.Editor.Tools
 {
-    public interface IColorInputService
-    {
-        Task<int> GetIndexFromUserInput(string title, string[] items, string[] colors);
-    }
+	public interface IColorInputService
+	{
+		Task<int> GetIndexFromUserInput(string title, string[] items, string[] colors);
+	}
 
-    public class ColorTool : UndoableToolBase
-    {
-        #region Private fields and properties
+	public class ColorTool : UndoableToolBase
+	{
+		#region Private fields and properties
 
-        private static IColorInputService ColorInputService => SvgEngine.Resolve<IColorInputService>();
+		private static IColorInputService ColorInputService => SvgEngine.Resolve<IColorInputService>();
 
-        private static ISvgCachingService SvgCachingService => SvgEngine.TryResolve<ISvgCachingService>();
+		private static ISvgCachingService SvgCachingService => SvgEngine.TryResolve<ISvgCachingService>();
 
-        private static readonly Lazy<IToolbarIconSizeProvider> Tbi = new Lazy<IToolbarIconSizeProvider>(() => SvgEngine.TryResolve<IToolbarIconSizeProvider>());
+		private static readonly Lazy<IToolbarIconSizeProvider> Tbi =
+			new Lazy<IToolbarIconSizeProvider>(SvgEngine.TryResolve<IToolbarIconSizeProvider>);
 
-        private static IFileSystem FileSystemService => SvgEngine.Resolve<IFileSystem>();
+		private SizeF _iconDimensions;
 
-        private Color _defaultSelectedColor;
-        private SizeF _iconDimensions;
+		#endregion
 
-        #endregion
+		#region Public properties
 
-        #region Public properties
+		public const string SelectedColorIndexKey = "selectedcolorindex";
+		public const string SelectableColorsKey = "selectablecolors";
+		public const string SelectableColorNamesKey = "selectablecolornames";
+		public const string IconDimensionsKey = "icondimensions";
 
-        public const string SelectedColorIndexKey = "selectedcolorindex";
-        public const string SelectableColorsKey = "selectablecolors";
-        public const string SelectableColorNamesKey = "selectablecolornames";
-        public const string IconDimensionsKey = "icondimensions";
+		public string[] SelectableColors
+		{
+			get
+			{
+				object selectableColors;
+				if (!Properties.TryGetValue(SelectableColorsKey, out selectableColors))
+					selectableColors = Enumerable.Empty<string>();
+				return (string[]) selectableColors;
+			}
+		}
 
-        public string[] SelectableColors
-        {
-            get
-            {
-                object selectableColors;
-                if (!Properties.TryGetValue(SelectableColorsKey, out selectableColors))
-                    selectableColors = Enumerable.Empty<string>();
-                return (string[]) selectableColors;
-            }
-        }
+		public string[] SelectableColorNames
+		{
+			get
+			{
+				object selectableColorNames;
+				if (!Properties.TryGetValue(SelectableColorNamesKey, out selectableColorNames))
+					selectableColorNames = SelectableColors.Clone();
+				return (string[]) selectableColorNames;
+			}
+		}
 
-        public string[] SelectableColorNames
-        {
-            get
-            {
-                object selectableColorNames;
-                if (!Properties.TryGetValue(SelectableColorNamesKey, out selectableColorNames))
-                    selectableColorNames = SelectableColors.Clone();
-                return (string[]) selectableColorNames;
-            }
-        }
+		public int SelectedColorIndex
+		{
+			get
+			{
+				object index;
+				return Properties.TryGetValue(SelectedColorIndexKey, out index)
+					? Convert.ToInt32(index)
+					: 0;
+			}
+			set { Properties[SelectedColorIndexKey] = value; }
+		}
 
-        public Color SelectedColor
-        {
-            get { return _defaultSelectedColor; }
-            set { _defaultSelectedColor = value; }
-        }
+		#endregion
 
-        #endregion
+		public ColorTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Color", properties,
+			undoRedoService)
+		{
+			IconName = "Svg.Editor.Resources.svg.ic_format_color_fill.svg";
+			ToolType = ToolType.Modify;
+		}
 
-        public ColorTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Color", properties, undoRedoService)
-        {
-            IconName = "Svg.Editor.Resources.svg.ic_format_color_fill.svg";
-            ToolType = ToolType.Modify;
+		#region Overrides
 
-            object selectedColorIndex;
-            SelectedColor = Properties.TryGetValue(SelectedColorIndexKey, out selectedColorIndex)
-                ? Color.Create(SelectableColors.ElementAtOrDefault(Convert.ToInt32(selectedColorIndex)) ?? "#000000")
-                : Color.Create(SelectableColors.FirstOrDefault() ?? "#000000");
+		public override async Task Initialize(ISvgDrawingCanvas ws)
+		{
+			await base.Initialize(ws);
 
-            object iconDimensions;
-            if (Properties.TryGetValue("IconDimensionsKey", out iconDimensions))
-            {
-                _iconDimensions = iconDimensions as SizeF;
-            }
-        }
+			object iconDimensions;
+			if (Properties.TryGetValue(IconDimensionsKey, out iconDimensions))
+			{
+				_iconDimensions = iconDimensions as SizeF;
+			}
 
-        #region Overrides
+			// cache icons
+			var cachingService = SvgEngine.TryResolve<ISvgCachingService>();
+			if (cachingService != null)
+			{
+				foreach (var selectableColor in SelectableColors)
+				{
+					var color = Color.Create(selectableColor);
+					var options = new SaveAsPngOptions
+					{
+						PreprocessAction = SvgProcessingUtil.ColorAction(color),
+						CustomPostFix = (key, opt) => StringifyColor(color),
+						ImageDimension = Tbi.Value?.GetSize(),
+					};
+					// global config
+					// local config
+					if (_iconDimensions != null)
+						options.ImageDimension = _iconDimensions;
 
-        public override async Task Initialize(ISvgDrawingCanvas ws)
-        {
-            await base.Initialize(ws);
+					cachingService.GetCachedPng(IconName, options);
+				}
+			}
 
-            // cache icons
-            var cachingService = SvgEngine.TryResolve<ISvgCachingService>();
-            if (cachingService != null)
-            {
-                foreach (var selectableColor in SelectableColors)
-                {
-                    var color = Color.Create(selectableColor);
-                    var options = new SaveAsPngOptions()
-                    {
-                        PreprocessAction = SvgProcessingUtil.ColorAction(color),
-                        CustomPostFix = (key, opt) => StringifyColor(color),
-                    };
-                    // global config
-                    options.ImageDimension = Tbi.Value?.GetSize();
-                    // local config
-                    if (_iconDimensions != null)
-                        options.ImageDimension = _iconDimensions;
+			// add tool commands
+			Commands = new List<IToolCommand>
+			{
+				new ChangeColorCommand(ws, this, "Change color")
+			};
 
-                    cachingService.GetCachedPng(IconName, options);
-                }
-            }
+			// initialize with callbacks
+			WatchDocument(ws.Document);
+		}
 
-            // add tool commands
-            Commands = new List<IToolCommand>
-            {
-                new ChangeColorCommand(ws, this, "Change color")
-            };
+		public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
+		{
+			// add watch for global colorizing
+			WatchDocument(newDocument);
+			UnWatchDocument(oldDocument);
+		}
 
-            // initialize with callbacks
-            WatchDocument(ws.Document);
-        }
+		#endregion
 
-        public override void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument)
-        {
-            // add watch for global colorizing
-            WatchDocument(newDocument);
-            UnWatchDocument(oldDocument);
-        }
+		#region Private helpers
 
-        #endregion
+		private static string StringifyColor(Color color)
+		{
+			return $"{color.R}_{color.G}_{color.B}";
+		}
 
-        #region Private helpers
+		private void ColorizeElement(SvgElement element, int colorIndex)
+		{
+			var noFill = element.HasConstraints(NoFillConstraint);
+			var noStroke = element.HasConstraints(NoStrokeConstraint);
 
-        private static string StringifyColor(Color color)
-        {
-            return $"{color.R}_{color.G}_{color.B}";
-        }
+			// only colorize visual elements
+			if (!(element is SvgVisualElement) || noFill && noStroke) return;
 
-        private void ColorizeElement(SvgElement element, Color color)
-        {
-            var noFill = element.HasConstraints(NoFillConstraint);
-            var noStroke = element.HasConstraints(NoStrokeConstraint);
+			var oldStroke = ((SvgColourServer) element.Stroke)?.ToString();
+			var oldFill = ((SvgColourServer) element.Fill)?.ToString();
+			UndoRedoService.ExecuteCommand(new UndoableActionCommand("Colorize element", _ =>
+			{
+				if (!noStroke)
+				{
+					element.Stroke?.Dispose();
+					element.Stroke = new SvgColourServer(Color.Create(SelectableColors.ElementAtOrDefault(colorIndex) ?? "#000000"));
+				}
+				if (!noFill)
+				{
+					element.Fill?.Dispose();
+					element.Fill = new SvgColourServer(Color.Create(SelectableColors.ElementAtOrDefault(colorIndex) ?? "#000000"));
+				}
+				Canvas.FireInvalidateCanvas();
+			}, _ =>
+			{
+				if (!noStroke)
+				{
+					element.Stroke?.Dispose();
+					element.SvgElementFactory.SetPropertyValue(element, "stroke", oldStroke, element.OwnerDocument);
+				}
+				if (!noFill)
+				{
+					element.Fill?.Dispose();
+					element.SvgElementFactory.SetPropertyValue(element, "fill", oldFill, element.OwnerDocument);
+				}
+				Canvas.FireInvalidateCanvas();
+			}), hasOwnUndoRedoScope: false);
+		}
 
-            // only colorize visual elements
-            if (!(element is SvgVisualElement) || noFill && noStroke) return;
+		/// <summary>
+		/// Subscribes to the documentss "Add/RemoveChild" handlers.
+		/// </summary>
+		/// <param name="document"></param>
+		private void WatchDocument(SvgDocument document)
+		{
+			if (document == null)
+				return;
 
-            var oldStroke = ((SvgColourServer) element.Stroke)?.ToString();
-            var oldFill = ((SvgColourServer) element.Fill)?.ToString();
-            UndoRedoService.ExecuteCommand(new UndoableActionCommand("Colorize element", _ =>
-            {
-                if (!noStroke)
-                {
-                    element.Stroke?.Dispose();
-                    element.Stroke = new SvgColourServer(color);
-                }
-                if (!noFill)
-                {
-                    element.Fill?.Dispose();
-                    element.Fill = new SvgColourServer(color);
-                }
-                Canvas.FireInvalidateCanvas();
-            }, _ =>
-            {
-                if (!noStroke)
-                {
-                    element.Stroke?.Dispose();
-                    element.SvgElementFactory.SetPropertyValue(element, "stroke", oldStroke, element.OwnerDocument);
-                }
-                if (!noFill)
-                {
-                    element.Fill?.Dispose();
-                    element.SvgElementFactory.SetPropertyValue(element, "fill", oldFill, element.OwnerDocument);
-                }
-                Canvas.FireInvalidateCanvas();
-            }), hasOwnUndoRedoScope: false);
-        }
+			document.ChildAdded -= OnChildAdded;
+			document.ChildAdded += OnChildAdded;
+		}
 
-        /// <summary>
-        /// Subscribes to the documentss "Add/RemoveChild" handlers.
-        /// </summary>
-        /// <param name="document"></param>
-        private void WatchDocument(SvgDocument document)
-        {
-            if (document == null)
-                return;
+		private void UnWatchDocument(SvgDocument document)
+		{
+			if (document == null)
+				return;
 
-            document.ChildAdded -= OnChildAdded;
-            document.ChildAdded += OnChildAdded;
-        }
+			document.ChildAdded -= OnChildAdded;
+		}
 
-        private void UnWatchDocument(SvgDocument document)
-        {
-            if (document == null)
-                return;
+		private void OnChildAdded(object sender, ChildAddedEventArgs e)
+		{
+			ColorizeElement(e.NewChild, SelectedColorIndex);
+		}
 
-            document.ChildAdded -= OnChildAdded;
-        }
+		#endregion
 
-        private void OnChildAdded(object sender, ChildAddedEventArgs e)
-        {
-            ColorizeElement(e.NewChild, SelectedColor);
-        }
+		#region Inner types
 
-        #endregion
+		/// <summary>
+		/// This command changes the color of selected items, or the global selected color, if no items are selected.
+		/// </summary>
+		private class ChangeColorCommand : ToolCommand
+		{
+			private readonly ISvgDrawingCanvas _canvas;
 
-        #region Inner types
+			public ChangeColorCommand(ISvgDrawingCanvas canvas, ColorTool tool, string name)
+				: base(tool, name, o => { }, iconName: tool.IconName, sortFunc: tc => 500)
+			{
+				_canvas = canvas;
+			}
 
-        /// <summary>
-        /// This command changes the color of selected items, or the global selected color, if no items are selected.
-        /// </summary>
-        private class ChangeColorCommand : ToolCommand
-        {
-            private readonly ISvgDrawingCanvas _canvas;
+			private new ColorTool Tool => (ColorTool) base.Tool;
 
-            public ChangeColorCommand(ISvgDrawingCanvas canvas, ColorTool tool, string name)
-                : base(tool, name, o => { }, iconName: tool.IconName, sortFunc: tc => 500)
-            {
-                _canvas = canvas;
-            }
+			public override async void Execute(object parameter)
+			{
+				var t = Tool;
 
-            private new ColorTool Tool => (ColorTool) base.Tool;
+				int selectedColorIndex;
 
-            public override async void Execute(object parameter)
-            {
-                var t = Tool;
-
-                int selectedColorIndex = 0;
-
-                try
-                {
-                    selectedColorIndex = await ColorInputService.GetIndexFromUserInput("Choose color", t.SelectableColorNames, t.SelectableColors);
-                }
-                catch (TaskCanceledException)
-                {
-                    return;
-                }
+				try
+				{
+					selectedColorIndex =
+						await ColorInputService.GetIndexFromUserInput("Choose color", t.SelectableColorNames, t.SelectableColors);
+				}
+				catch (TaskCanceledException)
+				{
+					return;
+				}
 
 
-                var color = Color.Create(t.SelectableColors[selectedColorIndex]);
+				if (_canvas.SelectedElements.Any())
+				{
+					t.UndoRedoService.ExecuteCommand(new UndoableActionCommand("Colorize selected elements", o => { }));
+					// change the color of all selected items
+					foreach (var selectedElement in _canvas.SelectedElements)
+					{
+						t.ColorizeElement(selectedElement, selectedColorIndex);
+					}
+					// don't change the global color when items are selected
+					return;
+				}
 
-                if (_canvas.SelectedElements.Any())
-                {
-                    t.UndoRedoService.ExecuteCommand(new UndoableActionCommand("Colorize selected elements", o => { }));
-                    // change the color of all selected items
-                    foreach (var selectedElement in _canvas.SelectedElements)
-                    {
-                        t.ColorizeElement(selectedElement, color);
-                    }
-                    // don't change the global color when items are selected
-                    return;
-                }
+				var formerSelectedColor = t.SelectedColorIndex;
+				t.UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name, o =>
+				{
+					t.SelectedColorIndex = selectedColorIndex;
+					t.Canvas.FireToolCommandsChanged();
+				}, o =>
+				{
+					t.SelectedColorIndex = formerSelectedColor;
+					t.Canvas.FireToolCommandsChanged();
+				}));
+			}
 
-                var formerSelectedColor = t.SelectedColor;
-                t.UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name, o =>
-                {
-                    t.SelectedColor = color;
-                    t.Canvas.FireToolCommandsChanged();
-                }, o =>
-                {
-                    t.SelectedColor = formerSelectedColor;
-                    t.Canvas.FireToolCommandsChanged();
-                }));
-            }
+			public override string IconName => SvgCachingService?.GetCachedPng(Tool.IconName,
+				new SaveAsPngOptions()
+				{
+					CustomPostFix = (key, op) => StringifyColor(Color.Create(Tool.SelectableColors.ElementAtOrDefault(Tool.SelectedColorIndex) ?? "#000000")),
+					ImageDimension = Tbi.Value?.GetSize()
+				});
+		}
 
-            public override string IconName => SvgCachingService?.GetCachedPng(Tool.IconName, new SaveAsPngOptions() { CustomPostFix = (key, op) => StringifyColor(Tool.SelectedColor), ImageDimension = Tbi.Value?.GetSize()});
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

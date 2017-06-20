@@ -23,8 +23,40 @@ namespace Svg.Editor.Tools
         View = 0x1000
     }
 
-    public interface ITool : IDisposable
-    {
+	public interface ISerializableTool
+	{
+		/// <summary>
+		/// Gets a value indicating whether this tool can serialize.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this instance can serialize; otherwise, <c>false</c>.
+		/// </value>
+		bool CanSerialize { get; }
+
+		/// <summary>
+		/// Gets the serialization identifier for the tool. Should include or be the tool name.
+		/// </summary>
+		/// <value>
+		/// The serialization identifier.
+		/// </value>
+		string SerializationId { get; }
+
+		/// <summary>
+		/// Gets the properties for serialization, removing all properties that cannot be serialized.
+		/// </summary>
+		/// <returns></returns>
+		IDictionary<string, object> GetPropertiesForSerialization();
+
+		/// <summary>
+		/// Deserializes the properties.
+		/// </summary>
+		/// <param name="serializedProperties">The serialized properties.</param>
+		/// <returns></returns>
+		bool DeserializeProperties(IDictionary<string, object> serializedProperties);
+	}
+
+	public interface ITool : IDisposable
+	{
         string Name { get; }
         ToolUsage ToolUsage { get; }
         /// <summary>
@@ -54,13 +86,13 @@ namespace Svg.Editor.Tools
         /// </summary>
         int GestureOrder { get; }
         string IconName { get; }
-        Task Initialize(ISvgDrawingCanvas ws);
-        Task OnDraw(IRenderer renderer, ISvgDrawingCanvas ws);
-        Task OnPreDraw(IRenderer renderer, ISvgDrawingCanvas ws);
-        Task OnUserInput(UserInputEvent @event, ISvgDrawingCanvas ws);
-        Task OnGesture(UserGesture gesture);
-        void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument);
-        void Reset();
+	    Task Initialize(ISvgDrawingCanvas ws);
+	    Task OnDraw(IRenderer renderer, ISvgDrawingCanvas ws);
+	    Task OnPreDraw(IRenderer renderer, ISvgDrawingCanvas ws);
+	    Task OnUserInput(UserInputEvent @event, ISvgDrawingCanvas ws);
+	    Task OnGesture(UserGesture gesture);
+	    void OnDocumentChanged(SvgDocument oldDocument, SvgDocument newDocument);
+	    void Reset();
     }
 
     public interface IToolCommand : ICommand

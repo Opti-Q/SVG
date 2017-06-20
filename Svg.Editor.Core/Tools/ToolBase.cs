@@ -7,17 +7,16 @@ using Svg.Editor.Interfaces;
 
 namespace Svg.Editor.Tools
 {
-    public abstract class ToolBase : ITool
+    public abstract class ToolBase : ITool, ISerializableTool
     {
-        protected ToolBase(string name)
+        protected ToolBase(string name) : this(name,null)
         {
-            Name = name;
         }
 
-        protected ToolBase(string name, IDictionary<string, object> properties) : this(name)
+        protected ToolBase(string name, IDictionary<string, object> properties)
         {
-            //Properties = JsonConvert.DeserializeObject<IDictionary<string, object>>(properties, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All }) ?? new Dictionary<string, object>();
-            Properties = properties ?? new Dictionary<string, object>();
+	        Name = name;
+			Properties = properties ?? new Dictionary<string, object>();
         }
 
         protected ISvgDrawingCanvas Canvas { get; private set; }
@@ -165,5 +164,22 @@ namespace Svg.Editor.Tools
         public virtual void Dispose()
         {
         }
+
+	    public virtual bool CanSerialize => true;
+	    public virtual string SerializationId => Name;
+		public virtual IDictionary<string, object> GetPropertiesForSerialization()
+	    {
+		    return CanSerialize ? Properties : new Dictionary<string, object>();
+	    }
+
+	    public bool DeserializeProperties(IDictionary<string, object> serializedProperties)
+	    {
+		    if (!CanSerialize)
+			    return false;
+
+		    foreach (var property in serializedProperties)
+			    Properties[property.Key] = property.Value;
+		    return true;
+	    }
     }
 }

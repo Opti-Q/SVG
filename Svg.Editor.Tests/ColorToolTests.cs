@@ -44,8 +44,8 @@ namespace Svg.Editor.Tests
             await Canvas.EnsureInitialized();
             var colorTool = Canvas.Tools.OfType<ColorTool>().Single();
             var text = new SvgText("hello");
-            colorTool.SelectedColor = Color.Create(colorTool.SelectableColors[2]);
-            var color = colorTool.SelectedColor;
+            colorTool.SelectedColorIndex = Color.Create(colorTool.SelectableColors[2]);
+            var color = colorTool.SelectedColorIndex;
 
             // Preassert
             Assert.AreNotEqual(color, ((SvgColourServer) text.Fill)?.Colour);
@@ -71,7 +71,7 @@ namespace Svg.Editor.Tests
             await Canvas.AddItemInScreenCenter(rectangle);
 
             // Assert
-            var color = colorTool.SelectedColor;
+            var color = colorTool.SelectedColorIndex;
             Assert.True(color.Equals(((SvgColourServer) rectangle.Stroke).Colour));
         }
 
@@ -87,13 +87,13 @@ namespace Svg.Editor.Tests
 
             // Act
 
-            colorTool.SelectedColor = color;
+            colorTool.SelectedColorIndex = color;
             await Canvas.AddItemInScreenCenter(text);
 
             // Assert
 
-            Assert.True(colorTool.SelectedColor.Equals(((SvgColourServer) text.Stroke).Colour));
-            Assert.True(colorTool.SelectedColor.Equals(((SvgColourServer) text.Fill).Colour));
+            Assert.True(colorTool.SelectedColorIndex.Equals(((SvgColourServer) text.Stroke).Colour));
+            Assert.True(colorTool.SelectedColorIndex.Equals(((SvgColourServer) text.Fill).Colour));
         }
 
         [Test]
@@ -108,12 +108,12 @@ namespace Svg.Editor.Tests
 
             // Act
 
-            colorTool.SelectedColor = color;
+            colorTool.SelectedColorIndex = color;
             await Canvas.AddItemInScreenCenter(rectangle);
 
             // Assert
 
-            Assert.True(colorTool.SelectedColor.Equals(((SvgColourServer) rectangle.Stroke).Colour));
+            Assert.True(colorTool.SelectedColorIndex.Equals(((SvgColourServer) rectangle.Stroke).Colour));
         }
 
         [Test]

@@ -19,10 +19,10 @@ namespace Svg.Editor.Tools
 
 	public class StrokeStyleTool : UndoableToolBase
 	{
-		public const string DefaultStrokeDashIndexKey = "defaultstrokedash";
+		public const string SelectedStrokeDashIndexKey = "selectedstrokedash";
 		public const string StrokeDashesKey = "strokedashes";
 		public const string StrokeDashNamesKey = "strokedashnames";
-		public const string DefaultStrokeWidthIndexKey = "defaultstrokewidth";
+		public const string SelectedStrokeWidthIndexKey = "selectedstrokewidth";
 		public const string StrokeWidthsKey = "strokewidths";
 		public const string StrokeWidthNamesKey = "strokewidthnames";
 
@@ -73,25 +73,31 @@ namespace Svg.Editor.Tools
 			}
 		}
 
-		public StrokeStyleOptions SelectedStrokeStyleOptions { get; set; }
+		public int SelectedStrokeDashIndex { get {
+			object index;
+			return Properties.TryGetValue(SelectedStrokeDashIndexKey, out index)
+				? Convert.ToInt32(index)
+				: 0;
+		} set { Properties[SelectedStrokeDashIndexKey] = value; } }
+
+		public int SelectedStrokeWidthIndex { get {
+			object index;
+			return Properties.TryGetValue(SelectedStrokeWidthIndexKey, out index)
+				? Convert.ToInt32(index)
+				: 0;
+		} set { Properties[SelectedStrokeWidthIndexKey] = value; } }
+
+		public StrokeStyleOptions SelectedStrokeStyleOptions => new StrokeStyleOptions
+		{
+			StrokeDashIndex = Convert.ToInt32(SelectedStrokeDashIndex),
+			StrokeWidthIndex = Convert.ToInt32(SelectedStrokeWidthIndex)
+		};
 
 		public StrokeStyleTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base(
 			"Stroke style", properties, undoRedoService)
 		{
 			IconName = "ic_line_style.svg";
 			ToolType = ToolType.Modify;
-
-			// set default stroke style options
-			object strokeDashIndex, strokeWidthIndex;
-			if (!properties.TryGetValue(DefaultStrokeDashIndexKey, out strokeDashIndex))
-				strokeDashIndex = 0;
-			if (!properties.TryGetValue(DefaultStrokeWidthIndexKey, out strokeWidthIndex))
-				strokeWidthIndex = 0;
-			SelectedStrokeStyleOptions = new StrokeStyleOptions
-			{
-				StrokeDashIndex = (int) strokeDashIndex,
-				StrokeWidthIndex = (int) strokeWidthIndex
-			};
 		}
 
 		public override async Task Initialize(ISvgDrawingCanvas ws)
@@ -133,16 +139,22 @@ namespace Svg.Editor.Tools
 
 		private void OnChildAdded(object sender, ChildAddedEventArgs e)
 		{
-			SetStrokeStyle(e.NewChild, SelectedStrokeStyleOptions);
+			SetStrokeStyle(e.NewChild);
 		}
 
-		private void SetStrokeStyle(SvgElement element, StrokeStyleOptions styleOptions)
+		private void SetStrokeStyle(SvgElement element, StrokeStyleOptions styleOptions = null)
 		{
 			var visualElement = element as SvgVisualElement;
 
-			if (styleOptions == null || visualElement == null || !(visualElement is SvgLine || visualElement is SvgPath ||
+			if (visualElement == null || !(visualElement is SvgLine || visualElement is SvgPath ||
 			                                                       visualElement is SvgEllipse))
 				return;
+
+			styleOptions = styleOptions ?? new StrokeStyleOptions
+			{
+				StrokeDashIndex = SelectedStrokeDashIndex,
+				StrokeWidthIndex = SelectedStrokeWidthIndex
+			};
 
 			var strokeDash = StrokeDashes.ElementAtOrDefault(styleOptions.StrokeDashIndex) ?? "none";
 			var strokeWidth = new SvgUnit(SvgUnitType.Pixel,
@@ -242,8 +254,8 @@ namespace Svg.Editor.Tools
 						selectedStrokeStyleOptions =
 							await
 								t.StrokeStyleOptionsInputService.GetUserInput("Select global stroke style", t.StrokeDashNames,
-									formerSelectedOptions?.StrokeDashIndex ?? 0,
-									t.StrokeWidthNames, formerSelectedOptions?.StrokeWidthIndex ?? 0);
+									formerSelectedOptions.StrokeDashIndex,
+									t.StrokeWidthNames, formerSelectedOptions.StrokeWidthIndex);
 					}
 					catch (TaskCanceledException)
 					{
@@ -256,8 +268,16 @@ namespace Svg.Editor.Tools
 					t.UndoRedoService.ExecuteCommand(new UndoableActionCommand
 					(
 						"Select global stroke style",
-						_ => t.SelectedStrokeStyleOptions = selectedStrokeStyleOptions,
-						_ => t.SelectedStrokeStyleOptions = formerSelectedOptions
+						_ =>
+						{
+							t.SelectedStrokeDashIndex = selectedStrokeStyleOptions.StrokeDashIndex;
+							t.SelectedStrokeWidthIndex = selectedStrokeStyleOptions.StrokeWidthIndex;
+						},
+						_ =>
+						{
+							t.SelectedStrokeDashIndex = formerSelectedOptions.StrokeDashIndex;
+							t.SelectedStrokeWidthIndex = formerSelectedOptions.StrokeWidthIndex;
+						}
 					));
 				}
 			}

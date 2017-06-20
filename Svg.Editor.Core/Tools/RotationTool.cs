@@ -68,7 +68,14 @@ namespace Svg.Editor.Tools
 
         #region Overrides
 
-        public override async Task Initialize(ISvgDrawingCanvas ws)
+	    public override IDictionary<string, object> GetPropertiesForSerialization()
+	    {
+		    var properties = Properties.ToDictionary(d => d.Key, d => d.Value);
+		    properties.Remove(FilterKey);
+		    return properties;
+	    }
+
+	    public override async Task Initialize(ISvgDrawingCanvas ws)
         {
             await base.Initialize(ws);
 

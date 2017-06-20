@@ -72,8 +72,8 @@ namespace Svg.Editor.Tests
             await Canvas.EnsureInitialized();
             var colorTool = Canvas.Tools.OfType<ColorTool>().Single();
             var text = new SvgText("hello");
-            colorTool.SelectedColor = Color.Create(colorTool.SelectableColors[1]);
-            var color = colorTool.SelectedColor;
+            colorTool.SelectedColorIndex = Color.Create(colorTool.SelectableColors[1]);
+            var color = colorTool.SelectedColorIndex;
             var oldStroke = text.Stroke?.ToString();
             var oldFill = text.Fill?.ToString();
             _textMock.F = (x, y) => null;
@@ -104,7 +104,7 @@ namespace Svg.Editor.Tests
             await Canvas.AddItemInScreenCenter(rectangle);
 
             // Preassert
-            var color = colorTool.SelectedColor;
+            var color = colorTool.SelectedColorIndex;
             Assert.AreEqual(color, ((SvgColourServer) rectangle.Stroke)?.Colour);
 
             // Act
