@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using MvvmCross.Core.ViewModels;
 using MvvmCross.Platform;
+using MvvmCross.Plugins.File;
 using Svg.Droid.SampleEditor.Core.Tools;
 using Svg.Editor;
 using Svg.Editor.Interfaces;
-using Svg.Editor.Services;
 using Svg.Editor.Tools;
 using Svg.Interfaces;
 
@@ -23,26 +25,22 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
 			SaveToolPropertiesCommand = new MvxCommand(SaveToolProperties);
 		}
 
+		private const string Path = "toolProperties.txt";
+
 		private void SaveToolProperties()
 		{
 			var toolProperties = Canvas?.GetToolPropertiesJson();
-			Mvx.Trace(toolProperties);
+			var content = Encoding.UTF8.GetBytes(toolProperties);
+			var fileSystem = Mvx.Resolve<IMvxFileStore>();
+			if (fileSystem.Exists(Path))
+				fileSystem.DeleteFile(Path);
+			using (var stream = fileSystem.OpenWrite(Path))
+				stream.Write(content, 0, content.Length);
 		}
 
 		public void Init()
 		{
-			// modify tool so that 
-			//var tool = Canvas.Tools.OfType<AddRandomItemTool>().FirstOrDefault();
-			//if (tool == null)
-			//{
-			//    tool = new AddRandomItemTool(Canvas);
-			//    Canvas.Tools.Add(tool);
-			//}
-			//// this surely creates a memory leak!!
-			//tool.SourceProvider = GetSource;
-			//Canvas.Tools.Add(new AuxiliaryLineTool()); // auxiliar line tool
-			//Canvas.Tools.Add(new SaveTool(false));
-			//Canvas.Tools.Add(new PlaceAsBackgroundTool(null, SvgEngine.Resolve<IUndoRedoService>()));
+			var toolProperties = ReadToolProperties();
 
 			SvgEngine.Register<IPickImageService>(() => new MvxPickImageService());
 
@@ -51,9 +49,9 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
 			// this part should be in the designer, when the iCL is created
 			var gridToolProperties = new Dictionary<string, object>
 			{
-				{"angle", 30.0f},
-				{"stepsizey", 20.0f},
-				{"issnappingenabled", true}
+				{GridTool.AlphaAngleKey, 30.0f},
+				{GridTool.StepSizeYKey, 20.0f},
+				{GridTool.IsSnappingEnabledKey, true}
 			};
 
 			var colorToolProperties = new Dictionary<string, object>
@@ -67,20 +65,20 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
 
 			var strokeStyleToolProperties = new Dictionary<string, object>
 			{
-				{StrokeStyleTool.DefaultStrokeDashIndexKey, 0},
+				{StrokeStyleTool.SelectedStrokeDashIndexKey, 0},
 				{StrokeStyleTool.StrokeDashesKey, new[] {"none", "3 3", "17 17", "34 34"}},
 				{StrokeStyleTool.StrokeDashNamesKey, new[] {"----------", "- - - - - -", "--  --  --", "---   ---"}},
-				{StrokeStyleTool.DefaultStrokeWidthIndexKey, 1},
+				{StrokeStyleTool.SelectedStrokeWidthIndexKey, 1},
 				{StrokeStyleTool.StrokeWidthsKey, new[] {2, 6, 12, 24}},
 				{StrokeStyleTool.StrokeWidthNamesKey, new[] {"thin", "normal", "thick", "ultra-thick"}}
 			};
 
 			var lineToolProperties = new Dictionary<string, object>
 			{
-				{"markerstartids", new[] {"none", "arrowStart", "circle"}},
-				{"markerstartnames", new[] {"---", "<--", "O--"}},
-				{"markerendids", new[] {"none", "arrowEnd", "circle"}},
-				{"markerendnames", new[] {"---", "-->", "--O"}},
+				{LineTool.MarkerStartIdsKey, new[] {"none", "arrowStart", "circle"}},
+				{LineTool.MarkerStartNamesKey, new[] {"---", "<--", "O--"}},
+				{LineTool.MarkerEndIdsKey, new[] {"none", "arrowEnd", "circle"}},
+				{LineTool.MarkerEndNamesKey, new[] {"---", "-->", "--O"}},
 				{LineTool.SelectedMarkerEndIndexKey, 1},
 				{LineTool.DefaultStrokeWidthKey, 2}
 			};
@@ -92,9 +90,9 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
 
 			var textToolProperties = new Dictionary<string, object>
 			{
-				{"fontsizes", new[] {12f, 16f, 20f, 24f, 36f, 48f}},
-				{"selectedfontsizeindex", 1},
-				{"fontsizenames", new[] {"12px", "16px", "20px", "24px", "36px", "48px"}}
+				{TextTool.FontSizesKey, new[] {12f, 16f, 20f, 24f, 36f, 48f}},
+				{TextTool.SelectedFontSizeIndexKey, 1},
+				{TextTool.FontSizeNamesKey, new[] {"12px", "16px", "20px", "24px", "36px", "48px"}}
 			};
 
 			//var zoomToolProperties = JsonConvert.SerializeObject(new Dictionary<string, object>
@@ -124,34 +122,57 @@ namespace Svg.Droid.SampleEditor.Core.ViewModels
 
 			var undoRedoService = SvgEngine.Resolve<IUndoRedoService>();
 
-			SvgEngine.Register(() => new ToolFactoryProvider(new Func<ITool>[]
-			{
-				() => new GridTool(gridToolProperties, undoRedoService),
-				() => new MoveTool(undoRedoService),
-				() => new PanTool(panToolProperties),
-				() => new RotationTool(rotationToolProperties, undoRedoService),
-				() => new ZoomTool(zoomToolProperties),
-				() => new SelectionTool(undoRedoService),
-				() => new TextTool(textToolProperties, undoRedoService),
-				() => new LineTool(lineToolProperties, undoRedoService),
-				() => new EllipseTool(null, undoRedoService),
-				() => new FreeDrawingTool(freeDrawToolProperties, undoRedoService),
-				() => new ColorTool(colorToolProperties, undoRedoService),
-				() => new StrokeStyleTool(strokeStyleToolProperties, undoRedoService),
-				() => new UndoRedoTool(undoRedoService),
-				() => new ArrangeTool(undoRedoService),
-				() => new AuxiliaryLineTool(),
-				() => new SaveTool(false),
-				() => new PlaceAsBackgroundTool(placeAsBackgroundToolProperties, undoRedoService),
-				() => new AddRandomItemTool() {SourceProvider = GetSource}
-			}));
+			//SvgEngine.Register(() => new ToolFactoryProvider(new Func<ITool>[]
+			//{
+			//	() => new GridTool(gridToolProperties, undoRedoService),
+			//	() => new MoveTool(undoRedoService),
+			//	() => new PanTool(panToolProperties),
+			//	() => new RotationTool(rotationToolProperties, undoRedoService),
+			//	() => new ZoomTool(zoomToolProperties),
+			//	() => new SelectionTool(undoRedoService),
+			//	() => new TextTool(textToolProperties, undoRedoService),
+			//	() => new LineTool(lineToolProperties, undoRedoService),
+			//	() => new EllipseTool(null, undoRedoService),
+			//	() => new FreeDrawingTool(freeDrawToolProperties, undoRedoService),
+			//	() => new ColorTool(colorToolProperties, undoRedoService),
+			//	() => new StrokeStyleTool(strokeStyleToolProperties, undoRedoService),
+			//	() => new UndoRedoTool(undoRedoService),
+			//	() => new ArrangeTool(undoRedoService),
+			//	() => new AuxiliaryLineTool(),
+			//	() => new SaveTool(false),
+			//	() => new PlaceAsBackgroundTool(placeAsBackgroundToolProperties, undoRedoService),
+			//	() => new AddRandomItemTool() {SourceProvider = GetSource}
+			//}));
 
 			#endregion
 
 			Canvas = new SvgDrawingCanvas {IsDebugEnabled = true};
 
+			Canvas.LoadTools(toolProperties, () => new GridTool(gridToolProperties, undoRedoService), () => new MoveTool(undoRedoService),
+				() => new PanTool(panToolProperties), () => new RotationTool(rotationToolProperties, undoRedoService),
+				() => new ZoomTool(zoomToolProperties), () => new SelectionTool(undoRedoService),
+				() => new TextTool(textToolProperties, undoRedoService), () => new LineTool(lineToolProperties, undoRedoService),
+				() => new EllipseTool(null, undoRedoService), () => new FreeDrawingTool(freeDrawToolProperties, undoRedoService),
+				() => new ColorTool(colorToolProperties, undoRedoService),
+				() => new StrokeStyleTool(strokeStyleToolProperties, undoRedoService), () => new UndoRedoTool(undoRedoService),
+				() => new ArrangeTool(undoRedoService), () => new AuxiliaryLineTool(), () => new SaveTool(false),
+				() => new PlaceAsBackgroundTool(placeAsBackgroundToolProperties, undoRedoService),
+				() => new AddRandomItemTool {SourceProvider = GetSource});
+
 			//Canvas.Document = SvgDocument.Open<SvgDocument>(GetSource("svg/svg_80ae394472b24f3daaaca4d067656058_78c.svg"));
 			//Canvas.Document = SvgDocument.Open<SvgDocument>(GetSource("svg/ground_floor_plan.svg"));
+		}
+
+		private static string ReadToolProperties()
+		{
+			var fileSystem = Mvx.Resolve<IMvxFileStore>();
+			if (fileSystem.Exists(Path))
+				using (var stream = fileSystem.OpenRead(Path))
+				using (var reader = new StreamReader(stream, Encoding.UTF8))
+				{
+					return reader.ReadToEnd();
+				}
+			return null;
 		}
 
 		private ISvgSource GetSource(string source)

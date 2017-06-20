@@ -99,6 +99,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SvgCanvasEditorViewRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -163,8 +164,12 @@
       <Project>{2c90ee6d-52e3-4ba0-92d4-8162800f698d}</Project>
       <Name>Svg.Editor.Forms</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Svg.Editor.Views.UWP\Svg.Editor.Views.UWP.csproj">
+      <Project>{98f6b246-19bf-4929-bd26-54d06aad6389}</Project>
+      <Name>Svg.Editor.Views.UWP</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Svg.Editor.Sample.Forms\Svg.Editor.Sample.Forms.csproj">
-      <Project>{af05ff4e-ef14-4cb9-afd6-fb1231f62245}</Project>
+      <Project>{f2b871b8-829f-4ef4-99a4-ab2fc9eeda5e}</Project>
       <Name>Svg.Editor.Sample.Forms</Name>
     </ProjectReference>
   </ItemGroup>

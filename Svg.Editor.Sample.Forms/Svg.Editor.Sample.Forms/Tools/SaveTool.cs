@@ -38,7 +38,7 @@ namespace Svg.Editor.Sample.Forms.Tools
 
                     using (var stream = fs.OpenWrite(storagePath))
                     {
-                        ws.SaveDocumentWithBoundsAsViewbox(stream);
+                        ws.SaveDocumentWithScreenAsViewbox(stream);
                     }
 
                 }, 
