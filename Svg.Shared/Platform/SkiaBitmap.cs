@@ -20,6 +20,8 @@ namespace Svg.Platform
 
         public SkiaBitmap(SKBitmap bitmap)
         {
+            if (bitmap == null)
+                throw new ArgumentNullException(nameof(bitmap));
             _image = bitmap;
             Width = _image.Width;
             Height = _image.Height;
