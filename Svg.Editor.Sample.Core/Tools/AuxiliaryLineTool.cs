@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Svg.Editor;
 using Svg.Editor.Interfaces;
 using Svg.Editor.Tools;
 
-namespace Svg.Droid.SampleEditor.Core.Tools
+namespace Svg.Editor.Sample.Core.Tools
 {
     public class AuxiliaryLineTool : ToolBase
     {

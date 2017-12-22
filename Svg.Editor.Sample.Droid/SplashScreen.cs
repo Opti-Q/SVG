@@ -1,8 +1,9 @@
 using Android.App;
 using Android.Content.PM;
 using MvvmCross.Droid.Views;
+using Svg.Editor.Sample.Droid.Resources;
 
-namespace Svg.Droid.SampleEditor
+namespace Svg.Editor.Sample.Droid
 {
     [Activity(
         Label = "Svg.Droid.SampleEditor"

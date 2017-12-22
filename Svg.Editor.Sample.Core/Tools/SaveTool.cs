@@ -3,12 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using MvvmCross.Platform;
 using MvvmCross.Plugins.Email;
-using Svg.Editor;
 using Svg.Editor.Interfaces;
 using Svg.Editor.Tools;
 using Svg.Interfaces;
 
-namespace Svg.Droid.SampleEditor.Core.Tools
+namespace Svg.Editor.Sample.Core.Tools
 {
     public class SaveTool : ToolBase
     {

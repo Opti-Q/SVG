@@ -4,7 +4,7 @@ using MvvmCross.Plugins.PictureChooser;
 using Svg.Editor.Interfaces;
 using Svg.Interfaces;
 
-namespace Svg.Droid.SampleEditor.Core.Tools
+namespace Svg.Editor.Sample.Core.Tools
 {
     public class MvxPickImageService : IPickImageService
     {

@@ -1,6 +1,6 @@
 using MvvmCross.Platform.Plugins;
 
-namespace Svg.Droid.SampleEditor.Bootstrap
+namespace Svg.Editor.Sample.Droid.Bootstrap
 {
     public class EmailPluginBootstrap
         : MvxPluginBootstrapAction<MvvmCross.Plugins.Email.PluginLoader>

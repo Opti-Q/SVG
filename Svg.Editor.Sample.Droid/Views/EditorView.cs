@@ -1,22 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Android.App;
+using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Views;
-using System.Linq;
-using System.Reflection;
-using Android.Graphics.Drawables;
 using MvvmCross.Droid.Views;
-using Svg.Droid.SampleEditor.Core.ViewModels;
 using Svg.Editor.Interfaces;
+using Svg.Editor.Sample.Core.ViewModels;
+using Svg.Editor.Sample.Droid.Resources;
 using Svg.Editor.Services;
 using Svg.Editor.Views.Droid;
-using Svg.Interfaces;
-using Svg.Platform;
 using Path = System.IO.Path;
 
-namespace Svg.Droid.SampleEditor.Views
+namespace Svg.Editor.Sample.Droid.Views
 {
     [Activity(Label = "Edit SVG", Exported = true)]
     public class EditorView : MvxActivity

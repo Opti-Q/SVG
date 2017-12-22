@@ -5,13 +5,12 @@ using System.Text;
 using MvvmCross.Core.ViewModels;
 using MvvmCross.Platform;
 using MvvmCross.Plugins.File;
-using Svg.Droid.SampleEditor.Core.Tools;
-using Svg.Editor;
 using Svg.Editor.Interfaces;
+using Svg.Editor.Sample.Core.Tools;
 using Svg.Editor.Tools;
 using Svg.Interfaces;
 
-namespace Svg.Droid.SampleEditor.Core.ViewModels
+namespace Svg.Editor.Sample.Core.ViewModels
 {
 	public class EditorViewModel
 		: MvxViewModel

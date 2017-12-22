@@ -1,6 +1,6 @@
 using MvvmCross.Platform.IoC;
 
-namespace Svg.Droid.SampleEditor.Core
+namespace Svg.Editor.Sample.Core
 {
     public class App : MvvmCross.Core.ViewModels.MvxApplication
     {

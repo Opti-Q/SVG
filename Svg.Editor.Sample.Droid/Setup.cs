@@ -1,14 +1,12 @@
 using Android.Content;
-using MvvmCross.Droid.Platform;
 using MvvmCross.Core.ViewModels;
+using MvvmCross.Droid.Platform;
 using MvvmCross.Platform.Platform;
-using Svg.Editor;
 using Svg.Editor.Droid.Services;
-using Svg.Editor.Services;
+using Svg.Editor.Sample.Core;
 using Svg.Editor.Tools;
-using Svg.Interfaces;
 
-namespace Svg.Droid.SampleEditor
+namespace Svg.Editor.Sample.Droid
 {
     public class Setup : MvxAndroidSetup
     {
@@ -26,7 +24,7 @@ namespace Svg.Droid.SampleEditor
 
         protected override IMvxApplication CreateApp()
         {
-            return new Core.App();
+            return new App();
         }
 
         protected override IMvxTrace CreateDebugTrace()

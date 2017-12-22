@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Svg.Droid.SampleEditor.Core.Resources.svg;
+using Svg.Editor.Sample.Core.Resources.svg;
 using Svg.Editor.Tools;
 using Svg.Interfaces;
 using Svg.Platform;
 
-namespace Svg.Droid.SampleEditor.Core.Tools
+namespace Svg.Editor.Sample.Core.Tools
 {
     public class AddRandomItemTool : ToolBase
     {

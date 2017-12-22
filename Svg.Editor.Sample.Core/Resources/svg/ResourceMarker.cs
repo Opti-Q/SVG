@@ -1,4 +1,4 @@
-﻿namespace Svg.Droid.SampleEditor.Core.Resources.svg
+﻿namespace Svg.Editor.Sample.Core.Resources.svg
 {
 	internal class ResourceMarker
 	{
