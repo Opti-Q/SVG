@@ -44,7 +44,7 @@ namespace Svg.Editor.Tests
             await Canvas.EnsureInitialized();
             var colorTool = Canvas.Tools.OfType<ColorTool>().Single();
             var text = new SvgText("hello");
-            colorTool.SelectedColorIndex = Color.Create(colorTool.SelectableColors[2]);
+            colorTool.SelectedColorIndex = 2;
             var color = colorTool.SelectedColorIndex;
 
             // Preassert
@@ -71,8 +71,8 @@ namespace Svg.Editor.Tests
             await Canvas.AddItemInScreenCenter(rectangle);
 
             // Assert
-            var color = colorTool.SelectedColorIndex;
-            Assert.True(color.Equals(((SvgColourServer) rectangle.Stroke).Colour));
+            var color = colorTool.SelectableColors[0];
+            Assert.AreEqual(color, ((SvgColourServer) rectangle.Stroke).Colour);
         }
 
         [Test]
@@ -82,18 +82,17 @@ namespace Svg.Editor.Tests
 
             await Canvas.EnsureInitialized();
             var colorTool = Canvas.Tools.OfType<ColorTool>().Single();
-            var color = Color.Create(0, 255, 0);
             var text = new SvgText("hello");
 
             // Act
 
-            colorTool.SelectedColorIndex = color;
+            colorTool.SelectedColorIndex = 1;
             await Canvas.AddItemInScreenCenter(text);
 
             // Assert
 
-            Assert.True(colorTool.SelectedColorIndex.Equals(((SvgColourServer) text.Stroke).Colour));
-            Assert.True(colorTool.SelectedColorIndex.Equals(((SvgColourServer) text.Fill).Colour));
+            Assert.AreEqual(Color.Create(colorTool.SelectableColors[1]), ((SvgColourServer) text.Stroke).Colour);
+            Assert.AreEqual(Color.Create(colorTool.SelectableColors[1]), ((SvgColourServer) text.Fill).Colour);
         }
 
         [Test]
@@ -103,12 +102,11 @@ namespace Svg.Editor.Tests
 
             await Canvas.EnsureInitialized();
             var colorTool = Canvas.Tools.OfType<ColorTool>().Single();
-            var color = Color.Create(0, 255, 0);
             var rectangle = new SvgRectangle();
 
             // Act
 
-            colorTool.SelectedColorIndex = color;
+            colorTool.SelectedColorIndex = 1;
             await Canvas.AddItemInScreenCenter(rectangle);
 
             // Assert

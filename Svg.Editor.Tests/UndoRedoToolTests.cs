@@ -72,8 +72,8 @@ namespace Svg.Editor.Tests
             await Canvas.EnsureInitialized();
             var colorTool = Canvas.Tools.OfType<ColorTool>().Single();
             var text = new SvgText("hello");
-            colorTool.SelectedColorIndex = Color.Create(colorTool.SelectableColors[1]);
-            var color = colorTool.SelectedColorIndex;
+            colorTool.SelectedColorIndex = 1;
+            var color = Color.Create(colorTool.SelectableColors[1]);
             var oldStroke = text.Stroke?.ToString();
             var oldFill = text.Fill?.ToString();
             _textMock.F = (x, y) => null;
