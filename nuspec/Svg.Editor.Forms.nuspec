@@ -41,26 +41,26 @@
 	<!-- Insert below <metadata> element -->
     <files>			
 <!-- platform independent assemblies -->
-		<file src="..\Svg.Editor.Forms\bin\$configuration$\Svg.Editor.Forms.dll" target="lib\portable45-net45+win8+wpa81\Svg.Editor.Forms.dll" />
-		<file src="..\Svg.Editor.Forms\bin\$configuration$\Svg.Editor.Forms.pdb" target="lib\portable45-net45+win8+wpa81\Svg.Editor.Forms.pdb" />
+		<file src=".\Svg.Editor.Forms\bin\$configuration$\Svg.Editor.Forms.dll" target="lib\portable45-net45+win8+wpa81\Svg.Editor.Forms.dll" />
+		<file src=".\Svg.Editor.Forms\bin\$configuration$\Svg.Editor.Forms.pdb" target="lib\portable45-net45+win8+wpa81\Svg.Editor.Forms.pdb" />
 		<!-- iOS reference assemblies -->
-		<file src="..\Svg.Editor.Forms\bin\$configuration$\Svg.Editor.Forms.dll" target="lib\Xamarin.iOS10\Svg.Editor.Forms.dll" />
-		<file src="..\Svg.Editor.Forms\bin\$configuration$\Svg.Editor.Forms.pdb" target="lib\Xamarin.iOS10\Svg.Editor.Forms.pdb" />
-		<file src="..\Svg.Editor.Forms.iOS\bin\$configuration$\Svg.Editor.Forms.iOS.dll" target="lib\Xamarin.iOS10\Svg.Editor.Forms.iOS.dll" />
-		<file src="..\Svg.Editor.Forms.iOS\bin\$configuration$\Svg.Editor.Forms.iOS.pdb" target="lib\Xamarin.iOS10\Svg.Editor.Forms.iOS.pdb" />
+		<file src=".\Svg.Editor.Forms\bin\$configuration$\Svg.Editor.Forms.dll" target="lib\Xamarin.iOS10\Svg.Editor.Forms.dll" />
+		<file src=".\Svg.Editor.Forms\bin\$configuration$\Svg.Editor.Forms.pdb" target="lib\Xamarin.iOS10\Svg.Editor.Forms.pdb" />
+		<file src=".\Svg.Editor.Forms.iOS\bin\$configuration$\Svg.Editor.Forms.iOS.dll" target="lib\Xamarin.iOS10\Svg.Editor.Forms.iOS.dll" />
+		<file src=".\Svg.Editor.Forms.iOS\bin\$configuration$\Svg.Editor.Forms.iOS.pdb" target="lib\Xamarin.iOS10\Svg.Editor.Forms.iOS.pdb" />
 		<!-- Android reference assemblies -->
-		<file src="..\Svg.Editor.Forms\bin\$configuration$\Svg.Editor.Forms.dll" target="lib\MonoAndroid403\Svg.Editor.Forms.dll" />
-		<file src="..\Svg.Editor.Forms\bin\$configuration$\Svg.Editor.Forms.pdb" target="lib\MonoAndroid403\Svg.Editor.Forms.pdb" />
-		<file src="..\Svg.Editor.Forms.Droid\bin\$configuration$\Svg.Editor.Forms.Droid.dll" target="lib\MonoAndroid403\Svg.Editor.Forms.Droid.dll" />
-		<file src="..\Svg.Editor.Forms.Droid\bin\$configuration$\Svg.Editor.Forms.Droid.pdb" target="lib\MonoAndroid403\Svg.Editor.Forms.Droid.pdb" />
+		<file src=".\Svg.Editor.Forms\bin\$configuration$\Svg.Editor.Forms.dll" target="lib\MonoAndroid403\Svg.Editor.Forms.dll" />
+		<file src=".\Svg.Editor.Forms\bin\$configuration$\Svg.Editor.Forms.pdb" target="lib\MonoAndroid403\Svg.Editor.Forms.pdb" />
+		<file src=".\Svg.Editor.Forms.Droid\bin\$configuration$\Svg.Editor.Forms.Droid.dll" target="lib\MonoAndroid403\Svg.Editor.Forms.Droid.dll" />
+		<file src=".\Svg.Editor.Forms.Droid\bin\$configuration$\Svg.Editor.Forms.Droid.pdb" target="lib\MonoAndroid403\Svg.Editor.Forms.Droid.pdb" />
 		<!-- UWP reference assemblies -->
-		<file src="..\Svg.Editor.Forms\bin\$configuration$\Svg.Editor.Forms.dll" target="lib\UAP10\Svg.Editor.Forms.dll" />
-		<file src="..\Svg.Editor.Forms\bin\$configuration$\Svg.Editor.Forms.pdb" target="lib\UAP10\Svg.Editor.Forms.pdb" />
-		<file src="..\Svg.Editor.Forms.UWP\bin\$configuration$\Svg.Editor.Forms.UWP.dll" target="lib\UAP10\Svg.Editor.Forms.UWP.dll" />
-		<file src="..\Svg.Editor.Forms.UWP\bin\$configuration$\Svg.Editor.Forms.UWP.pdb" target="lib\UAP10\Svg.Editor.Forms.UWP.pdb" />
-		<file src="..\Svg.Editor.Forms\*.cs" target="src" />
-		<file src="..\Svg.Editor.Forms.iOS\*.cs" target="src" />
-		<file src="..\Svg.Editor.Forms.Droid\*.cs" target="src" />
-		<file src="..\Svg.Editor.Forms.UWP\*.cs" target="src" />
+		<file src=".\Svg.Editor.Forms\bin\$configuration$\Svg.Editor.Forms.dll" target="lib\UAP10\Svg.Editor.Forms.dll" />
+		<file src=".\Svg.Editor.Forms\bin\$configuration$\Svg.Editor.Forms.pdb" target="lib\UAP10\Svg.Editor.Forms.pdb" />
+		<file src=".\Svg.Editor.Forms.UWP\bin\$configuration$\Svg.Editor.Forms.UWP.dll" target="lib\UAP10\Svg.Editor.Forms.UWP.dll" />
+		<file src=".\Svg.Editor.Forms.UWP\bin\$configuration$\Svg.Editor.Forms.UWP.pdb" target="lib\UAP10\Svg.Editor.Forms.UWP.pdb" />
+		<file src=".\Svg.Editor.Forms\*.cs" target="src" />
+		<file src=".\Svg.Editor.Forms.iOS\*.cs" target="src" />
+		<file src=".\Svg.Editor.Forms.Droid\*.cs" target="src" />
+		<file src=".\Svg.Editor.Forms.UWP\*.cs" target="src" />
     </files>
 </package>

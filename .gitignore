@@ -30,3 +30,5 @@ packages/
 /Nuget/.vscode
 /Nuget/nuget.exe
 .vs
+tools
+build

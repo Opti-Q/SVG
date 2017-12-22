@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package 
+    xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>Svg.Editor</id>
+        <version>$version$</version>
+        <title>Editor for Portable SVG Rendering Library</title>
+        <authors>gentledepp,bruzkovsky</authors>
+        <owners>gentledepp,bruzkovsky</owners>
+        <licenseUrl>http://opensource.org/licenses/MS-PL.html</licenseUrl>
+        <projectUrl>https://github.com/gentledepp/SVG</projectUrl>
+        <requireLicenseAcceptance>true</requireLicenseAcceptance>
+        <description>
+        Editor functionality that works with the Svg library.
+	    </description>
+        <summary>Open source library to load/save and render SVG vector graphics.</summary>
+        <releaseNotes>bugfixes</releaseNotes>
+        <tags>svg, vector graphics, rendering, editor</tags>
+        <dependencies>                
+            <dependency id="Newtonsoft.Json" version="9.0.1" exclude="Build,Analyzers" />
+            <dependency id="SkiaSharp" version="[1.56.2,2.0.0)" exclude="Build,Analyzers" />
+            <dependency id="Svg" version="2.0.4" exclude="Build,Analyzers" />
+            <dependency id="System.Reactive" version="3.1.1" exclude="Build,Analyzers" />
+            <dependency id="System.Reactive.Core" version="3.1.1" exclude="Build,Analyzers" />
+            <dependency id="System.Reactive.Interfaces" version="3.1.1" exclude="Build,Analyzers" />
+            <dependency id="System.Reactive.Linq" version="3.1.1" exclude="Build,Analyzers" />
+            <dependency id="System.Reactive.PlatformServices" version="3.1.1" exclude="Build,Analyzers" />
+        </dependencies>
+    </metadata>
+    <files>        
+        <file src=".\Svg.Editor.Core\bin\$configuration$\Svg.Editor.dll" target="lib\portable45-net45+win8+wpa81\Svg.Editor.dll" />
+        <file src=".\Svg.Editor.Core\bin\$configuration$\Svg.Editor.pdb" target="lib\portable45-net45+win8+wpa81\Svg.Editor.pdb" />
+        <file src=".\Svg.Editor.Core\**\*.cs" target="src" />
+    </files>
+</package>

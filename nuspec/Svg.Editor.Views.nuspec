@@ -31,16 +31,16 @@
 	<!-- Insert below <metadata> element -->
     <files>        
 <!-- iOS reference assemblies -->
-		<file src="..\Svg.Editor.Views.iOS\bin\$configuration$\Svg.Editor.Views.dll" target="lib\Xamarin.iOS10\Svg.Editor.Views.dll" />
-		<file src="..\Svg.Editor.Views.iOS\bin\$configuration$\Svg.Editor.Views.pdb" target="lib\Xamarin.iOS10\Svg.Editor.Views.pdb" />
+		<file src=".\Svg.Editor.Views.iOS\bin\$configuration$\Svg.Editor.Views.dll" target="lib\Xamarin.iOS10\Svg.Editor.Views.dll" />
+		<file src=".\Svg.Editor.Views.iOS\bin\$configuration$\Svg.Editor.Views.pdb" target="lib\Xamarin.iOS10\Svg.Editor.Views.pdb" />
 		<!-- Android reference assemblies -->
-		<file src="..\Svg.Editor.Views.Droid\bin\$configuration$\Svg.Editor.Views.dll" target="lib\MonoAndroid403\Svg.Editor.Views.dll" />
-		<file src="..\Svg.Editor.Views.Droid\bin\$configuration$\Svg.Editor.Views.pdb" target="lib\MonoAndroid403\Svg.Editor.Views.pdb" />
+		<file src=".\Svg.Editor.Views.Droid\bin\$configuration$\Svg.Editor.Views.dll" target="lib\MonoAndroid403\Svg.Editor.Views.dll" />
+		<file src=".\Svg.Editor.Views.Droid\bin\$configuration$\Svg.Editor.Views.pdb" target="lib\MonoAndroid403\Svg.Editor.Views.pdb" />
 		<!-- UWP reference assemblies -->
-		<file src="..\Svg.Editor.Views.UWP\bin\$configuration$\Svg.Editor.Views.dll" target="lib\UAP10\Svg.Editor.Views.dll" />
-		<file src="..\Svg.Editor.Views.UWP\bin\$configuration$\Svg.Editor.Views.pdb" target="lib\UAP10\Svg.Editor.Views.pdb" />
-		<file src="..\Svg.Editor.Views.iOS\**\*.cs" target="src" />
-		<file src="..\Svg.Editor.Views.Droid\**\*.cs" target="src" />
-		<file src="..\Svg.Editor.Views.UWP\**\*.cs" target="src" />
+		<file src=".\Svg.Editor.Views.UWP\bin\$configuration$\Svg.Editor.Views.dll" target="lib\UAP10\Svg.Editor.Views.dll" />
+		<file src=".\Svg.Editor.Views.UWP\bin\$configuration$\Svg.Editor.Views.pdb" target="lib\UAP10\Svg.Editor.Views.pdb" />
+		<file src=".\Svg.Editor.Views.iOS\**\*.cs" target="src" />
+		<file src=".\Svg.Editor.Views.Droid\**\*.cs" target="src" />
+		<file src=".\Svg.Editor.Views.UWP\**\*.cs" target="src" />
     </files>
 </package>
