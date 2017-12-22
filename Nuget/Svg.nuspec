@@ -17,23 +17,30 @@
         <releaseNotes>merged github pull requests</releaseNotes>
         <tags>svg, vector graphics, rendering</tags>
         <dependencies>
-			<dependency id="SkiaSharp" version="1.56.2" exclude="Build,Analyzers" />
+			<dependency id="SkiaSharp" version="[1.56.2,2.0.0)" exclude="Build,Analyzers" />
 		</dependencies>
     </metadata>
-    <files>
-		<!-- platform independent assemblies --> 
-        <file src="..\Svg.Core\bin\Release\Svg.dll" target="lib\portable45-net45+win8+wpa81\Svg.dll" />
-		
+    <files>		
+        <!-- platform independent assemblies -->
+        <file src="..\Svg.Core\bin\$configuration$\Svg.pdb" target="lib\portable45-net45+win8+wpa81\Svg.pdb" />
+        <file src="..\Svg.Core\bin\$configuration$\Svg.dll" target="lib\portable45-net45+win8+wpa81\Svg.dll" />
         <!-- iOS reference assemblies -->
-        <file src="..\Svg.iOS\bin\Release\Svg.dll" target="lib\Xamarin.iOS10\Svg.dll" />
-		
+        <file src="..\Svg.iOS\bin\$configuration$\Svg.pdb" target="lib\Xamarin.iOS10\Svg.pdb" />
+        <file src="..\Svg.iOS\bin\$configuration$\Svg.dll" target="lib\Xamarin.iOS10\Svg.dll" />
         <!-- Android reference assemblies -->
-        <file src="..\Svg.Droid\bin\Release\Svg.dll" target="lib\MonoAndroid403\Svg.dll" />
-		
+        <file src="..\Svg.Droid\bin\$configuration$\Svg.pdb" target="lib\MonoAndroid403\Svg.pdb" />
+        <file src="..\Svg.Droid\bin\$configuration$\Svg.dll" target="lib\MonoAndroid403\Svg.dll" />
         <!-- UWP reference assemblies -->
-        <file src="..\Svg.UWP\bin\Release\Svg.dll" target="lib\UAP10\Svg.dll" />
-		
+        <file src="..\Svg.UWP\bin\$configuration$\Svg.pdb" target="lib\UAP10\Svg.pdb" />
+        <file src="..\Svg.UWP\bin\$configuration$\Svg.dll" target="lib\UAP10\Svg.dll" />
         <!-- Windows reference assemblies -->
-        <file src="..\Svg.Win\bin\Release\Svg.dll" target="lib\net452\Svg.dll" />
+        <file src="..\Svg.Win\bin\x86\$configuration$\Svg.dll" target="lib\net452\Svg.dll" />
+        <file src="..\Svg.Win\bin\x86\$configuration$\Svg.dll" target="lib\net452\Svg.pdb" />
+        <file src="..\Svg.Shared\**\*.cs" target="src" />
+        <file src="..\Svg.Platform.Shared\**\*.cs" target="src" />
+        <file src="..\Svg.UWP\**\*.cs" target="src" />
+        <file src="..\Svg.Droid\**\*.cs" target="src" />
+        <file src="..\Svg.iOS\**\*.cs" target="src" />
+        <file src="..\Svg.Win\**\*.cs" target="src" />
     </files>
 </package>
