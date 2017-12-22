@@ -5,8 +5,7 @@
     "SkiaSharp": "1.56.2",
     "SkiaSharp.Views.Forms": "1.56.2",
     "Toasts.Forms.Plugin": "3.1.4",
-    "Xamarin.Android.Support.v4": "22.2.1.0",
-    "Xamarin.Forms": "2.3.4.211-pre3"
+    "Xamarin.Forms": "2.3.4.270"
   },
   "frameworks": {
     "MonoAndroid,Version=v7.1": {}
