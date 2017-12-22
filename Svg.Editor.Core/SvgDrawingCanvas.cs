@@ -92,14 +92,7 @@ namespace Svg.Editor
 			get
 			{
 				if (_toolCommands == null)
-				{
-					_toolCommands = new ObservableCollection<IEnumerable<IToolCommand>>();
-					var cmds = GetCommands();
-					foreach (var cmd in cmds)
-					{
-						_toolCommands.Add(cmd);
-					}
-				}
+					ResetToolCommands();
 				return _toolCommands;
 			}
 		}
@@ -934,7 +927,7 @@ namespace Svg.Editor
 		private void ResetToolCommands()
 		{
 			if (_toolCommands == null)
-				return;
+				_toolCommands = new ObservableCollection<IEnumerable<IToolCommand>>();
 
 			lock (_lockObject)
 			{
