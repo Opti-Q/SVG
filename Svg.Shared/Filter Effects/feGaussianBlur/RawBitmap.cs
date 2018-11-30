@@ -34,7 +34,6 @@ namespace Svg.FilterEffects
 
         public void Dispose()
         {
-            _originBitmap.UnlockBits(_bitmapData);
         }
 
         #endregion

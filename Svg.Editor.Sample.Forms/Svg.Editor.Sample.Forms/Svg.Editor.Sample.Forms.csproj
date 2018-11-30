@@ -46,6 +46,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainViewModel.cs" />
+    <Compile Include="FormsPickImageService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\svg\ResourceMarker.cs" />
     <Compile Include="Services\ColorInputService.cs" />

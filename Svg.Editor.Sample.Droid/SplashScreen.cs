@@ -1,7 +1,6 @@
 using Android.App;
 using Android.Content.PM;
 using MvvmCross.Droid.Views;
-using Svg.Editor.Sample.Droid.Resources;
 
 namespace Svg.Editor.Sample.Droid
 {

@@ -17,7 +17,6 @@ namespace Svg
         }
 
         public abstract BitmapData LockBits(RectangleF rectangle, ImageLockMode lockmode, PixelFormat pixelFormat);
-        public abstract void UnlockBits(BitmapData bitmapData);
         public abstract void SavePng(Stream stream, int quality = 76);
         public abstract void Dispose();
 

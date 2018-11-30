@@ -9,7 +9,6 @@ using Android.Views;
 using MvvmCross.Droid.Views;
 using Svg.Editor.Interfaces;
 using Svg.Editor.Sample.Core.ViewModels;
-using Svg.Editor.Sample.Droid.Resources;
 using Svg.Editor.Services;
 using Svg.Editor.Views.Droid;
 using Path = System.IO.Path;

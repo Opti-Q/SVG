@@ -1,12 +1,12 @@
 ﻿{
   "dependencies": {
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.3",
-    "SkiaSharp": "1.56.2",
+    "SkiaSharp": "1.60.0",
     "xunit": "2.2.0",
     "xunit.runner.visualstudio": "2.2.0"
   },
   "frameworks": {
-    "uap10.0": {}
+    "uap10.0.10240": {}
   },
   "runtimes": {
     "win10-arm": {},

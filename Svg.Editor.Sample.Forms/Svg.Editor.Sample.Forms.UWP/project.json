@@ -2,9 +2,9 @@
   "dependencies": {
     "Acr.UserDialogs": "6.3.9",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.3",
-    "SkiaSharp": "1.56.2",
-    "SkiaSharp.Views.Forms": "1.56.2",
-    "Svg": "2.0.4",
+    "SkiaSharp": "1.60.0",
+    "SkiaSharp.Views.Forms": "1.60.0",
+    "Svg": "2.2.0-pre.1",
     "System.Reactive": "3.1.1",
     "System.Reactive.Core": "3.1.1",
     "System.Reactive.Interfaces": "3.1.1",
@@ -13,7 +13,7 @@
     "System.Xml.ReaderWriter": "4.3.0"
   },
   "frameworks": {
-    "uap10.0": {}
+    "uap10.0.10586": {}
   },
   "runtimes": {
     "win10-arm": {},

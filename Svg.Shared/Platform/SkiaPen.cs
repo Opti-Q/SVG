@@ -82,10 +82,10 @@ namespace Svg.Platform
                         _brush.Paint.StrokeJoin = SKStrokeJoin.Bevel;
                         break;
                     case LineJoin.Miter:
-                        _brush.Paint.StrokeJoin = SKStrokeJoin.Mitter;
+                        _brush.Paint.StrokeJoin = SKStrokeJoin.Miter;
                         break;
                     case LineJoin.MiterClipped:
-                        _brush.Paint.StrokeJoin = SKStrokeJoin.Mitter;
+                        _brush.Paint.StrokeJoin = SKStrokeJoin.Miter;
                         break;
                     case LineJoin.Round:
                         _brush.Paint.StrokeJoin = SKStrokeJoin.Round;

@@ -23,6 +23,7 @@ namespace Svg.Editor.Sample.Forms
             SvgEngine.Register<IMarkerOptionsInputService>(() => new MarkerOptionsInputService());
             SvgEngine.Register<IStrokeStyleOptionsInputService>(() => new StrokeStyleOptionsInputService());
             SvgEngine.Register<ITextInputService>(() => new TextInputService());
+			SvgEngine.Register<IPickImageService>(() => new FormsPickImageService());
 
             SvgEngine.Resolve<ISvgCachingService>().Clear();
 
@@ -83,7 +84,6 @@ namespace Svg.Editor.Sample.Forms
 
             var placeAsBackgroundToolProperties = new Dictionary<string, object>
             {
-                //{ PlaceAsBackgroundTool.ImagePathKey, path },
                 { PlaceAsBackgroundTool.ChooseBackgroundEnabledKey, true }
             };
 
@@ -98,7 +98,8 @@ namespace Svg.Editor.Sample.Forms
             #endregion
 
 	        DrawingCanvas = new SvgDrawingCanvas();
-	        DrawingCanvas.LoadTools(() => new GridTool(gridToolProperties, undoRedoService),
+	        DrawingCanvas.LoadTools(
+		        () => new GridTool(gridToolProperties, undoRedoService),
 		        () => new MoveTool(undoRedoService), () => new PanTool(panToolProperties),
 		        () => new RotationTool(rotationToolProperties, undoRedoService), () => new ZoomTool(zoomToolProperties),
 		        () => new SelectionTool(undoRedoService), () => new TextTool(textToolProperties, undoRedoService),

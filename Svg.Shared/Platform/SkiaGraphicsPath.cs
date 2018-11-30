@@ -206,7 +206,7 @@ namespace Svg.Platform
             _bounds = null;
             var ap = (SkiaGraphicsPath)childPath;
             
-            var mode = connect ? SKPath.AddMode.Extend : SKPath.AddMode.Append;
+            var mode = connect ? SKPathAddMode.Extend : SKPathAddMode.Append;
             Path.AddPath(ap.Path, mode);
 
             _points.AddRange(ap._points);

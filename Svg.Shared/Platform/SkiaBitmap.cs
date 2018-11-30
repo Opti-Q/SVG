@@ -47,16 +47,11 @@ namespace Svg.Platform
             throw new NotImplementedException();
         }
 
-        public override void UnlockBits(BitmapData bitmapData)
-        {
-            _image.UnlockPixels();
-        }
-
         public override void SavePng(Stream stream, int quality = 76)
         {
             using (var img = SKImage.FromBitmap(_image))
             {
-                var data = img.Encode(SKImageEncodeFormat.Png, quality: quality);
+                var data = img.Encode(SKEncodedImageFormat.Png, quality);
                 data.SaveTo(stream);
             }
         }
@@ -65,7 +60,7 @@ namespace Svg.Platform
         {
             using (var img = SKImage.FromBitmap(_image))
             {
-                var data = img.Encode(SKImageEncodeFormat.Jpeg, quality: quality);
+                var data = img.Encode(SKEncodedImageFormat.Jpeg, quality);
                 data.SaveTo(stream);
             }
         }

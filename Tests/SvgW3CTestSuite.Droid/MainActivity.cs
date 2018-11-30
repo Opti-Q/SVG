@@ -39,7 +39,7 @@ namespace SvgW3CTestSuite.Droid
                 //nunit.AddTestAssembly(typeof(MyTests).Assembly);
 
                 // Do you want to automatically run tests when the app starts?
-                nunit.AutoRun = false;
+                nunit.Options.AutoRun = false;
 
                 LoadApplication(nunit);
             }

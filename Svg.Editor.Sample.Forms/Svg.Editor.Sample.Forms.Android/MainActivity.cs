@@ -2,6 +2,7 @@
 using Android.App;
 using Android.Content.PM;
 using Android.OS;
+using Plugin.CurrentActivity;
 using Svg.Editor.Forms;
 
 namespace Svg.Editor.Sample.Forms.Droid
@@ -19,9 +20,15 @@ namespace Svg.Editor.Sample.Forms.Droid
             Xamarin.Forms.Forms.Init(this, bundle);
             UserDialogs.Init(() => (Activity) this);
             SvgEditorForms.Init();
+	        CrossCurrentActivity.Current.Init(this, bundle);
 
             LoadApplication(new App());
         }
+
+	    public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Android.Content.PM.Permission[] grantResults)
+	    {
+		    Plugin.Permissions.PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+	    }
     }
 }
 
