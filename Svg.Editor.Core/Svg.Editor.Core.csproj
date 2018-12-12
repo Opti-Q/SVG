@@ -59,6 +59,8 @@
     <Compile Include="Tools\ArrangeTool.cs" />
     <Compile Include="Tools\EllipseTool.cs" />
     <Compile Include="Tools\PlaceAsBackgroundTool.cs" />
+    <Compile Include="Tools\RectangleTool.cs" />
+    <Compile Include="Tools\ShapeToolBase.cs" />
     <Compile Include="UndoRedo\CompositeCommand.cs" />
     <Compile Include="UndoRedo\UndoableActionCommand.cs" />
     <Compile Include="Events\MoveEvent.cs" />
@@ -194,6 +196,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\svg\ic_zoom_out.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\svg\ic_crop_square.svg" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

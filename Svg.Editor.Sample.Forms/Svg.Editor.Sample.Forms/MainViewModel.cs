@@ -100,15 +100,23 @@ namespace Svg.Editor.Sample.Forms
 	        DrawingCanvas = new SvgDrawingCanvas();
 	        DrawingCanvas.LoadTools(
 		        () => new GridTool(gridToolProperties, undoRedoService),
-		        () => new MoveTool(undoRedoService), () => new PanTool(panToolProperties),
-		        () => new RotationTool(rotationToolProperties, undoRedoService), () => new ZoomTool(zoomToolProperties),
-		        () => new SelectionTool(undoRedoService), () => new TextTool(textToolProperties, undoRedoService),
-		        () => new LineTool(lineToolProperties, undoRedoService), () => new EllipseTool(null, undoRedoService),
+		        () => new MoveTool(undoRedoService),
+		        () => new PanTool(panToolProperties),
+		        () => new RotationTool(rotationToolProperties, undoRedoService),
+		        () => new ZoomTool(zoomToolProperties),
+		        () => new SelectionTool(undoRedoService),
+		        () => new TextTool(textToolProperties, undoRedoService),
+		        () => new LineTool(lineToolProperties, undoRedoService),
+		        () => new EllipseTool(null, undoRedoService),
+		        () => new RectangleTool(null, undoRedoService),
 		        () => new FreeDrawingTool(freeDrawToolProperties, undoRedoService),
 		        () => new ColorTool(colorToolProperties, undoRedoService),
 		        () => new StrokeStyleTool(strokeStyleToolProperties, undoRedoService),
-		        () => new UndoRedoTool(undoRedoService), () => new ArrangeTool(undoRedoService), () => new SaveTool(false),
-		        () => new PlaceAsBackgroundTool(placeAsBackgroundToolProperties, undoRedoService), () => new AddItemTool());
+		        () => new UndoRedoTool(undoRedoService),
+		        () => new ArrangeTool(undoRedoService),
+		        () => new SaveTool(false),
+		        () => new PlaceAsBackgroundTool(placeAsBackgroundToolProperties, undoRedoService),
+		        () => new AddItemTool());
         }
 
         public SvgDrawingCanvas DrawingCanvas { get; set; }

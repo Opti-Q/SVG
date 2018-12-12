@@ -146,8 +146,7 @@ namespace Svg.Editor.Tools
 		{
 			var visualElement = element as SvgVisualElement;
 
-			if (visualElement == null || !(visualElement is SvgLine || visualElement is SvgPath ||
-			                                                       visualElement is SvgEllipse))
+			if (visualElement == null || !CanSetStrokeStyle(visualElement))
 				return;
 
 			styleOptions = styleOptions ?? new StrokeStyleOptions
@@ -175,6 +174,13 @@ namespace Svg.Editor.Tools
 					visualElement.StrokeWidth = formerStrokeWidth;
 				}
 			), hasOwnUndoRedoScope: false);
+		}
+
+		private static bool CanSetStrokeStyle(SvgVisualElement visualElement)
+		{
+			return visualElement is SvgLine || visualElement is SvgPath ||
+			       visualElement is SvgEllipse || visualElement is SvgRectangle ||
+			       visualElement is SvgPolygon;
 		}
 
 		#endregion
