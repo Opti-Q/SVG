@@ -9,7 +9,6 @@ namespace Svg.Editor.Sample.Forms.UWP
             InitializeComponent();
 
             SvgPlatform.Init();
-            SvgEditorForms.Init();
 
             LoadApplication(new Forms.App());
         }
