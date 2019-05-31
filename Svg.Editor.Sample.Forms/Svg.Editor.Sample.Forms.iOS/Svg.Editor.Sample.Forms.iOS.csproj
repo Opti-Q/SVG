@@ -101,6 +101,10 @@
       <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
       <Name>Svg.Editor.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Svg.Editor.Forms\Svg.Editor.Forms.csproj">
+      <Project>{2C90EE6D-52E3-4BA0-92D4-8162800F698D}</Project>
+      <Name>Svg.Editor.Forms</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Svg.Editor.Sample.Forms\Svg.Editor.Sample.Forms.csproj">
       <Project>{f2b871b8-829f-4ef4-99a4-ab2fc9eeda5e}</Project>
       <Name>Svg.Editor.Sample.Forms</Name>

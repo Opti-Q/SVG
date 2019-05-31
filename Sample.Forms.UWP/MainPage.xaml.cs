@@ -1,6 +1,4 @@
-﻿using Windows.UI.Xaml.Controls;
-using Svg;
-using Svg.Editor;
+﻿using Svg.Editor.Forms;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -15,8 +13,7 @@ namespace Sample.Forms.UWP
         {
             this.InitializeComponent();
 
-            SvgPlatform.Init();
-            SvgEditor.Init();
+            SvgEditorForms.Init();
 
             LoadApplication(new Svg.Editor.Sample.Forms.App());
         }
