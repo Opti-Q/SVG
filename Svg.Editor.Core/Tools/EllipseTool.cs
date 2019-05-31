@@ -36,7 +36,7 @@ namespace Svg.Editor.Tools
 		    var drawnRectangle = RectangleF.FromPoints(new[] {canvasEnd, AnchorPosition});
 
 		    // resize/move ellipse depending on where the pointer was put down
-		    switch (_movementHandle)
+		    switch (Handle)
 		    {
 			    case MovementHandle.TopRight:
 			    case MovementHandle.BottomLeft:
@@ -81,9 +81,9 @@ namespace Svg.Editor.Tools
 				    break;
 
 			    case MovementHandle.None:
-				    throw new ArgumentOutOfRangeException(nameof(_movementHandle), "Cannot be none at this point.");
+				    throw new ArgumentOutOfRangeException(nameof(Handle), "Cannot be none at this point.");
 			    default:
-				    throw new ArgumentOutOfRangeException(nameof(_movementHandle));
+				    throw new ArgumentOutOfRangeException(nameof(Handle));
 		    }
 	    }
 
