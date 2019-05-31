@@ -24,7 +24,6 @@ namespace Svg.Editor.Forms
 
                 SvgPlatform.Init();
                 SvgEditor.Init();
-                SvgEditorViews.Init();
 
 
                 _initialized = true;

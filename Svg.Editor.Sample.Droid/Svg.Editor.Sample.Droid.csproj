@@ -553,10 +553,6 @@
       <Project>{8739CED3-5844-4F18-B2E3-C99036B31B33}</Project>
       <Name>Svg.Editor.Sample.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Svg.Editor.Views.Droid\Svg.Editor.Views.Droid.csproj">
-      <Project>{EC21B42F-DA0D-4E7B-A2F4-757ABC917E07}</Project>
-      <Name>Svg.Editor.Views.Droid</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\" />

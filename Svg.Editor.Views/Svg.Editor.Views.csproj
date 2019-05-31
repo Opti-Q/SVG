@@ -1,10 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Project Sdk="MSBuild.Sdk.Extras/2.0.24">
+
   <PropertyGroup>
-    <RootNamespace>Svg.Editor.Forms</RootNamespace>
-    <AssemblyName>Svg.Editor.Forms</AssemblyName>
-    <DefaultLanguage>en-US</DefaultLanguage>
     <TargetFrameworks>netstandard2.0;MonoAndroid81;Xamarin.iOS10;uap10.0.16299</TargetFrameworks>
   </PropertyGroup>
 
@@ -31,15 +29,13 @@
       <ExcludeAssets>all</ExcludeAssets>
     </PackageReference>
   </ItemGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="SkiaSharp.Views.Forms" Version="1.60.0" />
-    <PackageReference Include="Svg" Version="2.2.0-pre.2" />
-    <PackageReference Include="System.Reactive" Version="4.0.0" />
-    <PackageReference Include="Xamarin.Forms" Version="2.5.0.77107" />
-  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Svg.Editor.Core\Svg.Editor.Core.csproj" />
-    <ProjectReference Include="..\Svg.Editor.Views\Svg.Editor.Views.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SkiaSharp.Views" Version="1.60.0" />
+  </ItemGroup>
+
 </Project>
