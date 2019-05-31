@@ -7,7 +7,7 @@ using Svg.Editor.Interfaces;
 using Svg.Editor.Services;
 using Svg.Interfaces;
 
-namespace Svg.Editor.Tests
+namespace Svg.Editor.Core.Test
 {
     public abstract class SvgDrawingCanvasTestBase
     {

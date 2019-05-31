@@ -4,12 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Svg.Editor.Interfaces;
-using Svg.Editor.Services;
 using Svg.Editor.Tools;
 using Svg.Editor.UndoRedo;
 using Svg.Interfaces;
 
-namespace Svg.Editor.Tests
+namespace Svg.Editor.Core.Test
 {
     [TestFixture]
     public class ColorToolTests : SvgDrawingCanvasTestBase

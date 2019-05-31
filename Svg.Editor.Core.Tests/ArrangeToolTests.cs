@@ -1,12 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Svg.Editor.Interfaces;
-using Svg.Editor.Services;
 using Svg.Editor.Tools;
 
-namespace Svg.Editor.Tests
+namespace Svg.Editor.Core.Test
 {
     [TestFixture]
     public class ArrangeToolTests : SvgDrawingCanvasTestBase
