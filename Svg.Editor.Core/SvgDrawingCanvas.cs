@@ -453,10 +453,11 @@ namespace Svg.Editor
 		/// <param name="p"></param>
 		/// <returns></returns>
 		public RectangleF GetPointerRectangle(PointF p)
-		{
-			var halfFingerThickness = 10 / ZoomFactor;
-			return RectangleF.Create(p.X - halfFingerThickness, p.Y - halfFingerThickness, halfFingerThickness * 2,
-				halfFingerThickness * 2); // "10 pixel fat finger"
+        {
+            var halfFingerThickness = 10; // "10 pixel fat finger"
+            var location = PointF.Create(p.X - halfFingerThickness, p.Y - halfFingerThickness);
+            var size = SizeF.Create(halfFingerThickness * 2, halfFingerThickness * 2);
+            return RectangleF.Create(location, size);
 		}
 
 		/// <summary>

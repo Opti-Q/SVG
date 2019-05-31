@@ -11,7 +11,7 @@ namespace Svg.Editor.Tools
     {
         public override int InputOrder => 300;
 
-        public RectangleTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Ellipse", properties, undoRedoService)
+        public RectangleTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Rectangle", properties, undoRedoService)
         {
             IconName = "ic_crop_square.svg";
         }

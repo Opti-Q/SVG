@@ -112,8 +112,8 @@ namespace Svg.Editor.Tools
 
             if (!IsActive) return;
 
-            CurrentShape = Canvas.GetElementsUnder<T>(Canvas.GetPointerRectangle(tap.Position),
-                        SelectionType.Intersect).FirstOrDefault();
+            var pointerRect = Canvas.GetPointerRectangle(tap.Position);
+            CurrentShape = Canvas.GetElementsUnder<T>(pointerRect, SelectionType.Intersect).FirstOrDefault();
 
             if (CurrentShape != null)
             {
@@ -141,7 +141,7 @@ namespace Svg.Editor.Tools
 
             if (Canvas.ActiveTool.ToolType != ToolType.Select) return;
 
-            var ellipse = Canvas.GetElementsUnderPointer<SvgEllipse>(doubleTap.Position).FirstOrDefault();
+            var ellipse = Canvas.GetElementsUnderPointer<T>(doubleTap.Position).FirstOrDefault();
             if (ellipse != null)
             {
                 Canvas.SelectedElements.Clear();
