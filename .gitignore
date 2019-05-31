@@ -1,8 +1,8 @@
 
-Samples/SVGViewer/SVGViewer.OpenCover.Settings
+/Samples/SVGViewer/SVGViewer.OpenCover.Settings
 *.cache
 *.trx
-Source/TestResults/
+/Source/TestResults/
 /Tests/IsoTestRunnder.Droid/Assets
 bin/
 obj/
@@ -10,7 +10,6 @@ obj/
 *.pdb
 *.mdb
 *.suo
-Assets/
 *.user
 *.sln.DotSettings
 *.user
@@ -30,5 +29,5 @@ packages/
 /Nuget/.vscode
 /Nuget/nuget.exe
 .vs
-tools
-build
+/tools
+/build
