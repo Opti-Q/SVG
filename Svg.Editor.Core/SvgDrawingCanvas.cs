@@ -201,7 +201,7 @@ namespace Svg.Editor
 			_tools = new ObservableCollection<ITool>();
 			_tools.CollectionChanged += OnToolsChanged;
 
-			_propertyChangedSubject.Throttle(TimeSpan.FromMilliseconds(250)).Subscribe(OnPropertyChanged);
+			_propertyChangedSubject.Subscribe(OnPropertyChanged);
 		}
 
 		public void LoadTools(params Func<ITool>[] tools)
