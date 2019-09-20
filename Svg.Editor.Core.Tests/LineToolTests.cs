@@ -18,25 +18,21 @@ namespace Svg.Editor.Core.Test
         [SetUp]
         protected override void SetupOverride()
         {
-
-            SvgEngine.Register<ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
-            {
-                () => new SelectionTool(SvgEngine.Resolve<IUndoRedoService>()), 
+            Canvas.LoadTools(
+                () => new SelectionTool(SvgEngine.Resolve<IUndoRedoService>()),
                 () => new GridTool(new Dictionary<string, object>
                 {
-                    { GridTool.AlphaAngleKey, 30.0f },
-                    { GridTool.StepSizeYKey, 20.0f },
-                    { GridTool.IsSnappingEnabledKey, true }
+                    {GridTool.AlphaAngleKey, 30.0f},
+                    {GridTool.StepSizeYKey, 20.0f},
+                    {GridTool.IsSnappingEnabledKey, true}
                 }, SvgEngine.Resolve<IUndoRedoService>()),
-
                 () => new LineTool(new Dictionary<string, object>
                 {
-                    { LineTool.MarkerStartIdsKey, new [] { "none", "arrowStart", "circle" } },
-                    { LineTool.MarkerStartNamesKey, new [] { "---", "<--", "O--" } },
-                    { LineTool.MarkerEndIdsKey, new [] { "none", "arrowEnd", "circle" } },
-                    { LineTool.MarkerEndNamesKey, new [] { "---", "-->", "--O" } }
-                }, SvgEngine.Resolve<IUndoRedoService>()),
-            }));
+                    {LineTool.MarkerStartIdsKey, new[] {"none", "arrowStart", "circle"}},
+                    {LineTool.MarkerStartNamesKey, new[] {"---", "<--", "O--"}},
+                    {LineTool.MarkerEndIdsKey, new[] {"none", "arrowEnd", "circle"}},
+                    {LineTool.MarkerEndNamesKey, new[] {"---", "-->", "--O"}}
+                }, SvgEngine.Resolve<IUndoRedoService>()));
 
         }
 

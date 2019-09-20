@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Reactive.Testing;
 using NUnit.Framework;
 using Svg.Editor.Events;
+using Svg.Editor.Interfaces;
 using Svg.Editor.Tools;
 using Svg.Interfaces;
 
@@ -12,6 +13,11 @@ namespace Svg.Editor.Core.Test
     [TestFixture]
     public class SelectionToolTests : SvgDrawingCanvasTestBase
     {
+        protected override void SetupOverride()
+        {
+            Canvas.LoadTools(() => new SelectionTool(SvgEngine.Resolve<IUndoRedoService>()));
+        }
+
         [Test]
         public async Task IfUserTapsCanvas_AndTapPositionIntersectsWithElement_SelectsElement()
         {

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Svg.Editor.Interfaces;
-using Svg.Editor.Services;
 using Svg.Editor.Tools;
 using Svg.Interfaces;
 
@@ -15,15 +13,9 @@ namespace Svg.Editor.Core.Test
         [SetUp]
         protected override void SetupOverride()
         {
-
-            SvgEngine.Register<ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
-            {
+            Canvas.LoadTools(
                 () => new SelectionTool(SvgEngine.Resolve<IUndoRedoService>()),
-
-                () => new MoveTool(SvgEngine.Resolve<IUndoRedoService>()), 
-            }));
-
-
+                () => new MoveTool(SvgEngine.Resolve<IUndoRedoService>()));
         }
 
         [Test]

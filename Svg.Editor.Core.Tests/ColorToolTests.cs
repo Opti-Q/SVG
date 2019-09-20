@@ -107,7 +107,8 @@ namespace Svg.Editor.Core.Test
 
             // Assert
 
-            Assert.True(colorTool.SelectedColorIndex.Equals(((SvgColourServer) rectangle.Stroke).Colour.ToString()));
+            Assert.AreEqual(((SvgColourServer) rectangle.Stroke).Colour.ToString(),
+                colorTool.SelectableColors[colorTool.SelectedColorIndex]);
         }
 
         [Test]

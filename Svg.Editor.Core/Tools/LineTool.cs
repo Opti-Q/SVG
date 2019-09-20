@@ -433,8 +433,8 @@ namespace Svg.Editor.Tools
 				StartY = new SvgUnit(SvgUnitType.Pixel, relativeStart.Y),
 				EndX = new SvgUnit(SvgUnitType.Pixel, relativeStart.X),
 				EndY = new SvgUnit(SvgUnitType.Pixel, relativeStart.Y),
-				MarkerStart = CreateUriFromId(MarkerStartIds[SelectedMarkerStartIndex]),
-				MarkerEnd = CreateUriFromId(MarkerEndIds[SelectedMarkerEndIndex])
+				MarkerStart = MarkerStartIds.Any() ? CreateUriFromId(MarkerStartIds[SelectedMarkerStartIndex]) : null,
+				MarkerEnd = MarkerEndIds.Any() ? CreateUriFromId(MarkerEndIds[SelectedMarkerEndIndex]) : null
 			};
 
 			return line;

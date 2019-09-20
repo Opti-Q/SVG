@@ -21,15 +21,13 @@ namespace Svg.Editor.Core.Test
 
         protected override void SetupOverride()
         {
-            SvgEngine.Register<ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
-            {
+            Canvas.LoadTools(
                 () => new TextTool(new Dictionary<string, object>
                 {
-                    { TextTool.FontSizesKey, new [] { 12f, 16f, 20f, 24f, 36f, 48f } },
-                    { TextTool.FontSizeNamesKey, new [] { "12px", "16px", "20px", "24px", "36px", "48px" } },
-                    { TextTool.SelectedFontSizeIndexKey, 1 },
-                }, SvgEngine.Resolve<IUndoRedoService>()),
-            }));
+                    {TextTool.FontSizesKey, new[] {12f, 16f, 20f, 24f, 36f, 48f}},
+                    {TextTool.FontSizeNamesKey, new[] {"12px", "16px", "20px", "24px", "36px", "48px"}},
+                    {TextTool.SelectedFontSizeIndexKey, 1},
+                }, SvgEngine.Resolve<IUndoRedoService>()));
 
             // register mock text input service
             _textMock = new MockTextInputService();

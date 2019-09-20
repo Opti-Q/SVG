@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Svg.Editor.Interfaces;
-using Svg.Editor.Services;
 using Svg.Editor.Tools;
 using Svg.Interfaces;
 
@@ -14,26 +13,25 @@ namespace Svg.Editor.Core.Test
     public class StrokeStyleToolTests : SvgDrawingCanvasTestBase
     {
         private MockStrokeStyleOptionsInputService _mockStrokeStyle;
+
         protected override void SetupOverride()
         {
-
-            SvgEngine.Register<ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
-            {
+            Canvas.LoadTools(
                 () => new SelectionTool(SvgEngine.Resolve<IUndoRedoService>()),
-
                 () => new StrokeStyleTool(new Dictionary<string, object>
                 {
-                    { StrokeStyleTool.StrokeDashesKey, new[] {"none", "3 3", "17 17", "34 34"} },
-                    { StrokeStyleTool.StrokeDashNamesKey, new [] { "----------", "- - - - - -", "--  --  --", "---   ---" } },
-                    { StrokeStyleTool.StrokeWidthsKey, new [] { 2, 6, 12, 24 } },
-                    { StrokeStyleTool.StrokeWidthNamesKey, new [] { "thin", "normal", "thick", "ultra-thick" } }
-                }, SvgEngine.Resolve<IUndoRedoService>()),
-            }));
+                    {StrokeStyleTool.StrokeDashesKey, new[] {"none", "3 3", "17 17", "34 34"}},
+                    {
+                        StrokeStyleTool.StrokeDashNamesKey,
+                        new[] {"----------", "- - - - - -", "--  --  --", "---   ---"}
+                    },
+                    {StrokeStyleTool.StrokeWidthsKey, new[] {2, 6, 12, 24}},
+                    {StrokeStyleTool.StrokeWidthNamesKey, new[] {"thin", "normal", "thick", "ultra-thick"}}
+                }, SvgEngine.Resolve<IUndoRedoService>()));
 
             // register stroke style options input service
             _mockStrokeStyle = new MockStrokeStyleOptionsInputService();
             SvgEngine.Register<IStrokeStyleOptionsInputService>(() => _mockStrokeStyle);
-            
         }
 
         [Test]

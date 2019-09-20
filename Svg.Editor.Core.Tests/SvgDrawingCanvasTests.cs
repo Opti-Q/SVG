@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Svg.Editor.Interfaces;
-using Svg.Editor.Services;
 using Svg.Editor.Tools;
 using Svg.Interfaces;
 
@@ -21,23 +20,21 @@ namespace Svg.Editor.Core.Test
             // set up tools
             var textToolProperties = new Dictionary<string, object>
             {
-                { "fontsizes", new [] { 12f, 16f, 20f, 24f, 36f, 48f } },
-                { "selectedfontsizeindex", 1 },
-                { "fontsizenames", new [] { "12px", "16px", "20px", "24px", "36px", "48px" } }
+                {"fontsizes", new[] {12f, 16f, 20f, 24f, 36f, 48f}},
+                {"selectedfontsizeindex", 1},
+                {"fontsizenames", new[] {"12px", "16px", "20px", "24px", "36px", "48px"}}
             };
 
             var undoRedoService = SvgEngine.Resolve<IUndoRedoService>();
 
-            SvgEngine.Register<ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
-            {
+            Canvas.LoadTools(
                 () => new GridTool(null, undoRedoService),
                 () => new MoveTool(undoRedoService),
                 () => new PanTool(null),
                 () => new RotationTool(null, undoRedoService),
                 () => new ZoomTool(null),
                 () => new SelectionTool(undoRedoService),
-                () => new TextTool(textToolProperties, undoRedoService),
-            }));
+                () => new TextTool(textToolProperties, undoRedoService));
 
             // register mock text input service for text tool
             _textMock = new MockTextInputService();

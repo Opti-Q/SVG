@@ -7,7 +7,6 @@ using NUnit.Framework;
 using Svg.Editor.Core.Test.Mocks;
 using Svg.Editor.Events;
 using Svg.Editor.Interfaces;
-using Svg.Editor.Services;
 using Svg.Editor.Tools;
 using Svg.Interfaces;
 
@@ -32,8 +31,7 @@ namespace Svg.Editor.Core.Test
 
             var undoRedoService = SvgEngine.Resolve<IUndoRedoService>();
 
-            SvgEngine.Register<ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
-            {
+            Canvas.LoadTools(
                 () => new GridTool(null, undoRedoService),
                 () => new MoveTool(undoRedoService),
                 () => new PanTool(null),
@@ -47,13 +45,12 @@ namespace Svg.Editor.Core.Test
                 () => new FreeDrawingTool(null, undoRedoService),
                 () => new StrokeStyleTool(new Dictionary<string, object>
                 {
-                    { StrokeStyleTool.StrokeDashesKey, new[] {"1", "3"} }
+                    {StrokeStyleTool.StrokeDashesKey, new[] {"1", "3"}}
                 }, undoRedoService),
                 () => new ColorTool(new Dictionary<string, object>
                 {
-                    { ColorTool.SelectableColorsKey, new[] {"#000000", "#FF0000"} }
-                }, undoRedoService), 
-            }));
+                    {ColorTool.SelectableColorsKey, new[] {"#000000", "#FF0000"}}
+                }, undoRedoService));
 
             _colorMock = new MockColorInputService();
             SvgEngine.Register<IColorInputService>(() => _colorMock);
@@ -105,8 +102,8 @@ namespace Svg.Editor.Core.Test
             await Canvas.AddItemInScreenCenter(rectangle);
 
             // Preassert
-            var color = colorTool.SelectedColorIndex;
-            Assert.AreEqual(color, ((SvgColourServer) rectangle.Stroke)?.Colour);
+            var color = colorTool.SelectableColors[colorTool.SelectedColorIndex];
+            Assert.AreEqual(color, ((SvgColourServer) rectangle.Stroke)?.Colour.ToString());
 
             // Act
             var undoredoTool = Canvas.Tools.OfType<UndoRedoTool>().Single();
@@ -567,6 +564,8 @@ namespace Svg.Editor.Core.Test
             var txtTool = Canvas.Tools.OfType<TextTool>().Single();
             Canvas.ActiveTool = txtTool;
 
+            _textMock.F = (x, y) => new TextTool.TextProperties { Text = theText, FontSizeIndex = 0 };
+
             var d = LoadDocument("nested_transformed_text.svg");
             var child = d.Children.OfType<SvgVisualElement>().Single(c => c.Visible && c.Displayable);
             var formerText = child.Descendants().OfType<SvgTextSpan>().Single().Text;
@@ -574,11 +573,15 @@ namespace Svg.Editor.Core.Test
             Canvas.ScreenHeight = 500;
             await Canvas.AddItemInScreenCenter(child);
 
-            _textMock.F = (x, y) => new TextTool.TextProperties { Text = theText, FontSizeIndex = 0 };
-            var pt1 = PointF.Create(370, 260);
+            var childBoundingBox = child.GetBoundingBox();
+            var childScreenLocation = Canvas.CanvasToScreen(childBoundingBox.Location);
+
+            var pt1 = PointF.Create(childScreenLocation.X + childBoundingBox.Width / 2,
+                childScreenLocation.Y + childBoundingBox.Height / 2);
+
             await Canvas.OnEvent(new PointerEvent(EventType.PointerDown, pt1, pt1, pt1, 1));
             await Canvas.OnEvent(new PointerEvent(EventType.PointerUp, pt1, pt1, pt1, 1));
-            ((TestScheduler) SchedulerProvider.BackgroundScheduler).AdvanceBy(TimeSpan.FromSeconds(1).Ticks);
+            ((TestScheduler)SchedulerProvider.BackgroundScheduler).AdvanceBy(TimeSpan.FromSeconds(1).Ticks);
 
             // Preassert
             var texts = Canvas.Document.Children.OfType<SvgTextBase>().ToList();
