@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
-<Project Sdk="MSBuild.Sdk.Extras/2.0.24">
+<Project Sdk="MSBuild.Sdk.Extras/2.0.46">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;MonoAndroid81;Xamarin.iOS10;uap10.0.16299</TargetFrameworks>
@@ -24,6 +24,9 @@
     <Compile Include="Platforms\UniversalWindows\**\*.cs" />
   </ItemGroup>
 
+  <PropertyGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
+    <AndroidUseIntermediateDesignerFile>False</AndroidUseIntermediateDesignerFile>
+  </PropertyGroup>
   <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
     <Compile Include="Platforms\Android\**\*.cs" />
 

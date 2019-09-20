@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
-<Project Sdk="MSBuild.Sdk.Extras/2.0.24">
+<Project Sdk="MSBuild.Sdk.Extras/2.0.46">
   <PropertyGroup>
     <RootNamespace>Svg.Editor.Forms</RootNamespace>
     <AssemblyName>Svg.Editor.Forms</AssemblyName>
@@ -26,6 +26,9 @@
     <Compile Include="Platforms\UniversalWindows\**\*.cs" />
   </ItemGroup>
 
+  <PropertyGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
+    <AndroidUseIntermediateDesignerFile>False</AndroidUseIntermediateDesignerFile>
+  </PropertyGroup>
   <ItemGroup Condition=" $(TargetFramework.StartsWith('MonoAndroid')) ">
     <Compile Include="Platforms\Android\**\*.cs" />
 
@@ -45,7 +48,7 @@
     <PackageReference Include="SkiaSharp.Views.Forms" Version="1.60.0" />
     <PackageReference Include="Svg" Version="2.2.0-pre.2" />
     <PackageReference Include="System.Reactive" Version="4.0.0" />
-    <PackageReference Include="Xamarin.Forms" Version="2.5.0.77107" />
+    <PackageReference Include="Xamarin.Forms" Version="3.6.0.709228" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Svg.Editor.Core\Svg.Editor.Core.csproj" />

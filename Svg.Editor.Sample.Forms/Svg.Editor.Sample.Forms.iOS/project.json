@@ -9,7 +9,7 @@
     "System.Reactive.Interfaces": "3.1.1",
     "System.Reactive.Linq": "3.1.1",
     "System.Reactive.PlatformServices": "3.1.1",
-    "Xamarin.Forms": "3.6.0.344457"
+    "Xamarin.Forms": "3.6.0.709228"
   },
   "frameworks": {
     "Xamarin.iOS,Version=v1.0.0": {}
