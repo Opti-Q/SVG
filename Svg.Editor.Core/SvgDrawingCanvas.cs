@@ -195,6 +195,10 @@ namespace Svg.Editor
 			_selectedElements.CollectionChanged += OnSelectionChanged;
 
 			UndoRedoService = SvgEngine.Resolve<IUndoRedoService>();
+            UndoRedoService.ActionExecuted += UndoRedoServiceOnActionExecuted;
+            UndoRedoService.CanRedoChanged += UndoRedoServiceOnCanRedoChanged;
+            UndoRedoService.CanUndoChanged += UndoRedoServiceOnCanRedoChanged;
+
 			GestureRecognizer = SvgEngine.Resolve<IGestureRecognizer>();
 			_schedulerProvider = SvgEngine.Resolve<ISchedulerProvider>();
 
@@ -204,7 +208,19 @@ namespace Svg.Editor
 			_propertyChangedSubject.Subscribe(OnPropertyChanged);
 		}
 
-		public void LoadTools(params Func<ITool>[] tools)
+        private void UndoRedoServiceOnActionExecuted(object sender, CommandEventArgs e)
+        {
+            // clear selection when undoing
+            if (e.ExecuteAction == ExecuteAction.Undo)
+                SelectedElements.Clear();
+        }
+
+        private void UndoRedoServiceOnCanRedoChanged(object sender, EventArgs e)
+        {
+            FireToolCommandsChanged();
+        }
+
+        public void LoadTools(params Func<ITool>[] tools)
 		{
 			_tools.CollectionChanged -= OnToolsChanged;
 			_tools.Clear();
@@ -818,7 +834,11 @@ namespace Svg.Editor
 
 			_onGestureToken?.Dispose();
 			_document?.Dispose();
-		}
+
+            UndoRedoService.CanRedoChanged -= UndoRedoServiceOnCanRedoChanged;
+            UndoRedoService.CanUndoChanged -= UndoRedoServiceOnCanRedoChanged;
+            UndoRedoService.ActionExecuted -= UndoRedoServiceOnActionExecuted;
+        }
 
 		private IList<IToolCommand> EnsureToolSelectors()
 		{
