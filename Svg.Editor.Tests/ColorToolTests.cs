@@ -21,19 +21,15 @@ namespace Svg.Editor.Tests
         {
             // register the tool provder with a single color tool
             var selectableColors = new[] { "#000000", "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF" };
-            SvgEngine.Register<ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
-            {
-                () => new ColorTool(new Dictionary<string, object>
+            Canvas.LoadTools(() => new ColorTool(new Dictionary<string, object>
                 {
                     { ColorTool.SelectableColorsKey, selectableColors },
                     { ColorTool.SelectableColorNamesKey, new [] { "Black","Red","Green","Blue", "Yellow", "Magenta", "Cyan" } }
-                }, SvgEngine.Resolve<IUndoRedoService>())
-            }));
+                }, SvgEngine.Resolve<IUndoRedoService>()));
 
             // register the mock color input service
             _colorMock = new MockColorInputService();
             SvgEngine.Register<IColorInputService>(() => _colorMock);
-            
         }
 
         [Test]
@@ -43,20 +39,21 @@ namespace Svg.Editor.Tests
 
             await Canvas.EnsureInitialized();
             var colorTool = Canvas.Tools.OfType<ColorTool>().Single();
+            
             var text = new SvgText("hello");
             colorTool.SelectedColorIndex = 2;
-            var color = colorTool.SelectedColorIndex;
+            var color = colorTool.SelectableColors[2];
 
             // Preassert
-            Assert.AreNotEqual(color, ((SvgColourServer) text.Fill)?.Colour);
-            Assert.AreNotEqual(color, ((SvgColourServer) text.Stroke)?.Colour);
+            Assert.AreNotEqual(color, ((SvgColourServer) text.Fill)?.Colour.ToString());
+            Assert.AreNotEqual(color, ((SvgColourServer) text.Stroke)?.Colour.ToString());
 
             // Act
             await Canvas.AddItemInScreenCenter(text);
 
             // Assert
-            Assert.AreEqual(color, ((SvgColourServer) text.Fill)?.Colour);
-            Assert.AreEqual(color, ((SvgColourServer) text.Stroke)?.Colour);
+            Assert.AreEqual(color, ((SvgColourServer) text.Fill)?.Colour.ToString());
+            Assert.AreEqual(color, ((SvgColourServer) text.Stroke)?.Colour.ToString());
         }
 
         [Test]
@@ -72,7 +69,7 @@ namespace Svg.Editor.Tests
 
             // Assert
             var color = colorTool.SelectableColors[0];
-            Assert.AreEqual(color, ((SvgColourServer) rectangle.Stroke).Colour);
+            Assert.AreEqual(color, ((SvgColourServer) rectangle.Stroke).Colour.ToString());
         }
 
         [Test]
@@ -111,7 +108,7 @@ namespace Svg.Editor.Tests
 
             // Assert
 
-            Assert.True(colorTool.SelectedColorIndex.Equals(((SvgColourServer) rectangle.Stroke).Colour));
+            Assert.True(colorTool.SelectedColorIndex.Equals(((SvgColourServer) rectangle.Stroke).Colour.ToString()));
         }
 
         [Test]
@@ -235,15 +232,12 @@ namespace Svg.Editor.Tests
 
             var selectableColors = new[] {"#000000", "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF"};
 
-            SvgEngine.Register<ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
-            {
-                () => new ColorTool(new Dictionary<string, object>
+            Canvas = new SvgDrawingCanvas();
+            Canvas.LoadTools(() => new ColorTool(new Dictionary<string, object>
                 {
                     { "selectablecolors", selectableColors }
-                }, new UndoRedoService())
-            }));
+                }, new UndoRedoService()));
 
-            Canvas = new SvgDrawingCanvas();
             await Canvas.EnsureInitialized();
 
             // Act

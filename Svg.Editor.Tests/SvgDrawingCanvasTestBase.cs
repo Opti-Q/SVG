@@ -21,13 +21,13 @@ namespace Svg.Editor.Tests
             SvgPlatform.Init();
             SvgEditor.Init();
 
-            SvgEngine.Register<SchedulerProvider>(() => SchedulerProvider);
+            SvgEngine.Register(() => SchedulerProvider);
             SvgEngine.RegisterSingleton<IGestureRecognizer>(() => new ReactiveGestureRecognizer(SchedulerProvider));
             SvgEngine.Register<IFileLoader>(() => new FileLoader());
 
-            SetupOverride();
-
             Canvas = new SvgDrawingCanvas();
+
+            SetupOverride();
         }
 
         protected virtual void SetupOverride()

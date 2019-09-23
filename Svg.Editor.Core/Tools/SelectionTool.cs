@@ -89,9 +89,12 @@ namespace Svg.Editor.Tools
             await base.OnTap(tap);
 
             if (!IsActive) return;
+            
+            System.Diagnostics.Debug.WriteLine(tap.Position);
 
             // select elements under pointer
-            SelectElementsUnder(Canvas.GetPointerRectangle(tap.Position), Canvas, SelectionType.Intersect, 1);
+            var pointerRect = Canvas.GetPointerRectangle(tap.Position);
+            SelectElementsUnder(pointerRect, Canvas, SelectionType.Intersect, 1);
 
             Reset();
             Canvas.FireInvalidateCanvas();
@@ -102,6 +105,8 @@ namespace Svg.Editor.Tools
             await base.OnDrag(drag);
 
             if (!IsActive) return;
+
+            System.Diagnostics.Debug.WriteLine(drag.Start);
 
             if (drag.State == DragState.Exit)
             {

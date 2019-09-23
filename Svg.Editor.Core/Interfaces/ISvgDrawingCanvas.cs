@@ -117,5 +117,6 @@ namespace Svg.Editor.Interfaces
         void Dispose();
         event PropertyChangedEventHandler PropertyChanged;
         string GetToolPropertiesJson();
+        void LoadTools(params Func<ITool>[] tools);
     }
 }

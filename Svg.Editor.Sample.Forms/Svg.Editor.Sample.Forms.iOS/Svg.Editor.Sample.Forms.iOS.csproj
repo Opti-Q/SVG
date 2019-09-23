@@ -101,11 +101,9 @@
       <Project>{4cf34d1c-662c-400d-beaf-e87ce1d08fab}</Project>
       <Name>Svg.Editor.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Svg.Editor.Forms.iOS\Svg.Editor.Forms.iOS.csproj">
-      <Project>{f99c92c2-1192-4cb8-8ce1-f90874669246}</Project>
-      <Name>Svg.Editor.Forms.iOS</Name>
-      <IsAppExtension>false</IsAppExtension>
-      <IsWatchApp>false</IsWatchApp>
+    <ProjectReference Include="..\..\Svg.Editor.Forms\Svg.Editor.Forms.csproj">
+      <Project>{2C90EE6D-52E3-4BA0-92D4-8162800F698D}</Project>
+      <Name>Svg.Editor.Forms</Name>
     </ProjectReference>
     <ProjectReference Include="..\Svg.Editor.Sample.Forms\Svg.Editor.Sample.Forms.csproj">
       <Project>{f2b871b8-829f-4ef4-99a4-ab2fc9eeda5e}</Project>

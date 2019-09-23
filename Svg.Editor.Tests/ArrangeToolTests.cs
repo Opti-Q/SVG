@@ -14,10 +14,7 @@ namespace Svg.Editor.Tests
         [SetUp]
         protected override void SetupOverride()
         {
-            SvgEngine.Register<ToolFactoryProvider>(() => new ToolFactoryProvider(new Func<ITool>[]
-            {
-                () => new ArrangeTool(SvgEngine.Resolve<IUndoRedoService>()), 
-            }));
+            Canvas.LoadTools(() => new ArrangeTool(SvgEngine.Resolve<IUndoRedoService>()));
         }
 
         [Test]

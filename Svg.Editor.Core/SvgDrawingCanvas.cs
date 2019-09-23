@@ -195,16 +195,32 @@ namespace Svg.Editor
 			_selectedElements.CollectionChanged += OnSelectionChanged;
 
 			UndoRedoService = SvgEngine.Resolve<IUndoRedoService>();
+            UndoRedoService.ActionExecuted += UndoRedoServiceOnActionExecuted;
+            UndoRedoService.CanRedoChanged += UndoRedoServiceOnCanRedoChanged;
+            UndoRedoService.CanUndoChanged += UndoRedoServiceOnCanRedoChanged;
+
 			GestureRecognizer = SvgEngine.Resolve<IGestureRecognizer>();
 			_schedulerProvider = SvgEngine.Resolve<ISchedulerProvider>();
 
 			_tools = new ObservableCollection<ITool>();
 			_tools.CollectionChanged += OnToolsChanged;
 
-			_propertyChangedSubject.Throttle(TimeSpan.FromMilliseconds(250)).Subscribe(OnPropertyChanged);
+			_propertyChangedSubject.Subscribe(OnPropertyChanged);
 		}
 
-		public void LoadTools(params Func<ITool>[] tools)
+        private void UndoRedoServiceOnActionExecuted(object sender, CommandEventArgs e)
+        {
+            // clear selection when undoing
+            if (e.ExecuteAction == ExecuteAction.Undo)
+                SelectedElements.Clear();
+        }
+
+        private void UndoRedoServiceOnCanRedoChanged(object sender, EventArgs e)
+        {
+            FireToolCommandsChanged();
+        }
+
+        public void LoadTools(params Func<ITool>[] tools)
 		{
 			_tools.CollectionChanged -= OnToolsChanged;
 			_tools.Clear();
@@ -453,10 +469,11 @@ namespace Svg.Editor
 		/// <param name="p"></param>
 		/// <returns></returns>
 		public RectangleF GetPointerRectangle(PointF p)
-		{
-			var halfFingerThickness = 10 / ZoomFactor;
-			return RectangleF.Create(p.X - halfFingerThickness, p.Y - halfFingerThickness, halfFingerThickness * 2,
-				halfFingerThickness * 2); // "10 pixel fat finger"
+        {
+            var halfFingerThickness = 10; // "10 pixel fat finger"
+            var location = PointF.Create(p.X - halfFingerThickness, p.Y - halfFingerThickness);
+            var size = SizeF.Create(halfFingerThickness * 2, halfFingerThickness * 2);
+            return RectangleF.Create(location, size);
 		}
 
 		/// <summary>
@@ -817,7 +834,11 @@ namespace Svg.Editor
 
 			_onGestureToken?.Dispose();
 			_document?.Dispose();
-		}
+
+            UndoRedoService.CanRedoChanged -= UndoRedoServiceOnCanRedoChanged;
+            UndoRedoService.CanUndoChanged -= UndoRedoServiceOnCanRedoChanged;
+            UndoRedoService.ActionExecuted -= UndoRedoServiceOnActionExecuted;
+        }
 
 		private IList<IToolCommand> EnsureToolSelectors()
 		{

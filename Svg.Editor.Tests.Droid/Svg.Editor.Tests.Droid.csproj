@@ -89,7 +89,6 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <Import Project="..\Svg.Editor.Tests\Svg.Editor.Tests.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>xcopy "$(SolutionDir)Svg.Editor.Tests\Assets\*.*" "$(ProjectDir)Assets\" /Y/D/E</PreBuildEvent>
