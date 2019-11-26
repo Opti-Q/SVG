@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;MonoAndroid81;Xamarin.iOS10;uap10.0.16299</TargetFrameworks>
-    <Version>2.3.0</Version>
+    <Version>2.4.0</Version>
     <PackageReleaseNotes>
     </PackageReleaseNotes>
   </PropertyGroup>

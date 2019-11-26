@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Xunit;
 
@@ -26,7 +27,7 @@ namespace Svg.Tests.UWP
             {
                 doc.Write(ms);
                 ms.Seek(0, SeekOrigin.Begin);
-                doc2 = SvgDocument.Open<SvgDocument>(ms);
+                doc2 = SvgDocument.Open<SvgDocument>(ms, new Dictionary<string, string>());
                 svg = Encoding.UTF8.GetString(ms.ToArray());
             }
 

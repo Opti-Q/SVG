@@ -65,7 +65,14 @@
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Entitlements.plist" />
-    <None Include="project.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="3.6.1" />
+    <PackageReference Include="nunit.xamarin" Version="3.6.1" />
+    <PackageReference Include="SkiaSharp" Version="1.60.0" />
+    <PackageReference Include="SkiaSharp.Views.Forms" Version="1.60.0" />
+    <PackageReference Include="Toasts.Forms.Plugin" Version="3.1.4" />
+    <PackageReference Include="Xamarin.Forms" Version="2.3.4.270" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default.png" />
@@ -79,15 +86,13 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Svg.iOS\Svg.iOS.csproj">
-      <Project>{46070862-fd10-4154-861a-657d4d9dde36}</Project>
-      <Name>Svg.iOS</Name>
-      <IsAppExtension>false</IsAppExtension>
-      <IsWatchApp>false</IsWatchApp>
-    </ProjectReference>
     <ProjectReference Include="..\SvgW3CTestSuite.Assets\SvgW3CTestSuite.Assets.csproj">
       <Project>{0167BE14-CABE-48DD-A530-2B93F834F601}</Project>
       <Name>SvgW3CTestSuite.Assets</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Svg\Svg.csproj">
+      <Project>{c4dd05d5-ad71-4d37-89e5-0c2abfa6d77e}</Project>
+      <Name>Svg</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

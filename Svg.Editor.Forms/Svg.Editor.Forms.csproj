@@ -6,7 +6,7 @@
     <AssemblyName>Svg.Editor.Forms</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetFrameworks>netstandard2.0;MonoAndroid81;Xamarin.iOS10;uap10.0.16299</TargetFrameworks>
-    <Version>2.3.0</Version>
+    <Version>2.4.0</Version>
     <PackageReleaseNotes>
     </PackageReleaseNotes>
   </PropertyGroup>
@@ -46,7 +46,7 @@
   
   <ItemGroup>
     <PackageReference Include="SkiaSharp.Views.Forms" Version="1.60.0" />
-    <PackageReference Include="Svg" Version="2.2.0-pre.2" />
+    <PackageReference Include="Svg" Version="2.4.0" />
     <PackageReference Include="System.Reactive" Version="4.0.0" />
     <PackageReference Include="Xamarin.Forms" Version="3.6.0.709228" />
   </ItemGroup>
