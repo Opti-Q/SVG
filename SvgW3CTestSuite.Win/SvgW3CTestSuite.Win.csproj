@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SvgW3CTestSuite.Win</RootNamespace>
     <AssemblyName>SvgW3CTestSuite.Win</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -62,17 +63,18 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Svg.Win\Svg.Win.csproj">
-      <Project>{1a9890ab-e4b4-4282-89ac-cef2610e30b0}</Project>
-      <Name>Svg.Win</Name>
-    </ProjectReference>
+    <PackageReference Include="NUnit" Version="3.6.1" />
+    <PackageReference Include="SkiaSharp" Version="1.60.0" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\SvgW3CTestSuite.Assets\SvgW3CTestSuite.Assets.csproj">
       <Project>{0167be14-cabe-48dd-a530-2b93f834f601}</Project>
       <Name>SvgW3CTestSuite.Assets</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="project.json" />
+    <ProjectReference Include="..\Svg\Svg.csproj">
+      <Project>{c4dd05d5-ad71-4d37-89e5-0c2abfa6d77e}</Project>
+      <Name>Svg</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

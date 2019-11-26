@@ -32,7 +32,7 @@ namespace SvgW3CTestSuite
         private static int _succeededCount = 0;
 
        
-        public static object[] SvgTestCases = {};
+        public static object[][] SvgTestCases = {};
         public static Func<string, ISvgSource> FileSourceProvider { get; set; }
         static W3CTestFixture()
         {
@@ -51,7 +51,7 @@ namespace SvgW3CTestSuite
                 path =>
                     EmbeddedResourceSource.Create(path, typeof(AssetHelper).GetTypeInfo().Assembly);
 #else
-            FileSourceProvider = (path) => EmbeddedResourceSource.Create(path, typeof(AssetHelper).Assembly);
+            FileSourceProvider = (path) => Svg.Platform.EmbeddedResourceSource.Create(path, typeof(AssetHelper).Assembly);
 #endif
         }
 

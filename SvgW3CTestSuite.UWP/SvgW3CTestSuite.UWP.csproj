@@ -12,7 +12,7 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.16299.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -91,7 +91,6 @@
   </PropertyGroup>
   <ItemGroup>
     <!--A reference to the entire .Net Framework and Windows SDK are automatically included-->
-    <None Include="project.json" />
     <SDKReference Include="TestPlatform.Universal, Version=$(UnitTestPlatformVersion)" />
   </ItemGroup>
   <ItemGroup>
@@ -113,16 +112,26 @@
     <None Include="SvgW3CTestSuite.UWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.9" />
+    <PackageReference Include="SkiaSharp" Version="1.60.0" />
+    <PackageReference Include="System.Runtime" Version="4.3.1" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Properties\UnitTestApp.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Svg.UWP\Svg.UWP.csproj">
-      <Project>{934b0e99-c2c9-4b41-8705-e79c223362ca}</Project>
-      <Name>Svg.UWP</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SvgW3CTestSuite.Assets\SvgW3CTestSuite.Assets.csproj">
       <Project>{0167be14-cabe-48dd-a530-2b93f834f601}</Project>
       <Name>SvgW3CTestSuite.Assets</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Svg\Svg.csproj">
+      <Project>{c4dd05d5-ad71-4d37-89e5-0c2abfa6d77e}</Project>
+      <Name>Svg</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

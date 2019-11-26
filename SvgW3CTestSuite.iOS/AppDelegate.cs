@@ -49,7 +49,7 @@ namespace SvgW3CTestSuite.iOS
                 //nunit.AddTestAssembly(typeof(MyTests).Assembly);
 
                 // Do you want to automatically run tests when the app starts?
-                nunit.AutoRun = false;
+                //nunit.AutoRun = false;
 
                 LoadApplication(nunit);
             }
