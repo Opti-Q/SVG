@@ -13,7 +13,7 @@ namespace Svg.Editor.Droid.Services
 {
     public class AndroidColorInputService : IColorInputService
     {
-        public Task<int> GetIndexFromUserInput(string title, string[] items, string[] colors)
+        public Task<int> GetIndexFromUserInput(string title, string[] items, string[] colors, int defaultIndex = 0)
         {
 
             var cp = SvgEngine.Resolve<IContextProvider>();

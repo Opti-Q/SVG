@@ -48,8 +48,11 @@ namespace Svg.Editor.Tools
                         .Any(eup => Canvas.SelectedElements.Contains(eup)))
                 {
                     // move tool is only active, if SelectionTool is the "ActiveTool"
+                    // or the active tool is PinTool
                     // otherwise we'd move and pan at the same time, yielding confusing results... :)
-                    if (Canvas.ActiveTool.ToolType != ToolType.Select) return;
+                    if ((Canvas.ActiveTool.ToolType != ToolType.Select) &&
+                        (Canvas.ActiveTool.GetType() != typeof(PinTool))) return;
+                    
 
                     // save the active tool for restoring later
                     _activatedFrom = Canvas.ActiveTool;

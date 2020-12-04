@@ -9,6 +9,7 @@ using Android.Views.InputMethods;
 using Android.Widget;
 using Svg;
 using Svg.Editor.Droid.Services;
+using Svg.Editor.Interfaces;
 using Svg.Editor.Tools;
 
 [assembly: SvgService(typeof(ITextInputService), typeof(AndroidTextInputService))]
@@ -99,6 +100,16 @@ namespace Svg.Editor.Droid.Services
 
             var inputMethodManager = (InputMethodManager) Application.Context.GetSystemService(Context.InputMethodService);
             inputMethodManager.ShowSoftInput(pView, ShowFlags.Implicit);
+        }
+
+        public Task<PinTool.PinSize> GetUserInput(IEnumerable<string> pinSizeOptions)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<string> GetUserInput(string textValue = null)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

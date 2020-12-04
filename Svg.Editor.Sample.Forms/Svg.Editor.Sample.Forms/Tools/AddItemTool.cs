@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Svg.Editor.Gestures;
+using Svg.Editor.Interfaces;
 using Svg.Editor.Tools;
 
 namespace Svg.Editor.Sample.Forms.Tools
@@ -10,11 +11,20 @@ namespace Svg.Editor.Sample.Forms.Tools
 		{
 		}
 
+        public override async Task Initialize(ISvgDrawingCanvas ws)
+        {
+            await base.Initialize(ws);
+
+            IsActive = false;
+        }
+
 		protected override async Task OnLongPress(LongPressGesture longPress)
 		{
 			await base.OnLongPress(longPress);
 
-			await Canvas.AddItemInScreenCenter(new SvgCircle { Radius = 10 });
+			if(!IsActive) return;
+
+            await Canvas.AddItemInScreenCenter(new SvgCircle { Radius = 10 });
 		}
 	}
 }

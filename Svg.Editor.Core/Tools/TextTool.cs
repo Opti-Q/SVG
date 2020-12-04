@@ -11,16 +11,7 @@ using Svg.Transforms;
 
 namespace Svg.Editor.Tools
 {
-	public interface ITextInputService
-	{
-		Task<TextTool.TextProperties> GetUserInput(
-			string title,
-			string textValue,
-			IEnumerable<string> textSizeOptions,
-			int textSizeSelected);
-	}
-
-	public class TextTool : UndoableToolBase
+    public class TextTool : UndoableToolBase
 	{
 		#region Private fields
 

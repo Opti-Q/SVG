@@ -39,6 +39,7 @@
     <EmbeddedResource Include="Resources\svg\ic_line_style.svg" />
     <EmbeddedResource Include="Resources\svg\ic_mode_edit.svg" />
     <EmbeddedResource Include="Resources\svg\ic_pan_tool.svg" />
+    <EmbeddedResource Include="Resources\svg\ic_pin_tool.svg" />
     <EmbeddedResource Include="Resources\svg\ic_panorama_fish_eye.svg" />
     <EmbeddedResource Include="Resources\svg\ic_redo.svg" />
     <EmbeddedResource Include="Resources\svg\ic_rotate_left.svg" />

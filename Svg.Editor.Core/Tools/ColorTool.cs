@@ -12,7 +12,7 @@ namespace Svg.Editor.Tools
 {
 	public interface IColorInputService
 	{
-		Task<int> GetIndexFromUserInput(string title, string[] items, string[] colors);
+		Task<int> GetIndexFromUserInput(string title, string[] items, string[] colors, int defaultIndex = 0);
 	}
 
 	public class ColorTool : UndoableToolBase
@@ -33,6 +33,7 @@ namespace Svg.Editor.Tools
 		#region Public properties
 
 		public const string SelectedColorIndexKey = "selectedcolorindex";
+		public const string SelectedTextColorIndexKey = "selectedtextcolorindex";
 		public const string SelectableColorsKey = "selectablecolors";
 		public const string SelectableColorNamesKey = "selectablecolornames";
 		public const string IconDimensionsKey = "icondimensions";
@@ -69,6 +70,18 @@ namespace Svg.Editor.Tools
 					: 0;
 			}
 			set { Properties[SelectedColorIndexKey] = value; }
+		}
+
+		public int SelectedTextColorIndex
+		{
+			get
+			{
+				object index;
+				return Properties.TryGetValue(SelectedTextColorIndexKey, out index)
+					? Convert.ToInt32(index)
+					: 7;
+			}
+			set { Properties[SelectedTextColorIndexKey] = value; }
 		}
 
 		#endregion
@@ -117,7 +130,8 @@ namespace Svg.Editor.Tools
 			// add tool commands
 			Commands = new List<IToolCommand>
 			{
-				new ChangeColorCommand(ws, this, "Change color")
+				new ChangeColorCommand(ws, this, "Change color"),
+				new ChangeTextColorCommand(ws, this, "Change text color", _ => Canvas.ActiveTool.GetType() == typeof(PinTool))
 			};
 
 			// initialize with callbacks
@@ -202,7 +216,15 @@ namespace Svg.Editor.Tools
 
 		private void OnChildAdded(object sender, ChildAddedEventArgs e)
 		{
-			ColorizeElement(e.NewChild, SelectedColorIndex);
+			if (e.NewChild.CustomAttributes.ContainsKey("pinsize"))
+			{
+				ColorizeElement(e.NewChild.Children[0], SelectedColorIndex);
+				ColorizeElement(e.NewChild.Children[1], SelectedTextColorIndex);
+			}
+			else
+			{
+				ColorizeElement(e.NewChild, SelectedColorIndex);
+			}
 		}
 
 		#endregion
@@ -240,6 +262,10 @@ namespace Svg.Editor.Tools
 					return;
 				}
 
+				if(selectedColorIndex == 7 || selectedColorIndex == 4)
+				{
+					t.SelectedTextColorIndex = 0;
+				}
 
 				if (_canvas.SelectedElements.Any())
 				{
@@ -247,7 +273,14 @@ namespace Svg.Editor.Tools
 					// change the color of all selected items
 					foreach (var selectedElement in _canvas.SelectedElements)
 					{
-						t.ColorizeElement(selectedElement, selectedColorIndex);
+						if (selectedElement.CustomAttributes.ContainsKey("pinsize"))
+						{
+							t.ColorizeElement(selectedElement.Children[0], selectedColorIndex);
+						}
+						else
+						{
+							t.ColorizeElement(selectedElement, selectedColorIndex);
+						}
 					}
 					// don't change the global color when items are selected
 					return;
@@ -261,6 +294,66 @@ namespace Svg.Editor.Tools
 				}, o =>
 				{
 					t.SelectedColorIndex = formerSelectedColor;
+					t.Canvas.FireToolCommandsChanged();
+				}));
+			}
+
+			public override string IconName => SvgCachingService?.GetCachedPng(Tool.IconName,
+				new SaveAsPngOptions()
+				{
+					CustomPostFix = (key, op) => StringifyColor(Color.Create(Tool.SelectableColors.ElementAtOrDefault(Tool.SelectedColorIndex) ?? "#000000")),
+					ImageDimension = Tbi.Value?.GetSize()
+				});
+		}
+
+		private class ChangeTextColorCommand : ToolCommand
+		{
+			private readonly ISvgDrawingCanvas _canvas;
+
+			public ChangeTextColorCommand(ISvgDrawingCanvas canvas, ColorTool tool, string name, Func<object, bool> canExecute = null)
+				: base(tool, name, o => { }, canExecute, iconName: tool.IconName, sortFunc: tc => 500)
+			{
+				_canvas = canvas;
+			}
+
+			private new ColorTool Tool => (ColorTool)base.Tool;
+
+			public override async void Execute(object parameter)
+			{
+				var t = Tool;
+
+				int selectedTextColorIndex;
+
+				try
+				{
+					selectedTextColorIndex =
+						await ColorInputService.GetIndexFromUserInput("Choose color", t.SelectableColorNames, t.SelectableColors, 7);
+				}
+				catch (TaskCanceledException)
+				{
+					return;
+				}
+
+				if (_canvas.SelectedElements.Any())
+				{
+					t.UndoRedoService.ExecuteCommand(new UndoableActionCommand("Colorize selected element's texts", o => { }));
+					// change the color of all selected items
+					foreach (var selectedElement in _canvas.SelectedElements)
+					{
+						t.ColorizeElement(selectedElement.Children[1], selectedTextColorIndex);
+					}
+					// don't change the global color when items are selected
+					return;
+				}
+
+				var formerSelectedColor = t.SelectedTextColorIndex;
+				t.UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name, o =>
+				{
+					t.SelectedTextColorIndex = selectedTextColorIndex;
+					t.Canvas.FireToolCommandsChanged();
+				}, o =>
+				{
+					t.SelectedTextColorIndex = formerSelectedColor;
 					t.Canvas.FireToolCommandsChanged();
 				}));
 			}
