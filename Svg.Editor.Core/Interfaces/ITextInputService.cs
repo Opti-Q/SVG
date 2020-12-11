@@ -12,9 +12,6 @@ namespace Svg.Editor.Interfaces
             IEnumerable<string> textSizeOptions,
             int textSizeSelected);
 
-        Task<PinTool.PinSize> GetUserInput(
-            IEnumerable<string> pinSizeOptions);
-
         Task<string> GetUserInput(
             string textValue = null);
     }

@@ -24,6 +24,7 @@ namespace Svg.Editor.Sample.Forms
             SvgEngine.Register<IStrokeStyleOptionsInputService>(() => new StrokeStyleOptionsInputService());
             SvgEngine.Register<ITextInputService>(() => new TextInputService());
 			SvgEngine.Register<IPickImageService>(() => new FormsPickImageService());
+            SvgEngine.Register<IPinInputService>(() => new PinInputService());
 
             SvgEngine.Resolve<ISvgCachingService>().Clear();
 

@@ -17,11 +17,18 @@ using Svg.Transforms;
 
 namespace Svg.Editor.Tools
 {
-    public class PinTool : UndoableToolBase
+    public interface IPinInputService
+	{
+        Task<PinTool.PinSize> GetUserInput(
+            IEnumerable<string> pinSizeOptions);
+    }
+
+    public class PinTool : UndoableToolBase, ISupportTextColor, ISupportMoving
     {
         #region Private fields
 
         private ITextInputService _textInputService;
+        private IPinInputService _pinInputService;
         private string _text;
 
         #endregion
@@ -62,6 +69,22 @@ namespace Svg.Editor.Tools
             set { Properties[PinSizeAttributeKey] = value; }
         }
 
+        public int GetDefaultTextColorIndex(int parentColor, string[] selectableColors)
+        {
+            var whiteIndex = Array.IndexOf(selectableColors, "White");
+            var yellowIndex = Array.IndexOf(selectableColors, "Yellow");
+            var blackIndex = Array.IndexOf(selectableColors, "Black");
+
+            if (parentColor == whiteIndex || parentColor == yellowIndex)
+            {
+                return blackIndex;
+            }
+            else
+            {
+                return whiteIndex;
+            }
+        }
+
         #endregion
 
         #region Overrides
@@ -73,6 +96,7 @@ namespace Svg.Editor.Tools
             IsActive = false;
 
             _textInputService = SvgEngine.TryResolve<ITextInputService>();
+            _pinInputService = SvgEngine.TryResolve<IPinInputService>();
             _text = "";
 
             // add tool commands
@@ -196,7 +220,7 @@ namespace Svg.Editor.Tools
         {
             try
             {
-                return await _textInputService.GetUserInput(PinSizeNames);
+                return await _pinInputService.GetUserInput(PinSizeNames);
             }
             catch (TaskCanceledException)
             {
@@ -418,10 +442,10 @@ namespace Svg.Editor.Tools
             return previousPin;
         }
 
-        #endregion
+		#endregion
 
-        #region Inner types
-        public enum PinSize
+		#region Inner types
+		public enum PinSize
         {
             Small,
             Medium,

@@ -102,11 +102,6 @@ namespace Svg.Editor.Droid.Services
             inputMethodManager.ShowSoftInput(pView, ShowFlags.Implicit);
         }
 
-        public Task<PinTool.PinSize> GetUserInput(IEnumerable<string> pinSizeOptions)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public Task<string> GetUserInput(string textValue = null)
         {
             throw new System.NotImplementedException();

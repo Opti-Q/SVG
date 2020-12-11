@@ -38,26 +38,6 @@ namespace Svg.Editor.Sample.Forms.Services
             return new TextTool.TextProperties {FontSizeIndex = sizeIndex, LineHeight = 12f, Text = text};
         }
 
-        public async Task<PinTool.PinSize> GetUserInput(IEnumerable<string> pinSizeOptions)
-        {
-            var defaultResult = PinTool.PinSize.Medium;
-
-            var sizeResult = await UserDialogs.Instance.ActionSheetAsync("Select pin size", "Cancel", null, null, pinSizeOptions.ToArray());
-
-            if (sizeResult == "Cancel")
-            {
-                return defaultResult;
-            }
-
-            PinTool.PinSize result;
-            if (!System.Enum.TryParse(sizeResult, out result))
-            {
-                result = defaultResult;
-            }
-
-            return result;
-        }
-
         public async Task<string> GetUserInput(string textValue = null)
         {
             var defaultResult = "";

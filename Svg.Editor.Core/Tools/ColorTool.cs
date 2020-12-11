@@ -15,6 +15,11 @@ namespace Svg.Editor.Tools
 		Task<int> GetIndexFromUserInput(string title, string[] items, string[] colors, int defaultIndex = 0);
 	}
 
+	public interface ISupportTextColor
+	{
+		int GetDefaultTextColorIndex(int parentColor, string[] selectableColors);
+	}
+
 	public class ColorTool : UndoableToolBase
 	{
 		#region Private fields and properties
@@ -131,7 +136,7 @@ namespace Svg.Editor.Tools
 			Commands = new List<IToolCommand>
 			{
 				new ChangeColorCommand(ws, this, "Change color"),
-				new ChangeTextColorCommand(ws, this, "Change text color", _ => Canvas.ActiveTool.GetType() == typeof(PinTool))
+				new ChangeTextColorCommand(ws, this, "Change text color", _ => Canvas.ActiveTool is ISupportTextColor)
 			};
 
 			// initialize with callbacks
@@ -216,7 +221,7 @@ namespace Svg.Editor.Tools
 
 		private void OnChildAdded(object sender, ChildAddedEventArgs e)
 		{
-			if (e.NewChild.CustomAttributes.ContainsKey("pinsize"))
+			if (Canvas.ActiveTool is ISupportTextColor)
 			{
 				ColorizeElement(e.NewChild.Children[0], SelectedColorIndex);
 				ColorizeElement(e.NewChild.Children[1], SelectedTextColorIndex);
@@ -262,19 +267,17 @@ namespace Svg.Editor.Tools
 					return;
 				}
 
-				if(selectedColorIndex == 7 || selectedColorIndex == 4)
-				{
-					t.SelectedTextColorIndex = 0;
-				}
-
 				if (_canvas.SelectedElements.Any())
 				{
 					t.UndoRedoService.ExecuteCommand(new UndoableActionCommand("Colorize selected elements", o => { }));
 					// change the color of all selected items
 					foreach (var selectedElement in _canvas.SelectedElements)
 					{
-						if (selectedElement.CustomAttributes.ContainsKey("pinsize"))
+						if (t.Canvas.ActiveTool is ISupportTextColor)
 						{
+							// in this case the selected element is a group
+							// the first child of the group is the shape itself
+							// and the second child is the text contained by the shape
 							t.ColorizeElement(selectedElement.Children[0], selectedColorIndex);
 						}
 						else
@@ -284,6 +287,11 @@ namespace Svg.Editor.Tools
 					}
 					// don't change the global color when items are selected
 					return;
+				}
+
+				if (t.Canvas.ActiveTool is ISupportTextColor tool)
+				{
+					t.SelectedTextColorIndex = tool.GetDefaultTextColorIndex(selectedColorIndex, t.SelectableColorNames);
 				}
 
 				var formerSelectedColor = t.SelectedColorIndex;
