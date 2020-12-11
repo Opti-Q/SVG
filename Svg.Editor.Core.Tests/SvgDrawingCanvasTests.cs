@@ -201,6 +201,11 @@ namespace Svg.Editor.Core.Test
             {
                 return Task.FromResult(F(title, textValue));
             }
+
+            public Task<string> GetUserInput(string textValue = null)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

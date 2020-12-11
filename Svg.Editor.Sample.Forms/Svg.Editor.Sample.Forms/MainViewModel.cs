@@ -24,6 +24,7 @@ namespace Svg.Editor.Sample.Forms
             SvgEngine.Register<IStrokeStyleOptionsInputService>(() => new StrokeStyleOptionsInputService());
             SvgEngine.Register<ITextInputService>(() => new TextInputService());
 			SvgEngine.Register<IPickImageService>(() => new FormsPickImageService());
+            SvgEngine.Register<IPinInputService>(() => new PinInputService());
 
             SvgEngine.Resolve<ISvgCachingService>().Clear();
 
@@ -39,7 +40,7 @@ namespace Svg.Editor.Sample.Forms
                     {
                         { "angle", 30.0f },
                         { "stepsizey", 20.0f },
-                        { "issnappingenabled", true }
+                        { "issnappingenabled", false }
                     };
 
             var colorToolProperties = new Dictionary<string, object>
@@ -95,9 +96,14 @@ namespace Svg.Editor.Sample.Forms
 
             var undoRedoService = SvgEngine.Resolve<IUndoRedoService>();
 
+            var pinToolProperties = new Dictionary<string, object>
+            {
+                {"pinsizenames", new[] {"Small", "Medium", "Large", "ExtraLarge" } }
+            };
+
             #endregion
 
-	        DrawingCanvas = new SvgDrawingCanvas();
+            DrawingCanvas = new SvgDrawingCanvas();
 	        DrawingCanvas.LoadTools(
 		        () => new GridTool(gridToolProperties, undoRedoService),
 		        () => new MoveTool(undoRedoService),
@@ -116,7 +122,8 @@ namespace Svg.Editor.Sample.Forms
 		        () => new ArrangeTool(undoRedoService),
 		        () => new SaveTool(false),
 		        () => new PlaceAsBackgroundTool(placeAsBackgroundToolProperties, undoRedoService),
-		        () => new AddItemTool());
+		        () => new AddItemTool(),
+                () => new PinTool(pinToolProperties, undoRedoService));
         }
 
         public SvgDrawingCanvas DrawingCanvas { get; set; }

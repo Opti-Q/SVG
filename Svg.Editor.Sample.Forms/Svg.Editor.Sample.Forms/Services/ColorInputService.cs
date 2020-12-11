@@ -9,7 +9,7 @@ namespace Svg.Editor.Sample.Forms.Services
 {
     public class ColorInputService : Svg.Editor.Tools.IColorInputService
     {
-        public async Task<int> GetIndexFromUserInput(string title, string[] items, string[] colors)
+        public async Task<int> GetIndexFromUserInput(string title, string[] items, string[] colors, int defaultIndex = 0)
         {
             var result = await Application.Current.MainPage.DisplayActionSheet(title, "cancel", null, items);
 
@@ -18,8 +18,7 @@ namespace Svg.Editor.Sample.Forms.Services
 
             var index = items.ToList().IndexOf(result);
             if (index < 0)
-                return 0;
-
+                return defaultIndex;
 
             return index;
         }

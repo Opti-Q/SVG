@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Svg.Editor.Interfaces;
 using Svg.Editor.Tools;
 
 namespace Svg.Editor.Core.Test.Mocks
@@ -13,6 +14,11 @@ namespace Svg.Editor.Core.Test.Mocks
         public Task<TextTool.TextProperties> GetUserInput(string title, string textValue, IEnumerable<string> textSizeOptions, int textSizeSelected)
         {
             return Task.FromResult(F(title, textValue));
+        }
+
+        public Task<string> GetUserInput(string textValue = null)
+        {
+            throw new NotImplementedException();
         }
     }
 }
