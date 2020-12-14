@@ -8,11 +8,9 @@ namespace Svg.Editor.Interfaces
     {
         Task<TextTool.TextProperties> GetUserInput(
             string title,
-            string textValue,
-            IEnumerable<string> textSizeOptions,
-            int textSizeSelected);
-
-        Task<string> GetUserInput(
-            string textValue = null);
+            string textValue = "",
+            IEnumerable<string> textSizeOptions = null,
+            int textSizeSelected = 0,
+            int maxTextLength = -1);
     }
 }
