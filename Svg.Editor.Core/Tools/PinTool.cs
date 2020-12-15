@@ -255,6 +255,8 @@ namespace Svg.Editor.Tools
         {
             var oldFill = (SvgColourServer)previousGroup.Children[0].Fill;
             var oldStroke = (SvgColourServer)previousGroup.Children[0].Stroke;
+            var oldTextFill = (SvgColourServer)previousGroup.Children[1].Fill;
+            var oldTextStroke = (SvgColourServer)previousGroup.Children[1].Stroke;
 
             if (previousGroup.CustomAttributes[PinFillAttributeKey] == "Holey")
 			{
@@ -267,6 +269,8 @@ namespace Svg.Editor.Tools
                 var id = Canvas.Document.Children.Count - 1;
                 Canvas.Document.Children[id].Children[0].Fill = oldFill;
                 Canvas.Document.Children[id].Children[0].Stroke = oldStroke;
+                Canvas.Document.Children[id].Children[1].Fill = oldTextFill;
+                Canvas.Document.Children[id].Children[1].Stroke = oldTextStroke;
 
                 Canvas.FireInvalidateCanvas();
             }
@@ -283,6 +287,8 @@ namespace Svg.Editor.Tools
                 var id = Canvas.Document.Children.Count - 1;
                 Canvas.Document.Children[id].Children[0].Fill = oldFill;
                 Canvas.Document.Children[id].Children[0].Stroke = oldStroke;
+                Canvas.Document.Children[id].Children[1].Fill = oldTextFill;
+                Canvas.Document.Children[id].Children[1].Stroke = oldTextStroke;
 
                 Canvas.FireInvalidateCanvas();
             }
