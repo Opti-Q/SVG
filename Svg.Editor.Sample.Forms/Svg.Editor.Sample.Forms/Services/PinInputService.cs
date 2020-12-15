@@ -10,9 +10,9 @@ namespace Svg.Editor.Sample.Forms.Services
 {
 	public class PinInputService : IPinInputService
     {
-        public async Task<PinTool.PinSize> GetUserInput(IEnumerable<string> pinSizeOptions)
+        public async Task<PinTool.PinSize> GetUserInput(IEnumerable<string> pinSizeOptions, int oldSizeIndex = 1)
         {
-            var defaultResult = PinTool.PinSize.Medium;
+            var defaultResult = (PinTool.PinSize)oldSizeIndex;
 
             var sizeResult = await UserDialogs.Instance.ActionSheetAsync("Select pin size", "Cancel", null, null, pinSizeOptions.ToArray());
 
@@ -22,7 +22,7 @@ namespace Svg.Editor.Sample.Forms.Services
             }
 
             PinTool.PinSize result;
-            if (!System.Enum.TryParse(sizeResult, out result))
+            if (!Enum.TryParse(sizeResult, out result))
             {
                 result = defaultResult;
             }

@@ -18,7 +18,8 @@ namespace Svg.Editor.Droid.Services
     public class AndroidTextInputService : ITextInputService
     {
 
-        public async Task<TextTool.TextProperties> GetUserInput(string title, string textValue, IEnumerable<string> textSizeOptions, int textSizeSelected)
+        public async Task<TextTool.TextProperties> GetUserInput(string title, string textValue = "",
+            IEnumerable<string> textSizeOptions = null, int textSizeSelected = 0, int maxTextLength = -1)
         {
             var tcs = new TaskCompletionSource<TextTool.TextProperties>();
 
@@ -100,11 +101,6 @@ namespace Svg.Editor.Droid.Services
 
             var inputMethodManager = (InputMethodManager) Application.Context.GetSystemService(Context.InputMethodService);
             inputMethodManager.ShowSoftInput(pView, ShowFlags.Implicit);
-        }
-
-        public Task<string> GetUserInput(string textValue = null)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

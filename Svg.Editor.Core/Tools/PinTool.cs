@@ -20,7 +20,7 @@ namespace Svg.Editor.Tools
     public interface IPinInputService
 	{
         Task<PinTool.PinSize> GetUserInput(
-            IEnumerable<string> pinSizeOptions);
+            IEnumerable<string> pinSizeOptions, int oldSizeIndex = 1);
     }
 
     public class PinTool : UndoableToolBase, ISupportTextColor, ISupportMoving
@@ -36,6 +36,7 @@ namespace Svg.Editor.Tools
         public PinTool(IDictionary<string, object> properties, IUndoRedoService undoRedoService) : base("Pin", properties, undoRedoService)
         {
             IconName = "ic_pin_tool.svg";
+            PinResizeIconName = "ic_pin_resize.svg";
             ToolUsage = ToolUsage.Explicit;
             ToolType = ToolType.Create;
         }
@@ -45,6 +46,7 @@ namespace Svg.Editor.Tools
         public const string PinSizeAttributeKey = "pinsize";
         public const string PinFillAttributeKey = "pinfill";
         public const string PinSizeNamesKey = "pinsizenames";
+        public string PinResizeIconName { get; } 
 
         public string[] PinSizeNames
         {
@@ -102,7 +104,7 @@ namespace Svg.Editor.Tools
             // add tool commands
             Commands = new List<IToolCommand>
             {
-                new ChangePinSizeCommand(ws, this, "Change size", _ => Canvas.ActiveTool.GetType() == typeof(PinTool))
+                new ChangePinSizeCommand(ws, this, "Change size")
             };
         }
 
@@ -216,11 +218,19 @@ namespace Svg.Editor.Tools
 
         #region Private helpers
 
-        private async Task<PinSize> GetPinSizeFromUserInput()
+        private async Task<PinSize> GetPinSizeFromUserInput(string size = "")
         {
             try
             {
-                return await _pinInputService.GetUserInput(PinSizeNames);
+                if (Enum.TryParse<PinSize>(size, out var oldSize))
+                {
+                    return await _pinInputService.GetUserInput(PinSizeNames, (int)oldSize);
+                }
+				else
+                {
+                    return await _pinInputService.GetUserInput(PinSizeNames);
+                }
+                
             }
             catch (TaskCanceledException)
             {
@@ -232,7 +242,8 @@ namespace Svg.Editor.Tools
         {
             try
             {
-                _text = await _textInputService.GetUserInput();
+                var input = await _textInputService.GetUserInput("Please enter 1 or 2 characters.", maxTextLength: 2);
+                _text = input.Text;
             }
             catch (TaskCanceledException)
             {
@@ -245,10 +256,10 @@ namespace Svg.Editor.Tools
             var oldFill = (SvgColourServer)previousGroup.Children[0].Fill;
             var oldStroke = (SvgColourServer)previousGroup.Children[0].Stroke;
 
-            if (previousGroup.CustomAttributes["pinfill"] == "Holey")
+            if (previousGroup.CustomAttributes[PinFillAttributeKey] == "Holey")
 			{
                 var newGroup = FilledPinToHoley(newSize, previousGroup);
-                newGroup.CustomAttributes["pinsize"] = newSize.ToString();
+                newGroup.CustomAttributes[PinSizeAttributeKey] = newSize.ToString();
 
                 Canvas.Document.Children.Remove(previousGroup);
                 Canvas.Document.Children.Add(newGroup);
@@ -259,10 +270,10 @@ namespace Svg.Editor.Tools
 
                 Canvas.FireInvalidateCanvas();
             }
-			else if (previousGroup.CustomAttributes["pinfill"] == "Filled")
+			else if (previousGroup.CustomAttributes[PinFillAttributeKey] == "Filled")
             {
                 var newGroup = HoleyPinToFilled(newSize, previousGroup);
-                newGroup.CustomAttributes["pinsize"] = newSize.ToString();
+                newGroup.CustomAttributes[PinSizeAttributeKey] = newSize.ToString();
 
                 ((SvgText)newGroup.Children[1]).Text = ((SvgText)previousGroup.Children[1]).Text;
 
@@ -463,8 +474,8 @@ namespace Svg.Editor.Tools
         {
             private readonly ISvgDrawingCanvas _canvas;
 
-            public ChangePinSizeCommand(ISvgDrawingCanvas canvas, PinTool tool, string name, Func<object, bool> canExecute = null)
-                : base(tool, name, o => { }, canExecute, iconName: tool.IconName, sortFunc: tc => 500)
+            public ChangePinSizeCommand(ISvgDrawingCanvas canvas, PinTool tool, string name)
+                : base(tool, name, o => { }, iconName: tool.PinResizeIconName, sortFunc: tc => 500)
             {
                 _canvas = canvas;
             }
@@ -474,20 +485,21 @@ namespace Svg.Editor.Tools
             public override async void Execute(object parameter)
             {
                 var t = Tool;
-
-                var selectedSize = await t.GetPinSizeFromUserInput();
+                PinSize selectedSize;
 
                 if (_canvas.SelectedElements.Any())
                 {
+                    var selectedElement = _canvas.SelectedElements[0];
+                    selectedSize = await t.GetPinSizeFromUserInput(selectedElement.CustomAttributes[PinSizeAttributeKey]);
+
                     t.UndoRedoService.ExecuteCommand(new UndoableActionCommand("Change size of selected elements", o => { }));
-                    // change the size of all selected items
-                    foreach (var selectedElement in _canvas.SelectedElements)
-                    {
-                        t.ChangePinSize(selectedElement, selectedSize);
-                    }
+
+                    t.ChangePinSize(selectedElement, selectedSize);
                     // don't change the global color when items are selected
                     return;
                 }
+
+                selectedSize = await t.GetPinSizeFromUserInput();
 
                 var formerSize = t.SelectedPinSize;
                 t.UndoRedoService.ExecuteCommand(new UndoableActionCommand(Name, o =>
@@ -499,6 +511,11 @@ namespace Svg.Editor.Tools
                     t.SelectedPinSize = formerSize;
                     t.Canvas.FireToolCommandsChanged();
                 }));
+            }
+
+            public override bool CanExecute(object parameter)
+            {
+                return Tool.IsActive;
             }
         }
 
