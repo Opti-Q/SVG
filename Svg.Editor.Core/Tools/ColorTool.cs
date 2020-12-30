@@ -221,7 +221,7 @@ namespace Svg.Editor.Tools
 
 		private void OnChildAdded(object sender, ChildAddedEventArgs e)
 		{
-			if (Canvas.ActiveTool is ISupportTextColor)
+			if (Canvas?.ActiveTool is ISupportTextColor)
 			{
 				ColorizeElement(e.NewChild.Children[0], SelectedColorIndex);
 				ColorizeElement(e.NewChild.Children[1], SelectedTextColorIndex);

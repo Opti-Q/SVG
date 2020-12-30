@@ -154,19 +154,21 @@ namespace Svg.Editor.Tools
 		private async Task<TextProperties> GetTextPropertiesFromUserInput(string title, string text, int index)
 		{
 			if (_dialogShown) return null;
-			_dialogShown = true;
 
 			TextProperties txtProperties;
 			try
 			{
+                _dialogShown = true;
 				txtProperties = await TextInputService.GetUserInput(title, text, FontSizeNames, index);
 			}
 			catch (TaskCanceledException)
 			{
 				txtProperties = null;
 			}
-
-			_dialogShown = false;
+            finally
+            {
+                _dialogShown = false;
+            }
 
 			if (txtProperties == null)
 				return null;

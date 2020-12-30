@@ -1,12 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-
-<Project Sdk="MSBuild.Sdk.Extras/2.0.46">
+﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.46">
   <PropertyGroup>
     <RootNamespace>Svg.Editor.Forms</RootNamespace>
     <AssemblyName>Svg.Editor.Forms</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetFrameworks>netstandard2.0;MonoAndroid81;Xamarin.iOS10;uap10.0.16299</TargetFrameworks>
-    <Version>2.4.0.4</Version>
+    <Version>2.4.0.5</Version>
     <PackageReleaseNotes>
     </PackageReleaseNotes>
   </PropertyGroup>
